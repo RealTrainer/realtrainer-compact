@@ -1,0 +1,93 @@
+{
+  "name": "rtcompact-tools",
+  "displayName": "RT Compact Tools",
+  "description": "Language support and diagnostics for RealTrainer COMPACT files",
+  "version": "0.0.1",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "activationEvents": [
+    "onLanguage:rtcompact",
+    "onCommand:rtcompact.openPreview",
+    "onCustomEditor:rtcompact.preview"
+  ],
+  "categories": [
+    "Programming Languages"
+  ],
+  "type": "module",
+  "main": "./client/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "RT Compact",
+      "properties": {
+        "rtcompact.hints.mode": {
+          "type": "string",
+          "enum": [
+            "inlay",
+            "codelens",
+            "off"
+          ],
+          "default": "inlay",
+          "description": "How run parsing hints are shown: inline at end of line (inlay), compact line above (codelens), or disabled (off)."
+        }
+      }
+    },
+    "configurationDefaults": {
+      "[rtcompact]": {
+        "editor.inlayHints.fontSize": 10
+      }
+    },
+    "languages": [
+      {
+        "id": "rtcompact",
+        "aliases": [
+          "RT Compact",
+          "rtcompact"
+        ],
+        "extensions": [
+          ".compact"
+        ],
+        "configuration": "./language-configuration/rtcompact-language-configuration.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "rtcompact.openPreview",
+        "title": "RealTrainer Compact: Open Custom Editor"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "rtcompact.preview",
+        "displayName": "RT Compact Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.compact"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "rtcompact",
+        "scopeName": "source.rtcompact",
+        "path": "./syntaxes/rtcompact.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "check": "node ./server/server.js --stdio",
+    "build:ui": "npm --prefix ../ui/react run build:lib"
+  },
+  "dependencies": {
+    "@realtrainer/compact-ui-react": "file:../ui/react",
+    "realtrainer-compact": "1.0.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11"
+  }
+}

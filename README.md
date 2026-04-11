@@ -1,17 +1,17 @@
-# compact-parser
+# realtrainer-compact
 
 A parser for **COMPACT format** - a concise text-based DSL for workout tracking, nutrition, expenses, and life logging.
 
 ## Installation
 
 ```bash
-npm install compact-parser
+npm install realtrainer-compact
 ```
 
 ## Quick Start
 
 ```typescript
-import { parseCompact, validateCompact, formatParseError } from 'compact-parser';
+import { parseCompact, validateCompact, formatParseError } from 'realtrainer-compact';
 
 const input = `
 [2026-01-15T18:00+02]## Jalkatreeni
@@ -172,7 +172,7 @@ import type {
   Food,
   Expense,
   // ... and many more
-} from 'compact-parser';
+} from 'realtrainer-compact';
 ```
 
 See [src/types.ts](src/types.ts) for the complete type definitions.
@@ -210,7 +210,7 @@ Add to RealTrainer's `package.json`:
 ```json
 {
   "dependencies": {
-    "@realtrainer/compact-parser": "file:../compact-parser"
+    "realtrainer-compact": "file:../realtrainer-compact"
   }
 }
 ```
@@ -220,30 +220,30 @@ Then run `npm install` in RealTrainer. Changes require rebuilding this package a
 ### Option 2: npm link
 
 ```bash
-# In compact-parser directory
+# In realtrainer-compact directory
 npm run build
 npm link
 
 # In realtrainer directory  
-npm link @realtrainer/compact-parser
+npm link realtrainer-compact
 ```
 
 ### Usage in RealTrainer
 
 ```typescript
 // Import parser functions
-import { parseCompact, parseCompactSafe } from '@realtrainer/compact-parser';
+import { parseCompact, parseCompactSafe } from 'realtrainer-compact';
 
 // Import renderers
-import { renderToMarkdown, renderToPlaintext } from '@realtrainer/compact-parser/renderers';
+import { renderToMarkdown, renderToPlaintext } from 'realtrainer-compact/renderers';
 
 // Import types
-import type { Document, Entry, Exercise, Workout } from '@realtrainer/compact-parser/types';
+import type { Document, Entry, Exercise, Workout } from 'realtrainer-compact/types';
 ```
 
 ### Development Workflow
 
-1. Make changes to grammar or TypeScript in compact-parser
+1. Make changes to grammar or TypeScript in realtrainer-compact
 2. Run `npm run build` (or `npm run dev` for build + test)
 3. In RealTrainer, the changes are available immediately (with file reference)
 

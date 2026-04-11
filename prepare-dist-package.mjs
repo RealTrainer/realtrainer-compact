@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.cwd();
@@ -73,5 +73,13 @@ const packageDist = {
 mkdirSync(distDir, { recursive: true });
 writeFileSync(join(distDir, 'package.json'), JSON.stringify(publishPackage, null, 2) + '\n', 'utf8');
 writeFileSync(join(distDir, 'package-dist.json'), JSON.stringify(packageDist, null, 2) + '\n', 'utf8');
+
+const rootFilesToCopy = ['README.md', 'LICENSE', 'LICENSE.md', 'COPYING'];
+for (const file of rootFilesToCopy) {
+  const src = join(root, file);
+  if (existsSync(src)) {
+    copyFileSync(src, join(distDir, file));
+  }
+}
 
 console.log('Created dist/package.json and dist/package-dist.json');

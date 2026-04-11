@@ -1,0 +1,71 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "RT Compact",
+  "scopeName": "source.rtcompact",
+  "patterns": [
+    {
+      "name": "meta.date.rtcompact",
+      "match": "^\\s*\\[[^\\]]+\\]\\s*$"
+    },
+    {
+      "name": "meta.meta-title.rtcompact",
+      "match": "^\\s*(\\[[^\\]]+\\])(\\s+)(##)(\\s+)(.+)$",
+      "captures": {
+        "1": {
+          "name": "meta.date.rtcompact"
+        },
+        "3": {
+          "name": "punctuation.definition.heading.rtcompact"
+        },
+        "5": {
+          "name": "entity.name.title.rtcompact"
+        }
+      }
+    },
+    {
+      "name": "meta.title.rtcompact",
+      "match": "^\\s*(##)(\\s+)(.+)$",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.heading.rtcompact"
+        },
+        "3": {
+          "name": "entity.name.title.rtcompact"
+        }
+      }
+    },
+    {
+      "name": "meta.split.rtcompact",
+      "match": "^\\s*((?:>\\s*)+)(.*)$",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.quote.rtcompact"
+        },
+        "2": {
+          "name": "entity.name.split.rtcompact"
+        }
+      }
+    },
+    {
+      "name": "keyword.control.field.rtcompact",
+      "match": "^\\s*(Tags|Emojis|Summary|Level[0-3]|Duration|Distance|Exercise|Move|Steps|Energy|Sleep|Weight|Mood|Note|Section|Run|Interval|Pyramid|Circuit|Superset|Food|Drinking|Expense|Reminder|Location|URL|BodyFat|Waist|Hip|Health|Derived|Phase\\d*|Time|Contacts|Text|Custom|Vitals|Feeling|Pain|Max|Best)\\b"
+    },
+    {
+      "name": "entity.name.sets.rtcompact",
+      "match": "\\b\\d+x(?:\\d+x)?(?:\\d+|\\?|\\d+(?:\\+\\d+)*(?:-\\d+)?)\\b"
+    },
+    {
+      "name": "constant.numeric.rtcompact",
+      "match": "\\b\\d+(?:[\\.,]\\d+)?\\b"
+    },
+    {
+      "name": "keyword.other.unit.rtcompact",
+      "match": "\\b(?:km|m|min|s|sec|kg|lb|kcal|h|bpm|steps)\\b"
+    },
+    {
+      "name": "punctuation.definition.annotation.rtcompact",
+      "match": "[@|/]"
+    }
+  ],
+  "repository": {}
+}

@@ -1,0 +1,17 @@
+[2026-04-10T15:35+03] ## Uintiharjoitus (Rintauinti)
+Tags uinti, kestävyys, kuntoutus
+Emojis 🏊‍♂️🌊
+Derived endurance.zone2_minutes 15|min basis:entity confidence:90% source:heart-rate goodness:5
+Derived strength.neural_stress 5|score basis:entity confidence:95% source:duration+type goodness:5
+Custom Effort 5|Moderate
+Custom Altaan-pituus 50|m
+Custom Kalorit 239|kcal
+Custom Syke-keski 131|bpm
+Custom Syke-max 147|bpm
+Custom Pituudet 10
+Run "rintauinti" 14.7min 500m | Tampere
+> 100m 2'58"/100m
+> 100m 2'54"/100m
+> 100m 2'53"/100m
+> 100m 3'06"/100m
+> 100m 2'49"/100m

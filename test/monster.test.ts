@@ -5,11 +5,11 @@ import { fileURLToPath } from 'url';
 import { parseCompact } from '../src/index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const MONSTER_PATH = join(__dirname, '../MONSTER.md');
+const MONSTER_PATH = join(__dirname, '../MONSTER.compact');
 const SNAPSHOT_PATH = join(__dirname, 'snapshots/monster.json');
 
-describe('MONSTER.md comprehensive test', () => {
-  it('should parse MONSTER.md successfully', () => {
+describe('MONSTER.compact comprehensive test', () => {
+  it('should parse MONSTER.compact successfully', () => {
     const input = readFileSync(MONSTER_PATH, 'utf-8');
     const result = parseCompact(input);
     

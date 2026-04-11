@@ -1,0 +1,69 @@
+name: Publish to npm
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check if package.json version changed
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            PREV_VERSION=$(git show HEAD^:package.json | node -e "const fs=require('fs'); const pkg=JSON.parse(fs.readFileSync(0,'utf8')); process.stdout.write(pkg.version);")
+          else
+            PREV_VERSION=""
+          fi
+          CURR_VERSION=$(node -e "const fs=require('fs'); const pkg=JSON.parse(fs.readFileSync('package.json','utf8')); process.stdout.write(pkg.version);")
+
+          echo "previous=$PREV_VERSION" >> "$GITHUB_OUTPUT"
+          echo "current=$CURR_VERSION" >> "$GITHUB_OUTPUT"
+
+          if [[ "$PREV_VERSION" == "$CURR_VERSION" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Version unchanged ($CURR_VERSION), skipping publish."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Version changed: $PREV_VERSION -> $CURR_VERSION"
+          fi
+
+      - name: Build dist artifacts
+        if: steps.version.outputs.changed == 'true'
+        run: npm run build:dist
+
+      - name: Build MCP server
+        if: steps.version.outputs.changed == 'true'
+        run: npm run build:mcp
+
+      - name: Run unit tests
+        if: steps.version.outputs.changed == 'true'
+        run: npm test -- --run
+
+      - name: Publish package
+        if: steps.version.outputs.changed == 'true'
+        run: npm publish ./dist --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
