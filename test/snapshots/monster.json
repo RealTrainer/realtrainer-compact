@@ -130,8 +130,15 @@
           "note": null
         },
         {
-          "type": "unknown",
-          "raw": "Derived strength.total_volume_load 4500|kg basis:entity confidence:100% source:sets*reps*load goodness:5"
+          "type": "derived",
+          "name": "strength.total_volume_load",
+          "value": 4500,
+          "unit": "kg",
+          "basis": "entity",
+          "confidence": 100,
+          "source": "sets*reps*load",
+          "goodness": 5,
+          "note": null
         },
         {
           "type": "derived",
