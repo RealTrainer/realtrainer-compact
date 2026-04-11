@@ -1,0 +1,2465 @@
+{
+  "workouts": [
+    {
+      "type": "workout",
+      "id": null,
+      "date": null,
+      "title": null,
+      "content": [
+        {
+          "type": "text",
+          "value": "Dokumenttitason otsikko (ei workout, ignoroidaan)"
+        },
+        {
+          "type": "text",
+          "value": "Compact Test Corpus - All Variants"
+        }
+      ]
+    },
+    {
+      "type": "workout",
+      "id": "w001",
+      "date": {
+        "type": "date",
+        "year": 2026,
+        "month": 2,
+        "day": 23
+      },
+      "title": "Perinteinen workout meta + otsikko",
+      "content": [
+        {
+          "type": "tags",
+          "tags": [
+            "juoksu",
+            "voimakestävyys",
+            "test"
+          ]
+        },
+        {
+          "type": "emojis",
+          "emojis": "🏃⚡💪"
+        },
+        {
+          "type": "summary",
+          "text": "Testataan kaikki muodot"
+        },
+        {
+          "type": "sport",
+          "level": 0,
+          "name": "juoksu"
+        },
+        {
+          "type": "sport",
+          "level": 1,
+          "name": "intervallit"
+        },
+        {
+          "type": "sport",
+          "level": 2,
+          "name": "tekniikka"
+        },
+        {
+          "type": "sport",
+          "level": 3,
+          "name": "joku vapaa tarkenne"
+        },
+        {
+          "type": "derived",
+          "name": "strength.neural_stress",
+          "value": 72,
+          "unit": "score",
+          "basis": "entity",
+          "confidence": 88,
+          "source": "exercise+load",
+          "goodness": 4,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "strength.max_strength_emphasis",
+          "value": 45,
+          "unit": "score",
+          "basis": "entity",
+          "confidence": 75,
+          "source": "rep-range",
+          "goodness": 3,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "strength.power_emphasis",
+          "value": 80,
+          "unit": "score",
+          "basis": "entity",
+          "confidence": 90,
+          "source": "movement-speed",
+          "goodness": 5,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "strength.speed_strength_emphasis",
+          "value": 65,
+          "unit": "score",
+          "basis": "entity",
+          "confidence": 80,
+          "source": "velocity",
+          "goodness": 4,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "strength.strength_endurance_emphasis",
+          "value": 30,
+          "unit": "score",
+          "basis": "entity",
+          "confidence": 70,
+          "source": "set-duration",
+          "goodness": 3,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "strength.hypertrophy_emphasis",
+          "value": 55,
+          "unit": "score",
+          "basis": "entity",
+          "confidence": 85,
+          "source": "volume-tut",
+          "goodness": 4,
+          "note": null
+        },
+        {
+          "type": "unknown",
+          "raw": "Derived strength.total_volume_load 4500|kg basis:entity confidence:100% source:sets*reps*load goodness:5"
+        },
+        {
+          "type": "derived",
+          "name": "endurance.zone1_minutes",
+          "value": 10,
+          "unit": "min",
+          "basis": "entity",
+          "confidence": 70,
+          "source": "warmup-estimate",
+          "goodness": 3,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "endurance.zone2_minutes",
+          "value": 25,
+          "unit": "min",
+          "basis": "entity",
+          "confidence": 75,
+          "source": "intensity-description",
+          "goodness": 4,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "endurance.zone3_minutes",
+          "value": 15,
+          "unit": "min",
+          "basis": "entity",
+          "confidence": 80,
+          "source": "interval-analysis",
+          "goodness": 4,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "endurance.zone4_minutes",
+          "value": 8,
+          "unit": "min",
+          "basis": "entity",
+          "confidence": 85,
+          "source": "interval-analysis",
+          "goodness": 4,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "endurance.zone5_minutes",
+          "value": 2,
+          "unit": "min",
+          "basis": "entity",
+          "confidence": 60,
+          "source": "sprint-estimate",
+          "goodness": 3,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "nutrition.sugar_simple",
+          "value": 15,
+          "unit": "g",
+          "basis": "entity",
+          "confidence": 65,
+          "source": "food-estimate",
+          "goodness": 3,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "nutrition.sugar_complex",
+          "value": 45,
+          "unit": "g",
+          "basis": "entity",
+          "confidence": 60,
+          "source": "food-estimate",
+          "goodness": 3,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "nutrition.fat_good_total",
+          "value": 20,
+          "unit": "g",
+          "basis": "entity",
+          "confidence": 70,
+          "source": "food-estimate",
+          "goodness": 4,
+          "note": null
+        },
+        {
+          "type": "derived",
+          "name": "nutrition.fat_bad_total",
+          "value": 8,
+          "unit": "g",
+          "basis": "entity",
+          "confidence": 75,
+          "source": "food-estimate",
+          "goodness": 3,
+          "note": null
+        },
+        {
+          "type": "phase",
+          "number": 1,
+          "name": "Alkuverryttely",
+          "details": "1km"
+        },
+        {
+          "type": "phase",
+          "number": 2,
+          "name": "VOIMAKESTÄVYYS",
+          "details": null
+        },
+        {
+          "type": "phase",
+          "number": 3,
+          "name": "Alkuverryttely",
+          "details": null
+        },
+        {
+          "type": "phase",
+          "number": null,
+          "name": "Voima/nop.kest.",
+          "details": "lisätiedot"
+        },
+        {
+          "type": "phase",
+          "number": null,
+          "name": "Yleinen vaihe",
+          "details": null
+        },
+        {
+          "type": "section",
+          "name": "0-100m",
+          "intensity": 70,
+          "duration": null,
+          "segment": {
+            "start": 0,
+            "end": 100,
+            "unit": "m"
+          }
+        },
+        {
+          "type": "section",
+          "name": "Nopeus",
+          "intensity": 90,
+          "duration": 3
+        },
+        {
+          "type": "section",
+          "name": "Section 2",
+          "intensity": null,
+          "duration": null
+        },
+        {
+          "type": "section",
+          "name": "Koordinaatiot",
+          "intensity": null,
+          "duration": null
+        },
+        {
+          "type": "duration",
+          "duration": {
+            "value": 10,
+            "unit": "min"
+          },
+          "description": "Kuntopalloverkka"
+        },
+        {
+          "type": "duration",
+          "duration": {
+            "value": 20,
+            "unit": "min"
+          },
+          "description": "ilman pipea"
+        },
+        {
+          "type": "duration",
+          "duration": {
+            "value": {
+              "min": 30,
+              "max": 60
+            },
+            "unit": "min"
+          },
+          "description": "aikaväli"
+        },
+        {
+          "type": "duration",
+          "duration": {
+            "value": null,
+            "unit": "min"
+          },
+          "description": "unknown duration"
+        },
+        {
+          "type": "contacts",
+          "count": 50,
+          "sets": 5,
+          "reps": 10,
+          "name": "konkka oikealla"
+        },
+        {
+          "type": "contacts",
+          "count": 60,
+          "sets": 3,
+          "reps": 20,
+          "name": "naputtelu (note pipe)"
+        },
+        {
+          "type": "contacts",
+          "count": 30,
+          "countMax": 80,
+          "sets": null,
+          "reps": null,
+          "name": "heittopaino"
+        },
+        {
+          "type": "contacts",
+          "count": 200,
+          "sets": null,
+          "reps": null,
+          "name": "loikat tasamaa"
+        },
+        {
+          "type": "text",
+          "value": "kommenttirivi workoutin sisällä (Comment -> text)"
+        },
+        {
+          "type": "text",
+          "value": "Vapaa tekstiä tähän väliin."
+        },
+        {
+          "type": "meta",
+          "key": "goal",
+          "value": "kyykky 160kg"
+        },
+        {
+          "type": "meta",
+          "key": "custom_field",
+          "value": "arvoa"
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "duration": {
+            "value": 30,
+            "unit": "min"
+          },
+          "distance": {
+            "value": null,
+            "unit": null
+          },
+          "steps": null,
+          "intensity": {
+            "hr": {
+              "min": 120,
+              "max": 150
+            }
+          },
+          "recovery": {
+            "value": 2,
+            "max": null,
+            "unit": "min"
+          },
+          "note": "pk-verkka",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "distance": {
+            "value": 3.5,
+            "valueMax": null,
+            "unit": "km"
+          },
+          "steps": 8228,
+          "intensity": {
+            "paceMin": {
+              "minutes": 6,
+              "seconds": 0,
+              "fraction": 0
+            },
+            "paceMax": {
+              "minutes": 6,
+              "seconds": 0,
+              "fraction": 0
+            },
+            "paceUnit": "km"
+          },
+          "recovery": null,
+          "note": "askeleet mukana",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "duration": {
+            "value": 30,
+            "unit": "min"
+          },
+          "distance": {
+            "value": 3.5,
+            "valueMax": null,
+            "unit": "km"
+          },
+          "steps": 8228,
+          "intensity": {
+            "hrZone": {
+              "min": 2,
+              "max": 3
+            }
+          },
+          "recovery": null,
+          "note": "kombo (kesto+matka+steps)",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "duration": {
+            "value": 41.56666666666667,
+            "unit": "min"
+          },
+          "distance": {
+            "value": 9,
+            "valueMax": null,
+            "unit": "km"
+          },
+          "steps": null,
+          "intensity": {
+            "hr": {
+              "max": 150,
+              "comparison": "lt"
+            }
+          },
+          "recovery": null,
+          "note": "matka + \"min'sec\"",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "duration": {
+            "value": 41.56666666666667,
+            "unit": "min"
+          },
+          "distance": {
+            "value": 9,
+            "valueMax": null,
+            "unit": "km"
+          },
+          "steps": null,
+          "intensity": {
+            "hr": {
+              "min": 120,
+              "comparison": "gte"
+            }
+          },
+          "recovery": null,
+          "note": "matka + min+sec ilman väliä",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "duration": {
+            "value": 41.56666666666667,
+            "unit": "min"
+          },
+          "distance": {
+            "value": 9,
+            "valueMax": null,
+            "unit": "km"
+          },
+          "steps": null,
+          "intensity": {
+            "hr": {
+              "value": 140,
+              "comparison": "eq"
+            }
+          },
+          "recovery": null,
+          "note": "matka + min + sec välilyönnillä",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "duration": {
+            "value": 41,
+            "unit": "min"
+          },
+          "distance": {
+            "value": 9,
+            "valueMax": null,
+            "unit": "km"
+          },
+          "steps": null,
+          "intensity": {
+            "min": 70,
+            "max": 70
+          },
+          "recovery": null,
+          "note": "matka + minuutit",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 3,
+          "countMax": null,
+          "distance": {
+            "value": 60,
+            "valueMax": null,
+            "unit": "m"
+          },
+          "steps": null,
+          "intensity": {
+            "min": 90,
+            "max": 95
+          },
+          "recovery": {
+            "value": 2,
+            "max": 3,
+            "unit": "min"
+          },
+          "note": "kiihdytykset",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 4,
+          "countMax": null,
+          "distance": {
+            "value": 40,
+            "valueMax": null,
+            "unit": "m"
+          },
+          "steps": null,
+          "intensity": {
+            "unknown": true
+          },
+          "recovery": {
+            "value": null,
+            "max": null,
+            "unit": null,
+            "text": "kävely"
+          },
+          "note": "unknown intensity + text recovery",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 2,
+          "count": 10,
+          "countMax": null,
+          "distance": {
+            "value": null,
+            "unit": null
+          },
+          "steps": null,
+          "intensity": {
+            "min": 100,
+            "max": 100,
+            "text": "max"
+          },
+          "recovery": null,
+          "note": "sets x reps x unknown",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 2,
+          "countMax": null,
+          "distance": {
+            "value": 2,
+            "valueMax": null,
+            "unit": "altaanmitta"
+          },
+          "steps": null,
+          "intensity": {
+            "zone": {
+              "min": "I",
+              "max": "II"
+            }
+          },
+          "recovery": null,
+          "note": "custom unit",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "distance": {
+            "value": 20,
+            "valueMax": null,
+            "unit": "m"
+          },
+          "distanceRight": 20,
+          "steps": null,
+          "intensity": {
+            "paceMin": {
+              "minutes": 3,
+              "seconds": 11,
+              "fraction": 0
+            },
+            "paceMax": {
+              "minutes": 3,
+              "seconds": 11,
+              "fraction": 0
+            },
+            "paceUnit": "m",
+            "pacePerDistance": {
+              "value": 100,
+              "unit": "m"
+            }
+          },
+          "recovery": null,
+          "note": "bilateraali matka",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 10,
+          "countMax": null,
+          "countRight": 10,
+          "distance": {
+            "value": null,
+            "unit": null
+          },
+          "steps": null,
+          "intensity": {
+            "text": "bw",
+            "bodyweight": true
+          },
+          "recovery": null,
+          "note": "bilateraali count ilman yksikköä",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "distance": {
+            "value": null,
+            "unit": "km"
+          },
+          "steps": null,
+          "intensity": {
+            "template": {
+              "type": "Distance",
+              "hint": "tavoite"
+            }
+          },
+          "recovery": null,
+          "note": "unknown distance with unit + template",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "distance": {
+            "value": null,
+            "unit": null
+          },
+          "steps": null,
+          "intensity": {
+            "template": {
+              "type": "PaceTime",
+              "hint": "nelkun tavoitevauhti"
+            }
+          },
+          "recovery": {
+            "value": null,
+            "max": null,
+            "unit": null,
+            "text": "km"
+          },
+          "note": "tyhjä spec + template intensity",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "move",
+          "sport": "rintauinti",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "distance": {
+            "value": 450,
+            "valueMax": null,
+            "unit": "m"
+          },
+          "steps": null,
+          "intensity": {
+            "paceMin": {
+              "minutes": 3,
+              "seconds": 11,
+              "fraction": 0
+            },
+            "paceMax": {
+              "minutes": 3,
+              "seconds": 11,
+              "fraction": 0
+            },
+            "paceUnit": "m",
+            "pacePerDistance": {
+              "value": 100,
+              "unit": "m"
+            }
+          },
+          "recovery": {
+            "value": 20,
+            "max": null,
+            "unit": "sec"
+          },
+          "note": "tekniikka",
+          "description": null,
+          "customFields": null,
+          "splits": [
+            {
+              "type": "split",
+              "distance": {
+                "value": 100,
+                "unit": "m"
+              },
+              "duration": null,
+              "pace": {
+                "minutes": 3,
+                "seconds": 12,
+                "perDistance": {
+                  "value": 100,
+                  "unit": "m"
+                }
+              },
+              "intensity": null,
+              "hr": 137,
+              "customFields": [
+                {
+                  "name": "käsiräpylät",
+                  "value": true,
+                  "unit": null
+                }
+              ],
+              "note": "split note",
+              "splits": null
+            },
+            {
+              "type": "split",
+              "distance": {
+                "value": 100,
+                "unit": "m"
+              },
+              "duration": null,
+              "pace": {
+                "minutes": 2,
+                "seconds": 51,
+                "perDistance": {
+                  "value": 100,
+                  "unit": "m"
+                }
+              },
+              "intensity": null,
+              "hr": null,
+              "customFields": null,
+              "note": null,
+              "splits": null
+            },
+            {
+              "type": "split",
+              "distance": {
+                "value": 100,
+                "unit": "m"
+              },
+              "duration": null,
+              "pace": {
+                "minutes": 2,
+                "seconds": 55,
+                "perDistance": {
+                  "value": 100,
+                  "unit": "m"
+                }
+              },
+              "intensity": null,
+              "hr": null,
+              "customFields": null,
+              "note": null,
+              "splits": null
+            },
+            {
+              "type": "split",
+              "distance": {
+                "value": 100,
+                "unit": "m"
+              },
+              "duration": null,
+              "pace": {
+                "minutes": 2,
+                "seconds": 56,
+                "perDistance": {
+                  "value": 100,
+                  "unit": "m"
+                }
+              },
+              "intensity": null,
+              "hr": null,
+              "customFields": null,
+              "note": null,
+              "splits": [
+                {
+                  "type": "split",
+                  "distance": {
+                    "value": 50,
+                    "unit": "m"
+                  },
+                  "duration": null,
+                  "pace": {
+                    "minutes": 1,
+                    "seconds": 20,
+                    "perDistance": {
+                      "value": 100,
+                      "unit": "m"
+                    }
+                  },
+                  "intensity": null,
+                  "hr": 140,
+                  "customFields": null,
+                  "note": "nested split (2 levels)",
+                  "splits": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "split",
+          "distance": {
+            "value": 150,
+            "unit": "m"
+          },
+          "duration": {
+            "value": 27,
+            "unit": "min"
+          },
+          "pace": null,
+          "intensity": null,
+          "hr": null,
+          "customFields": null,
+          "note": "standalone split (ei Move:n alla)",
+          "splits": null
+        },
+        {
+          "type": "split",
+          "distance": null,
+          "duration": null,
+          "pace": {
+            "minutes": 3,
+            "seconds": 39,
+            "perDistance": {
+              "value": 100,
+              "unit": "m"
+            }
+          },
+          "intensity": null,
+          "hr": null,
+          "customFields": null,
+          "note": "pace-only split",
+          "splits": null
+        },
+        {
+          "type": "unknown",
+          "raw": "> 5min | duration-only split"
+        },
+        {
+          "type": "interval",
+          "count": 4,
+          "distance": {
+            "value": 400,
+            "unit": "m"
+          },
+          "intensity": {
+            "min": 80,
+            "max": 90
+          },
+          "recovery": {
+            "value": 2,
+            "valueMax": 3,
+            "unit": "min"
+          }
+        },
+        {
+          "type": "interval",
+          "count": 5,
+          "distance": {
+            "value": 200,
+            "unit": "m"
+          },
+          "intensity": {
+            "min": 50,
+            "max": 50
+          },
+          "recovery": {
+            "value": 2,
+            "valueMax": 3,
+            "unit": "m"
+          }
+        },
+        {
+          "type": "interval",
+          "count": 4,
+          "distance": {
+            "value": 400,
+            "unit": "m"
+          },
+          "intensity": {
+            "min": 80,
+            "max": 90
+          },
+          "recovery": {
+            "value": 2,
+            "unit": "m"
+          }
+        },
+        {
+          "type": "interval",
+          "count": 5,
+          "distance": {
+            "value": 200,
+            "unit": "m"
+          },
+          "intensity": {
+            "min": 50,
+            "max": 50
+          },
+          "recovery": {
+            "value": 2,
+            "unit": "min"
+          }
+        },
+        {
+          "type": "interval",
+          "count": 6,
+          "distance": {
+            "value": 3,
+            "unit": "min"
+          },
+          "intensityText": "Ylämäki",
+          "intensity": null,
+          "recovery": {
+            "value": 2,
+            "unit": "m"
+          },
+          "note": "palautus"
+        },
+        {
+          "type": "interval",
+          "count": 6,
+          "distance": {
+            "value": 200,
+            "unit": "m"
+          },
+          "intensityText": "Z4",
+          "intensity": null,
+          "recovery": null,
+          "note": null
+        },
+        {
+          "type": "pyramid",
+          "name": "penkki",
+          "sets": [
+            {
+              "reps": 10,
+              "weight": {
+                "value": 40,
+                "unit": "kg"
+              }
+            },
+            {
+              "reps": 8,
+              "weight": {
+                "value": 50,
+                "unit": "kg"
+              }
+            },
+            {
+              "reps": 6,
+              "weight": {
+                "value": 60,
+                "unit": "kg"
+              }
+            }
+          ],
+          "note": "kommentti"
+        },
+        {
+          "type": "pyramid",
+          "name": "kyykky",
+          "sets": [
+            {
+              "reps": 5,
+              "weight": {
+                "value": 80,
+                "unit": "kg"
+              }
+            },
+            {
+              "reps": 5,
+              "weight": {
+                "value": 80,
+                "unit": "kg"
+              }
+            },
+            {
+              "reps": 5,
+              "weight": {
+                "value": 80,
+                "unit": "kg"
+              }
+            },
+            {
+              "reps": 2,
+              "weight": {
+                "value": 85,
+                "unit": "kg"
+              }
+            },
+            {
+              "reps": 2,
+              "weight": {
+                "value": 85,
+                "unit": "kg"
+              }
+            }
+          ],
+          "note": null
+        },
+        {
+          "type": "pyramid",
+          "name": "naruhyppely",
+          "sets": [
+            {
+              "reps": 10,
+              "weight": null
+            },
+            {
+              "reps": 20,
+              "weight": null
+            },
+            {
+              "reps": 30,
+              "weight": null
+            },
+            {
+              "reps": 40,
+              "weight": null
+            },
+            {
+              "reps": 30,
+              "weight": null
+            },
+            {
+              "reps": 20,
+              "weight": null
+            },
+            {
+              "reps": 10,
+              "weight": null
+            }
+          ],
+          "note": null
+        },
+        {
+          "type": "circuit",
+          "variant": "circuit",
+          "rounds": 3,
+          "exercises": [
+            {
+              "name": "Penkkipunnerrus",
+              "sets": 1,
+              "reps": 8,
+              "repsRight": null,
+              "unit": null,
+              "weight": {
+                "value": 80,
+                "unit": "kg"
+              },
+              "recovery": null,
+              "customFields": null,
+              "note": null
+            },
+            {
+              "name": "Etunojapunnerrus",
+              "sets": 1,
+              "reps": 5,
+              "repsRight": null,
+              "unit": null,
+              "weight": null,
+              "recovery": null,
+              "customFields": null,
+              "note": null
+            },
+            {
+              "name": "Hauiskääntö",
+              "sets": 1,
+              "reps": 10,
+              "repsRight": 10,
+              "unit": null,
+              "weight": {
+                "value": 12,
+                "unit": "kg"
+              },
+              "recovery": null,
+              "customFields": null,
+              "note": null
+            }
+          ],
+          "roundRest": null,
+          "note": null
+        },
+        {
+          "type": "circuit",
+          "variant": "circuit",
+          "rounds": 4,
+          "exercises": [
+            {
+              "name": "Takakyykky",
+              "sets": 1,
+              "reps": 5,
+              "repsRight": null,
+              "unit": null,
+              "weight": {
+                "value": 100,
+                "unit": "kg"
+              },
+              "recovery": null,
+              "customFields": null,
+              "note": null
+            },
+            {
+              "name": "Loikat",
+              "sets": 1,
+              "reps": 8,
+              "repsRight": null,
+              "unit": null,
+              "weight": null,
+              "recovery": null,
+              "customFields": null,
+              "note": null
+            },
+            {
+              "name": "Penkkipunnerrus",
+              "sets": 1,
+              "reps": 5,
+              "repsRight": null,
+              "unit": null,
+              "weight": {
+                "value": 70,
+                "unit": "kg"
+              },
+              "recovery": null,
+              "customFields": null,
+              "note": null
+            },
+            {
+              "name": "Pallon heitto",
+              "sets": 1,
+              "reps": 8,
+              "repsRight": null,
+              "unit": null,
+              "weight": null,
+              "recovery": null,
+              "customFields": null,
+              "note": null
+            }
+          ],
+          "roundRest": {
+            "value": 2,
+            "unit": "min"
+          },
+          "note": "kontrastivoimapiiri"
+        },
+        {
+          "type": "circuit",
+          "variant": "superset",
+          "rounds": 3,
+          "exercises": [
+            {
+              "name": "Hauiskääntö",
+              "sets": 1,
+              "reps": 12,
+              "repsRight": null,
+              "unit": null,
+              "weight": {
+                "value": 10,
+                "unit": "kg"
+              },
+              "recovery": null,
+              "customFields": null,
+              "note": null
+            },
+            {
+              "name": "Ojentajapunnerrus",
+              "sets": 1,
+              "reps": 12,
+              "repsRight": null,
+              "unit": null,
+              "weight": {
+                "value": 10,
+                "unit": "kg"
+              },
+              "recovery": {
+                "value": 30,
+                "max": null,
+                "unit": "sec"
+              },
+              "customFields": null,
+              "note": null
+            }
+          ],
+          "roundRest": null,
+          "note": null
+        },
+        {
+          "type": "exercise",
+          "name": "Takakyykky",
+          "sets": 3,
+          "reps": 8,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 100,
+            "unit": "kg"
+          },
+          "recovery": null,
+          "note": "hyvä fiilis",
+          "description": null,
+          "customFields": [
+            {
+              "name": "Tempo",
+              "value": 3010,
+              "unit": null
+            },
+            {
+              "name": "Leveys",
+              "value": 2,
+              "unit": null
+            }
+          ]
+        },
+        {
+          "type": "exercise",
+          "name": "Penkkipunnerrus",
+          "sets": null,
+          "reps": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": "3x8@{{Number:80}}kg | template paino",
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Farmer walk",
+          "sets": null,
+          "reps": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": "3x40m/2min@2x32kg | raskas (recovery before weight -tyyli)",
+          "customFields": null
+        },
+        {
+          "type": "unknown",
+          "raw": "Exercise Isometrinen pito|3x30/10s@20kg (lisäkuvaus) [[Hengitys:nenä]] | note"
+        },
+        {
+          "type": "exercise",
+          "name": "Yhden jalan kyykky",
+          "sets": 2,
+          "setsMax": 3,
+          "reps": 15,
+          "repsMax": 20,
+          "unit": null,
+          "weight": {
+            "value": 0,
+            "unit": "bodyweight"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": [
+            {
+              "name": "Liikelaajuus",
+              "value": 90,
+              "unit": "°"
+            }
+          ]
+        },
+        {
+          "type": "exercise",
+          "name": "Lankku",
+          "sets": 3,
+          "reps": 30,
+          "repsMax": 60,
+          "unit": "s",
+          "weight": {
+            "value": 0,
+            "unit": "bodyweight"
+          },
+          "recovery": null,
+          "note": "core",
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Kiertäjät",
+          "sets": 1,
+          "reps": 15,
+          "repsRight": 15,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 2,
+            "unit": "kg"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Etunojapunnerrus",
+          "sets": 2,
+          "reps": 10,
+          "repsRight": 10,
+          "repsMax": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Loikat",
+          "sets": 2,
+          "reps": 3,
+          "repsMax": null,
+          "distanceMin": 20,
+          "distanceMax": 30,
+          "unit": "m",
+          "weight": {
+            "value": 0,
+            "unit": "bodyweight"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Loikat (tasamaa ja ylämäki)",
+          "sets": 2,
+          "setsMax": 3,
+          "reps": 3,
+          "repsMax": 4,
+          "distanceMin": 20,
+          "distanceMax": 30,
+          "unit": "m",
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Aitajuoksu",
+          "sets": 3,
+          "reps": 4,
+          "repsMax": null,
+          "unit": null,
+          "weight": null,
+          "count": 5,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Venytys",
+          "sets": 1,
+          "reps": 30,
+          "repsMax": 60,
+          "unit": "s",
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Tuki",
+          "sets": 1,
+          "reps": 60,
+          "repsMax": null,
+          "unit": "s",
+          "weight": {
+            "value": 0,
+            "unit": "bodyweight"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Päkiähypyt",
+          "sets": 1,
+          "reps": 8,
+          "repsMax": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Käsipainon maastaveto",
+          "sets": 1,
+          "reps": 8,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 60,
+            "unit": "kg"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Nopeusliike",
+          "sets": 3,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 2,
+            "unit": "kg"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Sarjat ilman toistoja",
+          "sets": 3,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Pelkkä paino",
+          "sets": 1,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 20,
+            "unit": "bar"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Tuntematon",
+          "sets": 2,
+          "setsMax": 3,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Tuntematon painolla",
+          "sets": 2,
+          "setsMax": 3,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 0,
+            "unit": "bodyweight"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Välisarja",
+          "specType": "multiset",
+          "parts": [
+            {
+              "sets": 3,
+              "reps": 3,
+              "repsMax": null
+            },
+            {
+              "sets": 1,
+              "reps": 3,
+              "repsMax": null
+            },
+            {
+              "sets": 1,
+              "reps": 2,
+              "repsMax": 4
+            }
+          ],
+          "weight": {
+            "value": 25,
+            "unit": "kg"
+          },
+          "sets": null,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Välisarja ilman painoa",
+          "specType": "multiset",
+          "parts": [
+            {
+              "sets": 3,
+              "reps": 3,
+              "repsMax": null
+            },
+            {
+              "sets": 1,
+              "reps": 3,
+              "repsMax": null
+            },
+            {
+              "sets": 1,
+              "reps": 2,
+              "repsMax": 4
+            }
+          ],
+          "weight": null,
+          "sets": null,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Bilateraali painolla",
+          "sets": 4,
+          "reps": 6,
+          "repsRight": 6,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 20,
+            "unit": "kg"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Bilateraali aika",
+          "sets": 3,
+          "reps": 30,
+          "repsRight": 30,
+          "repsMax": null,
+          "unit": "s",
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Bilateraali ilman painoa",
+          "sets": 1,
+          "reps": 15,
+          "repsRight": 15,
+          "repsMax": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "exercise",
+          "name": "Teksti putken jälkeen",
+          "sets": null,
+          "reps": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": "vain selitys tähän",
+          "customFields": [
+            {
+              "name": "Huom",
+              "value": "kyllä",
+              "unit": null
+            }
+          ]
+        },
+        {
+          "type": "exercise",
+          "name": "Koulupaini",
+          "sets": null,
+          "reps": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": "1p matolta ajosta, 2p nostosta",
+          "customFields": [
+            {
+              "name": "sparri",
+              "value": true,
+              "unit": null
+            }
+          ]
+        },
+        {
+          "type": "exercise",
+          "name": "Pelkkä nimi ilman speksejä",
+          "sets": null,
+          "reps": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": [
+            {
+              "name": "strict",
+              "value": true,
+              "unit": null
+            }
+          ]
+        },
+        {
+          "type": "max",
+          "name": "kyykky",
+          "reps": 1,
+          "weight": 150,
+          "unit": "kg",
+          "estimated": false,
+          "pr": true,
+          "calculation": null
+        },
+        {
+          "type": "max",
+          "name": "penkki",
+          "reps": 1,
+          "weight": 142,
+          "unit": "kg",
+          "estimated": true,
+          "pr": false,
+          "calculation": {
+            "reps": 5,
+            "weight": 120,
+            "unit": "kg"
+          }
+        },
+        {
+          "type": "max",
+          "name": "mave",
+          "reps": 3,
+          "weight": 185,
+          "unit": "kg",
+          "estimated": false,
+          "pr": false,
+          "calculation": null
+        },
+        {
+          "type": "best",
+          "name": "100m",
+          "result": {
+            "value": 11.2,
+            "unit": "s"
+          },
+          "pr": true
+        },
+        {
+          "type": "best",
+          "name": "cooper",
+          "result": {
+            "value": 2850,
+            "unit": "m"
+          },
+          "pr": false
+        },
+        {
+          "type": "best",
+          "name": "lankku",
+          "result": {
+            "value": 225,
+            "unit": "time"
+          },
+          "pr": false
+        },
+        {
+          "type": "feeling",
+          "scale": "feeling",
+          "value": 8,
+          "description": "hyvä energia"
+        },
+        {
+          "type": "feeling",
+          "scale": "rpe",
+          "value": 7,
+          "description": null
+        },
+        {
+          "type": "feeling",
+          "scale": "feeling",
+          "value": 9,
+          "description": null
+        },
+        {
+          "type": "feeling",
+          "scale": "feeling",
+          "value": null,
+          "max": 10,
+          "description": null
+        },
+        {
+          "type": "feeling",
+          "scale": "feeling",
+          "value": null,
+          "description": "pelkkä kommentti"
+        },
+        {
+          "type": "feeling",
+          "scale": "feeling",
+          "value": null,
+          "description": null
+        },
+        {
+          "type": "pain",
+          "bodyPart": "polvi",
+          "severity": 2,
+          "description": "lievä jäykkyys"
+        },
+        {
+          "type": "pain",
+          "bodyPart": null,
+          "severity": null,
+          "description": "palautunut"
+        },
+        {
+          "type": "vitals",
+          "key": "weight",
+          "value": 85.2,
+          "unit": "kg"
+        },
+        {
+          "type": "vitals",
+          "key": "sleep",
+          "value": 7.5,
+          "unit": "h"
+        },
+        {
+          "type": "vitals",
+          "key": "rhr",
+          "value": 52,
+          "unit": "bpm"
+        },
+        {
+          "type": "vitals",
+          "key": null,
+          "value": null,
+          "unit": null
+        },
+        {
+          "type": "custom",
+          "name": "Effort",
+          "value": 7,
+          "unit": "Korkea hermostollinen kuormitus",
+          "note": null
+        },
+        {
+          "type": "custom",
+          "name": "Nesteytyssuositus",
+          "value": 0.6,
+          "unit": "l",
+          "note": null
+        },
+        {
+          "type": "custom",
+          "name": "Liikelaajuus",
+          "value": 90,
+          "unit": "°",
+          "note": null
+        },
+        {
+          "type": "custom",
+          "name": "Treenipaino",
+          "value": 85,
+          "unit": null,
+          "note": "huom (note pipe)"
+        },
+        {
+          "type": "food",
+          "calories": 450,
+          "protein": 30,
+          "carbs": 60,
+          "fat": 10,
+          "nutrients": [],
+          "description": "kaurapuuro, maitorahka"
+        },
+        {
+          "type": "food",
+          "calories": null,
+          "protein": null,
+          "carbs": null,
+          "fat": null,
+          "nutrients": [
+            {
+              "name": "caffeine",
+              "value": 100,
+              "unit": "mg"
+            },
+            {
+              "name": "creatine",
+              "value": 5,
+              "unit": "g"
+            }
+          ],
+          "description": "lisäravinteet"
+        },
+        {
+          "type": "food",
+          "calories": null,
+          "protein": null,
+          "carbs": null,
+          "fat": null,
+          "nutrients": [],
+          "description": "aamupala"
+        },
+        {
+          "type": "drinking",
+          "volume": 0.5,
+          "volumeUnit": "l",
+          "calories": null,
+          "protein": null,
+          "nutrients": null,
+          "liquid": null,
+          "description": "vesi"
+        },
+        {
+          "type": "drinking",
+          "volume": 0.6,
+          "volumeUnit": "l",
+          "calories": null,
+          "protein": null,
+          "nutrients": null,
+          "liquid": "kahvi",
+          "description": "aamukahvi"
+        },
+        {
+          "type": "drinking",
+          "volume": 3,
+          "volumeUnit": "dl",
+          "calories": 120,
+          "protein": 8,
+          "nutrients": null,
+          "liquid": "maito",
+          "description": "proteiinijuoma"
+        },
+        {
+          "type": "drinking",
+          "volume": 0.5,
+          "volumeUnit": "l",
+          "calories": null,
+          "protein": null,
+          "nutrients": [
+            {
+              "name": "caffeine",
+              "value": 200,
+              "unit": "mg"
+            }
+          ],
+          "liquid": "energiajuoma",
+          "description": "pre-workout"
+        },
+        {
+          "type": "expense",
+          "expenseType": "general",
+          "amount": 4.5,
+          "currency": "EUR",
+          "vatPercent": null,
+          "vatAmount": null,
+          "description": "Bussilippu"
+        },
+        {
+          "type": "unknown",
+          "raw": "Expense entry pirkkahalli 5.00USD | sisäänpääsy"
+        },
+        {
+          "type": "expense",
+          "expenseType": "general",
+          "amount": 100,
+          "currency": "EUR",
+          "vatPercent": 24,
+          "vatAmount": 19.35,
+          "description": "Konsultointi"
+        },
+        {
+          "type": "expense",
+          "expenseType": "general",
+          "amount": 50,
+          "currency": "EUR",
+          "vatPercent": 10,
+          "vatAmount": null,
+          "description": "Ruoka"
+        },
+        {
+          "type": "reminder",
+          "date": {
+            "year": 2026,
+            "month": 1,
+            "day": 15
+          },
+          "description": "Ilmoittautuminen päättyy"
+        },
+        {
+          "type": "reminder",
+          "date": {
+            "year": 2026,
+            "month": 1,
+            "day": 1
+          },
+          "description": null
+        },
+        {
+          "type": "location",
+          "place": "Tampere, Pirkkahalli"
+        },
+        {
+          "type": "url",
+          "url": "https://example.com"
+        },
+        {
+          "type": "measurement",
+          "measureType": "weight",
+          "value": 85.2,
+          "unit": "kg"
+        },
+        {
+          "type": "measurement",
+          "measureType": "bodyFat",
+          "value": 12.5,
+          "unit": "%"
+        },
+        {
+          "type": "measurement",
+          "measureType": "waist",
+          "value": 82,
+          "unit": "cm"
+        },
+        {
+          "type": "measurement",
+          "measureType": "hip",
+          "value": 95,
+          "unit": "cm"
+        },
+        {
+          "type": "sleep",
+          "duration": 7.5,
+          "quality": "good",
+          "hrv": 45,
+          "rhr": 52
+        },
+        {
+          "type": "sleep",
+          "duration": 8,
+          "quality": null,
+          "hrv": null,
+          "rhr": null
+        },
+        {
+          "type": "sleep",
+          "duration": 6.5,
+          "quality": "poor",
+          "hrv": null,
+          "rhr": null
+        },
+        {
+          "type": "health",
+          "healthType": "physio",
+          "description": "Olkapään mobilisaatio"
+        },
+        {
+          "type": "health",
+          "healthType": "injury",
+          "description": "Polven kipu"
+        },
+        {
+          "type": "health",
+          "healthType": "medication",
+          "description": "Ibuprofeeni 400mg"
+        },
+        {
+          "type": "unknown",
+          "raw": "Blorple this should be unknown line and not crash parsing"
+        }
+      ]
+    },
+    {
+      "type": "workout",
+      "id": "w003",
+      "date": {
+        "type": "date",
+        "year": 2026,
+        "month": 2,
+        "day": 24
+      },
+      "title": "Otsikossa meta (## [meta] title)",
+      "content": [
+        {
+          "type": "tags",
+          "tags": [
+            "test",
+            "otsikko-meta"
+          ]
+        },
+        {
+          "type": "emojis",
+          "emojis": "🧪📌"
+        },
+        {
+          "type": "section",
+          "name": "Otsikon testit",
+          "intensity": null,
+          "duration": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "distance": {
+            "value": 50,
+            "valueMax": null,
+            "unit": "m"
+          },
+          "steps": null,
+          "intensity": {
+            "min": 90,
+            "max": 90
+          },
+          "recovery": {
+            "value": 100,
+            "max": null,
+            "unit": "m"
+          },
+          "note": "nopea",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "unknown",
+          "raw": "> 50m 0:07/m 170bpm | splitillä outo pace-yksikkö (tarkoituksella)"
+        }
+      ]
+    },
+    {
+      "type": "workout",
+      "id": null,
+      "date": {
+        "type": "date",
+        "year": 2026,
+        "month": 2,
+        "day": 23
+      },
+      "title": "Meta omalla rivillä + otsikko",
+      "content": [
+        {
+          "type": "tags",
+          "tags": [
+            "meta-erillisellä-rivillä"
+          ]
+        },
+        {
+          "type": "emojis",
+          "emojis": "🧷"
+        },
+        {
+          "type": "section",
+          "name": "Pääosa",
+          "intensity": null,
+          "duration": null
+        },
+        {
+          "type": "exercise",
+          "name": "Penkkipunnerrus",
+          "sets": 3,
+          "reps": 8,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 80,
+            "unit": "kg"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        }
+      ]
+    },
+    {
+      "type": "workout",
+      "id": "w002",
+      "date": null,
+      "title": "Vain ID meta",
+      "content": [
+        {
+          "type": "tags",
+          "tags": [
+            "id-only"
+          ]
+        },
+        {
+          "type": "emojis",
+          "emojis": "🆔"
+        },
+        {
+          "type": "section",
+          "name": "Pääosa",
+          "intensity": null,
+          "duration": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 1,
+          "countMax": null,
+          "duration": {
+            "value": 45,
+            "unit": "min"
+          },
+          "distance": {
+            "value": null,
+            "unit": null
+          },
+          "steps": null,
+          "intensity": null,
+          "recovery": null,
+          "note": "perus",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        }
+      ]
+    },
+    {
+      "type": "workout",
+      "id": null,
+      "date": {
+        "type": "date",
+        "year": 2026,
+        "month": 2,
+        "day": 23
+      },
+      "title": "Päivä + #? (id null)",
+      "content": [
+        {
+          "type": "tags",
+          "tags": [
+            "id-null"
+          ]
+        },
+        {
+          "type": "emojis",
+          "emojis": "❔"
+        },
+        {
+          "type": "exercise",
+          "name": "Leuanveto",
+          "sets": 1,
+          "reps": "max",
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 0,
+            "unit": "bodyweight"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        }
+      ]
+    },
+    {
+      "type": "workout",
+      "id": null,
+      "date": null,
+      "title": "Vain #? (date null, id null)",
+      "content": [
+        {
+          "type": "tags",
+          "tags": [
+            "placeholder"
+          ]
+        },
+        {
+          "type": "emojis",
+          "emojis": "🕳️"
+        },
+        {
+          "type": "exercise",
+          "name": "Paikkaaja",
+          "sets": null,
+          "reps": null,
+          "unit": null,
+          "weight": null,
+          "recovery": null,
+          "note": null,
+          "description": "nullx",
+          "customFields": null
+        }
+      ]
+    },
+    {
+      "type": "workout",
+      "id": null,
+      "date": {
+        "type": "date",
+        "year": 2026,
+        "month": 2,
+        "day": 25
+      },
+      "title": null,
+      "content": [
+        {
+          "type": "exercise",
+          "name": "Otsikoton workout alkaa suoraan contentista",
+          "sets": 3,
+          "reps": 10,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 20,
+            "unit": "kg"
+          },
+          "recovery": null,
+          "note": null,
+          "description": null,
+          "customFields": null
+        },
+        {
+          "type": "tags",
+          "tags": [
+            "otsikoton"
+          ]
+        },
+        {
+          "type": "emojis",
+          "emojis": "🧩"
+        },
+        {
+          "type": "section",
+          "name": "Ilman otsikkoa",
+          "intensity": null,
+          "duration": null
+        },
+        {
+          "type": "move",
+          "sport": "juoksu",
+          "sets": 1,
+          "count": 10,
+          "countMax": null,
+          "distance": {
+            "value": null,
+            "unit": null
+          },
+          "steps": null,
+          "intensity": {
+            "text": "easy"
+          },
+          "recovery": null,
+          "note": "unknown distance count-only",
+          "description": null,
+          "customFields": null,
+          "splits": null
+        },
+        {
+          "type": "unknown",
+          "raw": "> Split 5min | split ilman distancea"
+        },
+        {
+          "type": "text",
+          "value": "Dokumenttitason alaotsikko (ei workout, ignoroidaan)"
+        }
+      ]
+    },
+    {
+      "type": "workout",
+      "id": null,
+      "date": null,
+      "title": "Tämä on doc-tason SectionHeader ja ohitetaan",
+      "content": []
+    }
+  ],
+  "stats": []
+}
