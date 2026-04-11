@@ -9,7 +9,7 @@ const isLocalDev = process.env.NODE_ENV === 'development' && !process.env.DOCUSA
 const config: Config = {
   title: 'ReactTrainer COMPACT',
   tagline: 'Dark, practical COMPACT docs for RealTrainer-style tracking',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.svg',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
