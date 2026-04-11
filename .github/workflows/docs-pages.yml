@@ -28,9 +28,14 @@ jobs:
           cache: npm
           cache-dependency-path: |
             package-lock.json
+            ui/react/package-lock.json
             docs-site/package-lock.json
 
       - name: Install root dependencies
+        run: npm ci
+
+      - name: Install UI package dependencies
+        working-directory: ui/react
         run: npm ci
 
       - name: Build local package artifacts

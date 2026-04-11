@@ -19,8 +19,15 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            ui/react/package-lock.json
 
       - name: Install dependencies
+        run: npm ci
+
+      - name: Install UI package dependencies
+        working-directory: ui/react
         run: npm ci
 
       - name: Build dist artifacts
