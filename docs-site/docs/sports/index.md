@@ -16,29 +16,29 @@ Analyysin yleisimmät harjoitustyypit ja liikekategoriat viittaavat erityisesti 
 
 ## Valitut lajikategoriat
 
-- [Juoksuharjoitus](/docs/sports/juoksuharjoitus)
-- [Voimaharjoitus](/docs/sports/voimaharjoitus)
-- [Lepo/Palautuminen](/docs/sports/lepo-palautuminen)
-- [Nopeusharjoitus](/docs/sports/nopeusharjoitus)
-- [Kestävyysharjoitus](/docs/sports/kestavyysharjoitus)
-- [Venyttely/Liikkuvuus](/docs/sports/venyttely-liikkuvuus)
-- [Pyöräily](/docs/sports/pyoraily)
-- [Kuntosali](/docs/sports/kuntosali)
-- [Uintiharjoitus](/docs/sports/uintiharjoitus)
-- [Hiihto](/docs/sports/hiihto)
-- [Tekniikkaharjoitus](/docs/sports/tekniikkaharjoitus)
-- [Intervallit/Vedot](/docs/sports/intervallit-vedot)
-- [Loikka/Hyppyharjoitus](/docs/sports/loikka-hyppyharjoitus)
-- [Heittoharjoitus](/docs/sports/heittoharjoitus)
-- [Keskivartaloharjoitus](/docs/sports/keskivartaloharjoitus)
-- [Lajiharjoitus](/docs/sports/lajiharjoitus)
-- [Aitaharjoitus](/docs/sports/aitaharjoitus)
+- [Juoksuharjoitus](sports/juoksuharjoitus)
+- [Voimaharjoitus](sports/voimaharjoitus)
+- [Lepo/Palautuminen](sports/lepo-palautuminen)
+- [Nopeusharjoitus](sports/nopeusharjoitus)
+- [Kestävyysharjoitus](sports/kestavyysharjoitus)
+- [Venyttely/Liikkuvuus](sports/venyttely-liikkuvuus)
+- [Pyöräily](sports/pyoraily)
+- [Kuntosali](sports/kuntosali)
+- [Uintiharjoitus](sports/uintiharjoitus)
+- [Hiihto](sports/hiihto)
+- [Tekniikkaharjoitus](sports/tekniikkaharjoitus)
+- [Intervallit/Vedot](sports/intervallit-vedot)
+- [Loikka/Hyppyharjoitus](sports/loikka-hyppyharjoitus)
+- [Heittoharjoitus](sports/heittoharjoitus)
+- [Keskivartaloharjoitus](sports/keskivartaloharjoitus)
+- [Lajiharjoitus](sports/lajiharjoitus)
+- [Aitaharjoitus](sports/aitaharjoitus)
 
 ## Tarkemmat formaattisivut
 
-- [Kuntosali](/docs/sports/gym)
-- [Kestävyys](/docs/sports/endurance)
-- [Lihaskunto](/docs/sports/bodyweight)
+- [Kuntosali](sports/gym)
+- [Kestävyys](sports/endurance)
+- [Lihaskunto](sports/bodyweight)
 
 ## Formaattifokus
 

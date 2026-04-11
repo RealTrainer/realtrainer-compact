@@ -38,6 +38,6 @@ Each page includes:
 
 If you want to start from practical domain examples, open these guides:
 
-- [Kuntosali](/docs/sports/gym)
-- [Kestävyys](/docs/sports/endurance)
-- [Lihaskunto](/docs/sports/bodyweight)
+- [Kuntosali](docs/sports/gym)
+- [Kestävyys](docs/sports/endurance)
+- [Lihaskunto](docs/sports/bodyweight)
