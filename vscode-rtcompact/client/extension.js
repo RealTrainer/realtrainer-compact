@@ -255,6 +255,54 @@ function formatCompactDate(dateValue) {
   return '';
 }
 
+function asText(value) {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
+function fallbackTextForEntry(type, entry) {
+  if (type === 'derived') {
+    const name = asText(entry.name);
+    const value = asText(entry.value);
+    const unit = asText(entry.unit);
+    return `${name} ${value}${unit ? ` ${unit}` : ''}`.trim();
+  }
+
+  if (type === 'contacts') {
+    const name = asText(entry.name) || 'Contacts';
+    const count = asText(entry.count);
+    return `${name} ${count}`.trim();
+  }
+
+  if (type === 'interval') {
+    const count = asText(entry.count);
+    const distance = entry.distance && typeof entry.distance === 'object'
+      ? `${asText(entry.distance.value)}${asText(entry.distance.unit)}`
+      : '';
+    const intensity = asText(entry.intensityText);
+    return `Interval ${count ? `${count}x` : ''}${distance}${intensity ? ` @${intensity}` : ''}`.trim();
+  }
+
+  if (type === 'food' || type === 'drinking' || type === 'expense' || type === 'sleep' || type === 'measurement') {
+    const description = asText(entry.description || entry.name || entry.measureType);
+    const value = asText(entry.value ?? entry.amount ?? entry.duration ?? entry.volume);
+    const unit = asText(entry.unit ?? entry.currency ?? entry.volumeUnit);
+    return `${type}: ${description}${value ? ` ${value}` : ''}${unit ? `${unit}` : ''}`.trim();
+  }
+
+  const compactBits = [
+    asText(entry.name),
+    asText(entry.value),
+    asText(entry.description),
+  ].filter(Boolean);
+  return compactBits.length > 0 ? `${type}: ${compactBits.join(' ')}` : `${type}`;
+}
+
 function toPreviewRows(content) {
   const rows = [];
 
@@ -329,9 +377,28 @@ function toPreviewRows(content) {
         id,
         type: 'exercise',
         name: item.name ?? 'Exercise',
-        sets: item.sets ?? 0,
-        reps: item.reps ?? 0,
+        sets: typeof item.sets === 'number' ? item.sets : null,
+        setsMax: typeof item.setsMax === 'number' ? item.setsMax : null,
+        reps:
+          typeof item.reps === 'number' || typeof item.reps === 'string' || (item.reps && typeof item.reps === 'object')
+            ? item.reps
+            : null,
+        repsMax: typeof item.repsMax === 'number' ? item.repsMax : null,
+        repsRight: typeof item.repsRight === 'number' ? item.repsRight : null,
+        rounds: typeof item.rounds === 'number' ? item.rounds : null,
+        unit: typeof item.unit === 'string' ? item.unit : null,
         weightKg: item.weight && typeof item.weight === 'object' ? item.weight.value : undefined,
+        specType: item.specType === 'measured' || item.specType === 'multiset' ? item.specType : null,
+        measuredDurations: Array.isArray(item.measuredDurations)
+          ? item.measuredDurations
+              .filter((d) => d && typeof d === 'object')
+              .map((d) => ({
+                left: typeof d.left === 'number' ? d.left : 0,
+                right: typeof d.right === 'number' ? d.right : null,
+                unit: d.unit === 'min' ? 'min' : 's',
+              }))
+          : undefined,
+        isBilateral: typeof item.isBilateral === 'boolean' ? item.isBilateral : undefined,
         note: item.note ?? '',
       });
       continue;
@@ -408,9 +475,20 @@ function toPreviewRows(content) {
       continue;
     }
 
+    if (item.type === 'tags' || item.type === 'emojis' || item.type === 'derived') {
+      continue;
+    }
+
     if (item.type === 'unknown') {
       rows.push({ id, type: 'unknown', raw: item.raw ?? 'Unknown line' });
+      continue;
     }
+
+    rows.push({
+      id,
+      type: 'text',
+      text: fallbackTextForEntry(item.type, item),
+    });
   }
 
   return rows;
@@ -419,12 +497,23 @@ function toPreviewRows(content) {
 function mapWorkoutToViewModel(workout) {
   const tagsEntry = workout.content.find((item) => item?.type === 'tags');
   const emojisEntry = workout.content.find((item) => item?.type === 'emojis');
+  const derivedValues = workout.content
+    .filter((item) => item && typeof item === 'object' && item.type === 'derived')
+    .map((item) => ({
+      name: typeof item.name === 'string' ? item.name : 'derived',
+      value: typeof item.value === 'number' ? item.value : Number(item.value ?? 0),
+      unit: typeof item.unit === 'string' ? item.unit : null,
+      basis: typeof item.basis === 'string' ? item.basis : null,
+      goodness: typeof item.goodness === 'number' ? item.goodness : null,
+    }))
+    .filter((item) => Number.isFinite(item.value));
 
   return {
     title: workout.title ?? 'Untitled workout',
     date: formatCompactDate(workout.date),
     tags: Array.isArray(tagsEntry?.tags) ? tagsEntry.tags : [],
     emojis: emojisEntry?.emojis,
+    derivedValues,
     rows: toPreviewRows(Array.isArray(workout.content) ? workout.content : []),
   };
 }

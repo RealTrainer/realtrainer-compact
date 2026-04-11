@@ -290,6 +290,22 @@ describe('Time/Duration', () => {
     expect((result as any).timeOfDay).toEqual({ hour: 9, minute: 30 });
     expect((result as any).description).toBeNull();
   });
+
+  it('parses quoted Time duration with description', () => {
+    const result = parseLine('Time 11\'54" | Dynaamiset venyttelyt ja lonkan avaukset');
+    expect((result as any).type).toBe('duration');
+    expect((result as any).duration?.unit).toBe('min');
+    expect((result as any).duration?.value).toBeCloseTo(11 + 54 / 60, 5);
+    expect((result as any).description).toBe('Dynaamiset venyttelyt ja lonkan avaukset');
+  });
+
+  it('parses quoted Time duration without description', () => {
+    const result = parseLine('Time 11\'54"');
+    expect((result as any).type).toBe('duration');
+    expect((result as any).duration?.unit).toBe('min');
+    expect((result as any).duration?.value).toBeCloseTo(11 + 54 / 60, 5);
+    expect((result as any).description).toBeNull();
+  });
 });
 
 // =============================================================================

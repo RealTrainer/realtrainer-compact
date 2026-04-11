@@ -18,7 +18,16 @@ export interface CompactWorkoutModel {
   tags: string[];
   emojis?: string;
   points?: number;
+  derivedValues?: CompactDerivedValue[];
   rows: CompactRow[];
+}
+
+export interface CompactDerivedValue {
+  name: string;
+  value: number;
+  unit?: string | null;
+  basis?: 'entity' | 'day' | string | null;
+  goodness?: 1 | 2 | 3 | 4 | 5 | null;
 }
 
 interface CompactBaseRow {
@@ -53,9 +62,17 @@ export interface CompactCustomRow extends CompactBaseRow {
 export interface CompactExerciseRow extends CompactBaseRow {
   type: 'exercise';
   name: string;
-  sets: number;
-  reps: number;
+  sets: number | null;
+  setsMax?: number | null;
+  reps: number | string | { rm: number } | null;
+  repsMax?: number | null;
+  repsRight?: number | null;
+  rounds?: number | null;
+  unit?: string | null;
   weightKg?: number;
+  specType?: 'measured' | 'multiset' | null;
+  measuredDurations?: Array<{ left: number; right: number | null; unit: 's' | 'min' }>;
+  isBilateral?: boolean;
   note?: string;
 }
 

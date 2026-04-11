@@ -99,6 +99,22 @@ describe('Basic Parsing', () => {
       expect(formatted).toContain('Line');
     }
   });
+
+  it('parses Derived source with multiplication markers', () => {
+    const result = parseCompact('[2026-03-11] ## Voimaharjoittelu\nDerived strength.total_volume_load 4850|kg basis:entity confidence:85% source:sets*reps*load goodness:4\n');
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const derived = result.document.workouts[0].content.find((c) => c.type === 'derived') as any;
+    const unknown = result.document.workouts[0].content.find((c) => c.type === 'unknown');
+    expect(derived).toBeDefined();
+    expect(derived.name).toBe('strength.total_volume_load');
+    expect(derived.value).toBe(4850);
+    expect(derived.unit).toBe('kg');
+    expect(derived.source).toBe('sets*reps*load');
+    expect(derived.goodness).toBe(4);
+    expect(unknown).toBeUndefined();
+  });
 });
 
 // =============================================================================
@@ -563,6 +579,19 @@ describe('Tags', () => {
     expect(content.tags).toContain('jalat');
     expect(content.tags).toContain('kuntosali');
   });
+
+  it('parses Tags with parentheses', () => {
+    const result = parseCompact('[2026-02-02] ## Voima (Ylävartalo) & Polven huolto\nTags Voimaharjoittelu, Polven kuntoutus (Isometriset)\n');
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const tags = result.document.workouts[0].content.find((c) => c.type === 'tags') as Tags | undefined;
+    const unknown = result.document.workouts[0].content.find((c) => c.type === 'unknown');
+    expect(tags).toBeDefined();
+    expect(tags?.tags).toContain('Voimaharjoittelu');
+    expect(tags?.tags).toContain('Polven kuntoutus (Isometriset)');
+    expect(unknown).toBeUndefined();
+  });
 });
 
 // =============================================================================
@@ -570,6 +599,20 @@ describe('Tags', () => {
 // =============================================================================
 
 describe('Life Tracking', () => {
+  it('parses Custom value+unit before label syntax', () => {
+    const result = parseCompact('[2026-01-27] ## Päivän aktiivisuus\nCustom 10000kpl | Askeleet\n');
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const custom = result.document.workouts[0].content.find((c) => c.type === 'custom') as any;
+    const unknown = result.document.workouts[0].content.find((c) => c.type === 'unknown');
+    expect(custom).toBeDefined();
+    expect(custom.name).toBe('Askeleet');
+    expect(custom.value).toBe(10000);
+    expect(custom.unit).toBe('kpl');
+    expect(unknown).toBeUndefined();
+  });
+
   it('parses Food', () => {
     const content = getContent<Food>('[2026-01-13] ## Test\nFood 450kcal 30g/prot | kaurapuuro\n', 'food');
     expect(content.calories).toBe(450);

@@ -1,6 +1,6 @@
 {
   "name": "realtrainer-compact",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Parser for COMPACT format - a concise text-based DSL for workout tracking, nutrition, expenses, and life logging",
   "type": "module",
   "main": "dist/index.js",
@@ -24,7 +24,13 @@
       "types": "./dist/renderers/index.d.ts",
       "import": "./dist/renderers/index.js",
       "require": "./dist/renderers/index.cjs"
-    }
+    },
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "import": "./dist/ui/index.js",
+      "require": "./dist/ui/index.cjs"
+    },
+    "./ui/styles.css": "./dist/ui/compact-ui-react.css"
   },
   "files": [
     "dist",
@@ -37,16 +43,17 @@
     "build:mcp:watch": "esbuild src/mcp/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/mcp/server.js --sourcemap --watch",
     "build:watch": "tsc --watch",
     "build:ui": "npm --prefix ui/react run build:lib",
+    "build:ui-export": "npm run build:ui && node build-ui-export.mjs",
     "build:extension": "npm --prefix vscode-rtcompact run build:ui",
     "build:dev": "npm run build && npm run link:local",
     "generate-parser": "node generate-parser.mjs",
     "copy-assets": "cp src/parser-generated.js dist/",
     "prepare-dist": "node prepare-dist-package.mjs",
-    "build:dist": "npm run build && npm run prepare-dist",
+    "build:dist": "npm run build && npm run build:ui-export && npm run prepare-dist",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:update-snapshots": "UPDATE_SNAPSHOTS=1 vitest run monster",
-    "prepublishOnly": "npm run build && npm test",
+    "prepublishOnly": "npm run build && npm run build:ui-export && npm test",
     "clean": "rm -rf dist",
     "clean:ui": "rm -rf ui/react/dist",
     "link:local": "npm link",
@@ -73,12 +80,12 @@
   "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
-    "url": "https://github.com/terotolonen/compact-parser.git"
+    "url": "https://github.com/RealTrainer/realtrainer-compact.git"
   },
   "bugs": {
-    "url": "https://github.com/terotolonen/compact-parser/issues"
+    "url": "https://github.com/RealTrainer/realtrainer-compact/issues"
   },
-  "homepage": "https://github.com/terotolonen/compact-parser#readme",
+  "homepage": "https://realtrainer.github.io/realtrainer-compact/",
   "engines": {
     "node": ">=18"
   },

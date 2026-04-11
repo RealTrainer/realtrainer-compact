@@ -83,7 +83,7 @@
   },
   "dependencies": {
     "@realtrainer/compact-ui-react": "file:../ui/react",
-    "realtrainer-compact": "1.0.3",
+    "realtrainer-compact": "file:..",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "vscode-languageclient": "^9.0.1",

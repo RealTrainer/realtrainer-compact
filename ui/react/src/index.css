@@ -32,9 +32,9 @@ body {
 }
 
 .rt-row {
-  border: 1px solid transparent;
-  border-radius: 0.75rem;
-  background: rgba(9, 14, 23, 0.55);
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
 }
 
 .rt-row-unknown {

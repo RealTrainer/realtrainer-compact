@@ -158,8 +158,8 @@ TagList = first:Tag rest:(_ "," _ t:Tag { return t; })* {
   return [first, ...rest];
 }
 
-// Tag voi sisältää välilyöntejä (esim. "dynaaminen venyttely"), mutta ei pilkkua
-Tag = chars:[a-zA-ZäöåÄÖÅ0-9_ -]+ { return chars.join('').trim(); }
+// Tag voi sisältää välilyöntejä ja sulkeita (esim. "Polven kuntoutus (Isometriset)"), mutta ei pilkkua
+Tag = chars:[a-zA-ZäöåÄÖÅ0-9_() -]+ { return chars.join('').trim(); }
 EmptyLine = [ \t]* [\n\r]+ { return null; }
 
 // Vaakaviiva (sekä doc-tasolla että workout-sisällössä)
@@ -1021,7 +1021,7 @@ SplitBlock = splits:SplitLine+ { return splits; }
 // Format: > 150m | note  OR  > Split 150m | note  OR  > 150m 3'39"/100m | note
 // Supports nesting: > > for deeper nested splits
 // Supports pace: 3'39"/100m or 3:39/100m, HR: 124bpm, custom fields: [[käsiräpylät]]
-SplitLine = ">" _ "Split"? _ spec:SplitSpec intensity:RunIntensity? hr:SplitHR? customFields:CustomFields? note:PipeNote? _ NL nestedSplits:NestedSplitBlock? {
+SplitLine = ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL nestedSplits:NestedSplitBlock? {
   return { 
     type: 'split', 
     distance: spec.distance || null, 
@@ -1037,7 +1037,7 @@ SplitLine = ">" _ "Split"? _ spec:SplitSpec intensity:RunIntensity? hr:SplitHR? 
 
 // Nested split block (2 levels deep: > >)
 NestedSplitBlock = splits:NestedSplitLine+ { return splits; }
-NestedSplitLine = ">" _ ">" _ "Split"? _ spec:SplitSpec intensity:RunIntensity? hr:SplitHR? customFields:CustomFields? note:PipeNote? _ NL {
+NestedSplitLine = ">" _ ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL {
   return { 
     type: 'split', 
     distance: spec.distance || null, 
@@ -1068,7 +1068,13 @@ SplitSpec =
   / "" { return { distance: null, duration: null, pace: null }; }
 
 SplitDistance = value:Number unit:DistRunUnit _ { return { value, unit }; }
-SplitDuration = value:Number unit:TimeRunUnit _ { return { value, unit }; }
+SplitDuration =
+  // Numeric duration with explicit unit: 5min, 30s
+  value:Number unit:TimeRunUnit _ { return { value, unit }; }
+  // Tick-quote duration: 8'11"
+  / min:Int "'" sec:Int "\"" _ { return { value: (min * 60) + sec, unit: 's' }; }
+  // Clock duration: 06:58
+  / pace:PaceTime _ { return { value: (pace.minutes * 60) + pace.seconds, unit: 's' }; }
 
 // Pace for splits: 3'39"/100m (tick-quote format) or 3:39/100m (colon format)
 // Returns { minutes, seconds, perDistance: { value, unit } }
@@ -1090,12 +1096,12 @@ SplitPace =
     return { minutes: pace.minutes, seconds: pace.seconds, perDistance: { value: 1, unit: paceUnit } };
   }
 
-// Heart rate for splits: 124bpm
-SplitHR = _ hr:Int "bpm"i _ { return hr; }
+// Heart rate for splits: 124bpm, @124bpm, @ 124bpm
+SplitHR = _ "@"? _ hr:Int "bpm"i _ { return hr; }
 
 // Standalone split: appears as content element (not attached to a Move)
 // Used when splits come after a Section or other non-Move content
-StandaloneSplit = ">" _ "Split"? _ spec:SplitSpec intensity:RunIntensity? hr:SplitHR? customFields:CustomFields? note:PipeNote? _ NL {
+StandaloneSplit = ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL {
   return { 
     type: 'split', 
     distance: spec.distance || null, 
@@ -1436,8 +1442,16 @@ RunDesc = _ "|" _ text:[^\n\r]* { return text.join('').trim(); }
 // Time ?min | desc       - unknown duration
 TimePrefix = "Time"
 Duration = 
+  // Quoted duration: Time 11'54" | Dynaamiset venyttelyt
+  TimePrefix _ min:Int MinuteMark sec:Int "\"" _ "|" _ desc:RestOfLine {
+    return { type: 'duration', duration: { value: min + (sec / 60), unit: 'min' }, description: desc.trim() };
+  }
+  // Quoted duration without description
+  / TimePrefix _ min:Int MinuteMark sec:Int "\"" _ NL {
+    return { type: 'duration', duration: { value: min + (sec / 60), unit: 'min' }, description: null };
+  }
   // Clock-like time of day: Time 18.00 | Kuntosali
-  TimePrefix _ hour:$([0-9]+) (":" / ".") minute:$([0-9]+) _ "|" _ desc:RestOfLine {
+  / TimePrefix _ hour:$([0-9]+) (":" / ".") minute:$([0-9]+) _ "|" _ desc:RestOfLine {
     return { type: 'duration', duration: null, timeOfDay: { hour: parseInt(hour, 10), minute: parseInt(minute, 10) }, description: desc.trim() };
   }
   // Clock-like time of day without description
@@ -1611,7 +1625,7 @@ DerivedSource = __ "source:" source:DerivedSourceValue {
 
 DerivedSourceValue =
   "\"" chars:[^"\n\r]+ "\"" { return chars.join('').trim(); }
-  / chars:[A-ZÄÖÅa-zäöå0-9_.,:;+\-/()#]+ { return chars.join('').trim(); }
+  / chars:[A-ZÄÖÅa-zäöå0-9_.,:;+*\-/()#]+ { return chars.join('').trim(); }
 
 DerivedGoodness = __ "goodness:" value:Int {
   if (value < 1 || value > 5) {
@@ -1629,6 +1643,10 @@ CustomPrefix = "Custom"
 Custom = CustomPrefix __ name:CustomNamePart __ value:Number unit:CustomLineUnit? note:PipeNote? _ NL {
   return { type: 'custom', name: name.trim(), value, unit: unit || null, note: note || null };
 }
+  // Legacy/fallback form: Custom 10000kpl | Askeleet
+  / CustomPrefix __ value:Number unit:CustomInlineUnit _ "|" _ name:RestOfLine {
+    return { type: 'custom', name: name.trim(), value, unit: unit || null, note: null };
+  }
 
 // Custom nimi: sanat jotka eivät ala numerolla, erotettu välilyönnillä
 // "Treenipaino" tai "Body Weight" tai "RM1" - mutta ei "85"
@@ -1640,6 +1658,9 @@ CustomWord = first:[A-ZÄÖÅa-zäöå] rest:[A-ZÄÖÅa-zäöå0-9\-/,.'#:]* { 
 
 // Custom yksikkö voi olla piipun jälkeen: Custom Liikelaajuus 90|°
 CustomLineUnit = "|" unit:$[^\n\r|]+ { return unit.trim(); }
+
+// Yksikkö heti arvon perässä: 10000kpl
+CustomInlineUnit = unit:$[A-ZÄÖÅa-zäöå%°/_-]+ { return unit.trim(); }
 
 // > - Geneerinen meta
 // > custom_field:arvo

@@ -3,7 +3,7 @@ import { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
 import { CompactBlogView } from './components/organisms/CompactBlogView';
 import type { CompactWorkoutModel } from './lib/types';
 import { sampleWorkout } from './preview/fixtures';
-import sampleCompactText from './preview/sample.compact?raw';
+import sampleCompactText from '../../../sample.compact?raw';
 import { workoutsFromCompact } from './preview/fromCompact';
 
 function App() {
@@ -40,24 +40,41 @@ function App() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-slate-700 bg-slate-900/60 p-3">
-          <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-slate-400">sample.compact workout</label>
-          <select
-            value={selectedIndex}
-            onChange={(event) => selectWorkout(Number(event.target.value))}
-            className="w-full rounded-md border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-200"
-          >
-            {sourceWorkouts.map((item, index) => (
-              <option key={`${item.title}-${index}`} value={index}>
-                {item.date} - {item.title}
-              </option>
-            ))}
-          </select>
-          {parsed.error && <p className="mt-2 text-xs text-rose-300">{parsed.error}</p>}
-        </div>
+        {mode === 'edit' && (
+          <div className="rounded-lg border border-slate-700 bg-slate-900/60 p-3">
+            <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-slate-400">sample.compact workout</label>
+            <select
+              value={selectedIndex}
+              onChange={(event) => selectWorkout(Number(event.target.value))}
+              className="w-full rounded-md border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-200"
+            >
+              {sourceWorkouts.map((item, index) => (
+                <option key={`${item.title}-${index}`} value={index}>
+                  {item.date} - {item.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {mode === 'view' && (
+          <p className="text-xs text-slate-400">
+            Showing all workouts from sample.compact ({sourceWorkouts.length})
+          </p>
+        )}
+
+        {parsed.error && <p className="text-xs text-rose-300">{parsed.error}</p>}
       </div>
 
-      {mode === 'view' ? <CompactBlogView workout={workout} /> : <CompactBlogEditor workout={workout} onChange={setWorkout} />}
+      {mode === 'view' ? (
+        <div className="space-y-8">
+          {sourceWorkouts.map((item, index) => (
+            <CompactBlogView key={`${item.title}-${index}`} workout={item} />
+          ))}
+        </div>
+      ) : (
+        <CompactBlogEditor workout={workout} onChange={setWorkout} />
+      )}
     </main>
   );
 }

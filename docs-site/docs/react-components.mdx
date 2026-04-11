@@ -1,0 +1,249 @@
+---
+sidebar_position: 10
+title: React Components
+description: Live React rendering examples using realtrainer-compact/ui
+---
+
+import {
+  ExerciseDemo,
+  PyramidDemo,
+  MoveDemo,
+  WorkoutDemo,
+  LiveEditor
+} from '@site/src/components/CompactDemo';
+
+# React Components
+
+This page demonstrates the `realtrainer-compact/ui` export,
+which provides ready-to-use React components for rendering COMPACT data.
+
+---
+
+## Installation
+
+```bash
+npm install realtrainer-compact react react-dom
+```
+
+Import the CSS in your app entry point:
+
+```tsx
+import 'realtrainer-compact/ui/styles.css';
+```
+
+---
+
+## Exercise Row
+
+**COMPACT syntax:**
+```compact
+Takakyykky 3x8x100kg | Lämmittelysarjat erikseen
+```
+
+**React component:**
+```tsx
+import { CompactRowView } from 'realtrainer-compact/ui';
+import type { CompactExerciseRow } from 'realtrainer-compact/ui';
+
+const exercise: CompactExerciseRow = {
+  id: 'ex-1',
+  type: 'exercise',
+  name: 'Takakyykky',
+  sets: 3,
+  reps: 8,
+  weightKg: 100,
+  note: 'Lämmittelysarjat erikseen',
+};
+
+<CompactRowView row={exercise} />
+```
+
+**Live render:**
+
+Edit the object and see the same component render update immediately:
+
+<ExerciseDemo />
+
+---
+
+## Pyramid Row
+
+**COMPACT syntax:**
+```compact
+Penkkipunnerrus 10x60kg 8x70kg 6x80kg 4x90kg
+```
+
+**React component:**
+```tsx
+import { CompactRowView } from 'realtrainer-compact/ui';
+import type { CompactPyramidRow } from 'realtrainer-compact/ui';
+
+const pyramid: CompactPyramidRow = {
+  id: 'pyr-1',
+  type: 'pyramid',
+  name: 'Penkkipunnerrus',
+  sets: [
+    { reps: 10, weightKg: 60 },
+    { reps: 8, weightKg: 70 },
+    { reps: 6, weightKg: 80 },
+    { reps: 4, weightKg: 90 },
+  ],
+};
+
+<CompactRowView row={pyramid} />
+```
+
+**Live render:**
+
+Edit the object and see the same component render update immediately:
+
+<PyramidDemo />
+
+---
+
+## Move Row
+
+**COMPACT syntax:**
+```compact
+# Juoksu
+Duration 45min
+Distance 8km
+| Peruskestävyysalueella
+```
+
+**React component:**
+```tsx
+import { CompactRowView } from 'realtrainer-compact/ui';
+import type { CompactMoveRow } from 'realtrainer-compact/ui';
+
+const run: CompactMoveRow = {
+  id: 'move-1',
+  type: 'move',
+  sport: 'Juoksu',
+  duration: { value: 45, unit: 'min' },
+  distance: { value: 8, unit: 'km' },
+  note: 'Peruskestävyysalueella',
+};
+
+<CompactRowView row={run} />
+```
+
+**Live render:**
+
+Edit the object and see the same component render update immediately:
+
+<MoveDemo />
+
+---
+
+## Full Workout View
+
+**COMPACT syntax:**
+```compact
+[2026-04-11]
+## Voimaharjoitus
+Tags voima, jalat
+Points 45
+
+### Lämmittely
+Koordit 2x20
+
+### Pääharjoitus
+Takakyykky 3x8x100kg | Lämmittelysarjat erikseen
+Penkkipunnerrus 10x60kg 8x70kg 6x80kg 4x90kg
+
+### Loppuverryttely
+# Juoksu
+Duration 45min
+Distance 8km
+| Peruskestävyysalueella
+```
+
+**React component:**
+```tsx
+import { CompactBlogView } from 'realtrainer-compact/ui';
+import type { CompactWorkoutModel } from 'realtrainer-compact/ui';
+
+const workout: CompactWorkoutModel = {
+  title: 'Voimaharjoitus',
+  date: '11.04.2026',
+  tags: ['voima', 'jalat'],
+  points: 45,
+  rows: [
+    { id: 'section-1', type: 'section', name: 'Lämmittely' },
+    { id: 'ex-warmup', type: 'exercise', name: 'Koordit', sets: 2, reps: 20 },
+    { id: 'section-2', type: 'section', name: 'Pääharjoitus' },
+    // ... exercise and pyramid rows
+    { id: 'section-3', type: 'section', name: 'Loppuverryttely' },
+    // ... move row
+  ],
+};
+
+<CompactBlogView workout={workout} />
+```
+
+**Live render:**
+
+Edit the object and see the same component render update immediately:
+
+<WorkoutDemo />
+
+---
+
+## TypeScript Types
+
+The package exports all necessary TypeScript interfaces:
+
+```ts
+import type {
+  CompactWorkoutModel,
+  CompactRow,        // Union of all row types
+  CompactExerciseRow,
+  CompactPyramidRow,
+  CompactPyramidSet,
+  CompactMoveRow,
+  CompactRunRow,
+  CompactDurationRow,
+  CompactSplitRow,
+  CompactSectionRow,
+  CompactPhaseRow,
+  CompactSummaryRow,
+  CompactTextRow,
+} from 'realtrainer-compact/ui';
+```
+
+---
+
+## Using with Parser
+
+Parse COMPACT text and render directly:
+
+```tsx
+import { parseCompact } from 'realtrainer-compact';
+import { CompactBlogView, workoutsFromCompact } from 'realtrainer-compact/ui';
+
+const text = `
+[2026-04-11]
+## Aamuharjoitus
+Kyykky 3x10x80kg
+`;
+
+const { workouts, error } = workoutsFromCompact(text);
+
+if (error) {
+  throw new Error(error);
+}
+
+<CompactBlogView workout={workouts[0]} />
+```
+
+See [Vite Playground](https://github.com/your-repo/realtrainer-compact/tree/main/ui/react) 
+for complete parser-to-UI integration example.
+
+---
+
+## Live Editor
+
+Try editing COMPACT syntax and see it rendered in real-time:
+
+<LiveEditor />

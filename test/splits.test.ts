@@ -357,4 +357,78 @@ Section Sarjat
     expect(split1.customFields?.[0].name).toBe('räpylät');
     expect(split1.note).toBe('sarja 1');
   });
+
+  it('should parse standalone splits after Text with @HR format', () => {
+    const input = `[2026-03-28] ## Ulkojuoksu
+Run 8.45min 1.03km
+Text Reppu selassa, paras vauhti lopussa vahan alle 6min/km, polville ihan OK
+> 1km 8'11"@140bpm
+> 0.03km 0'13"@156bpm
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const workout = result.document.workouts[0];
+    const move = workout.content.find(c => c.type === 'move') as Move;
+    const text = workout.content.find(c => c.type === 'text');
+    const splits = workout.content.filter(c => c.type === 'split') as Split[];
+    const unknowns = workout.content.filter(c => c.type === 'unknown');
+
+    expect(move).toBeDefined();
+    expect(text).toBeDefined();
+    expect(splits.length).toBe(2);
+    expect(unknowns.length).toBe(0);
+
+    expect(splits[0].distance?.value).toBe(1);
+    expect(splits[0].distance?.unit).toBe('km');
+    expect(splits[0].duration?.value).toBe(491);
+    expect(splits[0].duration?.unit).toBe('s');
+    expect(splits[0].hr).toBe(140);
+
+    expect(splits[1].distance?.value).toBe(0.03);
+    expect(splits[1].distance?.unit).toBe('km');
+    expect(splits[1].duration?.value).toBe(13);
+    expect(splits[1].duration?.unit).toBe('s');
+    expect(splits[1].hr).toBe(156);
+  });
+
+  it('should parse standalone swim splits with mm:ss durations', () => {
+    const input = `[2026-03-24T19:03+02] ## Uintiharjoitus (Rintauinti)
+Tags uinti, kuntoutus, Tampere
+Emojis 🏊‍♂️🌊🩹
+Run "rintauinti" 21.083333333333332min 600m | Tampere
+> 200m 06:58 | set 1
+> 250m 07:45 | set 2
+> 150m 04:33 | set 3
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const workout = result.document.workouts[0];
+    const move = workout.content.find(c => c.type === 'move') as Move;
+    const splits = move.splits as Split[];
+    const unknowns = workout.content.filter(c => c.type === 'unknown');
+
+    expect(move).toBeDefined();
+    expect(move.sport).toBe('rintauinti');
+    expect(splits?.length).toBe(3);
+    expect(unknowns.length).toBe(0);
+
+    expect(splits[0].distance?.value).toBe(200);
+    expect(splits[0].duration?.value).toBe(418);
+    expect(splits[0].duration?.unit).toBe('s');
+    expect(splits[0].note).toBe('set 1');
+
+    expect(splits[1].distance?.value).toBe(250);
+    expect(splits[1].duration?.value).toBe(465);
+    expect(splits[1].note).toBe('set 2');
+
+    expect(splits[2].distance?.value).toBe(150);
+    expect(splits[2].duration?.value).toBe(273);
+    expect(splits[2].note).toBe('set 3');
+  });
 });

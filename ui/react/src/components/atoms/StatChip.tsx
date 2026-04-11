@@ -3,5 +3,5 @@ interface StatChipProps {
 }
 
 export function StatChip({ value }: StatChipProps) {
-  return <span className="rounded-md bg-slate-800 px-2 py-1 font-mono text-sm text-orange-300">{value}</span>;
+  return <span className="font-mono text-sm text-[rgb(255,107,53)]">{value}</span>;
 }

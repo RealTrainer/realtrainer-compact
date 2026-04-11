@@ -26,4 +26,6 @@ export { CompactRowView } from './components/molecules/CompactRowView';
 export { CompactRowEdit } from './components/molecules/CompactRowEdit';
 
 export { CompactBlogView } from './components/organisms/CompactBlogView';
+export type { CompactBlogHeaderOptions } from './components/organisms/CompactBlogView';
 export { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
+export { workoutsFromCompact } from './lib/workoutsFromCompact';

@@ -52,7 +52,29 @@ export function CompactRowEdit({ row, onChange }: CompactRowEditProps) {
       return;
     }
 
-    if (key === 'sets' || key === 'reps' || key === 'weightKg' || key === 'distanceValue' || key === 'durationMin' || key === 'value' || key === 'depth') {
+    if (key === 'sets') {
+      const parsed = value.length === 0 ? null : Number(value);
+      onChange({ ...row, sets: parsed } as CompactRow);
+      return;
+    }
+
+    if (key === 'reps') {
+      let parsed: number | string | { rm: number } | null = null;
+      if (value.length > 0) {
+        const rmMatch = value.match(/^(\d+)\s*RM$/i);
+        if (rmMatch) {
+          parsed = { rm: Number(rmMatch[1]) };
+        } else if (/^\d+$/.test(value)) {
+          parsed = Number(value);
+        } else {
+          parsed = value;
+        }
+      }
+      onChange({ ...row, reps: parsed } as CompactRow);
+      return;
+    }
+
+    if (key === 'weightKg' || key === 'distanceValue' || key === 'durationMin' || key === 'value' || key === 'depth') {
       const parsed = value.length === 0 ? undefined : Number(value);
       onChange({ ...row, [key]: parsed } as CompactRow);
       return;
@@ -104,11 +126,11 @@ export function CompactRowEdit({ row, onChange }: CompactRowEditProps) {
           </div>
           <div>
             <FieldLabel>Sets</FieldLabel>
-            <input className="rt-input" value={row.sets} onChange={onInput('sets')} />
+            <input className="rt-input" value={row.sets ?? ''} onChange={onInput('sets')} />
           </div>
           <div>
             <FieldLabel>Reps</FieldLabel>
-            <input className="rt-input" value={row.reps} onChange={onInput('reps')} />
+            <input className="rt-input" value={typeof row.reps === 'object' && row.reps !== null && 'rm' in row.reps ? `${row.reps.rm}RM` : (row.reps ?? '')} onChange={onInput('reps')} />
           </div>
           <div>
             <FieldLabel>Weight kg</FieldLabel>

@@ -1,0 +1,142 @@
+.rt-doc-scope {
+  --rt-border: #273447;
+  --rt-text: #eaf2ff;
+  color: var(--rt-text);
+  font-family: Inter, 'Segoe UI', sans-serif;
+}
+
+.rt-doc-scope * {
+  box-sizing: border-box;
+}
+
+.rt-doc-scope .rt-card {
+  border: 1px solid var(--rt-border);
+  background: linear-gradient(145deg, rgba(20, 31, 46, 0.9), rgba(13, 20, 31, 0.85));
+  border-radius: 1rem;
+}
+
+.rt-doc-scope .rt-row {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.rt-doc-scope .rt-row-unknown {
+  border-color: #ff4f64;
+  border-style: dashed;
+  background: rgba(255, 79, 100, 0.1);
+}
+
+.rt-doc-row-frame {
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.rt-doc-scope [class~='mx-auto'] { margin-left: auto; margin-right: auto; }
+.rt-doc-scope [class~='w-full'] { width: 100%; }
+.rt-doc-scope [class~='max-w-4xl'] { max-width: 56rem; }
+.rt-doc-scope [class~='flex'] { display: flex; }
+.rt-doc-scope [class~='inline-flex'] { display: inline-flex; }
+.rt-doc-scope [class~='flex-col'] { flex-direction: column; }
+.rt-doc-scope [class~='flex-wrap'] { flex-wrap: wrap; }
+.rt-doc-scope [class~='items-center'] { align-items: center; }
+.rt-doc-scope [class~='items-start'] { align-items: flex-start; }
+.rt-doc-scope [class~='justify-between'] { justify-content: space-between; }
+.rt-doc-scope [class~='justify-center'] { justify-content: center; }
+.rt-doc-scope [class~='justify-end'] { justify-content: flex-end; }
+.rt-doc-scope [class~='gap-1'] { gap: 0.25rem; }
+.rt-doc-scope [class~='gap-1.5'] { gap: 0.375rem; }
+.rt-doc-scope [class~='gap-2'] { gap: 0.5rem; }
+.rt-doc-scope [class~='gap-3'] { gap: 0.75rem; }
+.rt-doc-scope [class~='space-y-1'] > * + * { margin-top: 0.25rem; }
+.rt-doc-scope [class~='space-y-2'] > * + * { margin-top: 0.5rem; }
+.rt-doc-scope [class~='space-y-4'] > * + * { margin-top: 1rem; }
+.rt-doc-scope [class~='space-y-5'] > * + * { margin-top: 1.25rem; }
+.rt-doc-scope [class~='p-3'] { padding: 0.75rem; }
+.rt-doc-scope [class~='p-6'] { padding: 1.5rem; }
+.rt-doc-scope [class~='px-1.5'] { padding-left: 0.375rem; padding-right: 0.375rem; }
+.rt-doc-scope [class~='px-2'] { padding-left: 0.5rem; padding-right: 0.5rem; }
+.rt-doc-scope [class~='px-3'] { padding-left: 0.75rem; padding-right: 0.75rem; }
+.rt-doc-scope [class~='py-0.5'] { padding-top: 0.125rem; padding-bottom: 0.125rem; }
+.rt-doc-scope [class~='py-1'] { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.rt-doc-scope [class~='py-1.5'] { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+.rt-doc-scope [class~='pt-3'] { padding-top: 0.75rem; }
+.rt-doc-scope [class~='pt-4'] { padding-top: 1rem; }
+.rt-doc-scope [class~='pb-1'] { padding-bottom: 0.25rem; }
+.rt-doc-scope [class~='pb-5'] { padding-bottom: 1.25rem; }
+.rt-doc-scope [class~='pl-2'] { padding-left: 0.5rem; }
+.rt-doc-scope [class~='pl-3'] { padding-left: 0.75rem; }
+.rt-doc-scope [class~='mt-0.5'] { margin-top: 0.125rem; }
+.rt-doc-scope [class~='mt-1'] { margin-top: 0.25rem; }
+.rt-doc-scope [class~='-mt-1'] { margin-top: -0.25rem; }
+.rt-doc-scope [class~='ml-0.5'] { margin-left: 0.125rem; }
+.rt-doc-scope [class~='h-5'] { height: 1.25rem; }
+.rt-doc-scope [class~='w-1'] { width: 0.25rem; }
+.rt-doc-scope [class~='rounded'] { border-radius: 0.25rem; }
+.rt-doc-scope [class~='rounded-md'] { border-radius: 0.375rem; }
+.rt-doc-scope [class~='rounded-lg'] { border-radius: 0.5rem; }
+.rt-doc-scope [class~='rounded-full'] { border-radius: 9999px; }
+.rt-doc-scope [class~='border'] { border: 1px solid transparent; }
+.rt-doc-scope [class~='border-b'] { border-bottom: 1px solid transparent; }
+.rt-doc-scope [class~='border-l'] { border-left: 1px solid transparent; }
+.rt-doc-scope [class~='border-l-2'] { border-left: 2px solid transparent; }
+.rt-doc-scope [class~='border-slate-600'] { border-color: #475569; }
+.rt-doc-scope [class~='border-slate-600/50'] { border-color: rgba(71, 85, 105, 0.5); }
+.rt-doc-scope [class~='border-slate-600/70'] { border-color: rgba(71, 85, 105, 0.7); }
+.rt-doc-scope [class~='border-slate-700/70'] { border-color: rgba(51, 65, 85, 0.7); }
+.rt-doc-scope [class~='bg-slate-700'] { background-color: #334155; }
+.rt-doc-scope [class~='bg-slate-700/70'] { background-color: rgba(51, 65, 85, 0.7); }
+.rt-doc-scope [class~='bg-orange-500'] { background-color: #f97316; }
+.rt-doc-scope [class~='bg-emerald-500/20'] { background-color: rgba(16, 185, 129, 0.2); }
+.rt-doc-scope [class~='bg-orange-500/20'] { background-color: rgba(249, 115, 22, 0.2); }
+.rt-doc-scope [class~='bg-amber-500/20'] { background-color: rgba(245, 158, 11, 0.2); }
+.rt-doc-scope [class~='bg-rose-500/20'] { background-color: rgba(244, 63, 94, 0.2); }
+.rt-doc-scope [class~='bg-[rgba(255,107,53,0.12)]'] { background-color: rgba(255, 107, 53, 0.12); }
+.rt-doc-scope [class~='text-center'] { text-align: center; }
+.rt-doc-scope [class~='text-right'] { text-align: right; }
+.rt-doc-scope [class~='font-mono'] { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
+.rt-doc-scope [class~='text-xs'] { font-size: 0.75rem; line-height: 1rem; }
+.rt-doc-scope [class~='text-sm'] { font-size: 0.875rem; line-height: 1.25rem; }
+.rt-doc-scope [class~='text-lg'] { font-size: 1.125rem; line-height: 1.75rem; }
+.rt-doc-scope [class~='text-xl'] { font-size: 1.25rem; line-height: 1.75rem; }
+.rt-doc-scope [class~='text-3xl'] { font-size: 1.875rem; line-height: 2.25rem; }
+.rt-doc-scope [class~='text-[10px]'] { font-size: 10px; }
+.rt-doc-scope [class~='font-medium'] { font-weight: 500; }
+.rt-doc-scope [class~='font-semibold'] { font-weight: 600; }
+.rt-doc-scope [class~='font-bold'] { font-weight: 700; }
+.rt-doc-scope [class~='font-extrabold'] { font-weight: 800; }
+.rt-doc-scope [class~='uppercase'] { text-transform: uppercase; }
+.rt-doc-scope [class~='tracking-wide'] { letter-spacing: 0.025em; }
+.rt-doc-scope [class~='tracking-[0.2em]'] { letter-spacing: 0.2em; }
+.rt-doc-scope [class~='tracking-[0.28em]'] { letter-spacing: 0.28em; }
+.rt-doc-scope [class~='italic'] { font-style: italic; }
+.rt-doc-scope [class~='text-slate-100'] { color: #f1f5f9; }
+.rt-doc-scope [class~='text-slate-200'] { color: #e2e8f0; }
+.rt-doc-scope [class~='text-slate-300'] { color: #cbd5e1; }
+.rt-doc-scope [class~='text-slate-400'] { color: #94a3b8; }
+.rt-doc-scope [class~='text-orange-300'] { color: #fdba74; }
+.rt-doc-scope [class~='text-orange-400'] { color: #fb923c; }
+.rt-doc-scope [class~='text-amber-300'] { color: #fcd34d; }
+.rt-doc-scope [class~='text-emerald-300'] { color: #6ee7b7; }
+.rt-doc-scope [class~='text-rose-200'] { color: #fecdd3; }
+.rt-doc-scope [class~='text-rose-300'] { color: #fda4af; }
+.rt-doc-scope [class~='text-[rgb(255,107,53)]'] { color: rgb(255, 107, 53); }
+
+@media (min-width: 640px) {
+  .rt-doc-scope [class~='sm:flex-row'] { flex-direction: row; }
+  .rt-doc-scope [class~='sm:items-center'] { align-items: center; }
+  .rt-doc-scope [class~='sm:justify-between'] { justify-content: space-between; }
+  .rt-doc-scope [class~='sm:gap-2'] { gap: 0.5rem; }
+  .rt-doc-scope [class~='sm:p-8'] { padding: 2rem; }
+  .rt-doc-scope [class~='sm:text-sm'] { font-size: 0.875rem; line-height: 1.25rem; }
+  .rt-doc-scope [class~='sm:text-4xl'] { font-size: 2.25rem; line-height: 2.5rem; }
+}
+
+.rt-doc-scope--embed > .rt-card[class~='mx-auto'] {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.rt-doc-scope--embed > .rt-card[class~='max-w-4xl'] {
+  max-width: none;
+}
