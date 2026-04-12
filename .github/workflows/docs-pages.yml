@@ -41,6 +41,12 @@ jobs:
       - name: Build local package artifacts
         run: npm run build:dist
 
+      - name: Build UI playground for GitHub Pages
+        working-directory: ui/react
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/compact-ui/
+        run: npm run build
+
       - name: Install dependencies
         working-directory: docs-site
         run: npm ci
@@ -57,6 +63,12 @@ jobs:
           DOCUSAURUS_ORG: ${{ github.repository_owner }}
           DOCUSAURUS_PROJECT: ${{ github.event.repository.name }}
         run: npm run build
+
+      - name: Copy UI playground into Pages artifact
+        run: |
+          rm -rf docs-site/build/compact-ui
+          mkdir -p docs-site/build/compact-ui
+          cp -R ui/react/dist/. docs-site/build/compact-ui/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

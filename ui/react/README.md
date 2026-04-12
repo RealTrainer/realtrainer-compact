@@ -43,6 +43,17 @@ export default defineConfig([
   - `npm run build` build playground app
   - `npm run build:lib` build reusable library bundle
 
+  ## Custom Base Path
+
+  You can host the playground under a subpath by setting `VITE_BASE_PATH`.
+
+  Examples:
+
+  - `VITE_BASE_PATH=/compact-ui/ npm run dev`
+  - `VITE_BASE_PATH=/compact-ui/ npm run build`
+
+  The value should usually end with `/` so generated asset URLs stay correct.
+
   ## Library Exports
 
   Entry: `src/index.ts`
