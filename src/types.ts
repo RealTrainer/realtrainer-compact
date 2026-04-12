@@ -202,11 +202,15 @@ export interface MeasuredDuration {
 export interface Exercise {
   type: 'exercise';
   name: string;
-  sets: number;
+  sets: number | null;
   setsMax?: number;
+  rounds?: number | null;
   reps: RepCount | null;
   repsMax: number | null;
   repsRight?: number;
+  distance?: number | null;
+  distanceMin?: number | null;
+  distanceMax?: number | null;
   unit: 's' | 'min' | 'm' | null;
   weight: Weight | null;
   recovery: Recovery | null;

@@ -69,7 +69,15 @@ function App() {
       {mode === 'view' ? (
         <div className="space-y-8">
           {sourceWorkouts.map((item, index) => (
-            <CompactBlogView key={`${item.title}-${index}`} workout={item} />
+            <CompactBlogView
+              key={`${item.title}-${index}`}
+              workout={item}
+              headerOptions={{
+                showTags: true,
+                showEmojis: true,
+                showPoints: true,
+              }}
+            />
           ))}
         </div>
       ) : (

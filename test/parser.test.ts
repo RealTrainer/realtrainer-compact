@@ -341,6 +341,34 @@ Circuit|3
     }
   });
 
+  it('parses measured bilateral exercise with recovery', () => {
+    const result = parseCompact(`[2026-01-13] ## Test
+Exercise Side Plank|2x20s+37s,23s+21s/60s
+`);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const exercise = result.document.workouts[0].content.find((c) => c.type === 'exercise') as any;
+      expect(exercise.specType).toBe('measured');
+      expect(exercise.measuredDurations[0]).toEqual({ left: 20, right: 37, unit: 's' });
+      expect(exercise.recovery).toEqual({ value: 60, max: null, unit: 'sec' });
+    }
+  });
+
+  it('parses distance exercise with recovery before weight', () => {
+    const result = parseCompact(`[2026-01-13] ## Test
+Exercise Farmer walk|3x40m/2min@2x32kg
+`);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const exercise = result.document.workouts[0].content.find((c) => c.type === 'exercise') as any;
+      expect(exercise.sets).toBe(3);
+      expect(exercise.distance).toBe(40);
+      expect(exercise.unit).toBe('m');
+      expect(exercise.weight).toEqual({ value: 32, unit: 'kg', count: 2 });
+      expect(exercise.recovery).toEqual({ value: 2, max: null, unit: 'min' });
+    }
+  });
+
   it('parses Circuit item with duration unit', () => {
     const result = parseCompact(`[2026-01-13] ## Test
 Circuit|3

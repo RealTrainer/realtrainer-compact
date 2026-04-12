@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export type CompactRow =
   | CompactSummaryRow
   | CompactPhaseRow
@@ -20,6 +22,15 @@ export interface CompactWorkoutModel {
   points?: number;
   derivedValues?: CompactDerivedValue[];
   rows: CompactRow[];
+}
+
+export interface CompactUiRenderers {
+  renderRow?: (row: CompactRow, defaultNode: ReactNode) => ReactNode;
+  renderExerciseScheme?: (
+    row: CompactExerciseRow,
+    parts: Array<{ text: string; tone: 'default' | 'weight' | 'muted'; kind: 'spec' | 'weight' | 'recovery' }>,
+    defaultNode: ReactNode,
+  ) => ReactNode;
 }
 
 export interface CompactDerivedValue {
@@ -69,7 +80,20 @@ export interface CompactExerciseRow extends CompactBaseRow {
   repsRight?: number | null;
   rounds?: number | null;
   unit?: string | null;
+  distance?: {
+    value?: number | null;
+    valueMax?: number | null;
+    unit?: string | null;
+  } | null;
   weightKg?: number;
+  weightCount?: number | null;
+  recovery?: {
+    value?: number | null;
+    max?: number | null;
+    valueMax?: number | null;
+    unit?: string | null;
+    text?: string | null;
+  } | null;
   specType?: 'measured' | 'multiset' | null;
   measuredDurations?: Array<{ left: number; right: number | null; unit: 's' | 'min' }>;
   isBilateral?: boolean;

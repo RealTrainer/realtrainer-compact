@@ -3,7 +3,7 @@ id: exercise
 title: Exercise
 ---
 
-import { CompactExampleBlock } from '@site/src/components/CompactDemo';
+import { EditableCompactExampleBlock } from '@site/src/components/CompactDemo';
 
 Use `Exercise` for single movement lines in COMPACT format.
 
@@ -18,7 +18,7 @@ Where `<spec>` is typically one of:
 - side-specific reps: `2x10+10`
 - unknown/open values: `2-3x?`
 
-<CompactExampleBlock>
+<EditableCompactExampleBlock minHeight={180}>
 ```compact
 Exercise Bench Press|3x8@70kg
 Exercise Plank|3x45s,45s,0s
@@ -26,21 +26,24 @@ Exercise Dead Bug|2x10+10@bw
 Exercise Bulgarian Split Squat|3x10+10@16kg
 Exercise Single-leg RDL|2x8+8@20kg
 ```
-</CompactExampleBlock>
+</EditableCompactExampleBlock>
 
 ## Left / Right Side Representation
 
 Common patterns for bilateral exercises:
 
 - reps per side: `10+10`
-- timed holds per side: `20s/37s`
-- repeated side pairs in sets: `2x20s/37s,23s/21s`
+- timed holds per side: `20s+37s`
+- repeated side pairs in sets: `2x20s+37s,23s+21s`
+- add set recovery at the end: `2x20s+37s,23s+21s/60s`
 
+<EditableCompactExampleBlock minHeight={140}>
 ```compact
 Exercise Split Squat|3x10+10@bw
-Exercise Side Plank|2x20s/37s,23s/21s
+Exercise Side Plank|2x20s+37s,23s+21s/60s
 Exercise Single-arm Row|3x12+12@22kg
 ```
+</EditableCompactExampleBlock>
 
 ## Notes
 

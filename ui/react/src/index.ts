@@ -2,6 +2,7 @@ import './index.css';
 
 export type {
   CompactWorkoutModel,
+  CompactUiRenderers,
   CompactRow,
   CompactSummaryRow,
   CompactPhaseRow,

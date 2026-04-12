@@ -82,7 +82,7 @@ Workout =
   }
   // Ilman otsikkoa: alkaa suoraan content-rivillä (L, E, R, P, I jne.)
   // Meta-blokin jälkeen voi olla rivinvaihto tai content samalla rivillä
-  / _ meta:("[" m:WorkoutMeta "]" _ { return m; })? NL? &ContentLineStart content:ContentLine+ { 
+  / _ meta:("[" m:WorkoutMeta "]" _ { return m; })? NL? &ContentLine content:ContentLine+ { 
     return { 
       type: 'workout',
       id: meta?.id || null,
@@ -96,10 +96,6 @@ Workout =
 TitleWithOptionalDate = 
   "[" m:WorkoutMeta "]" _ title:RestOfLine { return { meta: m, title: title.trim() }; }
   / title:RestOfLine { return { meta: null, title: title.trim() }; }
-
-// ContentLineStart - tunnistaa rivin joka aloittaa workout-sisällön
-// Käytetään lookaheadissa otsikottomien workoutien tunnistamiseen
-ContentLineStart = "Tags" / "Summary" / "Level" / "Exercise" / "Run" / "Move" / "Pyramid" / "Circuit" / "Superset" / "Interval" / "Time" / "Contacts" / "Section" / "Phase" / "Food" / "Drinking" / "Expense" / "Reminder" / "Location" / "URL" / "Weight" / "BodyFat" / "Sleep" / "Health" / "Max" / "Best" / "Feeling" / "Pain" / "Vitals" / "Derived" / "Custom" / "Text" / ">" / "#" / "-"
 
 // [pvm#id], [pvm#?], [pvm], [#id], [#?]
 WorkoutMeta = 
@@ -347,6 +343,23 @@ Exercise =
   ExercisePrefix _ name:NamePart "|" sets:CommaSetList note:PipeNote? _ NL {
     return { type: 'pyramid', name, sets: sets, note: note || null };
   }
+  // Distance exercise with recovery before weight: E name|3x40m/2min@2x32kg
+  / ExercisePrefix _ name:NamePart "|" sets:Int "x" dist:Int unit:DistanceUnit recovery:ExerciseRecovery weight:ExerciseWeight note:PipeNote? desc:ExerciseDesc? customFields:CustomFields? _ NL {
+    return {
+      type: 'exercise',
+      name,
+      sets,
+      reps: null,
+      repsMax: null,
+      distance: dist,
+      unit,
+      weight,
+      recovery,
+      note: note || null,
+      description: desc || null,
+      customFields: customFields || null,
+    };
+  }
   // Format with recovery before weight: E name|spec/recovery@weight [[custom:val]] (LLM-generated)
   / ExercisePrefix _ name:NamePart "|" spec:ExerciseSpecBase recovery:ExerciseRecovery weight:ExerciseWeight note:PipeNote? desc:ExerciseDesc? customFields:CustomFields? _ NL {
     return { type: 'exercise', name, ...spec, weight, recovery, note: note || null, description: desc || null, customFields: customFields || null };
@@ -444,6 +457,10 @@ ExerciseSpecBase =
     const result = { sets, reps, repsMax: null, unit: unit || null, weight: null };
     if (perSide) result.repsRight = reps;
     return result;
+  }
+  // 3x40m - sets x distance (for carries / loaded walks when recovery comes before weight)
+  / sets:Int "x" dist:Int unit:DistanceUnit {
+    return { sets, reps: null, repsMax: null, distance: dist, unit, weight: null };
   }
 
 // Per-side modifier: /suunta, /puoli, /jalka, /käsi, /per side, /side, /leg, /arm
@@ -582,6 +599,10 @@ ExerciseSpec =
   // 3x12x60s - kierrokset x liikkeet x aika (ei painoa)
   / rounds:Int "x" reps:RepCount "x" duration:Int unit:TimeUnit {
     return { rounds, sets: 1, reps, repsMax: null, duration, unit, weight: null };
+  }
+  // 3x40m - sarjat x matka (esim. farmers walk recovery-before-weight -polussa)
+  / sets:Int "x" dist:Int unit:DistanceUnit {
+    return { sets, reps: null, repsMax: null, distance: dist, unit, weight: null };
   }
   // 3x8@60kg - sarjat x toistot @ paino
   / sets:Int "x" reps:RepCount weight:ExerciseWeight {

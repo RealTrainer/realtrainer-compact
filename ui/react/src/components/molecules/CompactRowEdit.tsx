@@ -1,4 +1,6 @@
 import type { ChangeEvent } from 'react';
+import { parseCompact } from '../../../../../src/index.ts';
+import type { Exercise as ParsedExercise, Pyramid as ParsedPyramid } from '../../../../../src/types.ts';
 import type { CompactPyramidSet, CompactRow } from '../../lib/types';
 import { FieldLabel } from '../atoms/FieldLabel';
 
@@ -8,6 +10,15 @@ interface CompactRowEditProps {
 }
 
 export function CompactRowEdit({ row, onChange }: CompactRowEditProps) {
+  const parseEditorContent = <T extends 'exercise' | 'pyramid'>(line: string, type: T): ParsedExercise | ParsedPyramid | null => {
+    const result = parseCompact(`[2026-01-01] ## Editor\n${line}\n`);
+    if (!result.success) {
+      return null;
+    }
+
+    return result.document.workouts[0]?.content.find((item) => item.type === type) as ParsedExercise | ParsedPyramid | null;
+  };
+
   const pyramidSetsToText = () => {
     if (row.type !== 'pyramid') {
       return '';
@@ -18,22 +29,28 @@ export function CompactRowEdit({ row, onChange }: CompactRowEditProps) {
   };
 
   const parsePyramidSets = (value: string): CompactPyramidSet[] => {
-    const parsed: CompactPyramidSet[] = [];
-    for (const rawSegment of value.split(',')) {
-      const segment = rawSegment.trim();
-      if (!segment) {
-        continue;
-      }
-      const match = segment.match(/^(\d+)x(?:([\d.]+)kg)?$/i);
-      if (!match) {
-        continue;
-      }
-      parsed.push({
-        reps: Number(match[1]),
-        weightKg: match[2] ? Number(match[2]) : undefined,
-      });
+    const parsed = parseEditorContent(`Pyramid Tmp|${value}`, 'pyramid') as ParsedPyramid | null;
+    if (!parsed || parsed.type !== 'pyramid') {
+      return row.type === 'pyramid' ? row.sets : [];
     }
-    return parsed;
+
+    return parsed.sets.map((set) => ({
+      reps: set.reps,
+      weightKg: set.weight && 'value' in set.weight && typeof set.weight.value === 'number' ? set.weight.value : undefined,
+    }));
+  };
+
+  const parseExerciseReps = (value: string): number | string | { rm: number } | null => {
+    if (row.type !== 'exercise' || value.length === 0) {
+      return null;
+    }
+
+    const parsed = parseEditorContent(`Exercise Tmp|1x${value}${row.unit ?? ''}`, 'exercise') as ParsedExercise | null;
+    if (!parsed || parsed.type !== 'exercise') {
+      return row.reps;
+    }
+
+    return parsed.reps ?? null;
   };
 
   const onInput = (key: string) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,17 +76,7 @@ export function CompactRowEdit({ row, onChange }: CompactRowEditProps) {
     }
 
     if (key === 'reps') {
-      let parsed: number | string | { rm: number } | null = null;
-      if (value.length > 0) {
-        const rmMatch = value.match(/^(\d+)\s*RM$/i);
-        if (rmMatch) {
-          parsed = { rm: Number(rmMatch[1]) };
-        } else if (/^\d+$/.test(value)) {
-          parsed = Number(value);
-        } else {
-          parsed = value;
-        }
-      }
+      const parsed = parseExerciseReps(value);
       onChange({ ...row, reps: parsed } as CompactRow);
       return;
     }

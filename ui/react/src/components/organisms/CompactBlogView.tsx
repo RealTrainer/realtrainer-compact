@@ -1,5 +1,6 @@
+import { Fragment } from 'react';
 import type { ReactElement } from 'react';
-import type { CompactRow, CompactWorkoutModel } from '../../lib/types';
+import type { CompactRow, CompactUiRenderers, CompactWorkoutModel } from '../../lib/types';
 import { Badge } from '../atoms/Badge';
 import { CompactRowView } from '../molecules/CompactRowView';
 import { WorkoutHeader } from '../molecules/WorkoutHeader';
@@ -20,6 +21,7 @@ interface CompactBlogViewProps {
   onRowInteraction?: (rowId: string, event: RowInteractionEvent) => void;
   showHeader?: boolean;
   headerOptions?: CompactBlogHeaderOptions;
+  renderers?: CompactUiRenderers;
 }
 
 function getDerivedLabel(name: string): string {
@@ -39,7 +41,13 @@ function getDerivedLabel(name: string): string {
     'strength.speed_strength_emphasis': 'nopeusvoima',
     'strength.strength_endurance_emphasis': 'voimakestavyys',
   };
-  return map[name] || name.replace(/^[a-z]+\./i, '').replace(/_/g, ' ');
+  if (map[name]) {
+    return map[name];
+  }
+
+  const firstDot = name.indexOf('.');
+  const withoutPrefix = firstDot >= 0 ? name.slice(firstDot + 1) : name;
+  return withoutPrefix.split('_').join(' ');
 }
 
 export function CompactBlogView({
@@ -47,6 +55,7 @@ export function CompactBlogView({
   onRowInteraction,
   showHeader = true,
   headerOptions,
+  renderers,
 }: CompactBlogViewProps) {
   const derived = workout.derivedValues ?? [];
   const metadataRequested = headerOptions?.showMetaStrip === true || !showHeader;
@@ -75,7 +84,7 @@ export function CompactBlogView({
         scanIndex += 1;
       }
 
-      renderedRows.push(
+      const defaultSplitGroupNode = (
         <div key={`split-group-${row.id}`} className="mt-1 border-l-2 border-slate-600/70 pl-2" data-testid="standalone-splits-group">
           {splitRows.map((splitRow) => (
             <div
@@ -95,17 +104,23 @@ export function CompactBlogView({
                 : undefined}
               className={onRowInteraction ? 'cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500/60' : undefined}
             >
-              <CompactRowView row={splitRow} />
+              <CompactRowView row={splitRow} renderers={renderers} />
             </div>
           ))}
-        </div>,
+        </div>
+      );
+
+      renderedRows.push(
+        <Fragment key={`rendered-split-${row.id}`}>
+          {renderers?.renderRow ? renderers.renderRow(row, defaultSplitGroupNode) : defaultSplitGroupNode}
+        </Fragment>,
       );
 
       index = scanIndex - 1;
       continue;
     }
 
-    renderedRows.push(
+    const defaultRowNode = (
       <div
         key={row.id}
         data-testid={`row-${row.id}`}
@@ -123,8 +138,14 @@ export function CompactBlogView({
           : undefined}
         className={onRowInteraction ? 'cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500/60' : undefined}
       >
-        <CompactRowView row={row} />
-      </div>,
+        <CompactRowView row={row} renderers={renderers} />
+      </div>
+    );
+
+    renderedRows.push(
+      <Fragment key={`rendered-row-${row.id}`}>
+        {renderers?.renderRow ? renderers.renderRow(row, defaultRowNode) : defaultRowNode}
+      </Fragment>
     );
   }
 
@@ -141,7 +162,7 @@ export function CompactBlogView({
       )}
 
       {showMetaStrip && (
-        <div className="flex flex-wrap items-center gap-2" data-testid="workout-meta-strip">
+        <div className="flex flex-wrap items-center justify-center gap-2" data-testid="workout-meta-strip">
           {showTags && workout.tags.map((tag) => (
             <Badge key={tag} tone="good">{tag}</Badge>
           ))}

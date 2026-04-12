@@ -1,5 +1,6 @@
 export type {
   CompactWorkoutModel,
+  CompactUiRenderers,
   CompactRow,
   CompactSummaryRow,
   CompactPhaseRow,

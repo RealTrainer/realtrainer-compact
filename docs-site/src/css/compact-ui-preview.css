@@ -2,7 +2,7 @@
   --rt-border: #273447;
   --rt-text: #eaf2ff;
   color: var(--rt-text);
-  font-family: Inter, 'Segoe UI', sans-serif;
+  font-family: Inter, 'Segoe UI', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
 }
 
 .rt-doc-scope * {

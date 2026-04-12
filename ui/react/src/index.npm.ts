@@ -1,6 +1,7 @@
 // Entry point for NPM export (no CSS import - CSS is shipped separately)
 export type {
   CompactWorkoutModel,
+  CompactUiRenderers,
   CompactRow,
   CompactSummaryRow,
   CompactPhaseRow,

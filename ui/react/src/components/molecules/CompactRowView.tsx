@@ -1,20 +1,32 @@
 import clsx from 'clsx';
-import { formatDuration, formatExerciseScheme, formatRun } from '../../lib/formatters';
-import type { CompactRow } from '../../lib/types';
+import { formatDuration, formatExerciseSchemeParts, formatRun } from '../../lib/formatters';
+import type { CompactExerciseRow, CompactRow, CompactUiRenderers } from '../../lib/types';
 import { Badge } from '../atoms/Badge';
 import { StatChip } from '../atoms/StatChip';
 
 interface CompactRowViewProps {
   row: CompactRow;
+  renderers?: CompactUiRenderers;
 }
 
-function renderSchemeWithKgAccent(value: string) {
-  const parts = value.split(/(\d+(?:[.,]\d+)?kg\b)/g).filter(Boolean);
-  return parts.map((part, index) => (
-    <span key={`${part}-${index}`} className={/kg\b/.test(part) ? 'text-[rgb(255,107,53)]' : 'text-slate-300'}>
-      {part}
-    </span>
-  ));
+function renderDefaultExerciseScheme(row: CompactExerciseRow) {
+  const schemeParts = formatExerciseSchemeParts(row);
+
+  return {
+    schemeParts,
+    node: (
+      <span className="font-mono text-sm">
+        {schemeParts.map((part, index) => (
+          <span
+            key={`${row.id}-scheme-${index}`}
+            className={part.tone === 'weight' ? 'text-[rgb(255,107,53)]' : part.tone === 'muted' ? 'text-slate-400' : 'text-slate-300'}
+          >
+            {part.text}
+          </span>
+        ))}
+      </span>
+    ),
+  };
 }
 
 function formatCustomValue(value: unknown): string {
@@ -144,7 +156,7 @@ function renderSplitRow(split: Extract<CompactRow, { type: 'split' }>, depth = 1
   );
 }
 
-export function CompactRowView({ row }: CompactRowViewProps) {
+export function CompactRowView({ row, renderers }: CompactRowViewProps) {
   if (row.type === 'summary') {
     return <p className="rt-row p-3 text-sm text-slate-300">{row.text}</p>;
   }
@@ -182,14 +194,18 @@ export function CompactRowView({ row }: CompactRowViewProps) {
   }
 
   if (row.type === 'exercise') {
-    const scheme = formatExerciseScheme(row);
+    const { schemeParts, node: defaultSchemeNode } = renderDefaultExerciseScheme(row);
+    const schemeNode = renderers?.renderExerciseScheme
+      ? renderers.renderExerciseScheme(row, schemeParts, defaultSchemeNode)
+      : defaultSchemeNode;
+
     return (
       <div className="rt-row flex items-center justify-between gap-2 py-1.5">
         <div>
           <p className="text-lg font-medium text-slate-100">{row.name}</p>
           {row.note && <p className="mt-0.5 text-sm text-slate-400">{row.note}</p>}
         </div>
-        <span className="font-mono text-sm">{renderSchemeWithKgAccent(scheme)}</span>
+        {schemeNode}
       </div>
     );
   }

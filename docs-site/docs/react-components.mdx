@@ -207,6 +207,83 @@ import type {
 
 ---
 
+## Component Props
+
+Current public props used by the React UI package.
+
+### `CompactRowView`
+
+```ts
+type CompactRowViewProps = {
+  row: CompactRow;
+};
+```
+
+- `row`: One parsed COMPACT row. This is the main read-only row renderer.
+
+### `CompactBlogView`
+
+```ts
+type RowInteractionEvent = 'click' | 'press' | 'hover';
+
+interface CompactBlogHeaderOptions {
+  showTitle?: boolean;
+  showDate?: boolean;
+  showTags?: boolean;
+  showEmojis?: boolean;
+  showPoints?: boolean;
+  showMetaStrip?: boolean;
+}
+
+type CompactBlogViewProps = {
+  workout: CompactWorkoutModel;
+  onRowInteraction?: (rowId: string, event: RowInteractionEvent) => void;
+  showHeader?: boolean;
+  headerOptions?: CompactBlogHeaderOptions;
+};
+```
+
+- `workout`: Full workout card model to render.
+- `onRowInteraction`: Optional row-level interaction callback. When provided, rows become keyboard/click interactive and emit `click`, `press`, or `hover`.
+- `showHeader`: Controls whether the top workout header is shown. Default is `true`.
+- `headerOptions`: Fine-grained visibility toggles for header content and metadata strip.
+
+### `CompactBlogHeaderOptions`
+
+- `showTitle`: Show or hide the workout title.
+- `showDate`: Show or hide the workout date.
+- `showTags`: Show or hide tags.
+- `showEmojis`: Show or hide emojis.
+- `showPoints`: Show or hide points badge.
+- `showMetaStrip`: Force the separate metadata strip below the header. Useful when `showHeader={false}`.
+
+Example:
+
+```tsx
+<CompactBlogView
+  workout={workout}
+  headerOptions={{
+    showTags: true,
+    showEmojis: true,
+    showPoints: true,
+  }}
+/>
+```
+
+### `CompactBlogEditor`
+
+```ts
+type CompactBlogEditorProps = {
+  workout: CompactWorkoutModel;
+  onChange: (next: CompactWorkoutModel) => void;
+};
+```
+
+- `workout`: Editable workout model.
+- `onChange`: Called whenever header fields or any row editor changes the workout.
+
+---
+
 ## Using with Parser
 
 Parse COMPACT text and render directly:

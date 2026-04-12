@@ -1,4 +1,6 @@
 import type { ChangeEvent } from 'react';
+import { parseCompact } from '../../../../../src/index.ts';
+import type { Tags } from '../../../../../src/types.ts';
 import type { CompactRow, CompactWorkoutModel } from '../../lib/types';
 import { FieldLabel } from '../atoms/FieldLabel';
 import { CompactRowEdit } from '../molecules/CompactRowEdit';
@@ -9,15 +11,26 @@ interface CompactBlogEditorProps {
 }
 
 export function CompactBlogEditor({ workout, onChange }: CompactBlogEditorProps) {
+  const parseTags = (value: string): string[] => {
+    if (value.trim().length === 0) {
+      return [];
+    }
+
+    const result = parseCompact(`[2026-01-01] ## Editor\nTags ${value}\n`);
+    if (!result.success) {
+      return workout.tags;
+    }
+
+    const tags = result.document.workouts[0]?.content.find((item) => item.type === 'tags') as Tags | undefined;
+    return tags?.tags ?? workout.tags;
+  };
+
   const updateHeader = (key: 'title' | 'date' | 'tags' | 'emojis') => (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (key === 'tags') {
       onChange({
         ...workout,
-        tags: value
-          .split(',')
-          .map((item) => item.trim())
-          .filter(Boolean),
+        tags: parseTags(value),
       });
       return;
     }

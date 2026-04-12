@@ -80,4 +80,57 @@ Weight 85.2kg`;
     expect(screen.getByText('Health physio | Shoulder mobility')).toBeInTheDocument();
     expect(screen.getByText('weight 85.2kg')).toBeInTheDocument();
   });
+
+  it('omits the title completely when compact input has no title', () => {
+    const input = `[2026-03-28]
+Run 8km | Rauhallinen lenkki`;
+
+    const parsed = workoutsFromCompact(input);
+    expect(parsed.error).toBeNull();
+    expect(parsed.workouts.length).toBe(1);
+
+    render(<CompactBlogView workout={parsed.workouts[0]} />);
+
+    expect(screen.queryByText(/untitled workout/i)).not.toBeInTheDocument();
+    expect(screen.getByText('28.03.2026')).toBeInTheDocument();
+    expect(screen.getByText('juoksu')).toBeInTheDocument();
+  });
+
+  it('renders measured bilateral exercise recovery', () => {
+    const input = `[2026-03-28] ## Core
+Exercise Side Plank|2x20s+37s,23s+21s/60s`;
+
+    const parsed = workoutsFromCompact(input);
+    expect(parsed.error).toBeNull();
+    expect(parsed.workouts.length).toBe(1);
+    expect(parsed.workouts[0].rows[0]).toMatchObject({
+      type: 'exercise',
+      recovery: { value: 60, max: null, unit: 'sec' },
+    });
+
+    render(<CompactBlogView workout={parsed.workouts[0]} />);
+
+    expect(screen.getByText('Side Plank')).toBeInTheDocument();
+    expect(screen.getByTestId('row-exercise-0')).toHaveTextContent('20s+37s, 23s+21s • / palautus 60s');
+  });
+
+  it('supports custom exercise scheme rendering', () => {
+    const input = `[2026-03-28] ## Core
+Exercise Side Plank|2x20s+37s,23s+21s/60s`;
+
+    const parsed = workoutsFromCompact(input);
+    expect(parsed.error).toBeNull();
+    expect(parsed.workouts.length).toBe(1);
+
+    render(
+      <CompactBlogView
+        workout={parsed.workouts[0]}
+        renderers={{
+          renderExerciseScheme: (row) => <span data-testid="custom-scheme">custom scheme for {row.name}</span>,
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId('custom-scheme')).toHaveTextContent('custom scheme for Side Plank');
+  });
 });

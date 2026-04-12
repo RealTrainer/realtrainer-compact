@@ -109,6 +109,28 @@ pre {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
 }
 
+.rt-editable-preview {
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 0.75rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+  background: var(--ifm-pre-background);
+}
+
+.rt-editable-preview__input {
+  width: 100%;
+  display: block;
+  border: 0;
+  outline: 0;
+  resize: vertical;
+  padding: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ifm-pre-color);
+  background: transparent;
+}
+
 .footer {
   border-top: 1px solid rgba(148, 163, 184, 0.12);
 }

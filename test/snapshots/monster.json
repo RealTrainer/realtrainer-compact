@@ -1369,13 +1369,23 @@
         {
           "type": "exercise",
           "name": "Farmer walk",
-          "sets": null,
+          "sets": 3,
           "reps": null,
-          "unit": null,
-          "weight": null,
-          "recovery": null,
-          "note": null,
-          "description": "3x40m/2min@2x32kg | raskas (recovery before weight -tyyli)",
+          "repsMax": null,
+          "distance": 40,
+          "unit": "m",
+          "weight": {
+            "value": 32,
+            "unit": "kg",
+            "count": 2
+          },
+          "recovery": {
+            "value": 2,
+            "max": null,
+            "unit": "min"
+          },
+          "note": "raskas (recovery before weight -tyyli)",
+          "description": null,
           "customFields": null
         },
         {

@@ -1,5 +1,17 @@
 import { parseCompact } from '../../../../src/index.ts';
-import type { CompactWorkoutModel, CompactRow, CompactSplitRow } from './types';
+import type {
+  Content,
+  DateValue,
+  Derived,
+  DurationBlock,
+  Exercise as ParsedExercise,
+  MeasuredDuration,
+  Move,
+  Pyramid,
+  Split,
+  Weight,
+} from '../../../../src/types.ts';
+import type { CompactWorkoutModel, CompactRow, CompactSplitRow, CompactExerciseRow } from './types';
 
 function asText(value: unknown): string {
   if (value === null || value === undefined) return '';
@@ -59,7 +71,7 @@ function fallbackTextForEntry(type: string, entry: Record<string, unknown>): str
   }
 
   if (type === 'reminder') {
-    const date = formatCompactDate(entry.date);
+    const date = formatCompactDate(entry.date as DateValue | null | undefined);
     const description = asText(entry.description);
     return ['Reminder', date, description].filter(Boolean).join(' ').trim();
   }
@@ -104,12 +116,12 @@ function fallbackTextForEntry(type: string, entry: Record<string, unknown>): str
   return compactBits.length > 0 ? `${type}: ${compactBits.join(' ')}` : `${type}`;
 }
 
-function formatCompactDate(dateValue: unknown): string {
-  if (!dateValue || typeof dateValue !== 'object') {
+function formatCompactDate(dateValue: DateValue | null | undefined): string {
+  if (!dateValue) {
     return '';
   }
 
-  const d = dateValue as Record<string, unknown>;
+  const d = dateValue;
 
   if (d.type === 'date' && d.year && d.month && d.day) {
     const mm = String(d.month).padStart(2, '0');
@@ -132,41 +144,48 @@ function formatCompactDate(dateValue: unknown): string {
   return '';
 }
 
-function mapSplit(split: Record<string, unknown>, splitId: string): CompactSplitRow {
+function getWeightValue(weight: Weight | null | undefined): number | undefined {
+  return weight && 'value' in weight && typeof weight.value === 'number' ? weight.value : undefined;
+}
+
+function getWeightCount(weight: Weight | null | undefined): number | null {
+  return weight && 'count' in weight && typeof weight.count === 'number' ? weight.count : null;
+}
+
+function mapMeasuredDurations(durations: MeasuredDuration[] | undefined): CompactExerciseRow['measuredDurations'] {
+  return durations?.map((duration) => ({
+    left: duration.left,
+    right: duration.right,
+    unit: duration.unit,
+  }));
+}
+
+function mapSplit(split: Split, splitId: string): CompactSplitRow {
   const nestedSplits = Array.isArray(split.splits)
-    ? split.splits
-        .filter((nested): nested is Record<string, unknown> => !!nested && typeof nested === 'object')
-        .map((nested, nestedIndex) => mapSplit(nested, `${splitId}-nested-${nestedIndex}`))
+    ? split.splits.map((nested, nestedIndex) => mapSplit(nested, `${splitId}-nested-${nestedIndex}`))
     : null;
 
   return {
     id: splitId,
     type: 'split',
-    distance: split.distance && typeof split.distance === 'object' ? split.distance as CompactSplitRow['distance'] : undefined,
-    duration: split.duration && typeof split.duration === 'object' ? split.duration as CompactSplitRow['duration'] : undefined,
-    pace: split.pace && typeof split.pace === 'object' ? split.pace as CompactSplitRow['pace'] : undefined,
+    distance: split.distance as CompactSplitRow['distance'],
+    duration: split.duration as CompactSplitRow['duration'],
+    pace: split.pace as CompactSplitRow['pace'],
     intensity: split.intensity,
-    hr: typeof split.hr === 'number' ? split.hr : null,
-    customFields: Array.isArray(split.customFields) ? split.customFields as CompactSplitRow['customFields'] : null,
-    note: typeof split.note === 'string' ? split.note : null,
+    hr: split.hr ?? null,
+    customFields: split.customFields as CompactSplitRow['customFields'],
+    note: split.note ?? null,
     splits: nestedSplits,
   };
 }
 
-function mapRows(content: unknown[]): CompactRow[] {
+function mapRows(content: Content[]): CompactRow[] {
   const rows: CompactRow[] = [];
 
   for (let index = 0; index < content.length; index += 1) {
     const item = content[index];
-    if (!item || typeof item !== 'object') {
-      continue;
-    }
-
-    const entry = item as Record<string, unknown>;
+    const entry = item as Content;
     const type = entry.type;
-    if (typeof type !== 'string') {
-      continue;
-    }
 
     const id = `${type}-${index}`;
 
@@ -203,49 +222,46 @@ function mapRows(content: unknown[]): CompactRow[] {
     }
 
     if (type === 'exercise') {
-      const weight = entry.weight && typeof entry.weight === 'object' ? (entry.weight as Record<string, unknown>) : null;
+      const exercise = entry as ParsedExercise;
       rows.push({
         id,
         type: 'exercise',
-        name: typeof entry.name === 'string' ? entry.name : 'Exercise',
-        sets: typeof entry.sets === 'number' ? entry.sets : null,
-        setsMax: typeof entry.setsMax === 'number' ? entry.setsMax : null,
-        reps:
-          typeof entry.reps === 'number' || typeof entry.reps === 'string' || (entry.reps && typeof entry.reps === 'object')
-            ? (entry.reps as number | string | { rm: number })
-            : null,
-        repsMax: typeof entry.repsMax === 'number' ? entry.repsMax : null,
-        repsRight: typeof entry.repsRight === 'number' ? entry.repsRight : null,
-        rounds: typeof entry.rounds === 'number' ? entry.rounds : null,
-        unit: typeof entry.unit === 'string' ? entry.unit : null,
-        weightKg: typeof weight?.value === 'number' ? weight.value : undefined,
+        name: exercise.name,
+        sets: exercise.sets ?? null,
+        setsMax: exercise.setsMax ?? null,
+        reps: exercise.reps ?? null,
+        repsMax: exercise.repsMax ?? null,
+        repsRight: exercise.repsRight ?? null,
+        rounds: exercise.rounds ?? null,
+        unit: exercise.unit ?? null,
+        distance: typeof exercise.distance === 'number'
+          ? {
+              value: exercise.distance,
+              valueMax: exercise.distanceMax ?? null,
+              unit: exercise.unit ?? null,
+            }
+          : null,
+        weightKg: getWeightValue(exercise.weight),
+        weightCount: getWeightCount(exercise.weight),
+        recovery: exercise.recovery as CompactExerciseRow['recovery'],
         specType:
-          entry.specType === 'measured' || entry.specType === 'multiset'
-            ? entry.specType
+          exercise.specType === 'measured' || exercise.specType === 'multiset'
+            ? exercise.specType
             : null,
-        measuredDurations: Array.isArray(entry.measuredDurations)
-          ? entry.measuredDurations
-              .filter((d): d is Record<string, unknown> => !!d && typeof d === 'object')
-              .map((d) => ({
-                left: typeof d.left === 'number' ? d.left : 0,
-                right: typeof d.right === 'number' ? d.right : null,
-                unit: d.unit === 'min' ? 'min' : 's',
-              }))
-          : undefined,
-        isBilateral: typeof entry.isBilateral === 'boolean' ? entry.isBilateral : undefined,
-        note: typeof entry.note === 'string' ? entry.note : '',
+        measuredDurations: mapMeasuredDurations(exercise.measuredDurations),
+        isBilateral: exercise.isBilateral,
+        note: exercise.note ?? '',
       });
       continue;
     }
 
     if (type === 'pyramid') {
-      const sets = Array.isArray(entry.sets)
-        ? entry.sets.map((set) => {
-            const s = (set && typeof set === 'object') ? (set as Record<string, unknown>) : {};
-            const weight = s.weight && typeof s.weight === 'object' ? (s.weight as Record<string, unknown>) : null;
+      const pyramid = entry as Pyramid;
+      const sets = Array.isArray(pyramid.sets)
+        ? pyramid.sets.map((set) => {
             return {
-              reps: typeof s.reps === 'number' ? s.reps : 0,
-              weightKg: typeof weight?.value === 'number' ? weight.value : undefined,
+              reps: typeof set.reps === 'number' ? set.reps : 0,
+              weightKg: getWeightValue(set.weight),
             };
           })
         : [];
@@ -253,54 +269,54 @@ function mapRows(content: unknown[]): CompactRow[] {
       rows.push({
         id,
         type: 'pyramid',
-        name: typeof entry.name === 'string' ? entry.name : 'Pyramid',
+        name: pyramid.name,
         sets,
-        note: typeof entry.note === 'string' ? entry.note : '',
+        note: pyramid.note ?? '',
       });
       continue;
     }
 
-    if (type === 'move' || type === 'run') {
-      const splits = Array.isArray(entry.splits)
-        ? entry.splits
-            .filter((split): split is Record<string, unknown> => !!split && typeof split === 'object')
-            .map((split, splitIndex) => mapSplit(split, `${id}-split-${splitIndex}`))
+    if (type === 'move') {
+      const move = entry as Move;
+      const splits = Array.isArray(move.splits)
+        ? move.splits.map((split, splitIndex) => mapSplit(split, `${id}-split-${splitIndex}`))
         : null;
 
       rows.push({
         id,
         type: 'move',
-        sport: typeof entry.sport === 'string' ? entry.sport : null,
-        sets: typeof entry.sets === 'number' ? entry.sets : undefined,
-        count: typeof entry.count === 'number' ? entry.count : undefined,
-        countMax: typeof entry.countMax === 'number' ? entry.countMax : null,
-        distance: entry.distance && typeof entry.distance === 'object' ? entry.distance as { value?: number | null; valueMax?: number | null; unit?: string | null } : undefined,
-        duration: entry.duration && typeof entry.duration === 'object' ? entry.duration as { value?: number | null; unit?: string | null } : undefined,
-        steps: typeof entry.steps === 'number' ? entry.steps : null,
-        intensity: entry.intensity,
-        recovery: entry.recovery && typeof entry.recovery === 'object' ? entry.recovery as { value?: number | null; max?: number | null; valueMax?: number | null; unit?: string | null; text?: string | null } : null,
-        note: typeof entry.note === 'string' ? entry.note : null,
-        description: typeof entry.description === 'string' ? entry.description : null,
-        customFields: Array.isArray(entry.customFields) ? entry.customFields as Array<{ name: string; value: unknown; unit?: string | null }> : null,
+        sport: move.sport ?? null,
+        sets: move.sets,
+        count: move.count,
+        countMax: move.countMax ?? null,
+        distance: move.distance as { value?: number | null; valueMax?: number | null; unit?: string | null } | undefined,
+        duration: move.duration as { value?: number | null; unit?: string | null } | undefined,
+        steps: move.steps ?? null,
+        intensity: move.intensity,
+        recovery: move.recovery as { value?: number | null; max?: number | null; valueMax?: number | null; unit?: string | null; text?: string | null } | null,
+        note: move.note ?? null,
+        description: move.description ?? null,
+        customFields: move.customFields as Array<{ name: string; value: unknown; unit?: string | null }> | null,
         splits,
       });
       continue;
     }
 
     if (type === 'duration') {
-      const duration = entry.duration && typeof entry.duration === 'object' ? (entry.duration as Record<string, unknown>) : null;
+      const durationEntry = entry as DurationBlock;
+      const duration = durationEntry.duration;
       rows.push({
         id,
         type: 'duration',
         value: typeof duration?.value === 'number' ? duration.value : 0,
         unit: duration?.unit === 's' ? 's' : 'min',
-        description: typeof entry.description === 'string' ? entry.description : '',
+        description: durationEntry.description ?? '',
       });
       continue;
     }
 
     if (type === 'split') {
-      rows.push(mapSplit(entry, id));
+      rows.push(mapSplit(entry as Split, id));
       continue;
     }
 
@@ -321,7 +337,7 @@ function mapRows(content: unknown[]): CompactRow[] {
     rows.push({
       id,
       type: 'text',
-      text: fallbackTextForEntry(type, entry),
+      text: fallbackTextForEntry(type, entry as unknown as Record<string, unknown>),
     });
   }
 
@@ -347,19 +363,19 @@ export function workoutsFromCompact(input: string): { workouts: CompactWorkoutMo
     const derivedValues = workout.content
       .filter((item) => item?.type === 'derived')
       .map((item) => {
-        const derived = item as unknown as Record<string, unknown>;
+        const derived = item as Derived;
         return {
-          name: typeof derived.name === 'string' ? derived.name : 'derived',
-          value: typeof derived.value === 'number' ? derived.value : Number(derived.value ?? 0),
-          unit: typeof derived.unit === 'string' ? derived.unit : null,
-          basis: typeof derived.basis === 'string' ? derived.basis : null,
-          goodness: typeof derived.goodness === 'number' ? derived.goodness as 1 | 2 | 3 | 4 | 5 : null,
+          name: derived.name,
+          value: derived.value,
+          unit: derived.unit ?? null,
+          basis: derived.basis ?? null,
+          goodness: derived.goodness ?? null,
         };
       })
       .filter((item) => Number.isFinite(item.value));
 
     return {
-      title: workout.title ?? 'Untitled workout',
+      title: workout.title ?? '',
       date: formatCompactDate(workout.date),
       tags: Array.isArray(tagsEntry?.tags) ? tagsEntry.tags : [],
       emojis: typeof emojisEntry?.emojis === 'string' ? emojisEntry.emojis : undefined,

@@ -1,12 +1,20 @@
 import React, { useMemo, useState } from 'react';
 import CodeBlock from '@theme/CodeBlock';
+import { parseCompact } from 'realtrainer-compact';
 import {
   CompactBlogView,
   CompactRowView,
   workoutsFromCompact,
 } from 'realtrainer-compact/ui';
+import type {
+  CompactExerciseRow,
+  CompactMoveRow,
+  CompactPyramidRow,
+  CompactRow,
+  CompactWorkoutModel,
+} from 'realtrainer-compact/ui';
 
-const sampleExercise = {
+const sampleExercise: CompactExerciseRow = {
   id: 'ex-1',
   type: 'exercise',
   name: 'Takakyykky',
@@ -16,7 +24,7 @@ const sampleExercise = {
   note: 'Lämmittelysarjat erikseen',
 };
 
-const samplePyramid = {
+const samplePyramid: CompactPyramidRow = {
   id: 'pyr-1',
   type: 'pyramid',
   name: 'Penkkipunnerrus',
@@ -28,7 +36,7 @@ const samplePyramid = {
   ],
 };
 
-const sampleMove = {
+const sampleMove: CompactMoveRow = {
   id: 'move-1',
   type: 'move',
   sport: 'Juoksu',
@@ -37,7 +45,7 @@ const sampleMove = {
   note: 'Peruskestävyysalueella',
 };
 
-const sampleExerciseDocRow = {
+const sampleExerciseDocRow: CompactExerciseRow = {
   id: 'exercise-doc-1',
   type: 'exercise',
   name: 'Bench Press',
@@ -47,7 +55,7 @@ const sampleExerciseDocRow = {
   note: 'Tasainen kontrolloitu tempo',
 };
 
-const sampleRunningWorkout = {
+const sampleRunningWorkout: CompactWorkoutModel = {
   title: 'Ulkojuoksu',
   date: '28.03.2026',
   tags: ['juoksu', 'pk'],
@@ -63,7 +71,7 @@ const sampleRunningWorkout = {
           id: 'run-1-split-1',
           type: 'split',
           distance: { value: 1, unit: 'km' },
-          pace: { value: `8'11"`, unit: '/km' },
+          pace: { minutes: 8, seconds: 11, perDistance: { value: 1, unit: 'km' } },
           hr: 140,
           note: null,
           splits: null,
@@ -85,7 +93,7 @@ const sampleRunningWorkout = {
   ],
 };
 
-const sampleWorkout = {
+const sampleWorkout: CompactWorkoutModel = {
   title: 'Voimaharjoitus',
   date: '11.04.2026',
   tags: ['voima', 'jalat'],
@@ -99,35 +107,57 @@ const sampleWorkout = {
   ],
 };
 
+const EXERCISE_COMPACT = 'Exercise Takakyykky|3x8@100kg|Lämmittelysarjat erikseen';
+
+const PYRAMID_COMPACT = 'Pyramid Penkkipunnerrus|10x60,8x70,6x80,4x90kg';
+
+const MOVE_COMPACT = 'Run 8km | Peruskestävyysalueella';
+
+const WORKOUT_COMPACT = `[2026-04-11]
+## Voimaharjoitus
+Tags voima, jalat
+Points 45
+
+Section Lämmittely
+Exercise Koordit|2x20
+
+Section Pääharjoitus
+Exercise Takakyykky|3x8@100kg|Lämmittelysarjat erikseen
+Pyramid Penkkipunnerrus|10x60,8x70,6x80,4x90kg
+
+Section Loppuverryttely
+Run 8km | Peruskestävyysalueella`;
+
+const EDITOR_FONT_FAMILY = [
+  '"Fira Code"',
+  '"SFMono-Regular"',
+  'Monaco',
+  'Consolas',
+  '"Liberation Mono"',
+  'Menlo',
+  'monospace',
+  '"Apple Color Emoji"',
+  '"Segoe UI Emoji"',
+  '"Noto Color Emoji"',
+  '"EmojiOne Color"',
+].join(', ');
+
+function normalizeCompactSnippet(input: string): string {
+  const firstLine = input.split('\n').find((line) => line.trim().length > 0)?.trim() ?? '';
+
+  if (!firstLine || firstLine.startsWith('[') || firstLine.startsWith('## ')) {
+    return input;
+  }
+
+  return input;
+}
+
 function PreviewFrame({ children, padded = true }: { children: React.ReactNode; padded?: boolean }) {
   return (
     <div className={`rt-doc-scope ${padded ? '' : 'rt-doc-scope--embed'}`.trim()}>
       {padded ? <div className="rt-card rt-doc-row-frame">{children}</div> : children}
     </div>
   );
-}
-
-function firstNonEmptyLine(text: string): string {
-  const lines = text.split('\n');
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (trimmed.length > 0) {
-      return trimmed;
-    }
-  }
-
-  return '';
-}
-
-function ensureWorkoutWrapper(compact: string, title: string): string {
-  const firstLine = firstNonEmptyLine(compact);
-
-  if (firstLine.startsWith('[') || firstLine.startsWith('## ')) {
-    return compact;
-  }
-
-  return `[2026-01-01] ## ${title}\n${compact}`;
 }
 
 function extractTextContent(node: React.ReactNode): string {
@@ -188,7 +218,7 @@ function JsonEditorDemo({
           style={{
             width: '100%',
             minHeight: '260px',
-            fontFamily: "'Fira Code', 'Monaco', 'Consolas', monospace",
+            fontFamily: EDITOR_FONT_FAMILY,
             fontSize: '0.9rem',
             lineHeight: '1.5',
             padding: '1rem',
@@ -219,15 +249,164 @@ function JsonEditorDemo({
 
       {!parsed.error && hasValue && target === 'row' && (
         <PreviewFrame>
-          <CompactRowView row={parsed.value as typeof sampleExercise} />
+          <CompactRowView row={parsed.value as CompactRow} />
         </PreviewFrame>
       )}
 
       {!parsed.error && hasValue && target === 'workout' && (
         <PreviewFrame padded={false}>
-          <CompactBlogView workout={parsed.value as typeof sampleWorkout} onRowInteraction={() => {}} />
+          <CompactBlogView workout={parsed.value as CompactWorkoutModel} onRowInteraction={() => {}} />
         </PreviewFrame>
       )}
+    </div>
+  );
+}
+
+function EditableCompactPreview({
+  initialCompact,
+  minHeight = 160,
+  showHeader = false,
+}: {
+  initialCompact: string;
+  minHeight?: number;
+  showHeader?: boolean;
+}) {
+  const [text, setText] = useState(initialCompact);
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle');
+  const normalized = useMemo(() => normalizeCompactSnippet(text), [text]);
+  const parsed = useMemo(() => workoutsFromCompact(normalized), [normalized]);
+  const parserExport = useMemo(() => parseCompact(normalized), [normalized]);
+  const exportedJson = useMemo(() => JSON.stringify(parserExport, null, 2), [parserExport]);
+
+  const handleCopyJson = async () => {
+    try {
+      await navigator.clipboard.writeText(exportedJson);
+      setCopyState('copied');
+      window.setTimeout(() => setCopyState('idle'), 1800);
+    } catch {
+      setCopyState('error');
+      window.setTimeout(() => setCopyState('idle'), 2200);
+    }
+  };
+
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '0.75rem',
+          marginBottom: '0.65rem',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: '#94a3b8',
+          }}
+        >
+          Editable COMPACT preview
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {copyState === 'copied' && (
+            <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>
+              JSON copied
+            </span>
+          )}
+          {copyState === 'error' && (
+            <span style={{ fontSize: '0.75rem', color: '#dc2626', fontWeight: 600 }}>
+              Copy failed
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              void handleCopyJson();
+            }}
+            style={{
+              border: '1px solid #334155',
+              background: '#0f172a',
+              color: '#e2e8f0',
+              borderRadius: '8px',
+              padding: '0.45rem 0.7rem',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            Copy JSON
+          </button>
+        </div>
+      </div>
+
+      <div
+        className="rt-editable-preview"
+      >
+        <textarea
+          className="rt-editable-preview__input"
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          spellCheck={false}
+          style={{
+            minHeight: `${minHeight}px`,
+            fontFamily: EDITOR_FONT_FAMILY,
+          }}
+        />
+      </div>
+
+      {parsed.error && (
+        <div
+          style={{
+            marginBottom: '1rem',
+            padding: '0.75rem',
+            background: '#fee2e2',
+            color: '#b91c1c',
+            borderRadius: '6px',
+            border: '1px solid #fca5a5',
+            fontSize: '0.85rem',
+          }}
+        >
+          {parsed.error}
+        </div>
+      )}
+
+      {!parsed.error && (
+        <CompactPreviewWorkouts
+          workouts={parsed.workouts}
+          showHeader={showHeader}
+          showMetaStrip={!showHeader}
+        />
+      )}
+    </div>
+  );
+}
+
+function CompactPreviewWorkouts({
+  workouts,
+  showHeader = false,
+  showMetaStrip = !showHeader,
+}: {
+  workouts: ReturnType<typeof workoutsFromCompact>['workouts'];
+  showHeader?: boolean;
+  showMetaStrip?: boolean;
+}) {
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      {workouts.map((workout, index) => (
+        <PreviewFrame key={`${workout.title || 'workout'}-${index}`} padded={false}>
+          <CompactBlogView
+            workout={workout}
+            showHeader={showHeader}
+            headerOptions={{
+              showMetaStrip,
+            }}
+          />
+        </PreviewFrame>
+      ))}
     </div>
   );
 }
@@ -237,7 +416,7 @@ function JsonEditorDemo({
  */
 export function ExerciseDemo() {
   return (
-    <JsonEditorDemo initialValue={sampleExercise} target="row" />
+    <EditableCompactPreview initialCompact={EXERCISE_COMPACT} minHeight={84} showHeader={false} />
   );
 }
 
@@ -246,7 +425,7 @@ export function ExerciseDemo() {
  */
 export function PyramidDemo() {
   return (
-    <JsonEditorDemo initialValue={samplePyramid} target="row" />
+    <EditableCompactPreview initialCompact={PYRAMID_COMPACT} minHeight={84} showHeader={false} />
   );
 }
 
@@ -255,7 +434,7 @@ export function PyramidDemo() {
  */
 export function MoveDemo() {
   return (
-    <JsonEditorDemo initialValue={sampleMove} target="row" />
+    <EditableCompactPreview initialCompact={MOVE_COMPACT} minHeight={84} showHeader={false} />
   );
 }
 
@@ -264,7 +443,7 @@ export function MoveDemo() {
  */
 export function WorkoutDemo() {
   return (
-    <JsonEditorDemo initialValue={sampleWorkout} target="workout" />
+    <EditableCompactPreview initialCompact={WORKOUT_COMPACT} minHeight={280} showHeader />
   );
 }
 
@@ -286,46 +465,60 @@ export function RunningWorkoutStaticExample() {
 
 export function CompactSnippetExample({
   compact,
-  title = 'Example',
 }: {
   compact: string;
-  title?: string;
 }) {
   return (
     <>
       <CodeBlock language="compact">
         {compact}
       </CodeBlock>
-      <CompactRenderExample compact={compact} title={title} />
+      <CompactRenderExample compact={compact} />
     </>
   );
 }
 
 export function CompactExampleBlock({
   children,
-  title = 'Example',
 }: {
   children: React.ReactNode;
-  title?: string;
 }) {
   const compact = useMemo(() => extractTextContent(children).trim(), [children]);
 
   return (
     <>
       {children}
-      <CompactRenderExample compact={compact} title={title} />
+      <CompactRenderExample compact={compact} />
     </>
+  );
+}
+
+export function EditableCompactExampleBlock({
+  children,
+  minHeight = 160,
+  showHeader = false,
+}: {
+  children: React.ReactNode;
+  minHeight?: number;
+  showHeader?: boolean;
+}) {
+  const compact = useMemo(() => extractTextContent(children).trim(), [children]);
+
+  return (
+    <EditableCompactPreview
+      initialCompact={compact}
+      minHeight={minHeight}
+      showHeader={showHeader}
+    />
   );
 }
 
 export function CompactRenderExample({
   compact,
-  title = 'Example',
 }: {
   compact: string;
-  title?: string;
 }) {
-  const normalized = useMemo(() => ensureWorkoutWrapper(compact, title), [compact, title]);
+  const normalized = useMemo(() => normalizeCompactSnippet(compact), [compact]);
   const parsed = useMemo(() => workoutsFromCompact(normalized), [normalized]);
 
   if (parsed.error) {
@@ -346,21 +539,7 @@ export function CompactRenderExample({
     );
   }
 
-  return (
-    <div style={{ marginTop: '1rem' }}>
-      {parsed.workouts.map((workout: (typeof parsed.workouts)[number], index: number) => (
-        <PreviewFrame key={`${workout.title}-${index}`} padded={false}>
-          <CompactBlogView
-            workout={workout}
-            showHeader={false}
-            headerOptions={{
-              showMetaStrip: true,
-            }}
-          />
-        </PreviewFrame>
-      ))}
-    </div>
-  );
+  return <CompactPreviewWorkouts workouts={parsed.workouts} showHeader={false} showMetaStrip />;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -380,75 +559,5 @@ Exercise Isometrinen kyykkypito seinää vasten|3x45s,45s,0s
 Exercise Lankku|2x25s,24s`;
 
 export function LiveEditor() {
-  const [text, setText] = useState(DEFAULT_COMPACT);
-
-  const parsed = useMemo(() => workoutsFromCompact(text), [text]);
-  const workout = parsed.workouts[0];
-
-  return (
-    <div style={{ marginTop: '1rem' }}>
-      {/* Editable code block */}
-      <div style={{
-        border: '2px solid #3b82f6',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        marginBottom: '1.5rem',
-      }}>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          spellCheck={false}
-          style={{
-            width: '100%',
-            minHeight: '280px',
-            fontFamily: "'Fira Code', 'Monaco', 'Consolas', monospace",
-            fontSize: '0.9rem',
-            lineHeight: '1.5',
-            padding: '1rem',
-            border: 'none',
-            outline: 'none',
-            resize: 'vertical',
-            background: '#1e1e1e',
-            color: '#d4d4d4',
-          }}
-        />
-      </div>
-
-      {parsed.error && (
-        <div style={{ 
-          marginBottom: '1rem', 
-          padding: '0.75rem', 
-          background: '#fee2e2', 
-          color: '#b91c1c', 
-          borderRadius: '6px', 
-          fontSize: '0.85rem',
-          border: '1px solid #fca5a5',
-        }}>
-          {parsed.error}
-        </div>
-      )}
-
-      {/* Live render label */}
-      <p style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Live render:</p>
-
-      {/* Rendered output */}
-      {workout ? (
-        <PreviewFrame padded={false}>
-          <CompactBlogView workout={workout} onRowInteraction={() => {}} />
-        </PreviewFrame>
-      ) : (
-        <div
-          style={{
-            border: '1px solid #273447',
-            borderRadius: '8px',
-            padding: '1rem',
-            color: '#97a8c2',
-            fontStyle: 'italic',
-          }}
-        >
-          Kirjoita COMPACT-tekstiä ylläolevaan editoriin...
-        </div>
-      )}
-    </div>
-  );
+  return <EditableCompactPreview initialCompact={DEFAULT_COMPACT} minHeight={280} showHeader />;
 }

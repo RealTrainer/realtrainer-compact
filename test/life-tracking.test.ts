@@ -183,6 +183,19 @@ Expense 15EUR | Lounas
     expect(emojisContent.emojis).toContain('🍔');
     expect(emojisContent.emojis).toContain('🚗');
   });
+
+  it('parses titleless emoji snippets as workouts', () => {
+    const input = `Emojis 💪🏋️\n`;
+    const result = parseInput(input);
+
+    expect(result.workouts).toHaveLength(1);
+    expect(result.workouts[0].title).toBeNull();
+
+    const emojisContent = result.workouts[0].content.find((c: any) => c.type === 'emojis');
+    expect(emojisContent).toBeDefined();
+    expect(emojisContent.emojis).toContain('💪');
+    expect(emojisContent.emojis).toContain('🏋️');
+  });
 });
 
 // =============================================================================

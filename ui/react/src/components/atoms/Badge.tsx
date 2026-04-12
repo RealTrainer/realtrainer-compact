@@ -10,6 +10,7 @@ export function Badge({ children, tone = 'default' }: BadgeProps) {
     <span
       className={clsx(
         'inline-flex rounded-full px-3 py-1 text-xs font-semibold',
+        tone === 'accent' && 'rt-emoji-font',
         tone === 'default' && 'bg-slate-700/70 text-slate-200',
         tone === 'accent' && 'bg-orange-500/20 text-orange-300',
         tone === 'good' && 'bg-emerald-500/20 text-emerald-300',

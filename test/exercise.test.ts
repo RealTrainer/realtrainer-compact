@@ -79,11 +79,13 @@ describe('Exercise', () => {
     expect(result.note).toBeNull();
   });
 
-  it('parses exercise with multiple text pipe segments as merged description', () => {
+  it('parses distance exercise with trailing note segment', () => {
     const result = parseLine('Exercise vedot|4x100m|2min') as Exercise;
     expect(result.type).toBe('exercise');
     expect(result.name).toBe('vedot');
-    expect(result.description).toBe('4x100m | 2min');
+    expect(result.distance).toBe(100);
+    expect(result.unit).toBe('m');
+    expect(result.note).toBe('2min');
   });
 
   it('parses exercise with percentage weight', () => {

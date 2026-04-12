@@ -1,6 +1,6 @@
 {
   "name": "realtrainer-compact",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Parser for COMPACT format - a concise text-based DSL for workout tracking, nutrition, expenses, and life logging",
   "type": "module",
   "main": "dist/index.js",
