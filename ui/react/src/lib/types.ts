@@ -82,6 +82,7 @@ export interface CompactCustomRow extends CompactBaseRow {
   type: 'custom';
   name: string;
   value: unknown;
+  valueMax?: number | null;
   unit?: string | null;
 }
 

@@ -531,6 +531,21 @@ Custom Effort 7
     expect(custom.unit).toBeNull();
   });
 
+  it('parses Custom numeric range without unit', () => {
+    const input = `[2026-02-06] ## Harjoitus
+Custom RPM 60-110
+`;
+    const result = parseInput(input);
+    const workout = result.workouts[0];
+    const custom = workout.content.find((c: any) => c.type === 'custom');
+
+    expect(custom).toBeDefined();
+    expect(custom.name).toBe('RPM');
+    expect(custom.value).toBe(60);
+    expect(custom.valueMax).toBe(110);
+    expect(custom.unit).toBeNull();
+  });
+
   it('parses Custom with special unit characters', () => {
     const input = `[2026-02-06] ## Harjoitus
 Custom Liikelaajuus 90|°

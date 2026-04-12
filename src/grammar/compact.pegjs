@@ -1687,7 +1687,10 @@ DerivedNamePart = first:DerivedWord rest:(" " w:DerivedWord { return " " + w; })
 DerivedWord = first:[A-ZÄÖÅa-zäöå] rest:[A-ZÄÖÅa-zäöå0-9_\-/,.'#:.]* { return first + rest.join(''); }
 
 CustomPrefix = "Custom"
-Custom = CustomPrefix __ name:CustomNamePart __ value:Number unit:CustomLineUnit? note:PipeNote? _ NL {
+Custom = CustomPrefix __ name:CustomNamePart __ value:Number "-" valueMax:Number unit:CustomLineUnit? note:PipeNote? _ NL {
+  return { type: 'custom', name: name.trim(), value, valueMax, unit: unit || null, note: note || null };
+}
+  / CustomPrefix __ name:CustomNamePart __ value:Number unit:CustomLineUnit? note:PipeNote? _ NL {
   return { type: 'custom', name: name.trim(), value, unit: unit || null, note: note || null };
 }
   // Legacy/fallback form: Custom 10000kpl | Askeleet

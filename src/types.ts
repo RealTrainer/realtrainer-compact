@@ -560,6 +560,7 @@ export interface Custom {
   type: 'custom';
   name: string;
   value: number;
+  valueMax?: number;
   unit: string | null;
   note: string | null;
 }

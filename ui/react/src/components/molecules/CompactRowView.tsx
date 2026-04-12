@@ -173,11 +173,14 @@ export function CompactRowView({ row, renderers }: CompactRowViewProps) {
 
   if (row.type === 'custom') {
     const valueText = formatCustomValue(row.value);
+    const rangeText = typeof row.valueMax === 'number'
+      ? `${valueText}-${formatCustomValue(row.valueMax)}`
+      : valueText;
     return (
       <div className="border-l-2 border-slate-600 py-1 pl-3 text-sm" data-testid="custom-row">
         <span className="text-slate-400">{row.name}: </span>
         <span className="font-mono text-slate-200" data-testid="custom-value">
-          ~{valueText}{row.unit ?? ''}
+          ~{rangeText}{row.unit ?? ''}
         </span>
       </div>
     );

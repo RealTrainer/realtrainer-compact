@@ -216,6 +216,7 @@ function mapRows(content: Content[]): CompactRow[] {
         type: 'custom',
         name: typeof entry.name === 'string' ? entry.name : 'Custom',
         value: entry.value,
+        valueMax: typeof entry.valueMax === 'number' ? entry.valueMax : null,
         unit: typeof entry.unit === 'string' ? entry.unit : null,
       });
       continue;

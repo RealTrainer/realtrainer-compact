@@ -21,6 +21,21 @@
   background-color: transparent;
 }
 
+.rt-doc-scope p.rt-row {
+  text-align: left;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-wrap: pretty;
+}
+
+.rt-doc-scope .rt-row p:not([class*='tracking']) {
+  font-family: inherit;
+  letter-spacing: normal;
+  word-spacing: normal;
+  font-kerning: normal;
+  text-align: left;
+}
+
 .rt-doc-scope .rt-row-unknown {
   border-color: #ff4f64;
   border-style: dashed;
