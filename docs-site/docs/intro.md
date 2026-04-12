@@ -4,6 +4,7 @@ title: COMPACT Documentation
 slug: /
 ---
 
+import Link from '@docusaurus/Link';
 import { CompactExampleBlock } from '@site/src/components/CompactDemo';
 
 This site documents the major COMPACT format elements and how data is represented in the file format.
@@ -38,6 +39,6 @@ Each page includes:
 
 If you want to start from practical domain examples, open these guides:
 
-- [Kuntosali](docs/sports/gym)
-- [Kestävyys](docs/sports/endurance)
-- [Lihaskunto](docs/sports/bodyweight)
+- <Link to="/docs/sports/gym">Kuntosali</Link>
+- <Link to="/docs/sports/endurance">Kestävyys</Link>
+- <Link to="/docs/sports/bodyweight">Lihaskunto</Link>
