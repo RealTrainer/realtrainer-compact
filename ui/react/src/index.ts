@@ -4,6 +4,10 @@ export type {
   CompactWorkoutModel,
   CompactUiRenderers,
   CompactRow,
+  CompactStatKind,
+  CompactStatPart,
+  CompactStatTone,
+  CompactStatValue,
   CompactSummaryRow,
   CompactPhaseRow,
   CompactSectionRow,
@@ -30,3 +34,4 @@ export { CompactBlogView } from './components/organisms/CompactBlogView';
 export type { CompactBlogHeaderOptions } from './components/organisms/CompactBlogView';
 export { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
 export { workoutsFromCompact } from './lib/workoutsFromCompact';
+export { compactStatFromText, statFromDurationRow, statFromExerciseRow, statFromRunRow } from './lib/formatters';

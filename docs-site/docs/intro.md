@@ -9,6 +9,11 @@ import { CompactExampleBlock } from '@site/src/components/CompactDemo';
 
 This site documents the major COMPACT format elements and how data is represented in the file format.
 
+## Live Playground
+
+- [Open the React playground](https://realtrainer.github.io/realtrainer-compact/compact-ui/)
+- <Link to="/docs/react-components">Open the React components docs</Link>
+
 ## Quick Start
 
 A minimal format example:

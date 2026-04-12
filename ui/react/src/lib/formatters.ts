@@ -1,10 +1,6 @@
-import type { CompactDurationRow, CompactExerciseRow, CompactRunRow } from './types';
+import type { CompactDurationRow, CompactExerciseRow, CompactRunRow, CompactStatPart, CompactStatValue } from './types';
 
-export interface ExerciseSchemePart {
-  text: string;
-  tone: 'default' | 'weight' | 'muted';
-  kind: 'spec' | 'weight' | 'recovery';
-}
+export type ExerciseSchemePart = CompactStatPart;
 
 function formatMeasuredDuration(value: number, unit: 's' | 'min'): string {
   if (unit === 'min') {
@@ -82,6 +78,17 @@ export function formatExerciseScheme(row: CompactExerciseRow): string {
   return formatExerciseSchemeParts(row).map((part) => part.text).join('');
 }
 
+export function compactStatFromText(
+  text: string,
+  tone: CompactStatPart['tone'] = 'weight',
+  kind: CompactStatPart['kind'] = 'spec',
+): CompactStatValue {
+  return {
+    parts: [{ text, tone, kind }],
+    ariaLabel: text,
+  };
+}
+
 export function formatExerciseSchemeParts(row: CompactExerciseRow): ExerciseSchemePart[] {
   if (row.specType === 'measured' && Array.isArray(row.measuredDurations) && row.measuredDurations.length > 0) {
     const measured = row.measuredDurations
@@ -153,6 +160,51 @@ export function formatRun(row: CompactRunRow): string {
     chunks.push(`| ${row.note}`);
   }
   return chunks.join(' ');
+}
+
+export function statFromExerciseRow(row: CompactExerciseRow): CompactStatValue {
+  const parts = formatExerciseSchemeParts(row);
+
+  return {
+    parts,
+    ariaLabel: parts.map((part) => part.text).join(''),
+  };
+}
+
+export function statFromRunRow(row: CompactRunRow): CompactStatValue {
+  const parts: CompactStatPart[] = [];
+
+  if (typeof row.distanceValue === 'number' && row.distanceUnit) {
+    parts.push({ text: `${row.distanceValue}${row.distanceUnit}`, tone: 'weight', kind: 'spec' });
+  }
+
+  if (typeof row.durationMin === 'number') {
+    parts.push({ text: `${parts.length > 0 ? ' ' : ''}${row.durationMin}min`, tone: 'weight', kind: 'duration' });
+  }
+
+  if (row.note) {
+    parts.push({ text: `${parts.length > 0 ? ' • ' : ''}${row.note}`, tone: 'muted', kind: 'meta' });
+  }
+
+  return {
+    parts,
+    ariaLabel: parts.map((part) => part.text).join(''),
+  };
+}
+
+export function statFromDurationRow(row: CompactDurationRow): CompactStatValue {
+  const parts: CompactStatPart[] = [
+    { text: `${row.value}${row.unit}`, tone: 'weight', kind: 'duration' },
+  ];
+
+  if (row.description) {
+    parts.push({ text: ` • ${row.description}`, tone: 'muted', kind: 'meta' });
+  }
+
+  return {
+    parts,
+    ariaLabel: parts.map((part) => part.text).join(''),
+  };
 }
 
 export function formatDuration(row: CompactDurationRow): string {

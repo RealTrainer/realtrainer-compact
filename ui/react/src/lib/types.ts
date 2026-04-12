@@ -28,9 +28,24 @@ export interface CompactUiRenderers {
   renderRow?: (row: CompactRow, defaultNode: ReactNode) => ReactNode;
   renderExerciseScheme?: (
     row: CompactExerciseRow,
-    parts: Array<{ text: string; tone: 'default' | 'weight' | 'muted'; kind: 'spec' | 'weight' | 'recovery' }>,
+    parts: CompactStatPart[],
     defaultNode: ReactNode,
   ) => ReactNode;
+}
+
+export type CompactStatTone = 'default' | 'weight' | 'muted';
+
+export type CompactStatKind = 'spec' | 'weight' | 'recovery' | 'pace' | 'duration' | 'meta';
+
+export interface CompactStatPart {
+  text: string;
+  tone: CompactStatTone;
+  kind: CompactStatKind;
+}
+
+export interface CompactStatValue {
+  parts: CompactStatPart[];
+  ariaLabel?: string;
 }
 
 export interface CompactDerivedValue {

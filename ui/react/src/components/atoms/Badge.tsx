@@ -1,13 +1,15 @@
 import clsx from 'clsx';
+import type { HTMLAttributes, ReactNode } from 'react';
 
-interface BadgeProps {
-  children: React.ReactNode;
+export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+  children: ReactNode;
   tone?: 'default' | 'accent' | 'good' | 'warn' | 'danger';
 }
 
-export function Badge({ children, tone = 'default' }: BadgeProps) {
+export function Badge({ children, tone = 'default', className, ...props }: BadgeProps) {
   return (
     <span
+      {...props}
       className={clsx(
         'inline-flex rounded-full px-3 py-1 text-xs font-semibold',
         tone === 'accent' && 'rt-emoji-font',
@@ -16,6 +18,7 @@ export function Badge({ children, tone = 'default' }: BadgeProps) {
         tone === 'good' && 'bg-emerald-500/20 text-emerald-300',
         tone === 'warn' && 'bg-amber-500/20 text-amber-300',
         tone === 'danger' && 'bg-rose-500/20 text-rose-300',
+        className,
       )}
     >
       {children}

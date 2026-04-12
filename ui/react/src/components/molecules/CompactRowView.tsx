@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { formatDuration, formatExerciseSchemeParts, formatRun } from '../../lib/formatters';
+import { statFromDurationRow, statFromExerciseRow, statFromRunRow } from '../../lib/formatters';
 import type { CompactExerciseRow, CompactRow, CompactUiRenderers } from '../../lib/types';
 import { Badge } from '../atoms/Badge';
 import { StatChip } from '../atoms/StatChip';
@@ -10,22 +10,12 @@ interface CompactRowViewProps {
 }
 
 function renderDefaultExerciseScheme(row: CompactExerciseRow) {
-  const schemeParts = formatExerciseSchemeParts(row);
+  const stat = statFromExerciseRow(row);
+  const schemeParts = stat.parts;
 
   return {
     schemeParts,
-    node: (
-      <span className="font-mono text-sm">
-        {schemeParts.map((part, index) => (
-          <span
-            key={`${row.id}-scheme-${index}`}
-            className={part.tone === 'weight' ? 'text-[rgb(255,107,53)]' : part.tone === 'muted' ? 'text-slate-400' : 'text-slate-300'}
-          >
-            {part.text}
-          </span>
-        ))}
-      </span>
-    ),
+    node: <StatChip stat={stat} />,
   };
 }
 
@@ -276,7 +266,7 @@ export function CompactRowView({ row, renderers }: CompactRowViewProps) {
     return (
       <div className="rt-row flex items-center justify-between gap-3 p-3">
         <p className="text-lg font-semibold text-slate-100">Run</p>
-        <StatChip value={formatRun(row)} />
+        <StatChip stat={statFromRunRow(row)} />
       </div>
     );
   }
@@ -290,7 +280,7 @@ export function CompactRowView({ row, renderers }: CompactRowViewProps) {
         {durationDescription ? (
           <p className="text-base font-medium text-slate-100" data-testid="duration-description">{durationDescription}</p>
         ) : (
-          <StatChip value={formatDuration(row)} />
+          <StatChip stat={statFromDurationRow(row)} />
         )}
       </div>
     );

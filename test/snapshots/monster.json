@@ -975,8 +975,18 @@
           "splits": null
         },
         {
-          "type": "unknown",
-          "raw": "> 5min | duration-only split"
+          "type": "split",
+          "distance": null,
+          "duration": {
+            "value": 5,
+            "unit": "min"
+          },
+          "pace": null,
+          "intensity": null,
+          "hr": null,
+          "customFields": null,
+          "note": "duration-only split",
+          "splits": null
         },
         {
           "type": "interval",
@@ -1389,8 +1399,30 @@
           "customFields": null
         },
         {
-          "type": "unknown",
-          "raw": "Exercise Isometrinen pito|3x30/10s@20kg (lisäkuvaus) [[Hengitys:nenä]] | note"
+          "type": "exercise",
+          "name": "Isometrinen pito",
+          "sets": 3,
+          "reps": 30,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 20,
+            "unit": "kg"
+          },
+          "recovery": {
+            "value": 10,
+            "max": null,
+            "unit": "sec"
+          },
+          "note": "note",
+          "description": "lisäkuvaus",
+          "customFields": [
+            {
+              "name": "Hengitys",
+              "value": "nenä",
+              "unit": null
+            }
+          ]
         },
         {
           "type": "exercise",
@@ -2064,8 +2096,16 @@
           "description": "Bussilippu"
         },
         {
-          "type": "unknown",
-          "raw": "Expense entry pirkkahalli 5.00USD | sisäänpääsy"
+          "type": "expense",
+          "expenseType": {
+            "type": "entry",
+            "name": "pirkkahalli"
+          },
+          "amount": 5,
+          "currency": "USD",
+          "vatPercent": null,
+          "vatAmount": null,
+          "description": "sisäänpääsy"
         },
         {
           "type": "expense",
@@ -2461,8 +2501,18 @@
           "splits": null
         },
         {
-          "type": "unknown",
-          "raw": "> Split 5min | split ilman distancea"
+          "type": "split",
+          "distance": null,
+          "duration": {
+            "value": 5,
+            "unit": "min"
+          },
+          "pace": null,
+          "intensity": null,
+          "hr": null,
+          "customFields": null,
+          "note": "split ilman distancea",
+          "splits": null
         },
         {
           "type": "text",

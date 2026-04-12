@@ -700,6 +700,19 @@ Drinking 4dl 180kcal 8g/prot | Iso Latte [20:00]
     expect(content.vatAmount).toBe(24);
   });
 
+  it('parses exercise with recovery, description, custom field and trailing note', () => {
+    const content = getContent<Exercise>('[2026-01-13] ## Test\nExercise Isometrinen pito|3x30/10s@20kg (lisäkuvaus) [[Hengitys:nenä]] | note\n', 'exercise');
+    expect(content.name).toBe('Isometrinen pito');
+    expect(content.sets).toBe(3);
+    expect(content.reps).toBe(30);
+    expect(content.recovery?.value).toBe(10);
+    expect(content.recovery?.unit).toBe('sec');
+    expect(content.weight && 'value' in content.weight ? content.weight.value : null).toBe(20);
+    expect(content.description).toBe('lisäkuvaus');
+    expect(content.note).toBe('note');
+    expect(content.customFields?.[0].name).toBe('Hengitys');
+  });
+
   it('parses Sleep', () => {
     const content = getContent<SleepEntry>('[2026-01-13] ## Test\nSleep 7.5h quality:good\n', 'sleep');
     expect(content.duration).toBe(7.5);

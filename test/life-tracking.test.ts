@@ -135,6 +135,14 @@ describe('Expense', () => {
     const content = getContent('[2026-01-06] ## Kulut\nExpense 50EUR | Jäsenmaksu\n', 'expense');
     expect(content.amount).toBe(50);
   });
+
+  it('parses named entry expense', () => {
+    const content = getContent('[2026-01-06] ## Kulut\nExpense entry pirkkahalli 5.00USD | sisäänpääsy\n', 'expense');
+    expect(content.expenseType).toEqual({ type: 'entry', name: 'pirkkahalli' });
+    expect(content.amount).toBe(5);
+    expect(content.currency).toBe('USD');
+    expect(content.description).toBe('sisäänpääsy');
+  });
 });
 
 // =============================================================================

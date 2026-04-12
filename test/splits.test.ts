@@ -394,6 +394,27 @@ Text Reppu selassa, paras vauhti lopussa vahan alle 6min/km, polville ihan OK
     expect(splits[1].hr).toBe(156);
   });
 
+  it('should parse standalone duration-only split with note', () => {
+    const input = `[2026-03-28] ## Ulkojuoksu
+> 5min | duration-only split
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const workout = result.document.workouts[0];
+    const split = workout.content.find(c => c.type === 'split') as Split;
+    const unknowns = workout.content.filter(c => c.type === 'unknown');
+
+    expect(split).toBeDefined();
+    expect(split.distance).toBeNull();
+    expect(split.duration?.value).toBe(5);
+    expect(split.duration?.unit).toBe('min');
+    expect(split.note).toBe('duration-only split');
+    expect(unknowns.length).toBe(0);
+  });
+
   it('should parse standalone swim splits with mm:ss durations', () => {
     const input = `[2026-03-24T19:03+02] ## Uintiharjoitus (Rintauinti)
 Tags uinti, kuntoutus, Tampere

@@ -361,6 +361,13 @@ Exercise =
     };
   }
   // Format with recovery before weight: E name|spec/recovery@weight [[custom:val]] (LLM-generated)
+  / ExercisePrefix _ name:NamePart "|" spec:ExerciseSpecBase recovery:ExerciseRecovery weight:ExerciseWeight desc:ExerciseDesc customFields:CustomFields note:PipeNote? _ NL {
+    return { type: 'exercise', name, ...spec, weight, recovery, note: note || null, description: desc || null, customFields: customFields || null };
+  }
+  // Format with recovery before weight + description before note: E name|spec/recovery@weight (desc) | note
+  / ExercisePrefix _ name:NamePart "|" spec:ExerciseSpecBase recovery:ExerciseRecovery weight:ExerciseWeight desc:ExerciseDesc note:PipeNote? customFields:CustomFields? _ NL {
+    return { type: 'exercise', name, ...spec, weight, recovery, note: note || null, description: desc || null, customFields: customFields || null };
+  }
   / ExercisePrefix _ name:NamePart "|" spec:ExerciseSpecBase recovery:ExerciseRecovery weight:ExerciseWeight note:PipeNote? desc:ExerciseDesc? customFields:CustomFields? _ NL {
     return { type: 'exercise', name, ...spec, weight, recovery, note: note || null, description: desc || null, customFields: customFields || null };
   }
@@ -508,7 +515,13 @@ CustomFieldValue =
   / text:$[^|\]\n\r]+ { return { value: text.trim(), unit: null }; }
 
 // Optional description after exercise spec (separated by space)
-ExerciseDesc = " "+ text:$[^\n\r\[]+ { return text.trim(); }
+ExerciseDesc = " "+ text:$[^\n\r\[]+ {
+  const trimmed = text.trim();
+  if (trimmed.startsWith('(') && trimmed.endsWith(')')) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
+}
 
 // Measured duration item: 23s or 23s+28s (bilateral)
 MeasuredDurationItem = 
@@ -1122,7 +1135,20 @@ SplitHR = _ "@"? _ hr:Int "bpm"i _ { return hr; }
 
 // Standalone split: appears as content element (not attached to a Move)
 // Used when splits come after a Section or other non-Move content
-StandaloneSplit = ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL {
+StandaloneSplit = ">" _ "Split"? _ dur:SplitDuration customFields:CustomFields? note:PipeNote? _ NL {
+  return {
+    type: 'split',
+    distance: null,
+    duration: dur,
+    pace: null,
+    intensity: null,
+    hr: null,
+    customFields: customFields || null,
+    note: note || null,
+    splits: null
+  };
+}
+ / ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL {
   return { 
     type: 'split', 
     distance: spec.distance || null, 
@@ -1777,7 +1803,18 @@ PipeNoteWithBrackets = _ "|" _ text:$[^|\n\r]+ { return text.trim(); }
 // Expense 80EUR | Fysioterapiakäynti
 // Expense 100EUR ALV24% 19.35EUR | Konsultointi (with VAT amount)
 // Expense 50EUR ALV10% | Ruoka (VAT without amount)
-Expense = "Expense" _ expenseType:ExpenseType? _ amount:ExpenseAmount _ vat:ExpenseVAT? _ desc:PipeNote? _ NL {
+Expense = "Expense" _ typeName:ExpenseNamedEntry _ amount:ExpenseAmount _ vat:ExpenseVAT? _ desc:PipeNote? _ NL {
+  return {
+    type: 'expense',
+    expenseType: { type: 'entry', name: typeName },
+    amount: amount.value,
+    currency: amount.currency,
+    vatPercent: vat?.percent || null,
+    vatAmount: vat?.amount || null,
+    description: desc || null
+  };
+}
+ / "Expense" _ expenseType:ExpenseType? _ amount:ExpenseAmount _ vat:ExpenseVAT? _ desc:PipeNote? _ NL {
   return { 
     type: 'expense',
     expenseType: expenseType || 'general',
@@ -1788,6 +1825,8 @@ Expense = "Expense" _ expenseType:ExpenseType? _ amount:ExpenseAmount _ vat:Expe
     description: desc || null
   };
 }
+
+ExpenseNamedEntry = "entry" _ name:$[A-ZÄÖÅa-zäöå \-]+ _ { return name.trim(); }
 
 ExpenseType = "entry" _ name:ExpenseTypeName { return { type: 'entry', name }; }
             / "transport" { return { type: 'transport' }; }
