@@ -80,10 +80,27 @@ const config: Config = {
       },
       items: [
         {
+          type: 'doc',
+          docId: 'intro',
+          position: 'left',
+          label: 'Docs',
+        },
+        {
+          type: 'doc',
+          docId: 'react-components',
+          position: 'left',
+          label: 'React UI',
+        },
+        {
+          to: '/docs/sports/',
+          position: 'left',
+          label: 'Lajit',
+        },
+        {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Format Elements',
+          label: 'All Docs',
         },
         {
           href: 'https://github.com/RealTrainer/realtrainer-compact',

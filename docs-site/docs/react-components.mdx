@@ -37,7 +37,7 @@ import 'realtrainer-compact/ui/styles.css';
 
 **COMPACT syntax:**
 ```compact
-Takakyykky 3x8x100kg | Lämmittelysarjat erikseen
+Exercise Takakyykky|3x8@100kg|Lämmittelysarjat erikseen
 ```
 
 **React component:**
@@ -70,7 +70,7 @@ Edit the object and see the same component render update immediately:
 
 **COMPACT syntax:**
 ```compact
-Penkkipunnerrus 10x60kg 8x70kg 6x80kg 4x90kg
+Pyramid Penkkipunnerrus|10x60,8x70,6x80,4x90kg
 ```
 
 **React component:**
@@ -105,10 +105,7 @@ Edit the object and see the same component render update immediately:
 
 **COMPACT syntax:**
 ```compact
-# Juoksu
-Duration 45min
-Distance 8km
-| Peruskestävyysalueella
+Run 8km | Peruskestävyysalueella
 ```
 
 **React component:**
@@ -120,7 +117,6 @@ const run: CompactMoveRow = {
   id: 'move-1',
   type: 'move',
   sport: 'Juoksu',
-  duration: { value: 45, unit: 'min' },
   distance: { value: 8, unit: 'km' },
   note: 'Peruskestävyysalueella',
 };
@@ -145,18 +141,15 @@ Edit the object and see the same component render update immediately:
 Tags voima, jalat
 Points 45
 
-### Lämmittely
-Koordit 2x20
+Section Lämmittely
+Exercise Koordit|2x20
 
-### Pääharjoitus
-Takakyykky 3x8x100kg | Lämmittelysarjat erikseen
-Penkkipunnerrus 10x60kg 8x70kg 6x80kg 4x90kg
+Section Pääharjoitus
+Exercise Takakyykky|3x8@100kg|Lämmittelysarjat erikseen
+Pyramid Penkkipunnerrus|10x60,8x70,6x80,4x90kg
 
-### Loppuverryttely
-# Juoksu
-Duration 45min
-Distance 8km
-| Peruskestävyysalueella
+Section Loppuverryttely
+Run 8km | Peruskestävyysalueella
 ```
 
 **React component:**
@@ -225,7 +218,7 @@ import { CompactBlogView, workoutsFromCompact } from 'realtrainer-compact/ui';
 const text = `
 [2026-04-11]
 ## Aamuharjoitus
-Kyykky 3x10x80kg
+Exercise Kyykky|3x10@80kg
 `;
 
 const { workouts, error } = workoutsFromCompact(text);
@@ -237,7 +230,7 @@ if (error) {
 <CompactBlogView workout={workouts[0]} />
 ```
 
-See [Vite Playground](https://github.com/your-repo/realtrainer-compact/tree/main/ui/react) 
+See [Vite Playground](https://github.com/RealTrainer/realtrainer-compact/tree/main/ui/react) 
 for complete parser-to-UI integration example.
 
 ---
