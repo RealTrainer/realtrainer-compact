@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react';
-import { parseCompact } from '../../../../../src/index.ts';
-import type { Tags } from '../../../../../src/types.ts';
+import { parseCompact } from '@parser';
+import type { Tags } from '@parser/types';
 import type { CompactRow, CompactWorkoutModel } from '../../lib/types';
 import { FieldLabel } from '../atoms/FieldLabel';
 import { CompactRowEdit } from '../molecules/CompactRowEdit';

@@ -9,6 +9,8 @@ import {
   PyramidDemo,
   MoveDemo,
   WorkoutDemo,
+  CompactViewDemo,
+  CompactViewParsedDemo,
   LiveEditor
 } from '@site/src/components/CompactDemo';
 
@@ -18,6 +20,11 @@ This page demonstrates the `realtrainer-compact/ui` export,
 which provides ready-to-use React components for rendering COMPACT data.
 
 [Open the live React playground](https://realtrainer.github.io/realtrainer-compact/compact-ui/)
+
+The current Vite gallery mirrors the exported API surface closely:
+- `CompactView` for parser-first full rendering
+- `CompactRowView` for one generic row entry point
+- direct row exports like `Phase`, `MoveRow`, `Duration`, `SplitRow`, and `Unknown` when you want a smaller rendering surface
 
 ---
 
@@ -44,7 +51,7 @@ Exercise Takakyykky|3x8@100kg|Lämmittelysarjat erikseen
 
 **React component:**
 ```tsx
-import { CompactRowView } from 'realtrainer-compact/ui';
+import { Exercise } from 'realtrainer-compact/ui';
 import type { CompactExerciseRow } from 'realtrainer-compact/ui';
 
 const exercise: CompactExerciseRow = {
@@ -57,7 +64,7 @@ const exercise: CompactExerciseRow = {
   note: 'Lämmittelysarjat erikseen',
 };
 
-<CompactRowView row={exercise} />
+<Exercise row={exercise} />
 ```
 
 **Live render:**
@@ -77,7 +84,7 @@ Pyramid Penkkipunnerrus|10x60,8x70,6x80,4x90kg
 
 **React component:**
 ```tsx
-import { CompactRowView } from 'realtrainer-compact/ui';
+import { PyramidRow } from 'realtrainer-compact/ui';
 import type { CompactPyramidRow } from 'realtrainer-compact/ui';
 
 const pyramid: CompactPyramidRow = {
@@ -92,7 +99,7 @@ const pyramid: CompactPyramidRow = {
   ],
 };
 
-<CompactRowView row={pyramid} />
+<PyramidRow row={pyramid} />
 ```
 
 **Live render:**
@@ -112,7 +119,7 @@ Run 8km | Peruskestävyysalueella
 
 **React component:**
 ```tsx
-import { CompactRowView } from 'realtrainer-compact/ui';
+import { MoveRow } from 'realtrainer-compact/ui';
 import type { CompactMoveRow } from 'realtrainer-compact/ui';
 
 const run: CompactMoveRow = {
@@ -123,7 +130,7 @@ const run: CompactMoveRow = {
   note: 'Peruskestävyysalueella',
 };
 
-<CompactRowView row={run} />
+<MoveRow row={run} />
 ```
 
 **Live render:**
@@ -185,14 +192,91 @@ Edit the object and see the same component render update immediately:
 
 ---
 
+## CompactView
+
+`CompactView` is the parser-first entry point when you do not want to build a custom `CompactWorkoutModel` yourself.
+It accepts raw COMPACT text, `parseCompact(...)` results, a parsed `Document`, a parsed `Workout`, or an already prepared UI workout model.
+
+**React component with raw COMPACT text:**
+```tsx
+import { CompactView } from 'realtrainer-compact/ui';
+
+const compact = `
+[2026-04-11]
+## Voimaharjoitus
+Tags voima, jalat
+Exercise Takakyykky|3x8@100kg
+Run 8km | Peruskestävyysalueella
+`;
+
+<CompactView data={compact} showHeader />
+```
+
+**React component with parser result:**
+```tsx
+import { parseCompact } from 'realtrainer-compact';
+import { CompactView } from 'realtrainer-compact/ui';
+
+const parsed = parseCompact(compact);
+
+<CompactView data={parsed} showHeader />
+```
+
+**Live render from text:**
+
+<CompactViewDemo />
+
+**Live render from `parseCompact(...)`:**
+
+<CompactViewParsedDemo />
+
+---
+
+## Row-level Components
+
+If you already know the row type, you can import the row renderer directly instead of routing everything through `CompactRowView`.
+
+```tsx
+import {
+  Phase,
+  Section,
+  Custom,
+  Exercise,
+  PyramidRow,
+  MoveRow,
+  Run,
+  Duration,
+  SplitRow,
+  Text,
+  Unknown,
+} from 'realtrainer-compact/ui';
+```
+
+Use this when:
+- you already have a typed row and want the smallest possible rendering surface
+- you want per-row demos or tests without the generic dispatcher
+- you want your UI code to match the parser row type more explicitly
+
+Keep using `CompactRowView` when:
+- the input may be any row type
+- you want one generic row entry point
+- you are passing parser-native `Content` values around and do not want a manual switch nearby
+
+---
+
 ## TypeScript Types
 
 The package exports all necessary TypeScript interfaces:
 
 ```ts
+import type { Content } from 'realtrainer-compact';
 import type {
+  CompactRenderableData,
+  CompactRowInput,
+  CompactRowViewProps,
+  CompactViewProps,
   CompactWorkoutModel,
-  CompactRow,        // Union of all row types
+  CompactRow,
   CompactExerciseRow,
   CompactPyramidRow,
   CompactPyramidSet,
@@ -204,8 +288,31 @@ import type {
   CompactPhaseRow,
   CompactSummaryRow,
   CompactTextRow,
+  CompactUnknownRow,
+} from 'realtrainer-compact/ui';
+
+import {
+  CompactRowView,
+  CompactView,
+  Summary,
+  Phase,
+  Section,
+  Custom,
+  Exercise,
+  PyramidRow,
+  MoveRow,
+  Run,
+  Duration,
+  SplitRow,
+  Text,
+  Unknown,
 } from 'realtrainer-compact/ui';
 ```
+
+- `CompactRowInput` is the practical row input type for row-level rendering: `CompactRow | Content`.
+- `CompactRenderableData` is the parser-first union used by `CompactView`.
+- Row-level components such as `Phase`, `MoveRow`, and `Duration` are exported directly when you want a smaller surface than `CompactRowView`.
+- The Vite gallery groups these direct row exports under their own sidebar section so you can inspect each renderer separately.
 
 ---
 
@@ -217,11 +324,11 @@ Current public props used by the React UI package.
 
 ```ts
 type CompactRowViewProps = {
-  row: CompactRow;
+  row: CompactRowInput;
 };
 ```
 
-- `row`: One parsed COMPACT row. This is the main read-only row renderer.
+- `row`: One parser-native `Content` row or one normalized UI `CompactRow`. This is the main read-only row renderer.
 
 ### `CompactBlogView`
 
@@ -249,6 +356,37 @@ type CompactBlogViewProps = {
 - `onRowInteraction`: Optional row-level interaction callback. When provided, rows become keyboard/click interactive and emit `click`, `press`, or `hover`.
 - `showHeader`: Controls whether the top workout header is shown. Default is `true`.
 - `headerOptions`: Fine-grained visibility toggles for header content and metadata strip.
+
+### `CompactView`
+
+```ts
+type CompactRenderableData =
+  | string
+  | ParseResult
+  | ParseFailure
+  | Document
+  | Workout
+  | CompactWorkoutModel
+  | CompactWorkoutModel[];
+
+type CompactViewProps = {
+  data: CompactRenderableData;
+  workoutIndex?: number;
+  showHeader?: boolean;
+  headerOptions?: CompactBlogHeaderOptions;
+  onRowInteraction?: (rowId: string, event: RowInteractionEvent) => void;
+  renderers?: CompactUiRenderers;
+  emptyState?: ReactNode;
+  errorFallback?: (message: string) => ReactNode;
+};
+```
+
+- `data`: The main parser-first input. Pass COMPACT text, parser output, a parsed workout, or a ready-made UI model.
+- `workoutIndex`: Optional index when `data` contains multiple workouts and you want to render only one.
+- `showHeader`: Same header visibility control as `CompactBlogView`.
+- `headerOptions`: Same fine-grained header controls as `CompactBlogView`.
+- `emptyState`: Optional fallback when no workouts are available.
+- `errorFallback`: Optional custom renderer for parse errors.
 
 ### `CompactBlogHeaderOptions`
 
@@ -292,7 +430,7 @@ Parse COMPACT text and render directly:
 
 ```tsx
 import { parseCompact } from 'realtrainer-compact';
-import { CompactBlogView, workoutsFromCompact } from 'realtrainer-compact/ui';
+import { CompactView } from 'realtrainer-compact/ui';
 
 const text = `
 [2026-04-11]
@@ -300,13 +438,9 @@ const text = `
 Exercise Kyykky|3x10@80kg
 `;
 
-const { workouts, error } = workoutsFromCompact(text);
+const parsed = parseCompact(text);
 
-if (error) {
-  throw new Error(error);
-}
-
-<CompactBlogView workout={workouts[0]} />
+<CompactView data={parsed} showHeader />
 ```
 
 See [Vite Playground](https://github.com/RealTrainer/realtrainer-compact/tree/main/ui/react) 

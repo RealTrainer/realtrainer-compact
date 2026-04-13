@@ -59,6 +59,8 @@ const publishPackage = {
   bugs: pkg.bugs,
   homepage: pkg.homepage,
   engines: pkg.engines,
+  dependencies: pkg.dependencies,
+  peerDependencies: pkg.peerDependencies,
 };
 
 const packageDist = {

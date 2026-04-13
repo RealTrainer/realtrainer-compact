@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import type { Document } from './types.js';
+import type { Content, Document, Workout } from './types.js';
 
 // The generated parser will be imported at runtime
 // @ts-expect-error - No type definitions for generated parser
@@ -29,9 +29,9 @@ export interface ParseError {
 /**
  * Successful parse result
  */
-export interface ParseResult {
+export interface ParseResult<TDocument extends Document = Document> {
   success: true;
-  document: Document;
+  document: TDocument;
 }
 
 /**
@@ -45,7 +45,7 @@ export interface ParseFailure {
 /**
  * Union type for parse outcome
  */
-export type ParseOutcome = ParseResult | ParseFailure;
+export type ParseOutcome<TDocument extends Document = Document> = ParseResult<TDocument> | ParseFailure;
 
 /**
  * Parse compact format text into a Document AST.
@@ -105,6 +105,21 @@ export function parseCompact(input: string): ParseOutcome {
       },
     };
   }
+}
+
+export function isParseSuccess<TDocument extends Document = Document>(
+  result: ParseOutcome<TDocument>,
+): result is ParseResult<TDocument> {
+  return result.success;
+}
+
+export type ContentOfType<TType extends Content['type']> = Extract<Content, { type: TType }>;
+
+export function getWorkoutEntries<TType extends Content['type']>(
+  workout: Workout,
+  type: TType,
+): ContentOfType<TType>[] {
+  return workout.content.filter((entry): entry is ContentOfType<TType> => entry.type === type);
 }
 
 /**

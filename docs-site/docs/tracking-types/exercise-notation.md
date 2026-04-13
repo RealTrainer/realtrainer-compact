@@ -3,6 +3,7 @@ id: exercise-notation
 title: Exercise Notation Patterns
 ---
 
+import Link from '@docusaurus/Link';
 import { EditableCompactExampleBlock } from '@site/src/components/CompactDemo';
 
 This page summarizes the most important exercise notation patterns in COMPACT format.
@@ -49,6 +50,22 @@ Pyramid Single-arm Press|12+12x12,10+10x14,8+8x16kg
 ```
 </EditableCompactExampleBlock>
 
+For a grammar-focused breakdown, see <Link to="/docs/tracking-types/left-right-side-patterns">Left / Right Side Patterns</Link>.
+
+## Recovery
+
+Recovery is a first-class part of exercise notation, not just free-text description.
+
+<EditableCompactExampleBlock minHeight={140}>
+```compact
+Exercise Side Plank|2x20s+37s,23s+21s/60s
+Exercise Farmer walk|3x40m/2min@2x32kg
+Exercise Band Pull-Apart|3x20/15-20s
+```
+</EditableCompactExampleBlock>
+
+For a dedicated recovery page, see <Link to="/docs/tracking-types/recovery">Recovery</Link>.
+
 ## Patterns Seen in MONSTER Corpus
 
 <EditableCompactExampleBlock minHeight={160}>
@@ -65,3 +82,4 @@ Exercise Farmer walk|3x40m/2min@2x32kg
 - Keep unit symbols (`kg`, `s`, `min`, `m`) explicit when possible.
 - Avoid mixing side notations (`+` and `/`) for the same metric in one line.
 - For unknown/open targets, `?` is valid: `Exercise Tempo Drill|2-3x?`.
+- Other grammar-important patterns worth knowing are measured duration lists (`45s,45s,0s`), per-side modifiers (`/side`, `/per side`), set/rep ranges, and `[[custom:field]]` suffixes.

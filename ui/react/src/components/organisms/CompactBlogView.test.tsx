@@ -73,12 +73,35 @@ Weight 85.2kg`;
     expect(screen.getByTestId('workout-meta-strip')).toBeInTheDocument();
     expect(screen.getAllByText('recovery')).toHaveLength(1);
     expect(screen.getAllByText('😴💧')).toHaveLength(1);
+    expect(screen.queryByTestId('row-tags-0')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('row-emojis-1')).not.toBeInTheDocument();
     expect(screen.getByText('Paaosa')).toBeInTheDocument();
     expect(screen.getByText('Crosstrainer')).toBeInTheDocument();
     expect(screen.getByText('Food 450kcal 30g/prot | Chicken salad')).toBeInTheDocument();
     expect(screen.getByText('Expense 14.9EUR | groceries')).toBeInTheDocument();
     expect(screen.getByText('Health physio | Shoulder mobility')).toBeInTheDocument();
     expect(screen.getByText('weight 85.2kg')).toBeInTheDocument();
+  });
+
+  it('combines multiple emoji lines into one visible emoji badge', () => {
+    const input = `[2026-03-28] ## Arki
+Emojis 💪🧙
+Emojis 🏊🌊
+Text Good session overall`;
+
+    const parsed = workoutsFromCompact(input);
+    expect(parsed.error).toBeNull();
+    expect(parsed.workouts.length).toBe(1);
+
+    render(
+      <CompactBlogView
+        workout={parsed.workouts[0]}
+        showHeader={false}
+        headerOptions={{ showMetaStrip: true }}
+      />,
+    );
+
+    expect(screen.getByText('💪🧙🏊🌊')).toBeInTheDocument();
   });
 
   it('omits the title completely when compact input has no title', () => {

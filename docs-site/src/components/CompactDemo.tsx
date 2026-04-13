@@ -3,6 +3,7 @@ import CodeBlock from '@theme/CodeBlock';
 import { parseCompact } from 'realtrainer-compact';
 import {
   CompactBlogView,
+  CompactView,
   CompactRowView,
   workoutsFromCompact,
 } from 'realtrainer-compact/ui';
@@ -394,17 +395,24 @@ function CompactPreviewWorkouts({
   showHeader?: boolean;
   showMetaStrip?: boolean;
 }) {
-  return (
-    <div style={{ marginTop: '1rem' }}>
-      {workouts.map((workout, index) => (
-        <PreviewFrame key={`${workout.title || 'workout'}-${index}`} padded={false}>
-          <CompactBlogView
+  /*
+<CompactBlogView
             workout={workout}
             showHeader={showHeader}
             headerOptions={{
               showMetaStrip,
             }}
-          />
+          />  
+  */
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      {workouts.map((workout, index) => (
+        <PreviewFrame key={`${workout.title || 'workout'}-${index}`} padded={false}>
+          <CompactView data={workout} headerOptions={{
+            showEmojis: true,
+            showTags: true,
+            showPoints: true,
+          }}/>                    
         </PreviewFrame>
       ))}
     </div>
@@ -444,6 +452,22 @@ export function MoveDemo() {
 export function WorkoutDemo() {
   return (
     <EditableCompactPreview initialCompact={WORKOUT_COMPACT} minHeight={280} showHeader />
+  );
+}
+
+export function CompactViewDemo() {
+  return (
+    <EditableCompactPreview initialCompact={WORKOUT_COMPACT} minHeight={280} showHeader />
+  );
+}
+
+export function CompactViewParsedDemo() {
+  const parsed = parseCompact(WORKOUT_COMPACT);
+
+  return (
+    <PreviewFrame padded={false}>
+      <CompactView data={parsed} showHeader />
+    </PreviewFrame>
   );
 }
 
@@ -489,6 +513,7 @@ export function CompactExampleBlock({
     <>
       {children}
       <CompactRenderExample compact={compact} />
+      
     </>
   );
 }

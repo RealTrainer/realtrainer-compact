@@ -44,6 +44,6 @@ Each page includes:
 
 If you want to start from practical domain examples, open these guides:
 
-- <Link to="/docs/sports/gym">Kuntosali</Link>
-- <Link to="/docs/sports/endurance">Kestävyys</Link>
-- <Link to="/docs/sports/bodyweight">Lihaskunto</Link>
+- <Link to="/docs/sports/voimaharjoitus">Voimaharjoitus</Link>
+- <Link to="/docs/sports/lihaskunto">Lihaskunto</Link>
+- <Link to="/docs/sports/juoksuharjoitus">Juoksuharjoitus</Link>

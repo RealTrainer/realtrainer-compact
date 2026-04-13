@@ -3,13 +3,28 @@ import { Badge } from './components/atoms/Badge';
 import { FieldLabel } from './components/atoms/FieldLabel';
 import { StatChip } from './components/atoms/StatChip';
 import { CompactRowEdit } from './components/molecules/CompactRowEdit';
+import {
+  Custom,
+  Duration,
+  Exercise,
+  MoveRow,
+  Phase,
+  PyramidRow,
+  Run,
+  Section,
+  SplitRow,
+  Summary,
+  Text,
+  Unknown,
+} from './components/molecules/CompactRowParts';
 import { CompactRowView } from './components/molecules/CompactRowView';
 import { WorkoutHeader } from './components/molecules/WorkoutHeader';
 import { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
 import { CompactBlogView } from './components/organisms/CompactBlogView';
+import { CompactView } from './components/organisms/CompactView';
 import { compactStatFromText, statFromExerciseRow } from './lib/formatters';
-import type { CompactExerciseRow, CompactRow, CompactWorkoutModel } from './lib/types';
-import { parseCompact } from '../../../src/index.ts';
+import type { CompactExerciseRow, CompactRow, CompactRunRow, CompactWorkoutModel } from './lib/types';
+import { parseCompact } from '@parser';
 import { sampleWorkout } from './preview/fixtures';
 import sampleCompactText from '../../../sample.compact?raw';
 import minimonsterCompactText from '../../../data/minimonster.compact?raw';
@@ -47,7 +62,20 @@ type GallerySectionId =
   | 'molecule-workout-header'
   | 'molecule-compact-row-view'
   | 'molecule-compact-row-edit'
+  | 'row-summary'
+  | 'row-phase'
+  | 'row-section'
+  | 'row-custom'
+  | 'row-exercise'
+  | 'row-pyramid'
+  | 'row-move'
+  | 'row-run'
+  | 'row-duration'
+  | 'row-split'
+  | 'row-text'
+  | 'row-unknown'
   | 'organism-blog-view'
+  | 'organism-compact-view'
   | 'organism-blog-editor'
   | 'playground-compact-input'
   | 'playground-minimonster'
@@ -74,9 +102,27 @@ const galleryNav: Array<{ title: string; items: GalleryNavItem[] }> = [
     ],
   },
   {
+    title: 'Riviexportit',
+    items: [
+      { id: 'row-summary', label: 'Summary', kind: 'molecule', description: 'Yksirivinen yhteenveto' },
+      { id: 'row-phase', label: 'Phase', kind: 'molecule', description: 'Vaiheotsikko numerolla' },
+      { id: 'row-section', label: 'Section', kind: 'molecule', description: 'Ryhmittelevä osio-otsikko' },
+      { id: 'row-custom', label: 'Custom', kind: 'molecule', description: 'Mukautettu mittariarvo' },
+      { id: 'row-exercise', label: 'Exercise', kind: 'molecule', description: 'Perusvoimarivi' },
+      { id: 'row-pyramid', label: 'PyramidRow', kind: 'molecule', description: 'Pyramidi / sarjaporras' },
+      { id: 'row-move', label: 'MoveRow', kind: 'molecule', description: 'Liikuntasuoritus matkoilla ja splitteilla' },
+      { id: 'row-run', label: 'Run', kind: 'molecule', description: 'Legacy run -rivi' },
+      { id: 'row-duration', label: 'Duration', kind: 'molecule', description: 'Kestochip tai kuvaus' },
+      { id: 'row-split', label: 'SplitRow', kind: 'molecule', description: 'Valiaika / nested split' },
+      { id: 'row-text', label: 'Text', kind: 'molecule', description: 'Vapaamuotoinen tekstikappale' },
+      { id: 'row-unknown', label: 'Unknown', kind: 'molecule', description: 'Tuntematon fallback-rivi' },
+    ],
+  },
+  {
     title: 'Koosteet',
     items: [
       { id: 'organism-blog-view', label: 'CompactBlogView', kind: 'organism', description: 'Koko workout-kortin view' },
+      { id: 'organism-compact-view', label: 'CompactView', kind: 'organism', description: 'Parseri-ensin renderer tekstille tai AST:lle' },
       { id: 'organism-blog-editor', label: 'CompactBlogEditor', kind: 'organism', description: 'Koko workout-kortin editori' },
       { id: 'playground-compact-input', label: 'COMPACT Playground', kind: 'playground', description: 'Pasteta COMPACT, renderoi ja exportoi JSON' },
       { id: 'playground-minimonster', label: 'MINIMONSTER', kind: 'playground', description: 'Massiivinen all-in-one referenssitreeni' },
@@ -115,8 +161,21 @@ const componentInterfaces: Record<GallerySectionId, string> = {
   | 'molecule-workout-header'
   | 'molecule-compact-row-view'
   | 'molecule-compact-row-edit'
+  | 'row-summary'
+  | 'row-phase'
+  | 'row-section'
+  | 'row-custom'
+  | 'row-exercise'
+  | 'row-pyramid'
+  | 'row-move'
+  | 'row-run'
+  | 'row-duration'
+  | 'row-split'
+  | 'row-text'
+  | 'row-unknown'
   | 'organism-blog-view'
   | 'organism-blog-editor'
+  | 'organism-compact-view'
   | 'playground-compact-input'
   | 'playground-minimonster'
   | 'playground-workouts';`,
@@ -150,13 +209,51 @@ interface StatChipProps {
   points?: number;
 }`,
   'molecule-compact-row-view': `interface CompactRowViewProps {
-  row: CompactRow;
+  row: CompactRowInput;
   renderers?: CompactUiRenderers;
 }`,
   'molecule-compact-row-edit': `interface CompactRowEditProps {
   row: CompactRow;
   onChange: (next: CompactRow) => void;
 }`,
+  'row-summary': `type SummaryProps = {
+  row: CompactSummaryRow | Extract<Content, { type: 'summary' }>;
+};`,
+  'row-phase': `type PhaseProps = {
+  row: CompactPhaseRow | Extract<Content, { type: 'phase' }>;
+};`,
+  'row-section': `type SectionProps = {
+  row: CompactSectionRow | Extract<Content, { type: 'section' }>;
+};`,
+  'row-custom': `type CustomProps = {
+  row: CompactCustomRow | Extract<Content, { type: 'custom' }>;
+};`,
+  'row-exercise': `type ExerciseProps = {
+  row: CompactExerciseRow | Extract<Content, { type: 'exercise' }>;
+};`,
+  'row-pyramid': `type PyramidRowProps = {
+  row: CompactPyramidRow | Extract<Content, { type: 'pyramid' }>;
+};`,
+  'row-move': `type MoveRowProps = {
+  row: CompactMoveRow | Extract<Content, { type: 'move' }>;
+};`,
+  'row-run': `type RunProps = {
+  row: CompactRunRow | Extract<Content, { type: 'run' }>;
+};`,
+  'row-duration': `type DurationProps = {
+  row: CompactDurationRow | Extract<Content, { type: 'duration' }>;
+};`,
+  'row-split': `type SplitRowProps = {
+  row: CompactSplitRow | Extract<Content, { type: 'split' }>;
+  depth?: number;
+  keyPrefix?: string;
+};`,
+  'row-text': `type TextProps = {
+  row: CompactTextRow | Extract<Content, { type: 'text' }>;
+};`,
+  'row-unknown': `type UnknownProps = {
+  row: CompactUnknownRow | Extract<Content, { type: 'unknown' }>;
+};`,
   'organism-blog-view': `type RowInteractionEvent = 'click' | 'press' | 'hover';
 
 interface CompactBlogHeaderOptions {
@@ -174,6 +271,25 @@ interface CompactBlogViewProps {
   showHeader?: boolean;
   headerOptions?: CompactBlogHeaderOptions;
   renderers?: CompactUiRenderers;
+}`,
+  'organism-compact-view': `type CompactRenderableData =
+  | string
+  | ParseResult
+  | ParseFailure
+  | Document
+  | Workout
+  | CompactWorkoutModel
+  | CompactWorkoutModel[];
+
+interface CompactViewProps {
+  data: CompactRenderableData;
+  workoutIndex?: number;
+  showHeader?: boolean;
+  headerOptions?: CompactBlogHeaderOptions;
+  onRowInteraction?: (rowId: string, event: RowInteractionEvent) => void;
+  renderers?: CompactUiRenderers;
+  emptyState?: ReactNode;
+  errorFallback?: (message: string) => ReactNode;
 }`,
   'organism-blog-editor': `interface CompactBlogEditorProps {
   workout: CompactWorkoutModel;
@@ -249,6 +365,51 @@ function ExampleIntro({ title, children }: { title: string; children: React.Reac
       </div>
     </PreviewSurface>
   );
+}
+
+function RowExportShowcase({
+  title,
+  subtitle,
+  exampleTitle,
+  importName,
+  interfaceValue,
+  code,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  exampleTitle: string;
+  importName: string;
+  interfaceValue: string;
+  code: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <GalleryCard title={title} subtitle={subtitle}>
+      <div className="space-y-4">
+        <ExampleIntro title={exampleTitle}>{children}</ExampleIntro>
+        <NpmImportBlock imports={[importName]} />
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)]">
+          <PreviewSurface>
+            <div className="space-y-4">
+              {children}
+              <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                <code>{code}</code>
+              </pre>
+            </div>
+          </PreviewSurface>
+          <InterfaceBlock value={interfaceValue} />
+        </div>
+      </div>
+    </GalleryCard>
+  );
+}
+
+function pickSampleRow<TType extends CompactRow['type']>(
+  type: TType,
+  fallback: Extract<CompactRow, { type: TType }>,
+): Extract<CompactRow, { type: TType }> {
+  return sampleWorkout.rows.find((row): row is Extract<CompactRow, { type: TType }> => row.type === type) ?? fallback;
 }
 
 function JsonEditorPanel({
@@ -538,6 +699,42 @@ function App() {
   };
 
   const previewMoveRow = sampleWorkout.rows.find((row) => row.type === 'move') ?? sampleWorkout.rows[0];
+  const summaryDemoRow = pickSampleRow('summary', { id: 'summary-demo', type: 'summary', text: 'Tiivis nosto harjoituksen teemasta.' });
+  const phaseDemoRow = pickSampleRow('phase', { id: 'phase-demo', type: 'phase', number: 2, name: 'Build', details: 'Painotus siirtyy voimaan ja kontrolliin.' });
+  const sectionDemoRow = pickSampleRow('section', { id: 'section-demo', type: 'section', name: 'Paaharjoitus' });
+  const customDemoRow = pickSampleRow('custom', { id: 'custom-demo', type: 'custom', name: 'RPM', value: 60, valueMax: 110, unit: '' });
+  const exerciseDemoRow = pickSampleRow('exercise', initialStatLabRow);
+  const pyramidDemoRow = pickSampleRow('pyramid', {
+    id: 'pyramid-demo',
+    type: 'pyramid',
+    name: 'Trap Bar Deadlift',
+    sets: [
+      { reps: 8, weightKg: 60 },
+      { reps: 6, weightKg: 80 },
+      { reps: 4, weightKg: 95 },
+    ],
+  });
+  const moveDemoRow = pickSampleRow('move', {
+    id: 'move-demo',
+    type: 'move',
+    sport: 'Trail run',
+    duration: { value: 54, unit: 'min' },
+    distance: { value: 9.4, unit: 'km' },
+    note: 'Kevyt nousuvoittoinen lenkki.',
+  });
+  const runDemoRow: CompactRunRow = { id: 'run-demo', type: 'run', distanceValue: 8, distanceUnit: 'km', durationMin: 47, note: 'steady aerobic' };
+  const durationDemoRow = pickSampleRow('duration', { id: 'duration-demo', type: 'duration', value: 12, unit: 'min', description: 'Dynamic mobility' });
+  const splitDemoRow = moveDemoRow.splits?.[0] ?? {
+    id: 'split-demo',
+    type: 'split',
+    distance: { value: 1, unit: 'km' },
+    duration: { value: 5, unit: 'min' },
+    pace: { minutes: 5, seconds: 0, perDistance: { value: 1, unit: 'km' } },
+    hr: 148,
+    note: 'steady',
+  };
+  const textDemoRow = pickSampleRow('text', { id: 'text-demo', type: 'text', text: 'Knee felt better after warm-up and cadence stayed smooth.' });
+  const unknownDemoRow = pickSampleRow('unknown', { id: 'unknown-demo', type: 'unknown', raw: 'Custom RPM 60-110 ???' });
   const activeMeta = galleryNav.flatMap((group) => group.items).find((item) => item.id === activeSection);
   const compactPlaygroundParse = parseCompact(renderedCompactSource);
   const compactPlaygroundPreview = workoutsFromCompact(renderedCompactSource);
@@ -943,6 +1140,162 @@ function App() {
             </div>
           </GalleryCard>
         );
+      case 'row-summary':
+        return (
+          <RowExportShowcase
+            title="Summary"
+            subtitle="Kevyin mahdollinen tekstirivi nopeisiin huomioihin tai harjoituksen yhteenvedoksi."
+            exampleTitle="Yksi tiivis yhteenvetorivi ilman muuta metadataa."
+            importName="Summary"
+            interfaceValue={componentInterfaces['row-summary']}
+            code={`const row = ${stringifyExample(summaryDemoRow)};\n<Summary row={row} />;`}
+          >
+            <Summary row={summaryDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-phase':
+        return (
+          <RowExportShowcase
+            title="Phase"
+            subtitle="Numerollinen vaiheotsikko esimerkiksi blokille, build-jaksolle tai alkuverryttelylle."
+            exampleTitle="Phase-rivi erottaa suuremman harjoitusvaiheen omaksi otsakkeekseen."
+            importName="Phase"
+            interfaceValue={componentInterfaces['row-phase']}
+            code={`const row = ${stringifyExample(phaseDemoRow)};\n<Phase row={row} />;`}
+          >
+            <Phase row={phaseDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-section':
+        return (
+          <RowExportShowcase
+            title="Section"
+            subtitle="Kevyt osio-otsikko, joka ryhmittelee alle tulevat harjoiterivit."
+            exampleTitle="Section toimii hyvin harjoituksen sisäisenä navigaatiotasona."
+            importName="Section"
+            interfaceValue={componentInterfaces['row-section']}
+            code={`const row = ${stringifyExample(sectionDemoRow)};\n<Section row={row} />;`}
+          >
+            <Section row={sectionDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-custom':
+        return (
+          <RowExportShowcase
+            title="Custom"
+            subtitle="Mukautettu metriikka kun parserissa on `Custom`-rivi ja haluat renderöidä sen suoraan."
+            exampleTitle="Custom tukee myös arvoalueita kuten RPM 60-110."
+            importName="Custom"
+            interfaceValue={componentInterfaces['row-custom']}
+            code={`const row = ${stringifyExample(customDemoRow)};\n<Custom row={row} />;`}
+          >
+            <Custom row={customDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-exercise':
+        return (
+          <RowExportShowcase
+            title="Exercise"
+            subtitle="Perusvoimarivi, jossa sarjat, toistot, kuorma ja mahdollinen palautus muodostetaan yhdeksi komponentiksi."
+            exampleTitle="Exercise on hyödyllinen silloin kun et tarvitse koko workout-korttia ympärille."
+            importName="Exercise"
+            interfaceValue={componentInterfaces['row-exercise']}
+            code={`const row = ${stringifyExample(exerciseDemoRow)};\n<Exercise row={row} />;`}
+          >
+            <Exercise row={exerciseDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-pyramid':
+        return (
+          <RowExportShowcase
+            title="PyramidRow"
+            subtitle="Sarjaporrastus tai pyramidimalli omana rivikomponenttinaan ilman geneeristä dispatcher-kerrosta."
+            exampleTitle="PyramidRow näyttää paino- ja toistoporrastuksen sellaisenaan."
+            importName="PyramidRow"
+            interfaceValue={componentInterfaces['row-pyramid']}
+            code={`const row = ${stringifyExample(pyramidDemoRow)};\n<PyramidRow row={row} />;`}
+          >
+            <PyramidRow row={pyramidDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-move':
+        return (
+          <RowExportShowcase
+            title="MoveRow"
+            subtitle="Parseri-first liikuntasuoritus, jossa matka, kesto, pace, note ja mahdolliset splitit ovat kaikki samassa rakenteessa."
+            exampleTitle="MoveRow on nykyinen pääpolku juoksu-, uinti- ja yleisille move-riveille."
+            importName="MoveRow"
+            interfaceValue={componentInterfaces['row-move']}
+            code={`const row = ${stringifyExample(moveDemoRow)};\n<MoveRow row={row} />;`}
+          >
+            <MoveRow row={moveDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-run':
+        return (
+          <RowExportShowcase
+            title="Run"
+            subtitle="Legacy run -komponentti on edelleen exportattu yhteensopivuussyistä vanhemmille row-malleille."
+            exampleTitle="Run käyttää edelleen vanhaa `CompactRunRow`-shapea."
+            importName="Run"
+            interfaceValue={componentInterfaces['row-run']}
+            code={`const row = ${stringifyExample(runDemoRow)};\n<Run row={row} />;`}
+          >
+            <Run row={runDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-duration':
+        return (
+          <RowExportShowcase
+            title="Duration"
+            subtitle="Pelkkä kestorivi joko tekstiselitteellä tai strukturoituna stat-chipinä."
+            exampleTitle="Duration on hyvä esimerkiksi warm-up-, cooldown- tai mobility-osioihin."
+            importName="Duration"
+            interfaceValue={componentInterfaces['row-duration']}
+            code={`const row = ${stringifyExample(durationDemoRow)};\n<Duration row={row} />;`}
+          >
+            <Duration row={durationDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-split':
+        return (
+          <RowExportShowcase
+            title="SplitRow"
+            subtitle="Valiaikarivi tukee sekä strukturoituja pace/duration-kenttiä että sisäkkäisiä splittejä."
+            exampleTitle="SplitRow voi renderöidä move-rivin alle tulevan yhden splitin myös yksinään."
+            importName="SplitRow"
+            interfaceValue={componentInterfaces['row-split']}
+            code={`const row = ${stringifyExample(splitDemoRow)};\n<SplitRow row={row} />;`}
+          >
+            <SplitRow row={splitDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-text':
+        return (
+          <RowExportShowcase
+            title="Text"
+            subtitle="Vapaamuotoinen tekstikappale silloin kun haluat näyttää parserin `Text`-sisällön omana rivinään."
+            exampleTitle="Text pitää pitkänkin huomiorivin luettavana ilman editorimallia."
+            importName="Text"
+            interfaceValue={componentInterfaces['row-text']}
+            code={`const row = ${stringifyExample(textDemoRow)};\n<Text row={row} />;`}
+          >
+            <Text row={textDemoRow} />
+          </RowExportShowcase>
+        );
+      case 'row-unknown':
+        return (
+          <RowExportShowcase
+            title="Unknown"
+            subtitle="Fallback-rivi parserilta tuleville sisällöille, joita mapperi tai UI ei vielä tunne."
+            exampleTitle="Unknown tekee epäselvän rivin näkyväksi eikä piilota sitä hiljaa."
+            importName="Unknown"
+            interfaceValue={componentInterfaces['row-unknown']}
+            code={`const row = ${stringifyExample(unknownDemoRow)};\n<Unknown row={row} />;`}
+          >
+            <Unknown row={unknownDemoRow} />
+          </RowExportShowcase>
+        );
       case 'organism-blog-view':
         return (
           <GalleryCard title="CompactBlogView" subtitle="Koko workout-kortin read-only naytto. Tama on jo lahempana oikeaa lopputuotetta kuin pienemmat showcase-paneelit.">
@@ -970,6 +1323,49 @@ function App() {
                   />
                 </PreviewSurface>
                 <InterfaceBlock value={componentInterfaces['organism-blog-view']} />
+              </div>
+            </div>
+          </GalleryCard>
+        );
+      case 'organism-compact-view':
+        return (
+          <GalleryCard title="CompactView" subtitle="Parseri-ensin komponentti, jolle voi antaa suoraan COMPACT-tekstin, parseCompact-tuloksen tai parserin AST-workoutin ilman erillista viewmodel-muunnosta.">
+            <div className="space-y-4">
+              <ExampleIntro title="Anna komponentille pelkka COMPACT-teksti ja renderoi se suoraan.">
+                <CompactView
+                  data={compactPlaygroundExample}
+                  showHeader
+                  headerOptions={{
+                    showTags: true,
+                    showEmojis: true,
+                    showPoints: true,
+                  }}
+                />
+              </ExampleIntro>
+              <NpmImportBlock imports={['CompactView']} />
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)]">
+                <PreviewSurface>
+                  <CompactView
+                    data={parseCompact(compactPlaygroundExample)}
+                    showHeader
+                    headerOptions={{
+                      showTags: true,
+                      showEmojis: true,
+                      showPoints: true,
+                    }}
+                  />
+                </PreviewSurface>
+                <div className="space-y-4">
+                  <InterfaceBlock value={componentInterfaces['organism-compact-view']} />
+                  <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                    <code>{`const source = \`${compactPlaygroundExample}\`;
+
+<CompactView data={source} />
+
+const parsed = parseCompact(source);
+<CompactView data={parsed} showHeader />;`}</code>
+                  </pre>
+                </div>
               </div>
             </div>
           </GalleryCard>
@@ -1269,13 +1665,13 @@ function App() {
           </div>
         )}
 
-        <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
-          <aside className="rt-card h-fit p-4 sm:p-5 xl:sticky xl:top-6">
-            <div className="space-y-5">
+        <div className="grid gap-6 xl:grid-cols-[264px_minmax(0,1fr)]">
+          <aside className="rt-card h-fit p-3.5 sm:p-4 xl:sticky xl:top-6 xl:max-h-[calc(100vh-3rem)] xl:overflow-hidden">
+            <div className="space-y-4 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto xl:overscroll-contain xl:pr-1">
               {galleryNav.map((group) => (
-                <div key={group.title} className="space-y-2">
+                <div key={group.title} className="space-y-1.5">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{group.title}</p>
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     {group.items.map((item) => {
                       const active = item.id === activeSection;
 
@@ -1284,19 +1680,18 @@ function App() {
                           key={item.id}
                           type="button"
                           onClick={() => setActiveSection(item.id)}
-                          className={`w-full rounded-2xl border px-3 py-3 text-left transition ${
+                          className={`w-full rounded-xl border px-3 py-2.5 text-left transition ${
                             active
                               ? 'border-orange-400/70 bg-orange-500/10 text-white shadow-[0_0_0_1px_rgba(255,107,53,0.18)]'
                               : 'border-slate-800 bg-slate-950/40 text-slate-300 hover:border-slate-600 hover:bg-slate-900/70'
                           }`}
                         >
                           <div className="flex items-center justify-between gap-3">
-                            <span className="font-medium">{item.label}</span>
-                            <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${NavTone({ kind: item.kind })}`}>
+                            <span className="text-sm font-medium leading-5">{item.label}</span>
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${NavTone({ kind: item.kind })}`}>
                               {item.kind}
                             </span>
                           </div>
-                          <p className="mt-1 text-xs text-slate-400">{item.description}</p>
                         </button>
                       );
                     })}

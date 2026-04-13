@@ -10,7 +10,6 @@ Use `Tags` to classify data blocks in the COMPACT format.
 <CompactExampleBlock>
 ```compact
 Tags gym, strength, rehab
-Tags running, tampere, zone2
 ```
 </CompactExampleBlock>
 

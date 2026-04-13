@@ -7,6 +7,7 @@ export type CompactRow =
   | CompactCustomRow
   | CompactExerciseRow
   | CompactPyramidRow
+  | CompactCircuitRow
   | CompactMoveRow
   | CompactRunRow
   | CompactDurationRow
@@ -211,4 +212,41 @@ export interface CompactTextRow extends CompactBaseRow {
 export interface CompactUnknownRow extends CompactBaseRow {
   type: 'unknown';
   raw: string;
+}
+
+export interface CompactCircuitItem {
+  name: string;
+  sets?: number | null;
+  reps?: number | null;
+  repsRight?: number | null;
+  unit?: string | null;
+  weightKg?: number;
+  recovery?: {
+    value?: number | null;
+    max?: number | null;
+    unit?: string | null;
+    text?: string | null;
+  } | null;
+  note?: string | null;
+  customFields?: Array<{ name: string; value: unknown; unit?: string | null }> | null;
+}
+
+export interface CompactCircuitRow extends CompactBaseRow {
+  type: 'circuit';
+  variant: 'circuit' | 'superset';
+  rounds: number;
+  exercises: CompactCircuitItem[];
+  recovery?: {
+    value?: number | null;
+    max?: number | null;
+    unit?: string | null;
+    text?: string | null;
+  } | null;
+  roundRest?: {
+    value?: number | null;
+    max?: number | null;
+    unit?: string | null;
+    text?: string | null;
+  } | null;
+  note?: string | null;
 }

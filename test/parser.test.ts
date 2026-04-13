@@ -261,6 +261,25 @@ Circuit|3
     }
   });
 
+  it('parses Circuit with AMRAP (? rounds)', () => {
+    const result = parseCompact(`[2026-01-13] ## Test
+Circuit|?
+> Air Squats 15
+> Push-ups 10
+> Sit-ups 8
+`);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const circuit = result.document.workouts[0].content.find((c) => c.type === 'circuit') as any;
+      expect(circuit).toBeDefined();
+      expect(circuit.variant).toBe('circuit');
+      expect(circuit.rounds).toBeNull(); // AMRAP = unknown rounds
+      expect(circuit.exercises).toHaveLength(3);
+      expect(circuit.exercises[0].name).toBe('Air Squats');
+      expect(circuit.exercises[0].reps).toBe(15);
+    }
+  });
+
   it('parses Circuit with round rest', () => {
     const result = parseCompact(`[2026-01-13] ## Test
 Circuit|4/2min

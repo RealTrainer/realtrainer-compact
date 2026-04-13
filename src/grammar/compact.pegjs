@@ -840,7 +840,8 @@ WeightUnit = "kg" / "lb"
 TimeUnit = "s" !"t" { return "s"; } / "min"
 
 // Distance unit for exercises: meters or kilometers (for exercises like farmers walk)
-DistanceUnit = "km" / "m"
+// NOTE: "m" !"in" prevents matching "min" (minutes) as "m" (meters)
+DistanceUnit = "km" / "m" !"in" { return "m"; }
 
 // Pyramid with weights: Pyramid penkki|10x40,8x50,6x60kg
 // Pyramid with sets x reps x weight: Pyramid kyykky|3x5x80,2x2x85kg (3 sets of 5 reps @ 80kg, 2 sets of 2 reps @ 85kg)
@@ -909,14 +910,19 @@ PyramidSetsReps =
 
 // Circuit/Superset - multiple exercises performed in rotation
 // Circuit|3 rounds (or just Circuit|3)
+// Circuit|? = AMRAP (As Many Rounds As Possible)
 // > Exercise1 spec
 // > Exercise2 spec
 // Optional recovery between rounds: Circuit|3/2min
 CircuitPrefix = "Circuit" / "Superset"
 
+// Rounds can be a number or ? (AMRAP)
+CircuitRounds = "?" { return null; } / n:Int { return n; }
+
 Circuit = 
   // Full format: Circuit|3/2min (rounds + round rest) + exercises
-  variant:CircuitPrefix "|" rounds:Int roundRest:CircuitRoundRest? note:PipeNote? _ NL exercises:CircuitItemBlock {
+  // Circuit|? for AMRAP (rounds = null)
+  variant:CircuitPrefix "|" rounds:CircuitRounds roundRest:CircuitRoundRest? note:PipeNote? _ NL exercises:CircuitItemBlock {
     return { 
       type: 'circuit', 
       variant: variant.toLowerCase(), 

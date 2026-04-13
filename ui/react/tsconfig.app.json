@@ -12,6 +12,12 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@parser": ["../../src/index.ts"],
+      "@parser/types": ["../../src/types.ts"]
+    },
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "./dist",

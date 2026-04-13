@@ -3,6 +3,7 @@ id: exercise
 title: Exercise
 ---
 
+import Link from '@docusaurus/Link';
 import { EditableCompactExampleBlock } from '@site/src/components/CompactDemo';
 
 Use `Exercise` for single movement lines in COMPACT format.
@@ -28,6 +29,13 @@ Exercise Single-leg RDL|2x8+8@20kg
 ```
 </EditableCompactExampleBlock>
 
+## Related Patterns
+
+Two exercise subformats now have their own dedicated pages:
+
+- <Link to="/docs/tracking-types/recovery">Recovery</Link>
+- <Link to="/docs/tracking-types/left-right-side-patterns">Left / Right Side Patterns</Link>
+
 ## Left / Right Side Representation
 
 Common patterns for bilateral exercises:
@@ -51,3 +59,4 @@ Exercise Single-arm Row|3x12+12@22kg
 - `0s` measured entries can be filtered in UI rendering
 - Use the same side format consistently inside one workout block
 - If load is omitted, keep unitless reps/time only
+- Important grammar-adjacent patterns worth learning together with `Exercise` are recovery suffixes, measured duration lists, per-side modifiers, custom fields, and open/range targets like `2-3x?`

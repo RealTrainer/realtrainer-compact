@@ -7,6 +7,10 @@ const common = {
   platform: 'browser',
   target: ['es2020'],
   external: ['react', 'react-dom', 'clsx'],
+  alias: {
+    '@parser': join(process.cwd(), 'src/index.ts'),
+    '@parser/types': join(process.cwd(), 'src/types.ts'),
+  },
   jsx: 'automatic',
   minify: false,
   sourcemap: true,

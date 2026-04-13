@@ -10,6 +10,5 @@ Use `Emojis` for quick visual context.
 <CompactExampleBlock>
 ```compact
 Emojis 💪🏋️
-Emojis 🏊🌊
 ```
 </CompactExampleBlock>

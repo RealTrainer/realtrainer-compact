@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react';
-import { parseCompact } from '../../../../../src/index.ts';
-import type { Exercise as ParsedExercise, Pyramid as ParsedPyramid } from '../../../../../src/types.ts';
+import { parseCompact } from '@parser';
+import type { Exercise as ParsedExercise, Pyramid as ParsedPyramid } from '@parser/types';
 import type { CompactPyramidSet, CompactRow } from '../../lib/types';
 import { FieldLabel } from '../atoms/FieldLabel';
 

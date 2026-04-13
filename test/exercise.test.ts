@@ -42,6 +42,24 @@ describe('Exercise', () => {
     expect(result.unit).toBe('s');
   });
 
+  it('parses exercise with duration (minutes)', () => {
+    const result = parseLine('Exercise lonkankoukistaja|3x1min') as Exercise;
+    expect(result.type).toBe('exercise');
+    expect(result.name).toBe('lonkankoukistaja');
+    expect(result.sets).toBe(3);
+    expect(result.reps).toBe(1);
+    expect(result.unit).toBe('min');
+  });
+
+  it('parses exercise with duration in minutes - larger value', () => {
+    const result = parseLine('Exercise aitadrillit|1x20min') as Exercise;
+    expect(result.type).toBe('exercise');
+    expect(result.name).toBe('aitadrillit');
+    expect(result.sets).toBe(1);
+    expect(result.reps).toBe(20);
+    expect(result.unit).toBe('min');
+  });
+
   it('parses exercise with duration range', () => {
     const result = parseLine('Exercise reisivenytys|30-60s') as Exercise;
     expect(result.reps).toBe(30);

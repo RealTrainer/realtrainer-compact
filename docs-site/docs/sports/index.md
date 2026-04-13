@@ -2,43 +2,39 @@
 title: Lajit (Pääryhmät)
 ---
 
-Tämä sivu kokoaa COMPACT-formaatin lajipääryhmät käytännölliseksi lajivalikoksi.
+COMPACT-formaatissa voidaan esittää mitä tahansa lajeja ja aktiviteetteja. Tämä sivusto kokoaa tyypillisiä päiväkirjaan merkittäviä asioita ja esimerkkejä siitä, miten harjoituksia voidaan kirjata.
 
-## Pääryhmät (inspiraatio datasta)
+**Muuta seurattavaa:**
+- [Ravinto ja talous](/docs/tracking-types/nutrition-finance) - ruokailu, juominen, menot
+- [Kehon mittaukset](/docs/tracking-types/body-metrics) - paino, rasvaprosentti, uni
+- [Tuntemukset](/docs/tracking-types/feeling-pain) - fiilis, kipu
 
-Analyysin yleisimmät harjoitustyypit ja liikekategoriat viittaavat erityisesti näihin kokonaisuuksiin:
+## Pääryhmät
 
-- Kuntosali / voimaharjoittelu
-- Kestävyys (juoksu, uinti, pyöräily, vedot)
-- Lihaskunto / core
-- Koordinaatiot
-- Venyttely / liikkuvuus
+- Voimaharjoittelu (sali, pyramidit, kontrastivoima)
+- Lihaskunto (keskivartalo, kehonpaino, kuntopiiri)
+- Kestävyys (juoksu, uinti, pyöräily, hiihto)
+- Nopeus ja tekniikka
+- Venyttely ja liikkuvuus
 
-## Valitut lajikategoriat
+## Lajikategoriat (aakkosjärjestys)
 
-- [Juoksuharjoitus](sports/juoksuharjoitus)
-- [Voimaharjoitus](sports/voimaharjoitus)
-- [Lepo/Palautuminen](sports/lepo-palautuminen)
-- [Nopeusharjoitus](sports/nopeusharjoitus)
-- [Kestävyysharjoitus](sports/kestavyysharjoitus)
-- [Venyttely/Liikkuvuus](sports/venyttely-liikkuvuus)
-- [Pyöräily](sports/pyoraily)
-- [Kuntosali](sports/kuntosali)
-- [Uintiharjoitus](sports/uintiharjoitus)
-- [Hiihto](sports/hiihto)
-- [Tekniikkaharjoitus](sports/tekniikkaharjoitus)
-- [Intervallit/Vedot](sports/intervallit-vedot)
-- [Loikka/Hyppyharjoitus](sports/loikka-hyppyharjoitus)
 - [Heittoharjoitus](sports/heittoharjoitus)
-- [Keskivartaloharjoitus](sports/keskivartaloharjoitus)
+- [Hieronta](sports/hieronta) - Health physio
+- [Hiihto](sports/hiihto)
+- [Intervallit/Vedot](sports/intervallit-vedot)
+- [Juoksuharjoitus](sports/juoksuharjoitus)
 - [Lajiharjoitus](sports/lajiharjoitus)
-- [Aitaharjoitus](sports/aitaharjoitus)
-
-## Tarkemmat formaattisivut
-
-- [Kuntosali](sports/gym)
-- [Kestävyys](sports/endurance)
-- [Lihaskunto](sports/bodyweight)
+- [Lepo/Palautuminen](sports/lepo-palautuminen)
+- [Lihaskunto](sports/lihaskunto) - keskivartalo, kehonpaino, kuntopiiri
+- [Loikka/Hyppyharjoitus](sports/loikka-hyppyharjoitus)
+- [Nopeusharjoitus](sports/nopeusharjoitus) - vedot, kiihdytykset, aidat
+- [Pyöräily](sports/pyoraily)
+- [Sairas/Lepopäivä](sports/sairas-lepopaiva)
+- [Tekniikkaharjoitus](sports/tekniikkaharjoitus)
+- [Uintiharjoitus](sports/uintiharjoitus)
+- [Venyttely/Liikkuvuus](sports/venyttely-liikkuvuus)
+- [Voimaharjoitus](sports/voimaharjoitus) - sali, pyramidi, unilateraali
 
 ## Formaattifokus
 

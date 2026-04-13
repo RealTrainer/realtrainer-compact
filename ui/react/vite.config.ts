@@ -10,6 +10,12 @@ export default defineConfig(({ mode }) => {
   return {
     base,
     plugins: [react(), tailwindcss()],
+    resolve: {
+      alias: {
+        '@parser': path.resolve(__dirname, '../../src/index.ts'),
+        '@parser/types': path.resolve(__dirname, '../../src/types.ts'),
+      },
+    },
     server: {
       fs: {
         allow: [path.resolve(__dirname, '..', '..', '..')],
