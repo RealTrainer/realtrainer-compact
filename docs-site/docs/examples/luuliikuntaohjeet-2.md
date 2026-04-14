@@ -1,0 +1,78 @@
+---
+title: Luuliikuntaohjeet 2
+description: Harjoitus on adaptoitu UKK-instituutin sivuilla julkaistuista harjoituksista.
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { CompactRenderExample } from '@site/src/components/CompactDemo';
+
+Harjoitus on adaptoitu UKK-instituutin sivuilla julkaistuista harjoituksista.
+
+Lähde: [Luuliikuntaohjeet-2.pdf](https://ukkinstituutti.fi/wp-content/uploads/2020/10/Luuliikuntaohjeet-2.pdf)
+
+<Tabs>
+<TabItem value="rendered" label="Rendered" default>
+
+<CompactRenderExample compact={`
+[2026-04-14] ## Luuliikuntaohjeet 2
+Tags pdf, ukk, harjoitepankki
+Section Lämmittely
+Exercise Alkulämmittely – hiihtoliike|2-3 min
+Text Heilauta käsiä vuorotahtiin eteen ja taakse samalla polvista niiaamalla.
+Section Muu
+Exercise Viivakävely eteenpäin|2x10 askelta
+Text Kävele kanta-varvas-askeleilla eteenpäin noin 10 askelta ja palaa takaisin.
+Section Lihaskunto
+Exercise Tuolilta ylösnousu|1x10
+Text Nouse tuolilta seisomaan selkä suorana ja laskeudu hallitusti takaisin istumaan.
+Section Muu
+Exercise Tasapainoillen – esteen ylitys|1x10
+Text Astu jalalla sivulle kuvitteellisen esteen yli ja tuo toinen jalka perässä.
+Section Lihaskunto
+Exercise Käden vienti eteen – taakse|2x10
+Text Vie paino kädessä suorana taakse ja tuo se hallitusti takaisin eteen.
+Exercise Lonkan koukistuksesta ojennukseen|2x10
+Text Nosta jalka eteen koukkuun ja ojenna se rauhallisesti suoraksi taakse.
+Section Lihaskunto
+Exercise Selkälihasliike|2x10
+Text Ojenna jalka konttausasennossa suoraksi vaakatasoon ja pidä jännitys hetken.
+Exercise Vatsalihasten aktivointi|2x10
+Text Tuo polvea kohti vatsaa ja kurota vastakkaisella kädellä polveen painaen kevyesti.
+URL https://ukkinstituutti.fi/wp-content/uploads/2020/10/Luuliikuntaohjeet-2.pdf
+`} />
+
+</TabItem>
+<TabItem value="source" label="COMPACT Source">
+
+```compact
+[2026-04-14] ## Luuliikuntaohjeet 2
+Tags pdf, ukk, harjoitepankki
+Section Lämmittely
+Exercise Alkulämmittely – hiihtoliike|2-3 min
+Text Heilauta käsiä vuorotahtiin eteen ja taakse samalla polvista niiaamalla.
+Section Muu
+Exercise Viivakävely eteenpäin|2x10 askelta
+Text Kävele kanta-varvas-askeleilla eteenpäin noin 10 askelta ja palaa takaisin.
+Section Lihaskunto
+Exercise Tuolilta ylösnousu|1x10
+Text Nouse tuolilta seisomaan selkä suorana ja laskeudu hallitusti takaisin istumaan.
+Section Muu
+Exercise Tasapainoillen – esteen ylitys|1x10
+Text Astu jalalla sivulle kuvitteellisen esteen yli ja tuo toinen jalka perässä.
+Section Lihaskunto
+Exercise Käden vienti eteen – taakse|2x10
+Text Vie paino kädessä suorana taakse ja tuo se hallitusti takaisin eteen.
+Exercise Lonkan koukistuksesta ojennukseen|2x10
+Text Nosta jalka eteen koukkuun ja ojenna se rauhallisesti suoraksi taakse.
+Section Lihaskunto
+Exercise Selkälihasliike|2x10
+Text Ojenna jalka konttausasennossa suoraksi vaakatasoon ja pidä jännitys hetken.
+Exercise Vatsalihasten aktivointi|2x10
+Text Tuo polvea kohti vatsaa ja kurota vastakkaisella kädellä polveen painaen kevyesti.
+URL https://ukkinstituutti.fi/wp-content/uploads/2020/10/Luuliikuntaohjeet-2.pdf
+
+```
+
+</TabItem>
+</Tabs>

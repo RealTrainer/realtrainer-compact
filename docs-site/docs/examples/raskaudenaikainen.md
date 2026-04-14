@@ -1,0 +1,87 @@
+---
+title: Kotitreeni (Raskausajan harjoitukset)
+description: Harjoitus on adaptoitu UKK-instituutin sivuilla julkaistuista harjoituksista.
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { CompactRenderExample } from '@site/src/components/CompactDemo';
+
+Harjoitus on adaptoitu UKK-instituutin sivuilla julkaistuista harjoituksista.
+
+Lähde: [UKK-instituutti](https://ukkinstituutti.fi/)
+
+<Tabs>
+<TabItem value="rendered" label="Rendered" default>
+
+<CompactRenderExample compact={`
+[2026-04-14] ## Kotitreeni (Raskausajan harjoitukset)
+Tags raskaus, kotitreeni, huolto
+Emojis 🤰🧘‍♀️✨
+Derived strength.neural_stress 15|score basis:entity confidence:90% source:image goodness:5
+Derived strength.strength_endurance_emphasis 30|score basis:entity confidence:85% source:image goodness:5
+Derived endurance.zone1_minutes 10|min basis:entity confidence:80% source:image goodness:4
+Section Lämmittely
+Exercise Selän pyöristys ja ojennus|1min
+Text Seiso polvet hieman koukussa, pyöristä selkä ja palaa suoraksi hitaasti ja hallitusti.
+Exercise Lantion keinutus|1x8+8
+Text Kahdeksan hidasta ja kahdeksan nopeaa toistoa. Toista tarvittaessa.
+Exercise Sivuaskellus (Step touch)|1min
+Text Astu sivulle ja tuo toinen jalka viereen. Heiluta olkapäitä samalla rytmissä.
+Exercise Mambo-askel|1min
+Text Astu oikealla eteen ja takaisin. Vaihda johtavaa jalkaa neljän toiston välein.
+Section Lihaskunto
+Exercise Selkälihakset kontallaan|1min/per side
+Text Kontallaan, ojenna vastakkainen käsi ja jalka. Vie niitä sivulle ja takaisin hitaasti (4 laskua).
+Exercise Vinot vatsalihakset kyljellään|1min/per side
+Text Makaa kyljelläsi, nosta suoria jalkoja ylös ja laske ne hallitusti alas.
+Exercise Kyykky|1min
+Text Laskeudu hitaasti alas (3 laskua) ja nouse yhdellä ylös. Pidä selkä suorana.
+Exercise Seinäpunnerrus|1min
+Text Seiso seinää vasten ja tee punnerruksia pitäen vartalo suorana.
+Section Venyttely
+Exercise Rintavenytys seinää vasten|30s/per side
+Text Käsi seinää vasten, käännä ylävartaloa poispäin. Pidä lantio vakaana.
+Exercise Lonkankoukistajan venytys tuolilla|30s/per side
+Text Istu tuolin reunalla, vie jalka taakse ja työnnä lantiota kevyesti eteen.
+URL https://ukkinstituutti.fi/wp-content/uploads/2026/03/2026-home-exercises-during-pregnancy.pdf
+`} />
+
+</TabItem>
+<TabItem value="source" label="COMPACT Source">
+
+```compact
+[2026-04-14] ## Kotitreeni (Raskausajan harjoitukset)
+Tags raskaus, kotitreeni, huolto
+Emojis 🤰🧘‍♀️✨
+Derived strength.neural_stress 15|score basis:entity confidence:90% source:image goodness:5
+Derived strength.strength_endurance_emphasis 30|score basis:entity confidence:85% source:image goodness:5
+Derived endurance.zone1_minutes 10|min basis:entity confidence:80% source:image goodness:4
+Section Lämmittely
+Exercise Selän pyöristys ja ojennus|1min
+Text Seiso polvet hieman koukussa, pyöristä selkä ja palaa suoraksi hitaasti ja hallitusti.
+Exercise Lantion keinutus|1x8+8
+Text Kahdeksan hidasta ja kahdeksan nopeaa toistoa. Toista tarvittaessa.
+Exercise Sivuaskellus (Step touch)|1min
+Text Astu sivulle ja tuo toinen jalka viereen. Heiluta olkapäitä samalla rytmissä.
+Exercise Mambo-askel|1min
+Text Astu oikealla eteen ja takaisin. Vaihda johtavaa jalkaa neljän toiston välein.
+Section Lihaskunto
+Exercise Selkälihakset kontallaan|1min/per side
+Text Kontallaan, ojenna vastakkainen käsi ja jalka. Vie niitä sivulle ja takaisin hitaasti (4 laskua).
+Exercise Vinot vatsalihakset kyljellään|1min/per side
+Text Makaa kyljelläsi, nosta suoria jalkoja ylös ja laske ne hallitusti alas.
+Exercise Kyykky|1min
+Text Laskeudu hitaasti alas (3 laskua) ja nouse yhdellä ylös. Pidä selkä suorana.
+Exercise Seinäpunnerrus|1min
+Text Seiso seinää vasten ja tee punnerruksia pitäen vartalo suorana.
+Section Venyttely
+Exercise Rintavenytys seinää vasten|30s/per side
+Text Käsi seinää vasten, käännä ylävartaloa poispäin. Pidä lantio vakaana.
+Exercise Lonkankoukistajan venytys tuolilla|30s/per side
+Text Istu tuolin reunalla, vie jalka taakse ja työnnä lantiota kevyesti eteen.
+URL https://ukkinstituutti.fi/wp-content/uploads/2026/03/2026-home-exercises-during-pregnancy.pdf
+```
+
+</TabItem>
+</Tabs>

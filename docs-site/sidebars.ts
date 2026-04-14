@@ -15,7 +15,6 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     'intro',
-    'react-components',
     {
       type: 'category',
       label: 'Format Elements',
@@ -43,6 +42,31 @@ const sidebars: SidebarsConfig = {
         'tracking-types/feeling-pain',
         'tracking-types/body-metrics',
         'tracking-types/nutrition-finance',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Renderers',
+      items: [
+        'react-components',
+        'tracking-types/markdown-renderer',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Esimerkkejä',
+      items: [
+        'examples/index',
+        'examples/jumppa',
+        'examples/keppijumppa-liikepankki',
+        'examples/kuntojumppa-liikepankki',
+        'examples/kuntopiiri-liikepankki',
+        'examples/luuliikuntaohjeet-1',
+        'examples/luuliikuntaohjeet-2',
+        'examples/luuliikuntaohjeet-3',
+        'examples/mom-and-baby',
+        'examples/raskaudenaikainen',
+        'examples/tuolijumppa-liikepankki-v2',
       ],
     },
     {
