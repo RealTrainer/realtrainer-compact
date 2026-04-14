@@ -77,9 +77,14 @@ Weight 85.2kg`;
     expect(screen.queryByTestId('row-emojis-1')).not.toBeInTheDocument();
     expect(screen.getByText('Paaosa')).toBeInTheDocument();
     expect(screen.getByText('Crosstrainer')).toBeInTheDocument();
-    expect(screen.getByText('Food 450kcal 30g/prot | Chicken salad')).toBeInTheDocument();
-    expect(screen.getByText('Expense 14.9EUR | groceries')).toBeInTheDocument();
-    expect(screen.getByText('Health physio | Shoulder mobility')).toBeInTheDocument();
+    expect(screen.getByTestId('row-food-2')).toHaveTextContent('Food');
+    expect(screen.getByTestId('row-food-2')).toHaveTextContent('450kcal');
+    expect(screen.getByTestId('row-food-2')).toHaveTextContent('30g/prot');
+    expect(screen.getByTestId('row-food-2')).toHaveTextContent('Chicken salad');
+    expect(screen.getByTestId('row-expense-3')).toHaveTextContent('Expense');
+    expect(screen.getByTestId('row-expense-3')).toHaveTextContent('14.9EUR | groceries');
+    expect(screen.getByTestId('row-health-4')).toHaveTextContent('Health');
+    expect(screen.getByTestId('row-health-4')).toHaveTextContent('physio | Shoulder mobility');
     expect(screen.getByText('weight 85.2kg')).toBeInTheDocument();
   });
 

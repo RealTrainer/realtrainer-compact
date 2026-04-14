@@ -22,12 +22,14 @@ Exercise Lankku|2x25s,24s`;
     render(<CompactBlogView workout={parsed.workouts[0]} />);
 
     expect(screen.getByText('Kontrastivoima (Sali) & Kierto')).toBeInTheDocument();
-    expect(screen.getByText('Takakyykky')).toBeInTheDocument();
-    expect(screen.getByTestId('row-exercise-2')).toHaveTextContent('3x5x90kg');
+    const takakyykky = screen.getByText('Takakyykky');
+    expect(takakyykky).toBeInTheDocument();
+    expect(takakyykky.closest('[data-testid^="row-exercise-"]')).toHaveTextContent('3x5x90kg');
     expect(screen.getByText('Vauhditon pituus')).toBeInTheDocument();
     expect(screen.getByText('3x4')).toBeInTheDocument();
-    expect(screen.getByText('Penkkipunnerrus')).toBeInTheDocument();
-    expect(screen.getByTestId('row-exercise-4')).toHaveTextContent('3x5x80kg');
+    const penkki = screen.getByText('Penkkipunnerrus');
+    expect(penkki).toBeInTheDocument();
+    expect(penkki.closest('[data-testid^="row-exercise-"]')).toHaveTextContent('3x5x80kg');
     expect(screen.getByText('Vatsakiertokone')).toBeInTheDocument();
     expect(screen.getByText('3x20')).toBeInTheDocument();
     expect(screen.getByText('45s, 45s')).toBeInTheDocument();

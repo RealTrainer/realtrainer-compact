@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import CodeBlock from '@theme/CodeBlock';
-import { parseCompact } from 'realtrainer-compact';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { parseCompact, renderDocumentToMarkdown } from 'realtrainer-compact';
 import {
   CompactBlogView,
   CompactView,
@@ -128,6 +130,16 @@ Pyramid Penkkipunnerrus|10x60,8x70,6x80,4x90kg
 
 Section Loppuverryttely
 Run 8km | Peruskestävyysalueella`;
+
+const MARKDOWN_RENDERER_COMPACT = `[2026-04-14] ## Voimatreeni
+Tags voima, sali
+Emojis 💪
+Section Lämmittely
+Exercise Kyykky|2x10@40kg
+Section Pääosa
+Exercise Takakyykky|3x5@90kg
+Pyramid Penkki|10x60,8x70,6x80kg
+Expense 14.90 | Palautusjuoma`;
 
 const EDITOR_FONT_FAMILY = [
   '"Fira Code"',
@@ -585,4 +597,148 @@ Exercise Lankku|2x25s,24s`;
 
 export function LiveEditor() {
   return <EditableCompactPreview initialCompact={DEFAULT_COMPACT} minHeight={280} showHeader />;
+}
+
+export function MarkdownRendererDemo() {
+  const [text, setText] = useState(MARKDOWN_RENDERER_COMPACT);
+  const [activeTab, setActiveTab] = useState<'markdown' | 'rendered'>('markdown');
+  const parseResult = useMemo(() => parseCompact(text), [text]);
+
+  const markdownState = useMemo(() => {
+    if (!parseResult.success) {
+      return { markdown: '', error: null as string | null };
+    }
+
+    try {
+      return {
+        markdown: renderDocumentToMarkdown(parseResult.document),
+        error: null as string | null,
+      };
+    } catch (error) {
+      return {
+        markdown: '',
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }, [parseResult]);
+
+  const markdown = markdownState.markdown;
+
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      <div
+        style={{
+          border: '2px solid #3b82f6',
+          borderRadius: '8px',
+          overflow: 'hidden',
+          marginBottom: '1rem',
+        }}
+      >
+        <textarea
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          spellCheck={false}
+          style={{
+            width: '100%',
+            minHeight: '180px',
+            fontFamily: EDITOR_FONT_FAMILY,
+            fontSize: '0.9rem',
+            lineHeight: '1.5',
+            padding: '1rem',
+            border: 'none',
+            outline: 'none',
+            resize: 'vertical',
+            background: '#1e1e1e',
+            color: '#d4d4d4',
+          }}
+        />
+      </div>
+
+      {!parseResult.success && (
+        <div
+          style={{
+            marginBottom: '1rem',
+            padding: '0.75rem',
+            background: '#fee2e2',
+            color: '#b91c1c',
+            borderRadius: '6px',
+            border: '1px solid #fca5a5',
+            fontSize: '0.85rem',
+          }}
+        >
+          Parse error: {parseResult.error.message}
+        </div>
+      )}
+
+      {parseResult.success && (
+        <>
+          {markdownState.error && (
+            <div
+              style={{
+                marginBottom: '1rem',
+                padding: '0.75rem',
+                background: '#fee2e2',
+                color: '#b91c1c',
+                borderRadius: '6px',
+                border: '1px solid #fca5a5',
+                fontSize: '0.85rem',
+              }}
+            >
+              Renderer error: {markdownState.error}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+            <button
+              type="button"
+              onClick={() => setActiveTab('markdown')}
+              style={{
+                border: '1px solid var(--ifm-color-emphasis-300)',
+                borderRadius: '999px',
+                padding: '0.35rem 0.75rem',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                background: activeTab === 'markdown' ? 'var(--ifm-color-primary)' : 'transparent',
+                color: activeTab === 'markdown' ? 'white' : 'var(--ifm-font-color-base)',
+              }}
+            >
+              Markdown
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('rendered')}
+              style={{
+                border: '1px solid var(--ifm-color-emphasis-300)',
+                borderRadius: '999px',
+                padding: '0.35rem 0.75rem',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                background: activeTab === 'rendered' ? 'var(--ifm-color-primary)' : 'transparent',
+                color: activeTab === 'rendered' ? 'white' : 'var(--ifm-font-color-base)',
+              }}
+            >
+              Rendered
+            </button>
+          </div>
+
+          {activeTab === 'markdown' && <CodeBlock language="md">{markdown}</CodeBlock>}
+
+          {activeTab === 'rendered' && (
+            <div
+              style={{
+                border: '1px solid var(--ifm-color-emphasis-300)',
+                borderRadius: '8px',
+                padding: '1rem',
+                background: 'var(--ifm-background-surface-color)',
+              }}
+            >
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 }

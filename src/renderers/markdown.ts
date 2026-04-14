@@ -233,13 +233,21 @@ export function renderContentToMarkdown(item: Content): string | null {
       return `🏃 Sport: ${item.name}`;
 
     case 'interval': {
-      const intensity = item.intensity.min === item.intensity.max
-        ? `${item.intensity.min}%`
-        : `${item.intensity.min}-${item.intensity.max}%`;
-      const recovery = item.recovery.min === item.recovery.max
-        ? `${item.recovery.min}min`
-        : `${item.recovery.min}-${item.recovery.max}min`;
-      return `⏱️ ${item.count}×${item.distance.value}${item.distance.unit} @ ${intensity}, ${recovery} rest`;
+      const distValue = item.distance?.value ?? '?';
+      const distUnit = item.distance?.unit ?? '';
+      const pieces: string[] = [`${item.count}×${distValue}${distUnit}`];
+
+      const intensity = formatIntervalIntensity((item as unknown as { intensity?: unknown }).intensity);
+      if (intensity) {
+        pieces.push(`@ ${intensity}`);
+      }
+
+      const recovery = formatIntervalRecovery((item as unknown as { recovery?: unknown }).recovery);
+      if (recovery) {
+        pieces.push(`${recovery} rest`);
+      }
+
+      return `⏱️ ${pieces.join(', ')}`;
     }
 
     case 'vitals':
@@ -258,6 +266,44 @@ export function renderContentToMarkdown(item: Content): string | null {
     default:
       return null;
   }
+}
+
+function formatIntervalIntensity(intensity: unknown): string | null {
+  if (!intensity || typeof intensity !== 'object') return null;
+
+  if ('min' in intensity && 'max' in intensity) {
+    const i = intensity as { min: number; max: number };
+    return i.min === i.max ? `${i.min}%` : `${i.min}-${i.max}%`;
+  }
+
+  if ('text' in intensity && typeof (intensity as { text?: unknown }).text === 'string') {
+    return (intensity as { text: string }).text;
+  }
+
+  if ('unknown' in intensity) {
+    return '?';
+  }
+
+  if ('hrZone' in intensity && (intensity as { hrZone?: { min: number; max: number } }).hrZone) {
+    const zone = (intensity as { hrZone: { min: number; max: number } }).hrZone;
+    return zone.min === zone.max ? `Z${zone.min}` : `Z${zone.min}-Z${zone.max}`;
+  }
+
+  if ('zone' in intensity && (intensity as { zone?: { min?: string; max?: string; combo?: string[] } }).zone) {
+    const zone = (intensity as { zone: { min?: string; max?: string; combo?: string[] } }).zone;
+    if (Array.isArray(zone.combo) && zone.combo.length > 0) return zone.combo.join('+');
+    if (zone.min && zone.max) return zone.min === zone.max ? zone.min : `${zone.min}-${zone.max}`;
+  }
+
+  return null;
+}
+
+function formatIntervalRecovery(recovery: unknown): string | null {
+  if (!recovery || typeof recovery !== 'object') return null;
+  if (!('min' in recovery) || !('max' in recovery)) return null;
+
+  const r = recovery as { min: number; max: number };
+  return r.min === r.max ? `${r.min}min` : `${r.min}-${r.max}min`;
 }
 
 function renderExercise(item: Exercise): string {
@@ -338,12 +384,12 @@ function renderMove(item: Move): string {
   }
 
   // Duration
-  if (item.duration && item.duration.value) {
-    parts.push(`${item.duration.value}${item.duration.unit}`);
+  if (item.duration && item.duration.value != null) {
+    parts.push(formatDurationValue(item.duration.value, item.duration.unit));
   }
 
   // Distance
-  if (item.distance && item.distance.value) {
+  if (item.distance && item.distance.value != null) {
     const distMax = item.distance.valueMax;
     const distStr = distMax
       ? `${item.distance.value}-${distMax}${item.distance.unit}`
@@ -388,8 +434,31 @@ function renderDuration(item: DurationBlock): string {
     const m = String(item.timeOfDay.minute).padStart(2, '0');
     return `🕐 ${h}:${m} ${item.description || ''}`.trim();
   }
-  const val = item.duration!.value === null ? '?' : item.duration!.value;
-  return `⏱️ ${val}${item.duration!.unit} ${item.description || ''}`;
+  if (!item.duration) {
+    return `⏱️ ${item.description || ''}`.trim();
+  }
+  const val = item.duration.value === null ? '?' : item.duration.value;
+  const durationText = val === '?' ? `?${item.duration.unit}` : formatDurationValue(val, item.duration.unit);
+  return `⏱️ ${durationText} ${item.description || ''}`;
+}
+
+function formatDurationValue(value: number, unit: 'min' | 's'): string {
+  if (unit === 'min') {
+    if (Number.isInteger(value)) {
+      return `${value}min`;
+    }
+
+    const totalSeconds = Math.round(value * 60);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}'${String(seconds).padStart(2, '0')}"`;
+  }
+
+  if (Number.isInteger(value)) {
+    return `${value}s`;
+  }
+
+  return `${value.toFixed(1).replace(/\.0$/, '')}s`;
 }
 
 function renderFood(item: Food): string {

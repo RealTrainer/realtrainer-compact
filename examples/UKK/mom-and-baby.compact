@@ -1,0 +1,28 @@
+[2026-04-14] ## Kotitreeni vauvan kanssa
+Derived strength.neural_stress 35|score basis:entity confidence:85% source:bodyweight goodness:4
+Derived strength.strength_endurance_emphasis 45|score basis:entity confidence:80% source:reps goodness:4
+Derived endurance.zone1_minutes 15|min basis:entity confidence:70% source:warmup goodness:4
+Tags kotitreeni, vauva, kuntoutus, lihaskunto
+Emojis 👶💪🏠
+Section Alkulämmittely
+Exercise Paikallaan marssi|1min
+Text Marssi paikallasi ja pyöritä hartioita eteenpäin 8 kertaa, sitten taaksepäin.
+Exercise Sivutaputus|1min
+Text Vie jalka sivulle ja kosketa lattiaa isovarpaalla. Kierrä ylävartaloa ja vauvaa vastakkaiseen suuntaan kuin jalkaa.
+Exercise Vartalon pyöristys ja ojennus|2x4+4
+Text Seiso polvet hieman koukussa, paino oikealla jalalla, vauva edessäsi. Ojenna vartalo, astu vasen jalka taakse ja nosta vauva ylös. Vaihda tukijalkaa 4 toiston jälkeen.
+Section Lihaskunto
+Exercise Reidet ja hauikset|3x12
+Text Istu tuolilla selkä suorana, vauva kyynärvarsien päällä. Nouse seisomaan ja koukista samalla kyynärpäitä niin, että vauva tulee lähemmäs kehoasi. Istu takaisin tuolille.
+Exercise Pakarat ja takareidet|3x15
+Text Makaa selälläsi vauva alavatsan ja reisien päällä. Rullaa lantio ylös sillaksi ja laske nikama nikamalta alas.
+Exercise Vatsalihakset|3x12
+Text Makaa selälläsi ja nosta vauva sääriesi päälle. Nosta ylävartaloa katsoen vauvaa silmiin. Laske hartiat ja pää takaisin lattiaan.
+Exercise Yläselän lihakset|3x12
+Text Istu tuolilla jalat harallaan, vauva lattialla edessäsi selällään. Aseta kädet takaraivolle, pyöristä selkää ja kurkista vauvan silmiin. Ojenna selkä, vie kyynärpäät taakse ja avaa rintakehä.
+Section Venyttely
+Exercise Niska ja hartiat|30s/per side
+Text Istu tuolilla selkä suorana, tartu tuolin vasemmasta reunasta vasemmalla kädellä. Kallista päätä oikealle olkapäälle. Toista toiselle puolelle.
+Exercise Rintalihakset|30s/per side
+Text Paina oikea kätesi seinää vasten ja käännä ylävartaloa vasemmalle. Pidä lantio vakaana. Toista vasemmalla puolella.
+URL https://ukkinstituutti.fi/wp-content/uploads/2026/03/2026-home-exercises-for-mom-and-baby.pdf

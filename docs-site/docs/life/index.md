@@ -21,8 +21,8 @@ Kaikki tämä data yhdistyy samaan päiväkirjaan harjoitusten kanssa, jolloin n
 <CompactExampleBlock>
 ```compact
 [2026-04-14]
-Food Kananpoika-salaatti | lounas
-Food Proteiinishake | treenin jälkeen
+Food 520kcal 38g/prot 42g/carb 18g/fat | Kananpoika-salaatti (lounas)
+Food 210kcal 30g/prot | Proteiinishake (treenin jälkeen)
 Drinking 500ml vesi
 Drinking 2dl kahvi
 ```
@@ -35,7 +35,7 @@ Drinking 2dl kahvi
 [2026-04-14]
 Weight 78.5kg
 BodyFat 15%
-Sleep 7h30min | hyvä uni
+Sleep 7.5h quality:good
 ```
 </CompactExampleBlock>
 
@@ -44,8 +44,8 @@ Sleep 7h30min | hyvä uni
 <CompactExampleBlock>
 ```compact
 [2026-04-14] ## Aamutreeni
-Feeling 8 | Energinen olo
-Pain polvi 2 | lievä jäykkyys
+Feeling 8/10|Energinen olo
+Pain polvi|2/10 lievä jäykkyys
 Health physio | Olkapään mobilisaatio
 ```
 </CompactExampleBlock>
@@ -55,9 +55,9 @@ Health physio | Olkapään mobilisaatio
 <CompactExampleBlock>
 ```compact
 [2026-04-14]
-Expense 14.90 | ruokaostokset
-Expense 45.00 | hieronta
-Reminder Osta vastuskuminauha
+Expense 14.90EUR | ruokaostokset
+Expense 45.00EUR | hieronta
+Reminder 2026-04-20 | Osta vastuskuminauha
 ```
 </CompactExampleBlock>
 

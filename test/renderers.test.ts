@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { parseCompact } from '../dist/index.js';
 import { serializeDocument } from '../dist/renderers/compact.js';
 import { renderDocumentToMarkdown } from '../dist/renderers/markdown.js';
@@ -318,6 +319,19 @@ Derived endurance.zone2_minutes 95|min basis:day confidence:74 source:"all worko
 // =============================================================================
 
 describe('Markdown Renderer', () => {
+  it('renders minimonster fixture without crashing', () => {
+    const input = readFileSync(new URL('../data/minimonster.compact', import.meta.url), 'utf8');
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+
+    const render = () => renderDocumentToMarkdown(result.document);
+    expect(render).not.toThrow();
+
+    const markdown = render();
+    expect(markdown.length).toBeGreaterThan(0);
+    expect(markdown).toContain('MINIMONSTER - All Content Types');
+  });
+
   it('renders workout with title as heading', () => {
     const input = `[2025-12-31] ## Voimatreeni
 Exercise penkki|3x10@60kg
@@ -386,6 +400,20 @@ Note Hyvä treeni!
     
     const markdown = renderDocumentToMarkdown(result.document);
     expect(markdown).toContain('Hyvä treeni!');
+  });
+
+  it('formats decimal minute durations as min\'sec in runs', () => {
+    const input = `[2026-02-23] ## Test
+Run 9km 41'34" | matka + min'sec
+Run 9km 41min34s | matka + min+sec ilman väliä
+Run 9km 41min 34s | matka + min + sec välilyönnillä
+`;
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+
+    const markdown = renderDocumentToMarkdown(result.document);
+    expect(markdown).toContain("41'34\"");
+    expect(markdown).not.toContain('41.56666666666667min');
   });
 });
 

@@ -97,6 +97,19 @@ function fallbackTextForEntry(type: string, entry: Record<string, unknown>): str
     return ['Sleep', duration, quality].filter(Boolean).join(' ').trim();
   }
 
+  if (type === 'feeling') {
+    const score = entry.value != null ? `${asText(entry.value)}${asText(entry.scale) === 'rpe' ? ' RPE' : '/10'}` : '';
+    const description = asText(entry.description);
+    return ['Feeling', score, description ? `| ${description}` : ''].filter(Boolean).join(' ').trim();
+  }
+
+  if (type === 'pain') {
+    const bodyPart = asText(entry.bodyPart);
+    const severity = entry.severity != null ? `${asText(entry.severity)}/10` : '';
+    const description = asText(entry.description);
+    return ['Pain', bodyPart, severity, description ? `| ${description}` : ''].filter(Boolean).join(' ').trim();
+  }
+
   if (type === 'measurement') {
     const measureType = asText(entry.measureType);
     const value = entry.value != null ? `${asText(entry.value)}${asText(entry.unit)}` : '';
