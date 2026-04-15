@@ -23,7 +23,10 @@ export type {
 } from './lib/types';
 
 export { Badge } from './components/atoms/Badge';
+export { DurationStepper, formatDurationValue } from './components/atoms/DurationStepper';
 export { FieldLabel } from './components/atoms/FieldLabel';
+export { InlineOperator } from './components/atoms/InlineOperator';
+export { NumericStepper } from './components/atoms/NumericStepper';
 export { StatChip } from './components/atoms/StatChip';
 
 export { WorkoutHeader } from './components/molecules/WorkoutHeader';
@@ -44,6 +47,9 @@ export {
   Unknown,
 } from './components/molecules/CompactRowParts';
 export type { CompactRowInput } from './components/molecules/CompactRowParts';
+export { ActiveDurationEditControls } from './components/molecules/ActiveDurationEditControls';
+export { ActiveDurationTimer } from './components/molecules/ActiveDurationTimer';
+export { ActiveRepEditControls } from './components/molecules/ActiveRepEditControls';
 export { CompactRowEdit } from './components/molecules/CompactRowEdit';
 
 export { CompactBlogView } from './components/organisms/CompactBlogView';
@@ -58,4 +64,5 @@ export {
   compactWorkoutFromParsedWorkout,
   compactWorkoutsFromDocument,
 } from './lib/parsedRowMapping';
+export { getDistanceStepMeters, getNextDistanceMetersValue, getNextWeightValue } from './lib/stepperRules';
 export { compactStatFromText, statFromDurationRow, statFromExerciseRow, statFromRunRow } from './lib/formatters';

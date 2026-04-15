@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Badge } from './components/atoms/Badge';
+import { DurationStepper, formatDurationValue } from './components/atoms/DurationStepper';
 import { FieldLabel } from './components/atoms/FieldLabel';
+import { NumericStepper } from './components/atoms/NumericStepper';
 import { StatChip } from './components/atoms/StatChip';
+import { ActiveDurationEditControls } from './components/molecules/ActiveDurationEditControls';
+import { ActiveDurationTimer } from './components/molecules/ActiveDurationTimer';
+import { ActiveRepEditControls } from './components/molecules/ActiveRepEditControls';
 import { CompactRowEdit } from './components/molecules/CompactRowEdit';
 import {
   Custom,
@@ -23,8 +28,10 @@ import { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
 import { CompactBlogView } from './components/organisms/CompactBlogView';
 import { CompactView } from './components/organisms/CompactView';
 import { compactStatFromText, statFromExerciseRow } from './lib/formatters';
+import { getNextDistanceMetersValue, getNextWeightValue } from './lib/stepperRules';
 import type { CompactExerciseRow, CompactRow, CompactRunRow, CompactWorkoutModel } from './lib/types';
 import { parseCompact } from '@parser';
+import type { DurationBlock as ParsedDurationBlock, Exercise as ParsedExercise } from '@parser/types';
 import { sampleWorkout } from './preview/fixtures';
 import sampleCompactText from '../../../sample.compact?raw';
 import minimonsterCompactText from '../../../data/minimonster.compact?raw';
@@ -57,8 +64,13 @@ interface WorkoutHeaderExampleProps {
 type GallerySectionId =
   | 'overview'
   | 'atom-badge'
+  | 'atom-numeric-stepper'
+  | 'atom-duration-stepper'
   | 'atom-field-label'
   | 'atom-stat-chip'
+  | 'molecule-active-duration-edit'
+  | 'molecule-active-duration-timer'
+  | 'molecule-active-rep-edit'
   | 'molecule-workout-header'
   | 'molecule-compact-row-view'
   | 'molecule-compact-row-edit'
@@ -94,8 +106,13 @@ const galleryNav: Array<{ title: string; items: GalleryNavItem[] }> = [
     items: [
       { id: 'overview', label: 'Gallerian aloitus', kind: 'overview', description: 'Rakenne, käyttö ja navigointi' },
       { id: 'atom-badge', label: 'Badge', kind: 'atom', description: 'Pill badge eri tone-varianteilla' },
+      { id: 'atom-numeric-stepper', label: 'NumericStepper', kind: 'atom', description: 'Plus/miinus numerosäädin adaptiivisilla askelilla' },
+      { id: 'atom-duration-stepper', label: 'DurationStepper', kind: 'atom', description: 'Kestoeditori min+sek tuella' },
       { id: 'atom-field-label', label: 'FieldLabel', kind: 'atom', description: 'Lomakekenttien pieni otsake' },
       { id: 'atom-stat-chip', label: 'StatChip', kind: 'atom', description: 'Korostettu numerolabel' },
+      { id: 'molecule-active-duration-edit', label: 'ActiveDurationEditControls', kind: 'molecule', description: 'Sarjat + kesto (+ bilateral) editori' },
+      { id: 'molecule-active-duration-timer', label: 'ActiveDurationTimer', kind: 'molecule', description: 'Sarjakohtainen keston kellotus mitatuilla ajoilla' },
+      { id: 'molecule-active-rep-edit', label: 'ActiveRepEditControls', kind: 'molecule', description: 'Sarjat/toistot/paino editori' },
       { id: 'molecule-workout-header', label: 'WorkoutHeader', kind: 'molecule', description: 'Harjoituksen identiteettiotsake' },
       { id: 'molecule-compact-row-view', label: 'CompactRowView', kind: 'molecule', description: 'Yksittäisen rivin renderer' },
       { id: 'molecule-compact-row-edit', label: 'CompactRowEdit', kind: 'molecule', description: 'Yksittäisen rivin editori' },
@@ -185,6 +202,25 @@ const componentInterfaces: Record<GallerySectionId, string> = {
   onClick?: React.MouseEventHandler<HTMLSpanElement>;
   onTouchStart?: React.TouchEventHandler<HTMLSpanElement>;
 }`,
+  'atom-numeric-stepper': `interface NumericStepperProps {
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  label?: string;
+  suffix?: string;
+  computeNextValue?: (current: number, direction: 'increase' | 'decrease') => number;
+}`,
+  'atom-duration-stepper': `interface DurationStepperProps {
+  value: number;
+  onChange: (value: number) => void;
+  precision?: 'min' | 'sec';
+  minuteControlsMode?: 'auto' | 'always' | 'never';
+  minuteStepMinutes?: number;
+  secondStepSeconds?: number;
+  showSecondControlsWithMinutes?: boolean;
+}`,
   'atom-field-label': `interface FieldLabelProps {
   children: React.ReactNode;
   htmlFor?: string;
@@ -200,6 +236,21 @@ interface StatChipProps {
   stat: CompactStatValue;
   onClick?: React.MouseEventHandler<HTMLSpanElement>;
   onTouchStart?: React.TouchEventHandler<HTMLSpanElement>;
+}`,
+  'molecule-active-duration-edit': `interface ActiveDurationEditControlsProps {
+  entity: Exercise | DurationBlock;
+  onChange: (next: Exercise | DurationBlock) => void;
+  onMarkDone?: () => void;
+}`,
+  'molecule-active-duration-timer': `interface ActiveDurationTimerProps {
+  entity: Exercise;
+  onChange?: (next: Exercise) => void;
+  onClose?: () => void;
+  autoStart?: boolean;
+}`,
+  'molecule-active-rep-edit': `interface ActiveRepEditControlsProps {
+  entity: Exercise;
+  onChange: (next: Exercise) => void;
 }`,
   'molecule-workout-header': `interface WorkoutHeaderProps {
   title?: string;
@@ -349,6 +400,43 @@ function NpmImportBlock({ imports }: { imports: string[] }) {
 
 function PreviewSurface({ children }: { children: React.ReactNode }) {
   return <div className="rounded-2xl border border-slate-700/80 bg-slate-950/70 p-4">{children}</div>;
+}
+
+function TabView({
+  tabs,
+  activeTab,
+  onTabChange,
+}: {
+  tabs: Array<{ id: string; label: string; content: React.ReactNode }>;
+  activeTab: string;
+  onTabChange: (tabId: string) => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/60">
+      <div className="flex flex-wrap gap-2 border-b border-slate-800 p-3">
+        {tabs.map((tab) => {
+          const isActive = tab.id === activeTab;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => onTabChange(tab.id)}
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition ${
+                isActive
+                  ? 'bg-orange-500 text-white'
+                  : 'border border-slate-700 bg-slate-950 text-slate-300 hover:border-slate-500'
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+      <div className="p-4">
+        {tabs.find((tab) => tab.id === activeTab)?.content}
+      </div>
+    </div>
+  );
 }
 
 function ExampleIntro({ title, children }: { title: string; children: React.ReactNode }) {
@@ -554,6 +642,118 @@ function App() {
   const [rowEditSourceError, setRowEditSourceError] = useState<string | null>(null);
   const [compactPlaygroundSource, setCompactPlaygroundSource] = useState(compactPlaygroundExample);
   const [renderedCompactSource, setRenderedCompactSource] = useState(compactPlaygroundExample);
+  const [numericBasicValue, setNumericBasicValue] = useState(8);
+  const [numericWeightValue, setNumericWeightValue] = useState(7);
+  const [numericDistanceValue, setNumericDistanceValue] = useState(1.45);
+  const [durationDemoValue, setDurationDemoValue] = useState(95);
+  const [durationShortValue, setDurationShortValue] = useState(35);
+  const [durationEntity, setDurationEntity] = useState<ParsedExercise>({
+    type: 'exercise',
+    name: 'Lankku',
+    sets: 3,
+    setsMax: undefined,
+    rounds: null,
+    reps: 45,
+    repsMax: null,
+    repsRight: 45,
+    distance: null,
+    distanceMin: null,
+    distanceMax: null,
+    unit: 's',
+    weight: null,
+    recovery: null,
+    note: null,
+    description: null,
+    customFields: null,
+    specType: undefined,
+    measuredDurations: undefined,
+    isBilateral: true,
+  });
+  const [durationBlockEntity, setDurationBlockEntity] = useState<ParsedDurationBlock>({
+    type: 'duration',
+    duration: {
+      value: 12,
+      unit: 'min',
+    },
+    description: 'Palauttava osuus',
+  });
+  const [editDoneCount, setEditDoneCount] = useState(0);
+  const [repEntity, setRepEntity] = useState<ParsedExercise>({
+    type: 'exercise',
+    name: 'Bulgarian Split Squat',
+    sets: 3,
+    setsMax: undefined,
+    rounds: null,
+    reps: 10,
+    repsMax: null,
+    repsRight: 10,
+    distance: null,
+    distanceMin: null,
+    distanceMax: null,
+    unit: null,
+    weight: {
+      value: 15,
+      valueMax: 15,
+      unit: 'kg',
+      count: 1,
+    },
+    recovery: null,
+    note: null,
+    description: null,
+    customFields: null,
+    specType: undefined,
+    measuredDurations: undefined,
+    isBilateral: true,
+  });
+  const [durationExerciseTab, setDurationExerciseTab] = useState<'preview' | 'json' | 'compact'>('preview');
+  const [durationBlockTab, setDurationBlockTab] = useState<'preview' | 'json' | 'compact'>('preview');
+  const [durationTimerTab, setDurationTimerTab] = useState<'preview' | 'json' | 'compact'>('preview');
+  const [repStrengthTab, setRepStrengthTab] = useState<'preview' | 'json' | 'compact'>('preview');
+  const [repDistanceTab, setRepDistanceTab] = useState<'preview' | 'json' | 'compact'>('preview');
+  const [distanceEntity, setDistanceEntity] = useState<ParsedExercise>({
+    type: 'exercise',
+    name: 'Juoksu',
+    sets: 4,
+    setsMax: undefined,
+    rounds: null,
+    reps: 500,
+    repsMax: null,
+    repsRight: undefined,
+    distance: 500,
+    distanceMin: null,
+    distanceMax: null,
+    unit: 'm',
+    weight: null,
+    recovery: null,
+    note: null,
+    description: null,
+    customFields: null,
+    specType: undefined,
+    measuredDurations: undefined,
+    isBilateral: false,
+  });
+  const [durationTimerEntity, setDurationTimerEntity] = useState<ParsedExercise>({
+    type: 'exercise',
+    name: 'Marssi ja hartiat eteen-taakse',
+    sets: 1,
+    setsMax: undefined,
+    rounds: null,
+    reps: 30,
+    repsMax: null,
+    repsRight: undefined,
+    distance: null,
+    distanceMin: null,
+    distanceMax: null,
+    unit: 's',
+    weight: null,
+    recovery: null,
+    note: null,
+    description: 'Marssi paikallasi ja yhdista liikkeeseen hartioiden pyoritys eteen ja taakse.',
+    customFields: null,
+    specType: 'measured',
+    measuredDurations: [],
+    isBilateral: false,
+  });
 
   const statChipPresets: Array<{ label: string; row: CompactExerciseRow; description: string }> = [
     {
@@ -738,6 +938,12 @@ function App() {
   const activeMeta = galleryNav.flatMap((group) => group.items).find((item) => item.id === activeSection);
   const compactPlaygroundParse = parseCompact(renderedCompactSource);
   const compactPlaygroundPreview = workoutsFromCompact(renderedCompactSource);
+  const durationEntityCompact = `[2026-01-01] ## Demo\nExercise ${durationEntity.name}|${durationEntity.sets ?? 1}x${durationEntity.reps}${durationEntity.unit ?? ''}\n`;
+  const durationBlockLine = `${durationBlockEntity.duration?.value ?? 0}${durationBlockEntity.duration?.unit ?? 's'}${durationBlockEntity.description ? ` ${durationBlockEntity.description}` : ''}`;
+  const durationBlockCompact = `[2026-01-01] ## Demo\n${durationBlockLine}\n`;
+  const repEntityCompact = `[2026-01-01] ## Demo\nExercise ${repEntity.name}|${repEntity.sets ?? 1}x${repEntity.reps}${repEntity.repsRight ? `+${repEntity.repsRight}` : ''}${repEntity.weight && 'value' in repEntity.weight ? `x${repEntity.weight.value}kg` : ''}\n`;
+  const distanceEntityCompact = `[2026-01-01] ## Demo\nExercise ${distanceEntity.name}|${distanceEntity.sets ?? 1}x${distanceEntity.reps}${distanceEntity.unit ?? ''}\n`;
+  const durationTimerCompact = `[2026-01-01] ## Demo\nExercise ${durationTimerEntity.name}|${durationTimerEntity.reps}${durationTimerEntity.unit ?? ''}${durationTimerEntity.description ? `\nText ${durationTimerEntity.description}` : ''}${Array.isArray(durationTimerEntity.measuredDurations) && durationTimerEntity.measuredDurations.length > 0 ? `\n# measured: ${durationTimerEntity.measuredDurations.map((setDuration) => `${setDuration.left}${setDuration.unit}${typeof setDuration.right === 'number' ? `+${setDuration.right}${setDuration.unit}` : ''}`).join(', ')}` : ''}\n`;
 
   const loadCompactPlaygroundSource = (nextSource: string) => {
     setCompactPlaygroundSource(nextSource);
@@ -867,6 +1073,83 @@ function App() {
             </div>
           </GalleryCard>
         );
+      case 'atom-numeric-stepper':
+        return (
+          <GalleryCard title="NumericStepper" subtitle="Yleinen plus/miinus-atomi, jossa voi käyttää joko kiinteää stepiä tai domain-logiikkaa (paino/metrit).">
+            <div className="space-y-4">
+              <NpmImportBlock imports={['NumericStepper']} />
+              <PreviewSurface>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                    <p className="mb-3 text-xs uppercase tracking-[0.18em] text-slate-500">Perusaskel</p>
+                    <NumericStepper value={numericBasicValue} onChange={setNumericBasicValue} label="Sarjat" min={0} max={20} step={1} />
+                  </div>
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                    <p className="mb-3 text-xs uppercase tracking-[0.18em] text-slate-500">Paino (1 + 2.5)</p>
+                    <NumericStepper
+                      value={numericWeightValue}
+                      onChange={setNumericWeightValue}
+                      label="Paino"
+                      suffix="kg"
+                      min={0}
+                      max={500}
+                      computeNextValue={getNextWeightValue}
+                    />
+                  </div>
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                    <p className="mb-3 text-xs uppercase tracking-[0.18em] text-slate-500">Metrit (adaptiivinen)</p>
+                    <NumericStepper
+                      value={numericDistanceValue}
+                      onChange={setNumericDistanceValue}
+                      label="Matka"
+                      suffix="m"
+                      min={0}
+                      max={100000}
+                      computeNextValue={getNextDistanceMetersValue}
+                    />
+                  </div>
+                </div>
+              </PreviewSurface>
+              <InterfaceBlock value={componentInterfaces['atom-numeric-stepper']} />
+            </div>
+          </GalleryCard>
+        );
+      case 'atom-duration-stepper':
+        return (
+          <GalleryCard title="DurationStepper" subtitle="Keston editointiatomi sekunti- ja minuuttitarkkuudella, mukaan lukien dual mode minuutit + sekunnit.">
+            <div className="space-y-4">
+              <NpmImportBlock imports={['DurationStepper']} />
+              <PreviewSurface>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Dual mode (&gt;=60s)</p>
+                    <DurationStepper
+                      value={durationDemoValue}
+                      onChange={setDurationDemoValue}
+                      label="Kesto"
+                      precision="sec"
+                      minuteControlsMode="always"
+                      showSecondControlsWithMinutes
+                    />
+                    <p className="text-xs text-slate-400">Arvo: {formatDurationValue(durationDemoValue)}</p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Sekuntitarkkuus (&lt;60s)</p>
+                    <DurationStepper
+                      value={durationShortValue}
+                      onChange={setDurationShortValue}
+                      label="Sprintti"
+                      precision="sec"
+                      minuteControlsMode="never"
+                    />
+                    <p className="text-xs text-slate-400">Arvo: {formatDurationValue(durationShortValue)}</p>
+                  </div>
+                </div>
+              </PreviewSurface>
+              <InterfaceBlock value={componentInterfaces['atom-duration-stepper']} />
+            </div>
+          </GalleryCard>
+        );
       case 'atom-field-label':
         return (
           <GalleryCard title="FieldLabel" subtitle="Yhtenainen label lomakekenttien ja editorikenttien ylapuolelle. Label tukee nyt myos click- ja touch-eventteja suoraan root-elementilta.">
@@ -916,6 +1199,229 @@ function App() {
                 </div>
               </PreviewSurface>
               <InterfaceBlock value={componentInterfaces['atom-field-label']} />
+            </div>
+          </GalleryCard>
+        );
+      case 'molecule-active-duration-edit':
+        return (
+          <GalleryCard title="ActiveDurationEditControls" subtitle="Aktiiviharjoituksen kestoeditori: sarjat + kesto + bilateral + done-action.">
+            <div className="space-y-4">
+              <NpmImportBlock imports={['ActiveDurationEditControls']} />
+              <PreviewSurface>
+                <div className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                  <p className="text-xs text-slate-400">Tehty-nappia painettu: {editDoneCount} kertaa</p>
+
+                  <div className="space-y-2">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Exercise-kesto (bilateral)</p>
+                    <TabView
+                      activeTab={durationExerciseTab}
+                      onTabChange={(tab) => setDurationExerciseTab(tab as 'preview' | 'json' | 'compact')}
+                      tabs={[
+                        {
+                          id: 'preview',
+                          label: 'Preview',
+                          content: (
+                            <ActiveDurationEditControls
+                              entity={durationEntity}
+                              onChange={(next) => setDurationEntity(next as ParsedExercise)}
+                              onMarkDone={() => setEditDoneCount((current) => current + 1)}
+                            />
+                          ),
+                        },
+                        {
+                          id: 'json',
+                          label: 'JSON',
+                          content: (
+                            <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                              <code>{JSON.stringify(durationEntity, null, 2)}</code>
+                            </pre>
+                          ),
+                        },
+                        {
+                          id: 'compact',
+                          label: 'COMPACT',
+                          content: (
+                            <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                              <code>{durationEntityCompact}</code>
+                            </pre>
+                          ),
+                        },
+                      ]}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">DurationBlock-esimerkki</p>
+                    <TabView
+                      activeTab={durationBlockTab}
+                      onTabChange={(tab) => setDurationBlockTab(tab as 'preview' | 'json' | 'compact')}
+                      tabs={[
+                        {
+                          id: 'preview',
+                          label: 'Preview',
+                          content: (
+                            <ActiveDurationEditControls
+                              entity={durationBlockEntity}
+                              onChange={(next) => setDurationBlockEntity(next as ParsedDurationBlock)}
+                              onMarkDone={() => setEditDoneCount((current) => current + 1)}
+                            />
+                          ),
+                        },
+                        {
+                          id: 'json',
+                          label: 'JSON',
+                          content: (
+                            <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                              <code>{JSON.stringify(durationBlockEntity, null, 2)}</code>
+                            </pre>
+                          ),
+                        },
+                        {
+                          id: 'compact',
+                          label: 'COMPACT',
+                          content: (
+                            <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                              <code>{durationBlockCompact}</code>
+                            </pre>
+                          ),
+                        },
+                      ]}
+                    />
+                  </div>
+                </div>
+              </PreviewSurface>
+              <InterfaceBlock value={componentInterfaces['molecule-active-duration-edit']} />
+            </div>
+          </GalleryCard>
+        );
+      case 'molecule-active-duration-timer':
+        return (
+          <GalleryCard title="ActiveDurationTimer" subtitle="Parser-entityyn sidottu setti-/kestotimeri, joka kirjoittaa mitatut ajat suoraan measuredDurations-kenttaan.">
+            <div className="space-y-4">
+              <NpmImportBlock imports={['ActiveDurationTimer']} />
+              <PreviewSurface>
+                <div className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Esimerkki: Exercise Pakaralihakset|30s + Text-ohje fullscreen-aloituksessa</p>
+                  <TabView
+                    activeTab={durationTimerTab}
+                    onTabChange={(tab) => setDurationTimerTab(tab as 'preview' | 'json' | 'compact')}
+                    tabs={[
+                      {
+                        id: 'preview',
+                        label: 'Preview',
+                        content: (
+                          <ActiveDurationTimer
+                            entity={durationTimerEntity}
+                            onChange={(next) => setDurationTimerEntity(next)}
+                          />
+                        ),
+                      },
+                      {
+                        id: 'json',
+                        label: 'JSON',
+                        content: (
+                          <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                            <code>{JSON.stringify(durationTimerEntity, null, 2)}</code>
+                          </pre>
+                        ),
+                      },
+                      {
+                        id: 'compact',
+                        label: 'COMPACT',
+                        content: (
+                          <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                            <code>{durationTimerCompact}</code>
+                          </pre>
+                        ),
+                      },
+                    ]}
+                  />
+                </div>
+              </PreviewSurface>
+              <InterfaceBlock value={componentInterfaces['molecule-active-duration-timer']} />
+            </div>
+          </GalleryCard>
+        );
+      case 'molecule-active-rep-edit':
+        return (
+          <GalleryCard title="ActiveRepEditControls" subtitle="Aktiiviharjoituksen toistoeditori sarjoille, bilateral-toistoille ja adaptiiviselle painolle.">
+            <div className="space-y-4">
+              <NpmImportBlock imports={['ActiveRepEditControls']} />
+              <PreviewSurface>
+                <div className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Voimaesimerkki: 3x10+10x15kg</p>
+                  <TabView
+                    activeTab={repStrengthTab}
+                    onTabChange={(tab) => setRepStrengthTab(tab as 'preview' | 'json' | 'compact')}
+                    tabs={[
+                      {
+                        id: 'preview',
+                        label: 'Preview',
+                        content: (
+                          <ActiveRepEditControls
+                            entity={repEntity}
+                            onChange={(next) => setRepEntity(next)}
+                          />
+                        ),
+                      },
+                      {
+                        id: 'json',
+                        label: 'JSON',
+                        content: (
+                          <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                            <code>{JSON.stringify(repEntity, null, 2)}</code>
+                          </pre>
+                        ),
+                      },
+                      {
+                        id: 'compact',
+                        label: 'COMPACT',
+                        content: (
+                          <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                            <code>{repEntityCompact}</code>
+                          </pre>
+                        ),
+                      },
+                    ]}
+                  />
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Matkaesimerkki: 4x500m</p>
+                  <TabView
+                    activeTab={repDistanceTab}
+                    onTabChange={(tab) => setRepDistanceTab(tab as 'preview' | 'json' | 'compact')}
+                    tabs={[
+                      {
+                        id: 'preview',
+                        label: 'Preview',
+                        content: (
+                          <ActiveRepEditControls
+                            entity={distanceEntity}
+                            onChange={(next) => setDistanceEntity(next)}
+                          />
+                        ),
+                      },
+                      {
+                        id: 'json',
+                        label: 'JSON',
+                        content: (
+                          <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                            <code>{JSON.stringify(distanceEntity, null, 2)}</code>
+                          </pre>
+                        ),
+                      },
+                      {
+                        id: 'compact',
+                        label: 'COMPACT',
+                        content: (
+                          <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                            <code>{distanceEntityCompact}</code>
+                          </pre>
+                        ),
+                      },
+                    ]}
+                  />
+                </div>
+              </PreviewSurface>
+              <InterfaceBlock value={componentInterfaces['molecule-active-rep-edit']} />
             </div>
           </GalleryCard>
         );
