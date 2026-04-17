@@ -57,6 +57,8 @@ export type { CompactBlogHeaderOptions } from './components/organisms/CompactBlo
 export { CompactView } from './components/organisms/CompactView';
 export type { CompactRenderableData, CompactViewProps } from './components/organisms/CompactView';
 export { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
+export { ActiveWorkoutSession } from './components/organisms/ActiveWorkoutSession';
+export type { ActiveWorkoutSessionProps } from './components/organisms/ActiveWorkoutSession';
 export { workoutsFromCompact } from './lib/workoutsFromCompact';
 export {
   compactRowFromParsedContent,
@@ -66,3 +68,24 @@ export {
 } from './lib/parsedRowMapping';
 export { getDistanceStepMeters, getNextDistanceMetersValue, getNextWeightValue } from './lib/stepperRules';
 export { compactStatFromText, statFromDurationRow, statFromExerciseRow, statFromRunRow } from './lib/formatters';
+export { VirtualClock, RealClock } from './lib/controller/VirtualClock';
+export { WorkoutTimingController } from './lib/controller/WorkoutTimingController';
+export { WorkoutSessionController } from './lib/controller/WorkoutSessionController';
+export type {
+  ActiveRepSetState,
+  CompleteRepStepInput,
+  RepWorkoutControllerStep,
+  RepWorkoutSetResult,
+  TimedWorkoutControllerStep,
+  UpdateStepInput,
+  WorkoutControllerEvent,
+  WorkoutControllerState,
+  WorkoutControllerStatus,
+  WorkoutControllerStep,
+} from './lib/controller/workout-controller-types';
+export type {
+  WorkoutSessionControllerOptions,
+  WorkoutSessionEvent,
+  WorkoutSessionState,
+  WorkoutSessionSummary,
+} from './lib/controller/workout-session-controller-types';

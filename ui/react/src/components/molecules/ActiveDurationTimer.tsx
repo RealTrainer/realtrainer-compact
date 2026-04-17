@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
 import type { Exercise as ParsedExercise } from '@parser/types';
+import { RealClock, type Clock } from '../../lib/controller/VirtualClock';
 
 type TimerSide = 'left' | 'right';
 
@@ -15,6 +16,7 @@ export interface ActiveDurationTimerProps {
   onReady?: (next: ParsedExercise) => void;
   onClose?: () => void;
   autoStart?: boolean;
+  clock?: Clock;
 }
 
 function toSeconds(value: number | null | undefined, unit: ParsedExercise['unit']): number {
@@ -66,9 +68,13 @@ export function ActiveDurationTimer({
   onReady,
   onClose,
   autoStart = false,
+  clock,
 }: ActiveDurationTimerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const instructionOverlayRef = useRef<HTMLDivElement>(null);
+  const timerClock = useMemo<Clock>(() => clock ?? new RealClock(), [clock]);
+  const lastTickAtRef = useRef<number | null>(null);
+  const pendingElapsedMsRef = useRef(0);
   const isBilateral = typeof entity.repsRight === 'number' && entity.repsRight > 0;
   const totalSets = Math.max(1, entity.sets ?? 1);
   const leftPlannedSeconds = Math.max(1, toSeconds(typeof entity.reps === 'number' ? entity.reps : 0, entity.unit));
@@ -114,6 +120,8 @@ export function ActiveDurationTimer({
     setLastResultSeconds(null);
     setAutoSaveOnZeroPending(false);
     setShowInstructionOverlay(false);
+    lastTickAtRef.current = null;
+    pendingElapsedMsRef.current = 0;
   }, [
     autoStart,
     entity.name,
@@ -125,24 +133,44 @@ export function ActiveDurationTimer({
   ]);
 
   useEffect(() => {
-    if (!isRunning || remainingSeconds <= 0) return;
+    if (!isRunning || remainingSeconds <= 0) {
+      lastTickAtRef.current = null;
+      pendingElapsedMsRef.current = 0;
+      return;
+    }
 
-    const timerId = window.setInterval(() => {
+    lastTickAtRef.current = timerClock.now();
+
+    const timerId = timerClock.setInterval(() => {
+      const nowMs = timerClock.now();
+      const previousTickAt = lastTickAtRef.current ?? nowMs;
+      lastTickAtRef.current = nowMs;
+      pendingElapsedMsRef.current += Math.max(0, nowMs - previousTickAt);
+
+      const elapsedWholeSeconds = Math.floor(pendingElapsedMsRef.current / 1000);
+      if (elapsedWholeSeconds <= 0) {
+        return;
+      }
+
+      pendingElapsedMsRef.current -= elapsedWholeSeconds * 1000;
+
       setRemainingSeconds((prev) => {
-        if (prev <= 1) {
-          window.clearInterval(timerId);
+        if (prev <= elapsedWholeSeconds) {
+          timerClock.clearInterval(timerId);
           setIsRunning(false);
           setAutoSaveOnZeroPending(true);
           return 0;
         }
-        return prev - 1;
+        return prev - elapsedWholeSeconds;
       });
-    }, 1000);
+    }, 250);
 
     return () => {
-      window.clearInterval(timerId);
+      timerClock.clearInterval(timerId);
+      lastTickAtRef.current = null;
+      pendingElapsedMsRef.current = 0;
     };
-  }, [isRunning, remainingSeconds]);
+  }, [isRunning, remainingSeconds, timerClock]);
 
   useEffect(() => {
     const onFullscreenChange = () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Badge } from './components/atoms/Badge';
 import { DurationStepper, formatDurationValue } from './components/atoms/DurationStepper';
 import { FieldLabel } from './components/atoms/FieldLabel';
@@ -24,6 +24,7 @@ import {
 } from './components/molecules/CompactRowParts';
 import { CompactRowView } from './components/molecules/CompactRowView';
 import { WorkoutHeader } from './components/molecules/WorkoutHeader';
+import { ActiveWorkoutSession } from './components/organisms/ActiveWorkoutSession';
 import { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
 import { CompactBlogView } from './components/organisms/CompactBlogView';
 import { CompactView } from './components/organisms/CompactView';
@@ -32,10 +33,11 @@ import { getNextDistanceMetersValue, getNextWeightValue } from './lib/stepperRul
 import type { CompactExerciseRow, CompactRow, CompactRunRow, CompactWorkoutModel } from './lib/types';
 import { parseCompact } from '@parser';
 import type { DurationBlock as ParsedDurationBlock, Exercise as ParsedExercise } from '@parser/types';
-import { sampleWorkout } from './preview/fixtures';
+import { activeWorkoutSessionCompactExample, sampleWorkout } from './preview/fixtures';
 import sampleCompactText from '../../../sample.compact?raw';
 import minimonsterCompactText from '../../../data/minimonster.compact?raw';
 import { workoutsFromCompact } from './preview/fromCompact';
+import { VirtualClock } from './lib/controller/VirtualClock';
 
 type SupportedAtomEvent = 'onClick' | 'onTouchStart';
 
@@ -60,6 +62,8 @@ interface WorkoutHeaderExampleProps {
   emojis?: string;
   points?: number;
 }
+
+const durationTimerPlaybackRates = [1, 2, 5] as const;
 
 type GallerySectionId =
   | 'overview'
@@ -89,6 +93,7 @@ type GallerySectionId =
   | 'organism-blog-view'
   | 'organism-compact-view'
   | 'organism-blog-editor'
+  | 'organism-active-workout-session'
   | 'playground-compact-input'
   | 'playground-minimonster'
   | 'playground-workouts';
@@ -141,6 +146,7 @@ const galleryNav: Array<{ title: string; items: GalleryNavItem[] }> = [
       { id: 'organism-blog-view', label: 'CompactBlogView', kind: 'organism', description: 'Koko workout-kortin view' },
       { id: 'organism-compact-view', label: 'CompactView', kind: 'organism', description: 'Parseri-ensin renderer tekstille tai AST:lle' },
       { id: 'organism-blog-editor', label: 'CompactBlogEditor', kind: 'organism', description: 'Koko workout-kortin editori' },
+      { id: 'organism-active-workout-session', label: 'ActiveWorkoutSession', kind: 'organism', description: 'Monen harjoituksen aktiivinen sessionakyma Active-kontrolleilla' },
       { id: 'playground-compact-input', label: 'COMPACT Playground', kind: 'playground', description: 'Pasteta COMPACT, renderoi ja exportoi JSON' },
       { id: 'playground-minimonster', label: 'MINIMONSTER', kind: 'playground', description: 'Massiivinen all-in-one referenssitreeni' },
       { id: 'playground-workouts', label: 'Sample.compact', kind: 'playground', description: 'Nykyinen data-driven playground' },
@@ -193,6 +199,7 @@ const componentInterfaces: Record<GallerySectionId, string> = {
   | 'organism-blog-view'
   | 'organism-blog-editor'
   | 'organism-compact-view'
+  | 'organism-active-workout-session'
   | 'playground-compact-input'
   | 'playground-minimonster'
   | 'playground-workouts';`,
@@ -245,8 +252,10 @@ interface StatChipProps {
   'molecule-active-duration-timer': `interface ActiveDurationTimerProps {
   entity: Exercise;
   onChange?: (next: Exercise) => void;
+  onReady?: (next: Exercise) => void;
   onClose?: () => void;
   autoStart?: boolean;
+  clock?: Clock;
 }`,
   'molecule-active-rep-edit': `interface ActiveRepEditControlsProps {
   entity: Exercise;
@@ -345,6 +354,12 @@ interface CompactViewProps {
   'organism-blog-editor': `interface CompactBlogEditorProps {
   workout: CompactWorkoutModel;
   onChange: (next: CompactWorkoutModel) => void;
+}`,
+  'organism-active-workout-session': `interface ActiveWorkoutSessionProps {
+  workouts: Workout[];
+  clock?: Clock;
+  autoStartTimedSteps?: boolean;
+  onSessionComplete?: (state: WorkoutSessionState) => void;
 }`,
   'playground-compact-input': `const parseResult = parseCompact(input);
 const preview = workoutsFromCompact(input);
@@ -708,6 +723,8 @@ function App() {
   const [durationExerciseTab, setDurationExerciseTab] = useState<'preview' | 'json' | 'compact'>('preview');
   const [durationBlockTab, setDurationBlockTab] = useState<'preview' | 'json' | 'compact'>('preview');
   const [durationTimerTab, setDurationTimerTab] = useState<'preview' | 'json' | 'compact'>('preview');
+  const [durationTimerPlaybackRate, setDurationTimerPlaybackRate] = useState<(typeof durationTimerPlaybackRates)[number]>(1);
+  const [activeSessionPlaybackRate, setActiveSessionPlaybackRate] = useState<(typeof durationTimerPlaybackRates)[number]>(1);
   const [repStrengthTab, setRepStrengthTab] = useState<'preview' | 'json' | 'compact'>('preview');
   const [repDistanceTab, setRepDistanceTab] = useState<'preview' | 'json' | 'compact'>('preview');
   const [distanceEntity, setDistanceEntity] = useState<ParsedExercise>({
@@ -754,6 +771,8 @@ function App() {
     measuredDurations: [],
     isBilateral: false,
   });
+  const durationTimerClock = useMemo(() => new VirtualClock(), []);
+  const activeSessionClock = useMemo(() => new VirtualClock(), []);
 
   const statChipPresets: Array<{ label: string; row: CompactExerciseRow; description: string }> = [
     {
@@ -944,6 +963,8 @@ function App() {
   const repEntityCompact = `[2026-01-01] ## Demo\nExercise ${repEntity.name}|${repEntity.sets ?? 1}x${repEntity.reps}${repEntity.repsRight ? `+${repEntity.repsRight}` : ''}${repEntity.weight && 'value' in repEntity.weight ? `x${repEntity.weight.value}kg` : ''}\n`;
   const distanceEntityCompact = `[2026-01-01] ## Demo\nExercise ${distanceEntity.name}|${distanceEntity.sets ?? 1}x${distanceEntity.reps}${distanceEntity.unit ?? ''}\n`;
   const durationTimerCompact = `[2026-01-01] ## Demo\nExercise ${durationTimerEntity.name}|${durationTimerEntity.reps}${durationTimerEntity.unit ?? ''}${durationTimerEntity.description ? `\nText ${durationTimerEntity.description}` : ''}${Array.isArray(durationTimerEntity.measuredDurations) && durationTimerEntity.measuredDurations.length > 0 ? `\n# measured: ${durationTimerEntity.measuredDurations.map((setDuration) => `${setDuration.left}${setDuration.unit}${typeof setDuration.right === 'number' ? `+${setDuration.right}${setDuration.unit}` : ''}`).join(', ')}` : ''}\n`;
+  const activeSessionParse = parseCompact(activeWorkoutSessionCompactExample);
+  const activeSessionWorkouts = activeSessionParse.success ? activeSessionParse.document.workouts : [];
 
   const loadCompactPlaygroundSource = (nextSource: string) => {
     setCompactPlaygroundSource(nextSource);
@@ -957,6 +978,42 @@ function App() {
 
     downloadJsonFile('compact-export.json', compactPlaygroundParse.document);
   };
+
+  useEffect(() => {
+    durationTimerClock.setPlaybackRate(durationTimerPlaybackRate);
+  }, [durationTimerClock, durationTimerPlaybackRate]);
+
+  useEffect(() => {
+    activeSessionClock.setPlaybackRate(activeSessionPlaybackRate);
+  }, [activeSessionClock, activeSessionPlaybackRate]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const timerId = window.setInterval(() => {
+      durationTimerClock.advanceByRealTime(250);
+    }, 250);
+
+    return () => {
+      window.clearInterval(timerId);
+    };
+  }, [durationTimerClock]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const timerId = window.setInterval(() => {
+      activeSessionClock.advanceByRealTime(250);
+    }, 250);
+
+    return () => {
+      window.clearInterval(timerId);
+    };
+  }, [activeSessionClock]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -1310,10 +1367,27 @@ function App() {
                         id: 'preview',
                         label: 'Preview',
                         content: (
-                          <ActiveDurationTimer
-                            entity={durationTimerEntity}
-                            onChange={(next) => setDurationTimerEntity(next)}
-                          />
+                          <div className="space-y-4">
+                            <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-800 bg-slate-950/70 p-3 text-sm text-slate-300">
+                              <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Demo speed</span>
+                              {durationTimerPlaybackRates.map((rate) => (
+                                <button
+                                  key={rate}
+                                  type="button"
+                                  onClick={() => setDurationTimerPlaybackRate(rate)}
+                                  className={`rounded-full border px-3 py-1.5 transition ${durationTimerPlaybackRate === rate ? 'border-cyan-400 bg-cyan-500/20 text-cyan-100' : 'border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-500 hover:text-slate-100'}`}
+                                >
+                                  {rate}x
+                                </button>
+                              ))}
+                              <span className="text-xs text-slate-500">Virtuaalikello pyorii taustalla oikeaa aikaa vastaan.</span>
+                            </div>
+                            <ActiveDurationTimer
+                              entity={durationTimerEntity}
+                              clock={durationTimerClock}
+                              onChange={(next) => setDurationTimerEntity(next)}
+                            />
+                          </div>
                         ),
                       },
                       {
@@ -1889,6 +1963,59 @@ const parsed = parseCompact(source);
                   <CompactBlogEditor workout={workout} onChange={setWorkout} />
                 </PreviewSurface>
                 <InterfaceBlock value={componentInterfaces['organism-blog-editor']} />
+              </div>
+            </div>
+          </GalleryCard>
+        );
+      case 'organism-active-workout-session':
+        return (
+          <GalleryCard title="ActiveWorkoutSession" subtitle="Top-level aktiivinen sessionakyma usealle harjoitukselle. Demo kayttaa samaa virtuaalikelloa koko sessiolle, jotta playbackin nopeutus toimii heti Vite-playgroundissa.">
+            <div className="space-y-4">
+              <ExampleIntro title="Proto-polku UI-validointiin: timed warmup, rep strength ja timed cooldown samassa sessionakyvassa.">
+                <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-sm text-slate-300">
+                  <p>Session demon lähde on suoraan COMPACT-tekstistä parsittu kolmen workoutin kokonaisuus.</p>
+                </div>
+              </ExampleIntro>
+              <NpmImportBlock imports={["ActiveWorkoutSession", "VirtualClock"]} />
+              <div className="space-y-4">
+                {/* Component first */}
+                <PreviewSurface>
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-800 bg-slate-950/70 p-3 text-sm text-slate-300">
+                      <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Session speed</span>
+                      {durationTimerPlaybackRates.map((rate) => (
+                        <button
+                          key={rate}
+                          type="button"
+                          onClick={() => setActiveSessionPlaybackRate(rate)}
+                          className={`rounded-full border px-3 py-1.5 transition ${activeSessionPlaybackRate === rate ? 'border-cyan-400 bg-cyan-500/20 text-cyan-100' : 'border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-500 hover:text-slate-100'}`}
+                        >
+                          {rate}x
+                        </button>
+                      ))}
+                      <span className="text-xs text-slate-500">Yksi jaettu VirtualClock syottaa koko session etenemista.</span>
+                    </div>
+
+                    {activeSessionParse.success ? (
+                      <ActiveWorkoutSession
+                        workouts={activeSessionWorkouts}
+                        clock={activeSessionClock}
+                      />
+                    ) : (
+                      <div className="rounded-2xl border border-rose-700 bg-rose-950/40 p-4 text-sm text-rose-100">
+                        Session source parse failed: {activeSessionParse.error.message}
+                      </div>
+                    )}
+                  </div>
+                </PreviewSurface>
+
+                {/* Code preview below */}
+                <div className="grid gap-4 xl:grid-cols-2">
+                  <InterfaceBlock value={componentInterfaces['organism-active-workout-session']} />
+                  <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                    <code>{activeWorkoutSessionCompactExample}</code>
+                  </pre>
+                </div>
               </div>
             </div>
           </GalleryCard>
