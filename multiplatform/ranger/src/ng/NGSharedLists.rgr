@@ -1,0 +1,15 @@
+class NGSharedLists@(singleton) {
+    def sportNames:[string]
+
+    Constructor () {
+        push sportNames "Swim"
+        push sportNames "Run"
+        push sportNames "Bike"
+        push sportNames "Ski"
+        push sportNames "Row"
+    }
+
+    fn defaultSportNames:[string] () {
+        return sportNames
+    }
+}

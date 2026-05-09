@@ -45,6 +45,21 @@ class TokenSlice  {
   toString () {
     return this.source.substring(this.start, (this.start + this.size) );
   };
+  strEquals (value) {
+    const vLen = value.length;
+    if ( vLen != this.size ) {
+      return false;
+    }
+    let i = 0;
+    while (i < vLen) {
+      if ( (this.source.charCodeAt((this.start + i) )) == (value.charCodeAt(i )) ) {
+      } else {
+        return false;
+      }
+      i = i + 1;
+    };
+    return true;
+  };
   charCodeAt (index) {
     if ( index < 0 ) {
       return -1;

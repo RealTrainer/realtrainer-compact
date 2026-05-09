@@ -49,12 +49,10 @@ class PercentageRangeDetector {
                 if ((j > (i + 2)) && (j < len) && ((slice.charCodeAt(j)) == 37)) {
                     def leftDigits (slice.read(i))
                     def rightDigits (slice.peek(i + 2).read(j - (i + 2)))
-                    if (leftDigits.hasInteger(0 ((leftDigits.length()) - 1))) {
-                    } {
+                    if (!(leftDigits.hasInteger(0 ((leftDigits.length()) - 1)))) {
                         return (this.noMatch())
                     }
-                    if (rightDigits.hasInteger(0 ((rightDigits.length()) - 1))) {
-                    } {
+                    if (!(rightDigits.hasInteger(0 ((rightDigits.length()) - 1)))) {
                         return (this.noMatch())
                     }
                     def lval (leftDigits.parseInteger(0 ((leftDigits.length()) - 1)))
@@ -81,16 +79,13 @@ class PercentageRangeDetector {
         def parts (p.getResults())
         def first (itemAt parts 0)
         def second (itemAt parts 1)
-        if (first.tag == "num-range") {
-        } {
+        if (!(first.tag == "num-range")) {
             return (this.noMatch())
         }
-        if (second.tag == "keyword") {
-        } {
+        if (!(second.tag == "keyword")) {
             return (this.noMatch())
         }
-        if ((second.toString()) == "%") {
-        } {
+        if (!(second.strEquals("%"))) {
             return (this.noMatch())
         }
 

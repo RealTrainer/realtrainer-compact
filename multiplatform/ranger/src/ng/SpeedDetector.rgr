@@ -34,12 +34,10 @@ class SpeedDetector {
             return (this.noMatch())
         }
 
-        if (left.hasInteger(0 (colonPos - 1))) {
-        } {
+        if (!(left.hasInteger(0 (colonPos - 1)))) {
             return (this.noMatch())
         }
-        if (left.hasInteger((colonPos + 1) (colonPos + 2))) {
-        } {
+        if (!(left.hasInteger((colonPos + 1) (colonPos + 2)))) {
             return (this.noMatch())
         }
         def sec (left.parseInteger((colonPos + 1) (colonPos + 2)))
@@ -52,8 +50,7 @@ class SpeedDetector {
         if (dist.isEmpty()) {
             return (this.noMatch())
         }
-        if (dist.tag == "distance") {
-        } {
+        if (!(dist.tag == "distance")) {
             return (this.noMatch())
         }
 
@@ -65,16 +62,13 @@ class SpeedDetector {
 
         def third (dist)
 
-        if (second.tag == "keyword") {
-        } {
+        if (!(second.tag == "keyword")) {
             return (this.noMatch())
         }
-        if ((second.toString()) == "/") {
-        } {
+        if (!(second.strEquals("/"))) {
             return (this.noMatch())
         }
-        if (third.tag == "distance") {
-        } {
+        if (!(third.tag == "distance")) {
             return (this.noMatch())
         }
 

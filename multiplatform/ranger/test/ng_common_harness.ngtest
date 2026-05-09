@@ -81,6 +81,20 @@ Expect child 1 string kcal
 Test 70% load
 Expect tag percentage
 
+Test Swim 100m
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Swim
+Expect child 1 tag distance
+Expect child 1 string 100m
+
+Test Swim 2:50/100m
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Swim
+Expect child 1 tag speed
+Expect child 1 string 2:50/100m
+
 Test 40-50%
 Expect tag percentage-range
 Expect child 0 tag num-range

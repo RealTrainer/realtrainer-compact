@@ -17,7 +17,6 @@ Import "ZoneDetector.rgr"
 Import "RomanZoneDetector.rgr"
 Import "RecoveryTimeDetector.rgr"
 Import "TimeValueDetector.rgr"
-Import "SportExerciseDetector.rgr"
 Import "DecimalNumberDetector.rgr"
 Import "PositiveIntegerDetector.rgr"
 Import "RepeatBlockDetector.rgr"
@@ -25,8 +24,8 @@ Import "AMTimeValueDetector.rgr"
 Import "DetailsDataDetector.rgr"
 Import "HeadingDataDetector.rgr"
 
-class StandardDetectors {
-    sfn create:[TokenDetector] () {
+class NGSharedDetectorFactory@(singleton) {
+    fn createSportExerciseChildDetectors:[TokenDetector] () {
         def ds:[TokenDetector]
         push ds (SpaceDetector.create())
         push ds (NewlineDetector.create())
@@ -46,7 +45,6 @@ class StandardDetectors {
         push ds (RomanZoneDetector.create())
         push ds (RecoveryTimeDetector.create())
         push ds (TimeValueDetector.create())
-        push ds (SportExerciseDetector.create())
         push ds (DecimalNumberDetector.create())
         push ds (PositiveIntegerDetector.create())
         push ds (RepeatBlockDetector.create())

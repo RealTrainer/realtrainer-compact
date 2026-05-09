@@ -45,6 +45,21 @@ class TokenSlice  {
   toString () {
     return this.source.substring(this.start, (this.start + this.size) );
   };
+  strEquals (value) {
+    const vLen = value.length;
+    if ( vLen != this.size ) {
+      return false;
+    }
+    let i = 0;
+    while (i < vLen) {
+      if ( (this.source.charCodeAt((this.start + i) )) == (value.charCodeAt(i )) ) {
+      } else {
+        return false;
+      }
+      i = i + 1;
+    };
+    return true;
+  };
   charCodeAt (index) {
     if ( index < 0 ) {
       return -1;
@@ -810,12 +825,10 @@ class SpeedDetector  extends TokenDetector {
     if ( (colonPos + 3) != (left).length() ) {
       return this.noMatch();
     }
-    if ( left.hasInteger(0, (colonPos - 1)) ) {
-    } else {
+    if ( false == left.hasInteger(0, (colonPos - 1)) ) {
       return this.noMatch();
     }
-    if ( left.hasInteger((colonPos + 1), (colonPos + 2)) ) {
-    } else {
+    if ( false == left.hasInteger((colonPos + 1), (colonPos + 2)) ) {
       return this.noMatch();
     }
     const sec = left.parseInteger((colonPos + 1), (colonPos + 2));
@@ -827,8 +840,7 @@ class SpeedDetector  extends TokenDetector {
     if ( dist.isEmpty() ) {
       return this.noMatch();
     }
-    if ( dist.tag == "distance" ) {
-    } else {
+    if ( false == (dist.tag == "distance") ) {
       return this.noMatch();
     }
     const first = left;
@@ -836,16 +848,13 @@ class SpeedDetector  extends TokenDetector {
     const second = (slice.peek(slashPos)).read(1);
     second.tag = "keyword";
     const third = dist;
-    if ( second.tag == "keyword" ) {
-    } else {
+    if ( false == (second.tag == "keyword") ) {
       return this.noMatch();
     }
-    if ( (second).toString() == "/" ) {
-    } else {
+    if ( false == second.strEquals("/") ) {
       return this.noMatch();
     }
-    if ( third.tag == "distance" ) {
-    } else {
+    if ( false == (third.tag == "distance") ) {
       return this.noMatch();
     }
     const outLen = ((first).length() + (second).length()) + (third).length();
@@ -984,16 +993,13 @@ class WeightDetector  extends TokenDetector {
     const parts = p.getResults();
     const first = parts[0];
     const second = parts[1];
-    if ( first.tag == "positive-integer" ) {
-    } else {
+    if ( false == (first.tag == "positive-integer") ) {
       return this.noMatch();
     }
-    if ( second.tag == "keyword" ) {
-    } else {
+    if ( false == (second.tag == "keyword") ) {
       return this.noMatch();
     }
-    if ( (second).toString() == "kg" ) {
-    } else {
+    if ( false == second.strEquals("kg") ) {
       return this.noMatch();
     }
     const outLen = (first).length() + (second).length();
@@ -1194,110 +1200,25 @@ AMTimeValueDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new AMTimeValueDetector(s);
 };
-class DetailsDataDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "details-data";
+class NGSharedLists  {
+  constructor() {
+    this.sportNames = [];
+    this.sportNames.push("Swim");
+    this.sportNames.push("Run");
+    this.sportNames.push("Bike");
+    this.sportNames.push("Ski");
+    this.sportNames.push("Row");
   }
-  detect (slice) {
-    if ( (slice).length() < 1 ) {
-      return this.noMatch();
-    }
-    if ( slice.charCodeAt(0) != 62 ) {
-      return this.noMatch();
-    }
-    const out = slice.read(1);
-    out.tag = this.detectedTag;
-    return out;
+  defaultSportNames () {
+    return this.sportNames;
   };
 }
-DetailsDataDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new DetailsDataDetector(s);
-};
-class HeadingDataDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "heading-data";
+NGSharedLists.__singleton_instance = null;
+NGSharedLists.__singleton = function() {
+  if (NGSharedLists.__singleton_instance == null) {
+    NGSharedLists.__singleton_instance = new NGSharedLists();
   }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 2 ) {
-      return this.noMatch();
-    }
-    if ( slice.charCodeAt(0) != 35 ) {
-      return this.noMatch();
-    }
-    if ( slice.charCodeAt(1) != 32 ) {
-      return this.noMatch();
-    }
-    let i = 2;
-    while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      i = i + 1;
-    };
-    if ( i <= 2 ) {
-      return this.noMatch();
-    }
-    const out = slice.read(i);
-    out.tag = this.detectedTag;
-    return out;
-  };
-}
-HeadingDataDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new HeadingDataDetector(s);
-};
-class BPMDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "bpm";
-  }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 4 ) {
-      return this.noMatch();
-    }
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    detectors.push(KeywordDetector.create("bpm"));
-    const p = new Parser((slice).toString(), detectors);
-    (p).start();
-    if ( p.getCount() != 2 ) {
-      return this.noMatch();
-    }
-    const parts = p.getResults();
-    const first = parts[0];
-    const second = parts[1];
-    if ( first.tag == "positive-integer" ) {
-    } else {
-      return this.noMatch();
-    }
-    if ( second.tag == "keyword" ) {
-    } else {
-      return this.noMatch();
-    }
-    if ( (second).toString() == "bpm" ) {
-    } else {
-      return this.noMatch();
-    }
-    const outLen = (first).length() + (second).length();
-    const out = slice.read(outLen);
-    out.tag = this.detectedTag;
-    out.addChild(first);
-    out.addChild(second);
-    return out;
-  };
-}
-BPMDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new BPMDetector(s);
+  return NGSharedLists.__singleton_instance;
 };
 class KCALDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -1321,16 +1242,13 @@ class KCALDetector  extends TokenDetector {
     const parts = p.getResults();
     const first = parts[0];
     const second = parts[1];
-    if ( first.tag == "positive-integer" ) {
-    } else {
+    if ( false == (first.tag == "positive-integer") ) {
       return this.noMatch();
     }
-    if ( second.tag == "keyword" ) {
-    } else {
+    if ( false == (second.tag == "keyword") ) {
       return this.noMatch();
     }
-    if ( (second).toString() == "kcal" ) {
-    } else {
+    if ( false == second.strEquals("kcal") ) {
       return this.noMatch();
     }
     const outLen = (first).length() + (second).length();
@@ -1345,44 +1263,48 @@ KCALDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new KCALDetector(s);
 };
-class PercentageDetector  extends TokenDetector {
+class BPMDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
     this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "percentage";
+    this.detectedTag = "bpm";
   }
   detect (slice) {
     const __len = (slice).length();
-    if ( __len < 2 ) {
+    if ( __len < 4 ) {
       return this.noMatch();
     }
-    const valuePart = slice.splitWithToken("%");
-    const vLen = (valuePart).length();
-    if ( vLen <= 0 ) {
+    let detectors = [];
+    detectors.push(PositiveIntegerDetector.create());
+    detectors.push(KeywordDetector.create("bpm"));
+    const p = new Parser((slice).toString(), detectors);
+    (p).start();
+    if ( p.getCount() != 2 ) {
       return this.noMatch();
     }
-    if ( (vLen + 1) > __len ) {
+    const parts = p.getResults();
+    const first = parts[0];
+    const second = parts[1];
+    if ( false == (first.tag == "positive-integer") ) {
       return this.noMatch();
     }
-    if ( valuePart.hasInteger(0, (vLen - 1)) ) {
-    } else {
+    if ( false == (second.tag == "keyword") ) {
       return this.noMatch();
     }
-    const v = valuePart.parseInteger(0, (vLen - 1));
-    if ( v <= 0 ) {
+    if ( false == second.strEquals("bpm") ) {
       return this.noMatch();
     }
-    if ( slice.charCodeAt(vLen) != 37 ) {
-      return this.noMatch();
-    }
-    const out = slice.read((vLen + 1));
+    const outLen = (first).length() + (second).length();
+    const out = slice.read(outLen);
     out.tag = this.detectedTag;
+    out.addChild(first);
+    out.addChild(second);
     return out;
   };
 }
-PercentageDetector.create = function() {
+BPMDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
-  return new PercentageDetector(s);
+  return new BPMDetector(s);
 };
 class PercentageRangeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -1421,12 +1343,10 @@ class PercentageRangeDetector  extends TokenDetector {
         if ( ((j > (i + 2)) && (j < __len)) && (slice.charCodeAt(j) == 37) ) {
           const leftDigits = slice.read(i);
           const rightDigits = (slice.peek((i + 2))).read((j - (i + 2)));
-          if ( leftDigits.hasInteger(0, ((leftDigits).length() - 1)) ) {
-          } else {
+          if ( false == leftDigits.hasInteger(0, ((leftDigits).length() - 1)) ) {
             return this.noMatch();
           }
-          if ( rightDigits.hasInteger(0, ((rightDigits).length() - 1)) ) {
-          } else {
+          if ( false == rightDigits.hasInteger(0, ((rightDigits).length() - 1)) ) {
             return this.noMatch();
           }
           const lval = leftDigits.parseInteger(0, ((leftDigits).length() - 1));
@@ -1450,16 +1370,13 @@ class PercentageRangeDetector  extends TokenDetector {
     const parts = p.getResults();
     const first = parts[0];
     const second = parts[1];
-    if ( first.tag == "num-range" ) {
-    } else {
+    if ( false == (first.tag == "num-range") ) {
       return this.noMatch();
     }
-    if ( second.tag == "keyword" ) {
-    } else {
+    if ( false == (second.tag == "keyword") ) {
       return this.noMatch();
     }
-    if ( (second).toString() == "%" ) {
-    } else {
+    if ( false == second.strEquals("%") ) {
       return this.noMatch();
     }
     const outLen = (first).length() + (second).length();
@@ -1473,52 +1390,6 @@ class PercentageRangeDetector  extends TokenDetector {
 PercentageRangeDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new PercentageRangeDetector(s);
-};
-class RMDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "rm";
-  }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 3 ) {
-      return this.noMatch();
-    }
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    detectors.push(KeywordDetector.create("RM"));
-    const p = new Parser((slice).toString(), detectors);
-    (p).start();
-    if ( p.getCount() != 2 ) {
-      return this.noMatch();
-    }
-    const parts = p.getResults();
-    const first = parts[0];
-    const second = parts[1];
-    if ( first.tag == "positive-integer" ) {
-    } else {
-      return this.noMatch();
-    }
-    if ( second.tag == "keyword" ) {
-    } else {
-      return this.noMatch();
-    }
-    if ( (second).toString() == "RM" ) {
-    } else {
-      return this.noMatch();
-    }
-    const outLen = (first).length() + (second).length();
-    const out = slice.read(outLen);
-    out.tag = this.detectedTag;
-    out.addChild(first);
-    out.addChild(second);
-    return out;
-  };
-}
-RMDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new RMDetector(s);
 };
 class SetRepRangeLoadDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -1704,6 +1575,88 @@ SetRepRangeLoadDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new SetRepRangeLoadDetector(s);
 };
+class PercentageDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "percentage";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 2 ) {
+      return this.noMatch();
+    }
+    const valuePart = slice.splitWithToken("%");
+    const vLen = (valuePart).length();
+    if ( vLen <= 0 ) {
+      return this.noMatch();
+    }
+    if ( (vLen + 1) > __len ) {
+      return this.noMatch();
+    }
+    if ( valuePart.hasInteger(0, (vLen - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    const v = valuePart.parseInteger(0, (vLen - 1));
+    if ( v <= 0 ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt(vLen) != 37 ) {
+      return this.noMatch();
+    }
+    const out = slice.read((vLen + 1));
+    out.tag = this.detectedTag;
+    return out;
+  };
+}
+PercentageDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new PercentageDetector(s);
+};
+class RMDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "rm";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 3 ) {
+      return this.noMatch();
+    }
+    let detectors = [];
+    detectors.push(PositiveIntegerDetector.create());
+    detectors.push(KeywordDetector.create("RM"));
+    const p = new Parser((slice).toString(), detectors);
+    (p).start();
+    if ( p.getCount() != 2 ) {
+      return this.noMatch();
+    }
+    const parts = p.getResults();
+    const first = parts[0];
+    const second = parts[1];
+    if ( false == (first.tag == "positive-integer") ) {
+      return this.noMatch();
+    }
+    if ( false == (second.tag == "keyword") ) {
+      return this.noMatch();
+    }
+    if ( false == second.strEquals("RM") ) {
+      return this.noMatch();
+    }
+    const outLen = (first).length() + (second).length();
+    const out = slice.read(outLen);
+    out.tag = this.detectedTag;
+    out.addChild(first);
+    out.addChild(second);
+    return out;
+  };
+}
+RMDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new RMDetector(s);
+};
 class ZoneDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -1834,6 +1787,181 @@ RomanZoneDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RomanZoneDetector(s);
 };
+class DetailsDataDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "details-data";
+  }
+  detect (slice) {
+    if ( (slice).length() < 1 ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt(0) != 62 ) {
+      return this.noMatch();
+    }
+    const out = slice.read(1);
+    out.tag = this.detectedTag;
+    return out;
+  };
+}
+DetailsDataDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new DetailsDataDetector(s);
+};
+class HeadingDataDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "heading-data";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 2 ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt(0) != 35 ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt(1) != 32 ) {
+      return this.noMatch();
+    }
+    let i = 2;
+    while (i < __len) {
+      const ch = slice.charCodeAt(i);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      i = i + 1;
+    };
+    if ( i <= 2 ) {
+      return this.noMatch();
+    }
+    const out = slice.read(i);
+    out.tag = this.detectedTag;
+    return out;
+  };
+}
+HeadingDataDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new HeadingDataDetector(s);
+};
+class NGSharedDetectorFactory  {
+  constructor() {
+  }
+  createSportExerciseChildDetectors () {
+    let ds = [];
+    ds.push(SpaceDetector.create());
+    ds.push(NewlineDetector.create());
+    ds.push(DateTimeDetector.create());
+    ds.push(SpeedDetector.create());
+    ds.push(KCALDetector.create());
+    ds.push(BPMDetector.create());
+    ds.push(WeightDetector.create());
+    ds.push(DistanceRangeBlockDetector.create());
+    ds.push(PercentageRangeDetector.create());
+    ds.push(SetRepRangeLoadDetector.create());
+    ds.push(NumRangeBlockDetector.create());
+    ds.push(DistanceDetector.create());
+    ds.push(PercentageDetector.create());
+    ds.push(RMDetector.create());
+    ds.push(ZoneDetector.create());
+    ds.push(RomanZoneDetector.create());
+    ds.push(RecoveryTimeDetector.create());
+    ds.push(TimeValueDetector.create());
+    ds.push(DecimalNumberDetector.create());
+    ds.push(PositiveIntegerDetector.create());
+    ds.push(RepeatBlockDetector.create());
+    ds.push(AMTimeValueDetector.create());
+    ds.push(DetailsDataDetector.create());
+    ds.push(HeadingDataDetector.create());
+    return ds;
+  };
+}
+NGSharedDetectorFactory.__singleton_instance = null;
+NGSharedDetectorFactory.__singleton = function() {
+  if (NGSharedDetectorFactory.__singleton_instance == null) {
+    NGSharedDetectorFactory.__singleton_instance = new NGSharedDetectorFactory();
+  }
+  return NGSharedDetectorFactory.__singleton_instance;
+};
+class SportExerciseDetector  extends TokenDetector {
+  constructor(noMatchSlice, sportNames) {
+    super()
+    this.sports = [];
+    this.cachedNoMatch = noMatchSlice;
+    this.sports = sportNames;
+    this.detectedTag = "exercise";
+  }
+  createChildDetectors () {
+    const shared = NGSharedDetectorFactory.__singleton();
+    return shared.createSportExerciseChildDetectors();
+  };
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 6 ) {
+      return this.noMatch();
+    }
+    let name = "";
+    let nameLen = 0;
+    let matched = false;
+    for ( let i = 0; i < this.sports.length; i++) {
+      var sportName = this.sports[i];
+      const head = sportName + " ";
+      if ( slice.hasToken(head) ) {
+        name = sportName;
+        nameLen = sportName.length;
+        matched = true;
+        break;
+      }
+    };
+    if ( matched == false ) {
+      return this.noMatch();
+    }
+    const restStart = nameLen + 1;
+    if ( restStart >= __len ) {
+      return this.noMatch();
+    }
+    let lineEnd = restStart;
+    while (lineEnd < __len) {
+      const ch = slice.charCodeAt(lineEnd);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
+    if ( lineEnd <= restStart ) {
+      return this.noMatch();
+    }
+    const restSlice = (slice.peek(restStart)).read((lineEnd - restStart));
+    const p = new Parser((restSlice).toString(), this.createChildDetectors());
+    (p).start();
+    if ( p.getCount() <= 0 ) {
+      return this.noMatch();
+    }
+    const nameToken = slice.read(nameLen);
+    nameToken.tag = "exercise-name";
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    out.addChild(nameToken);
+    const children = p.getResults();
+    for ( let i_1 = 0; i_1 < children.length; i_1++) {
+      var ch_1 = children[i_1];
+      out.addChild(ch_1);
+    };
+    return out;
+  };
+}
+SportExerciseDetector.create = function() {
+  const shared = NGSharedLists.__singleton();
+  const sportNames = shared.defaultSportNames();
+  const s = TokenDetector.createNoMatchSlice();
+  return new SportExerciseDetector(s, sportNames);
+};
+SportExerciseDetector.createWithSports = function(sportNames) {
+  const s = TokenDetector.createNoMatchSlice();
+  return new SportExerciseDetector(s, sportNames);
+};
 class StandardDetectors  {
   constructor() {
   }
@@ -1858,6 +1986,7 @@ StandardDetectors.create = function() {
   ds.push(RomanZoneDetector.create());
   ds.push(RecoveryTimeDetector.create());
   ds.push(TimeValueDetector.create());
+  ds.push(SportExerciseDetector.create());
   ds.push(DecimalNumberDetector.create());
   ds.push(PositiveIntegerDetector.create());
   ds.push(RepeatBlockDetector.create());
@@ -2186,6 +2315,13 @@ TokenDetectorModule.createDistanceRangeBlock = function() {
 TokenDetectorModule.createAMTimeValue = function() {
   return AMTimeValueDetector.create();
 };
+TokenDetectorModule.defaultSportNames = function() {
+  const shared = NGSharedLists.__singleton();
+  return shared.defaultSportNames();
+};
+TokenDetectorModule.createSportExercise = function() {
+  return SportExerciseDetector.create();
+};
 TokenDetectorModule.createDetailsData = function() {
   return DetailsDataDetector.create();
 };
@@ -2244,16 +2380,19 @@ module.exports.WeightDetector = WeightDetector;
 module.exports.NumRangeBlockDetector = NumRangeBlockDetector;
 module.exports.DistanceRangeBlockDetector = DistanceRangeBlockDetector;
 module.exports.AMTimeValueDetector = AMTimeValueDetector;
-module.exports.DetailsDataDetector = DetailsDataDetector;
-module.exports.HeadingDataDetector = HeadingDataDetector;
-module.exports.BPMDetector = BPMDetector;
+module.exports.NGSharedLists = NGSharedLists;
 module.exports.KCALDetector = KCALDetector;
-module.exports.PercentageDetector = PercentageDetector;
+module.exports.BPMDetector = BPMDetector;
 module.exports.PercentageRangeDetector = PercentageRangeDetector;
-module.exports.RMDetector = RMDetector;
 module.exports.SetRepRangeLoadDetector = SetRepRangeLoadDetector;
+module.exports.PercentageDetector = PercentageDetector;
+module.exports.RMDetector = RMDetector;
 module.exports.ZoneDetector = ZoneDetector;
 module.exports.RomanZoneDetector = RomanZoneDetector;
+module.exports.DetailsDataDetector = DetailsDataDetector;
+module.exports.HeadingDataDetector = HeadingDataDetector;
+module.exports.NGSharedDetectorFactory = NGSharedDetectorFactory;
+module.exports.SportExerciseDetector = SportExerciseDetector;
 module.exports.StandardDetectors = StandardDetectors;
 module.exports.NGExpectRule = NGExpectRule;
 module.exports.NGTestCase = NGTestCase;

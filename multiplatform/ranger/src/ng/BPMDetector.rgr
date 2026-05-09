@@ -35,16 +35,13 @@ class BPMDetector {
         def parts (p.getResults())
         def first (itemAt parts 0)
         def second (itemAt parts 1)
-        if (first.tag == "positive-integer") {
-        } {
+        if (!(first.tag == "positive-integer")) {
             return (this.noMatch())
         }
-        if (second.tag == "keyword") {
-        } {
+        if (!(second.tag == "keyword")) {
             return (this.noMatch())
         }
-        if ((second.toString()) == "bpm") {
-        } {
+        if (!(second.strEquals("bpm"))) {
             return (this.noMatch())
         }
 

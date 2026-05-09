@@ -68,6 +68,24 @@ class TokenSlice {
         return (substring source start (start + size))
     }
 
+    fn strEquals:boolean (value:string) {
+        def vLen (strlen value)
+        if (vLen != size) {
+            return false
+        }
+
+        def i@(mutable):int 0
+        while (i < vLen) {
+            if ((charAt source (start + i)) == (charAt value i)) {
+            } {
+                return false
+            }
+            i = i + 1
+        }
+
+        return true
+    }
+
     fn charCodeAt:int (index:int) {
         if (index < 0) {
             return -1

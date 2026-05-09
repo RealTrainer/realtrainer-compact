@@ -14,6 +14,8 @@ Import "DistanceDetector.rgr"
 Import "NumRangeBlockDetector.rgr"
 Import "DistanceRangeBlockDetector.rgr"
 Import "AMTimeValueDetector.rgr"
+Import "NGSharedLists.rgr"
+Import "SportExerciseDetector.rgr"
 Import "DetailsDataDetector.rgr"
 Import "HeadingDataDetector.rgr"
 Import "BPMDetector.rgr"
@@ -86,6 +88,15 @@ class TokenDetectorModule {
 
     sfn createAMTimeValue:AMTimeValueDetector () {
         return (AMTimeValueDetector.create())
+    }
+
+    sfn defaultSportNames:[string] () {
+        def shared (new NGSharedLists())
+        return (shared.defaultSportNames())
+    }
+
+    sfn createSportExercise:SportExerciseDetector () {
+        return (SportExerciseDetector.create())
     }
 
     sfn createDetailsData:DetailsDataDetector () {
