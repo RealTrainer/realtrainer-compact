@@ -1,0 +1,142 @@
+Import "TokenDetector.rgr"
+Import "KeywordDetector.rgr"
+Import "DateTimeDetector.rgr"
+Import "SpaceDetector.rgr"
+Import "NewlineDetector.rgr"
+Import "PositiveIntegerDetector.rgr"
+Import "DecimalNumberDetector.rgr"
+Import "TimeValueDetector.rgr"
+Import "RecoveryTimeDetector.rgr"
+Import "SpeedDetector.rgr"
+Import "RepeatBlockDetector.rgr"
+Import "WeightDetector.rgr"
+Import "DistanceDetector.rgr"
+Import "NumRangeBlockDetector.rgr"
+Import "DistanceRangeBlockDetector.rgr"
+Import "AMTimeValueDetector.rgr"
+Import "DetailsDataDetector.rgr"
+Import "HeadingDataDetector.rgr"
+Import "BPMDetector.rgr"
+Import "KCALDetector.rgr"
+Import "PercentageDetector.rgr"
+Import "PercentageRangeDetector.rgr"
+Import "RMDetector.rgr"
+Import "SetRepRangeLoadDetector.rgr"
+Import "ZoneDetector.rgr"
+Import "RomanZoneDetector.rgr"
+Import "StandardDetectors.rgr"
+Import "NGTestRunner.rgr"
+
+class TokenDetectorModule {
+    sfn createKeyword:KeywordDetector (token:string) {
+        return (KeywordDetector.create(token))
+    }
+
+    sfn createDateTime:DateTimeDetector () {
+        return (DateTimeDetector.create())
+    }
+
+    sfn createSpace:SpaceDetector () {
+        return (SpaceDetector.create())
+    }
+
+    sfn createNewline:NewlineDetector () {
+        return (NewlineDetector.create())
+    }
+
+    sfn createPositiveInteger:PositiveIntegerDetector () {
+        return (PositiveIntegerDetector.create())
+    }
+
+    sfn createDecimalNumber:DecimalNumberDetector () {
+        return (DecimalNumberDetector.create())
+    }
+
+    sfn createTimeValue:TimeValueDetector () {
+        return (TimeValueDetector.create())
+    }
+
+    sfn createRecoveryTime:RecoveryTimeDetector () {
+        return (RecoveryTimeDetector.create())
+    }
+
+    sfn createSpeed:SpeedDetector () {
+        return (SpeedDetector.create())
+    }
+
+    sfn createRepeatBlock:RepeatBlockDetector () {
+        return (RepeatBlockDetector.create())
+    }
+
+    sfn createWeight:WeightDetector () {
+        return (WeightDetector.create())
+    }
+
+    sfn createDistance:DistanceDetector () {
+        return (DistanceDetector.create())
+    }
+
+    sfn createNumRangeBlock:NumRangeBlockDetector () {
+        return (NumRangeBlockDetector.create())
+    }
+
+    sfn createDistanceRangeBlock:DistanceRangeBlockDetector () {
+        return (DistanceRangeBlockDetector.create())
+    }
+
+    sfn createAMTimeValue:AMTimeValueDetector () {
+        return (AMTimeValueDetector.create())
+    }
+
+    sfn createDetailsData:DetailsDataDetector () {
+        return (DetailsDataDetector.create())
+    }
+
+    sfn createHeadingData:HeadingDataDetector () {
+        return (HeadingDataDetector.create())
+    }
+
+    sfn createBPM:BPMDetector () {
+        return (BPMDetector.create())
+    }
+
+    sfn createKCAL:KCALDetector () {
+        return (KCALDetector.create())
+    }
+
+    sfn createPercentage:PercentageDetector () {
+        return (PercentageDetector.create())
+    }
+
+    sfn createPercentageRange:PercentageRangeDetector () {
+        return (PercentageRangeDetector.create())
+    }
+
+    sfn createRM:RMDetector () {
+        return (RMDetector.create())
+    }
+
+    sfn createSetRepRangeLoad:SetRepRangeLoadDetector () {
+        return (SetRepRangeLoadDetector.create())
+    }
+
+    sfn createZone:ZoneDetector () {
+        return (ZoneDetector.create())
+    }
+
+    sfn createRomanZone:RomanZoneDetector () {
+        return (RomanZoneDetector.create())
+    }
+
+    sfn createStandardDetectors:[TokenDetector] () {
+        return (StandardDetectors.create())
+    }
+
+    sfn createNGTestRunner:NGTestRunner () {
+        return (NGTestRunner.create())
+    }
+
+    sfn createNGTestSpecParser:NGTestSpecParser () {
+        return (NGTestSpecParser.create())
+    }
+}

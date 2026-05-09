@@ -1,0 +1,33 @@
+Import "token_slice.rgr"
+
+class TokenDetector {
+    def detectedTag:string "unknown"
+    def cachedNoMatch:TokenSlice (new TokenSlice("" 0 0))
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+    }
+
+    sfn createNoMatchSlice:TokenSlice () {
+        def s (new TokenSlice("" 0 0))
+        s.tag = ""
+        return s
+    }
+
+    sfn create:TokenDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new TokenDetector(s))
+    }
+
+    fn getNoMatchSlice:TokenSlice () {
+        return cachedNoMatch
+    }
+
+    fn noMatch:TokenSlice () {
+        return (this.getNoMatchSlice())
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        return (this.noMatch())
+    }
+}

@@ -1,0 +1,45 @@
+Import "TokenDetector.rgr"
+
+class HeadingDataDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "heading-data"
+    }
+
+    sfn create:HeadingDataDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new HeadingDataDetector(s))
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def len (slice.length())
+        if (len < 2) {
+            return (this.noMatch())
+        }
+        if ((slice.charCodeAt(0)) != 35) {
+            return (this.noMatch())
+        }
+        if ((slice.charCodeAt(1)) != 32) {
+            return (this.noMatch())
+        }
+
+        def i@(mutable):int 2
+        while (i < len) {
+            def ch (slice.charCodeAt(i))
+            if ((ch == 10) || (ch == 13)) {
+                break
+            }
+            i = i + 1
+        }
+
+        if (i <= 2) {
+            return (this.noMatch())
+        }
+
+        def out (slice.read(i))
+        out.tag = detectedTag
+        return out
+    }
+}

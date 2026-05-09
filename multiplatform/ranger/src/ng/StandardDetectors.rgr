@@ -1,0 +1,56 @@
+Import "TokenDetector.rgr"
+Import "SpaceDetector.rgr"
+Import "NewlineDetector.rgr"
+Import "DateTimeDetector.rgr"
+Import "SpeedDetector.rgr"
+Import "KCALDetector.rgr"
+Import "BPMDetector.rgr"
+Import "WeightDetector.rgr"
+Import "DistanceRangeBlockDetector.rgr"
+Import "PercentageRangeDetector.rgr"
+Import "SetRepRangeLoadDetector.rgr"
+Import "NumRangeBlockDetector.rgr"
+Import "DistanceDetector.rgr"
+Import "PercentageDetector.rgr"
+Import "RMDetector.rgr"
+Import "ZoneDetector.rgr"
+Import "RomanZoneDetector.rgr"
+Import "RecoveryTimeDetector.rgr"
+Import "TimeValueDetector.rgr"
+Import "DecimalNumberDetector.rgr"
+Import "PositiveIntegerDetector.rgr"
+Import "RepeatBlockDetector.rgr"
+Import "AMTimeValueDetector.rgr"
+Import "DetailsDataDetector.rgr"
+Import "HeadingDataDetector.rgr"
+
+class StandardDetectors {
+    sfn create:[TokenDetector] () {
+        def ds:[TokenDetector]
+        push ds (SpaceDetector.create())
+        push ds (NewlineDetector.create())
+        push ds (DateTimeDetector.create())
+        push ds (SpeedDetector.create())
+        push ds (KCALDetector.create())
+        push ds (BPMDetector.create())
+        push ds (WeightDetector.create())
+        push ds (DistanceRangeBlockDetector.create())
+        push ds (PercentageRangeDetector.create())
+        push ds (SetRepRangeLoadDetector.create())
+        push ds (NumRangeBlockDetector.create())
+        push ds (DistanceDetector.create())
+        push ds (PercentageDetector.create())
+        push ds (RMDetector.create())
+        push ds (ZoneDetector.create())
+        push ds (RomanZoneDetector.create())
+        push ds (RecoveryTimeDetector.create())
+        push ds (TimeValueDetector.create())
+        push ds (DecimalNumberDetector.create())
+        push ds (PositiveIntegerDetector.create())
+        push ds (RepeatBlockDetector.create())
+        push ds (AMTimeValueDetector.create())
+        push ds (DetailsDataDetector.create())
+        push ds (HeadingDataDetector.create())
+        return ds
+    }
+}

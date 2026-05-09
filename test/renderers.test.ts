@@ -57,6 +57,28 @@ Exercise penkki|5x5@80%
     expect(serialized).toContain('@80%');
   });
 
+  it('preserves explicit document format marker in compact serialization', () => {
+    const input = `[2025-12-31] ## Test
+Format compact/v2
+Exercise penkki|5x5@80%
+`;
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    expect(result.document.format).toBe('compact/v2');
+
+    const serialized = serializeDocument(result.document);
+    expect(serialized).toContain('Format compact/v2');
+
+    const reparsed = parseCompact(serialized);
+    expect(reparsed.success).toBe(true);
+    if (!reparsed.success) return;
+
+    expect(reparsed.document.format).toBe('compact/v2');
+    expect(reparsed.document.workouts[0].content.find((item) => item.type === 'exercise')).toBeDefined();
+  });
+
   it('serializes sections correctly', () => {
     const input = `[2025-12-31] ## Test
 Section Lämmittely
@@ -101,6 +123,112 @@ Run "rintauinti" 1x450m@3:11/100m
       expect(move.intensity?.pacePerDistance?.value).toBe(100);
       expect(move.intensity?.pacePerDistance?.unit).toBe('m');
     }
+  });
+
+  it('serializes split comments using explicit Comment and Split child markers', () => {
+    const input = `[2026-02-20] ## Juoksuharjoitus
+Run 5km | progressio
+> Comment tasainen alku
+> Split 3km | pääosa
+> > "pidä rytmi"
+`;
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const serialized = serializeDocument(result.document);
+    expect(serialized).toContain('> Comment tasainen alku');
+    expect(serialized).toContain('> Split 3km | pääosa');
+    expect(serialized).toContain('> > Comment pidä rytmi');
+
+    const reparsed = parseCompact(serialized);
+    expect(reparsed.success).toBe(true);
+    if (!reparsed.success) return;
+
+    const move = reparsed.document.workouts[0].content.find((item) => item.type === 'move') as any;
+    expect(move.splits?.[0]?.type).toBe('text');
+    expect(move.splits?.[1]?.type).toBe('split');
+    expect(move.splits?.[1]?.splits?.[0]?.type).toBe('text');
+  });
+
+  it('serializes Attempt and Recovery child markers', () => {
+    const input = `[2026-02-20] ## Juoksuharjoitus
+Run 5km | progressio
+> Attempt 12x60kg | vahva alku
+> Recovery 90s
+> Split 3km | pääosa
+> > Attempt 8xbw
+> > Recovery walk
+`;
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const serialized = serializeDocument(result.document);
+    expect(serialized).toContain('> Attempt 12x60kg | vahva alku');
+    expect(serialized).toContain('> Recovery 90s');
+    expect(serialized).toContain('> > Attempt 8xbw');
+    expect(serialized).toContain('> > Recovery walk');
+
+    const reparsed = parseCompact(serialized);
+    expect(reparsed.success).toBe(true);
+    if (!reparsed.success) return;
+
+    const move = reparsed.document.workouts[0].content.find((item) => item.type === 'move') as any;
+    expect(move.splits?.[0]?.type).toBe('attempt');
+    expect(move.splits?.[1]?.type).toBe('recovery');
+    expect(move.splits?.[2]?.type).toBe('split');
+    expect(move.splits?.[2]?.splits?.[0]?.type).toBe('attempt');
+    expect(move.splits?.[2]?.splits?.[1]?.type).toBe('recovery');
+  });
+
+  it('serializes child endurance markers (Run/Walk/Swim)', () => {
+    const input = `[2026-02-20] ## Juoksuharjoitus
+Run 1km | osiot
+> Run 800m | pääveto
+> Walk 200m | palautus
+> > Swim 50m | cool down
+`;
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const serialized = serializeDocument(result.document);
+    expect(serialized).toContain('> Run 800m | pääveto');
+    expect(serialized).toContain('> Walk 200m | palautus');
+    expect(serialized).toContain('> > Swim 50m | cool down');
+
+    const reparsed = parseCompact(serialized);
+    expect(reparsed.success).toBe(true);
+    if (!reparsed.success) return;
+
+    const move = reparsed.document.workouts[0].content.find((item) => item.type === 'move') as any;
+    expect(move.splits?.[0]?.type).toBe('splitMove');
+    expect(move.splits?.[1]?.type).toBe('splitMove');
+    expect(move.splits?.[1]?.splits?.[0]?.type).toBe('splitMove');
+  });
+
+  it('serializes child Derived and Feeling markers', () => {
+    const input = `[2026-02-20] ## Uinti
+Run 1000m | tasainen
+> Derived endurance.zone2_minutes 20|min basis:entity confidence:88 source:hr+pace goodness:4
+> Feelings 3 | kevyt
+`;
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const serialized = serializeDocument(result.document);
+    expect(serialized).toContain('> Derived endurance.zone2_minutes 20|min basis:entity confidence:88% source:hr+pace goodness:4');
+    expect(serialized).toContain('> Feeling 3/10|kevyt');
+
+    const reparsed = parseCompact(serialized);
+    expect(reparsed.success).toBe(true);
+    if (!reparsed.success) return;
+
+    const move = reparsed.document.workouts[0].content.find((item) => item.type === 'move') as any;
+    expect(move.splits?.[0]?.type).toBe('derived');
+    expect(move.splits?.[1]?.type).toBe('feeling');
   });
 
   it('serializes complex workout', () => {

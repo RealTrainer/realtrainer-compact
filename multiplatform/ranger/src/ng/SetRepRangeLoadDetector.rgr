@@ -1,0 +1,207 @@
+Import "TokenDetector.rgr"
+
+class SetRepRangeLoadDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "set-rep-range-load"
+    }
+
+    sfn create:SetRepRangeLoadDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new SetRepRangeLoadDetector(s))
+    }
+
+    fn isDigit:boolean (ch:int) {
+        return ((ch >= 48) && (ch <= 57))
+    }
+
+    fn isAlphaNum:boolean (ch:int) {
+        if ((ch >= 48) && (ch <= 57)) {
+            return true
+        }
+        if ((ch >= 65) && (ch <= 90)) {
+            return true
+        }
+        if ((ch >= 97) && (ch <= 122)) {
+            return true
+        }
+        return false
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def len (slice.length())
+        if (len < 9) {
+            return (this.noMatch())
+        }
+
+        def i@(mutable):int 0
+
+        while (i < len) {
+            if (this.isDigit((slice.charCodeAt(i)))) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        def setsLeftEnd i
+        if (setsLeftEnd <= 0) {
+            return (this.noMatch())
+        }
+        if ((i >= len) || ((slice.charCodeAt(i)) != 45)) {
+            return (this.noMatch())
+        }
+
+        i = i + 1
+        def setsRightStart i
+        while (i < len) {
+            if (this.isDigit((slice.charCodeAt(i)))) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        def setsRightEnd i
+        if (setsRightEnd <= setsRightStart) {
+            return (this.noMatch())
+        }
+
+        if ((i >= len) || ((slice.charCodeAt(i)) != 120)) {
+            return (this.noMatch())
+        }
+        i = i + 1
+
+        def repsLeftStart i
+        while (i < len) {
+            if (this.isDigit((slice.charCodeAt(i)))) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        def repsLeftEnd i
+        if (repsLeftEnd <= repsLeftStart) {
+            return (this.noMatch())
+        }
+
+        if ((i >= len) || ((slice.charCodeAt(i)) != 45)) {
+            return (this.noMatch())
+        }
+        i = i + 1
+
+        def repsRightStart i
+        while (i < len) {
+            if (this.isDigit((slice.charCodeAt(i)))) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        def repsRightEnd i
+        if (repsRightEnd <= repsRightStart) {
+            return (this.noMatch())
+        }
+
+        def setsLeft (slice.read(setsLeftEnd))
+        def setsRight (slice.peek(setsRightStart).read(setsRightEnd - setsRightStart))
+        def repsLeft (slice.peek(repsLeftStart).read(repsLeftEnd - repsLeftStart))
+        def repsRight (slice.peek(repsRightStart).read(repsRightEnd - repsRightStart))
+
+        if (setsLeft.hasInteger(0 ((setsLeft.length()) - 1))) {
+        } {
+            return (this.noMatch())
+        }
+        if (setsRight.hasInteger(0 ((setsRight.length()) - 1))) {
+        } {
+            return (this.noMatch())
+        }
+        if (repsLeft.hasInteger(0 ((repsLeft.length()) - 1))) {
+        } {
+            return (this.noMatch())
+        }
+        if (repsRight.hasInteger(0 ((repsRight.length()) - 1))) {
+        } {
+            return (this.noMatch())
+        }
+
+        if ((setsLeft.parseInteger(0 ((setsLeft.length()) - 1))) <= 0) {
+            return (this.noMatch())
+        }
+        if ((setsRight.parseInteger(0 ((setsRight.length()) - 1))) <= 0) {
+            return (this.noMatch())
+        }
+        if ((repsLeft.parseInteger(0 ((repsLeft.length()) - 1))) <= 0) {
+            return (this.noMatch())
+        }
+        if ((repsRight.parseInteger(0 ((repsRight.length()) - 1))) <= 0) {
+            return (this.noMatch())
+        }
+
+        if (i >= len) {
+            return (this.noMatch())
+        }
+
+        def mode (slice.charCodeAt(i))
+        if (mode == 64) {
+            i = i + 1
+            if ((i + 1) >= len) {
+                return (this.noMatch())
+            }
+            if ((slice.charCodeAt(i)) != 98) {
+                return (this.noMatch())
+            }
+            if ((slice.charCodeAt(i + 1)) != 119) {
+                return (this.noMatch())
+            }
+            i = i + 2
+        } {
+            if (mode == 120) {
+                i = i + 1
+                def loadStart i
+                while (i < len) {
+                    if (this.isDigit((slice.charCodeAt(i)))) {
+                        i = i + 1
+                    } {
+                        break
+                    }
+                }
+                if (i <= loadStart) {
+                    return (this.noMatch())
+                }
+
+                def loadDigits (slice.peek(loadStart).read(i - loadStart))
+                if (loadDigits.hasInteger(0 ((loadDigits.length()) - 1))) {
+                } {
+                    return (this.noMatch())
+                }
+                if ((loadDigits.parseInteger(0 ((loadDigits.length()) - 1))) <= 0) {
+                    return (this.noMatch())
+                }
+
+                if ((i + 1) >= len) {
+                    return (this.noMatch())
+                }
+                if ((slice.charCodeAt(i)) != 107) {
+                    return (this.noMatch())
+                }
+                if ((slice.charCodeAt(i + 1)) != 103) {
+                    return (this.noMatch())
+                }
+                i = i + 2
+            } {
+                return (this.noMatch())
+            }
+        }
+
+        if (i < len) {
+            if (this.isAlphaNum((slice.charCodeAt(i)))) {
+                return (this.noMatch())
+            }
+        }
+
+        def out (slice.read(i))
+        out.tag = detectedTag
+        return out
+    }
+}

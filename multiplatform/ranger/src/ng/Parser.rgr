@@ -1,0 +1,72 @@
+
+
+Import "token_slice.rgr"
+Import "DateTimeDetector.rgr"
+Import "TokenDetector.rgr"
+
+class Parser {
+
+    def source:string ""
+
+    def slice:TokenSlice
+
+    def detectors:[TokenDetector]
+
+    def parserdResults:[TokenSlice]
+    
+    Constructor (source:string, detectors:[TokenDetector]) {
+        this.source = source
+        this.detectors = detectors
+        slice = (new TokenSlice(source 0 (strlen source)))
+        clear parserdResults
+    }
+
+    fn start:void () {
+
+        def activeSlice@(mutable):TokenSlice (new TokenSlice(source 0 (strlen source)))
+
+        while ((activeSlice.length()) > 0) {
+            def advance:int 0
+
+            ; walk detectors and try to parse something
+            def i@(mutable):int 0
+            while (i < (array_length detectors)) {
+                def detector (itemAt detectors i)
+                def result (detector.detect(activeSlice))
+                if (result.isEmpty()) {
+                } {
+                    if (result.tag == "space") {
+                    } {
+                        if (result.tag == "newline") {
+                        } {
+                            push parserdResults result
+                        }
+                    }
+                    advance = (result.length())
+                    break
+                }
+                i = i + 1
+            }
+            
+            ; TODO: test additional parsers here before deciding fallback move
+
+            ; if no parser matched, move forward by one code unit
+            if (advance == 0) {
+                break
+            } {
+                activeSlice = (activeSlice.peek(advance))
+            }
+
+
+        }
+    }
+
+    fn getResults:[TokenSlice] () {
+        return parserdResults
+    }
+
+    fn getCount:int () {
+        return (array_length parserdResults)
+    }
+
+}

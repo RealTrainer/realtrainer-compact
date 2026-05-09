@@ -1386,8 +1386,7 @@
           "unit": "m",
           "weight": {
             "value": 32,
-            "unit": "kg",
-            "count": 2
+            "unit": "kg"
           },
           "recovery": {
             "value": 2,

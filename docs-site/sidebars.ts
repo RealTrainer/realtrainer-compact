@@ -66,7 +66,7 @@ const sidebars: SidebarsConfig = {
         'examples/luuliikuntaohjeet-3',
         'examples/mom-and-baby',
         'examples/raskaudenaikainen',
-        'examples/tuolijumppa-liikepankki-v2',
+        'examples/tuolijumppa-liikepankki',
       ],
     },
     {

@@ -1,0 +1,70 @@
+Import "TokenDetector.rgr"
+
+class RecoveryTimeDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "recovery-time"
+    }
+
+    sfn create:RecoveryTimeDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new RecoveryTimeDetector(s))
+    }
+
+    fn isDigit:boolean (ch:int) {
+        if (ch < 48) {
+            return false
+        }
+        if (ch > 57) {
+            return false
+        }
+        return true
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def len (slice.length())
+        if (len < 3) {
+            return (this.noMatch())
+        }
+        if ((slice.charCodeAt(0)) != 47) {
+            return (this.noMatch())
+        }
+
+        def i@(mutable):int 1
+        def hasNonZero@(mutable):boolean false
+        while (i < len) {
+            def ch (slice.charCodeAt(i))
+            if (this.isDigit(ch)) {
+                if (ch != 48) {
+                    hasNonZero = true
+                }
+                i = i + 1
+            } {
+                break
+            }
+        }
+
+        if (i == 1) {
+            return (this.noMatch())
+        }
+        if (hasNonZero) {
+        } {
+            return (this.noMatch())
+        }
+        if (i >= len) {
+            return (this.noMatch())
+        }
+
+        def unit (slice.charCodeAt(i))
+        if ((unit == 115) || (unit == 109)) {
+        } {
+            return (this.noMatch())
+        }
+
+        def out (slice.read(i + 1))
+        out.tag = detectedTag
+        return out
+    }
+}

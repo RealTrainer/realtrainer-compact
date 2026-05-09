@@ -245,6 +245,7 @@ export interface SplitPace {
  * Can also appear as standalone content entries (not attached to a Move).
  * @example
  * > Split 150m 3'39"/100m | sarja 1
+ * > Comment tasainen aloitus
  * > 450m 2'55"/100m 124bpm
  * > 100m@Z4 [[käsiräpylät]] | tekniikka
  */
@@ -257,7 +258,7 @@ export interface Split {
   hr?: number | null;
   customFields?: CustomField[] | null;
   note: string | null;
-  splits?: Split[]; // Nested splits (recursive)
+  splits?: SplitChild[]; // Nested child entries (recursive)
 }
 
 /**
@@ -281,7 +282,7 @@ export interface Move {
   note: string | null;
   description: string | null;
   customFields?: CustomField[] | null;
-  splits?: Split[]; // Child splits/laps (not counted in statistics)
+  splits?: SplitChild[]; // Child entries/laps (not counted in statistics)
 }
 
 /**
@@ -525,6 +526,62 @@ export interface Text {
 }
 
 /**
+ * Explicit strength attempt child row under a Move/Split subtree.
+ * @example
+ * > Attempt 12x60kg
+ * > Attempt 8xbw
+ */
+export interface SplitAttempt {
+  type: 'attempt';
+  reps: number;
+  load: Weight;
+  note: string | null;
+}
+
+/**
+ * Explicit recovery child row under a Move/Split subtree.
+ * @example
+ * > Recovery 90s
+ * > Recovery 2min
+ * > Recovery walk
+ */
+export interface SplitRecovery {
+  type: 'recovery';
+  recovery: Recovery;
+  note: string | null;
+}
+
+/**
+ * Explicit child endurance row under a Move/Split subtree.
+ * @example
+ * > Run 800m
+ * > Walk 200m
+ * > Swim 100m
+ */
+export interface SplitMove {
+  type: 'splitMove';
+  sport: string;
+  sets: number;
+  count: number;
+  countMax: number | null;
+  distance: Distance | null;
+  duration?: Duration | null;
+  intensity: Intensity | null;
+  recovery: Recovery | null;
+  note: string | null;
+  description: string | null;
+  customFields?: CustomField[] | null;
+  splits?: SplitChild[];
+}
+
+/**
+ * Child entry under a Move or Split.
+ * Used first for explicit Split rows and comment rows, and later expandable
+ * toward the more generic recursive sub-entry model described in ai/v2.md.
+ */
+export type SplitChild = Split | Text | SplitAttempt | SplitRecovery | SplitMove | Derived | Feeling;
+
+/**
  * Metadata key-value pair for additional workout info.
  * @example
  * $sää aurinkoinen
@@ -766,6 +823,9 @@ export type Content =
   | Circuit
   | Move
   | Split
+  | SplitAttempt
+  | SplitRecovery
+  | SplitMove
   | DurationBlock
   | Contacts
   | Feeling
@@ -801,6 +861,8 @@ export interface Workout {
   date: DateValue | null;
   title: string | null;
   content: Content[];
+  /** Declared input syntax format for this workout, if explicitly marked in source. */
+  format?: string | null;
   /** Original user input before AI transformation (added at runtime, not from parser) */
   originalInput?: string;
 }
@@ -826,4 +888,6 @@ export interface Stats {
 export interface Document {
   workouts: Workout[];
   stats: Stats[];
+  /** Declared input syntax format for the parsed document, if explicitly marked in source. */
+  format?: string | null;
 }

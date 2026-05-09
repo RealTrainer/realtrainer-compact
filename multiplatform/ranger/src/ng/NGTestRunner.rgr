@@ -1,0 +1,305 @@
+Import "TokenDetector.rgr"
+Import "StandardDetectors.rgr"
+Import "Parser.rgr"
+
+class NGExpectRule {
+    def kind:string ""
+    def childIndex:int -1
+    def field:string ""
+    def value:string ""
+}
+
+class NGTestCase {
+    def input:string ""
+    def expects:[NGExpectRule]
+}
+
+class NGTestSpecParser {
+    sfn create:NGTestSpecParser () {
+        return (new NGTestSpecParser())
+    }
+
+    fn isSpace:boolean (ch:int) {
+        if (ch == 32) {
+            return true
+        }
+        if (ch == 9) {
+            return true
+        }
+        return false
+    }
+
+    fn trim:string (text:string) {
+        def len (strlen text)
+        if (len == 0) {
+            return ""
+        }
+
+        def start@(mutable):int 0
+        while (start < len) {
+            def ch (charAt text start)
+            if (this.isSpace(ch)) {
+                start = start + 1
+            } {
+                break
+            }
+        }
+
+        def stop@(mutable):int len
+        while (stop > start) {
+            def ch2 (charAt text (stop - 1))
+            if (this.isSpace(ch2)) {
+                stop = stop - 1
+            } {
+                break
+            }
+        }
+
+        if (stop <= start) {
+            return ""
+        }
+        return (substring text start stop)
+    }
+
+    fn startsWith:boolean (text:string prefix:string) {
+        def tLen (strlen text)
+        def pLen (strlen prefix)
+        if (pLen > tLen) {
+            return false
+        }
+        return ((substring text 0 pLen) == prefix)
+    }
+
+    fn isCommentLine:boolean (line:string) {
+        return (this.startsWith(line "//"))
+    }
+
+    fn findSpace:int (text:string) {
+        def len (strlen text)
+        def i@(mutable):int 0
+        while (i < len) {
+            def ch (charAt text i)
+            if (ch == 32) {
+                return i
+            }
+            i = i + 1
+        }
+        return -1
+    }
+
+    fn decodeEscapes:string (text:string) {
+        def len (strlen text)
+        if (len == 0) {
+            return ""
+        }
+
+        def out@(mutable):string ""
+        def i@(mutable):int 0
+        while (i < len) {
+            def ch (charAt text i)
+            if ((ch == 92) && ((i + 1) < len)) {
+                def next (charAt text (i + 1))
+                if (next == 110) {
+                    out = (out + "\n")
+                    i = i + 2
+                    continue
+                }
+                if (next == 114) {
+                    out = (out + "\r")
+                    i = i + 2
+                    continue
+                }
+                if (next == 116) {
+                    out = (out + "\t")
+                    i = i + 2
+                    continue
+                }
+                if (next == 92) {
+                    out = (out + "\\")
+                    i = i + 2
+                    continue
+                }
+            }
+            out = (out + (substring text i (i + 1)))
+            i = i + 1
+        }
+        return out
+    }
+
+    fn parseExpect:NGExpectRule (line:string) {
+        def out (new NGExpectRule())
+        def payload (this.trim(line))
+        if ((strlen payload) == 0) {
+            return out
+        }
+
+        if (this.startsWith(payload "tag ")) {
+            out.kind = "tag"
+            out.value = (this.decodeEscapes((this.trim((substring payload 4 (strlen payload))))))
+            return out
+        }
+
+        if (this.startsWith(payload "child ")) {
+            def rest (this.trim((substring payload 6 (strlen payload))))
+            def idxSep (this.findSpace(rest))
+            if (idxSep < 0) {
+                return out
+            }
+
+            def idxText (substring rest 0 idxSep)
+            def idxSlice (TokenSlice.fromText(idxText))
+            if ((idxSlice.length()) == 0) {
+                return out
+            }
+            if (idxSlice.hasInteger(0 ((idxSlice.length()) - 1))) {
+            } {
+                return out
+            }
+
+            out.childIndex = (idxSlice.parseInteger(0 ((idxSlice.length()) - 1)))
+
+            def afterIdx (this.trim((substring rest (idxSep + 1) (strlen rest))))
+            def fieldSep (this.findSpace(afterIdx))
+            if (fieldSep < 0) {
+                return out
+            }
+
+            out.kind = "child"
+            out.field = (substring afterIdx 0 fieldSep)
+            out.value = (this.decodeEscapes((this.trim((substring afterIdx (fieldSep + 1) (strlen afterIdx))))))
+            return out
+        }
+
+        return out
+    }
+
+    fn parse:[NGTestCase] (specText:string) {
+        def cases:[NGTestCase]
+        def active@(optional):NGTestCase
+
+        def len (strlen specText)
+        def lineStart@(mutable):int 0
+        def i@(mutable):int 0
+
+        while (i <= len) {
+            if (i == len) {
+            } {
+                def ch (charAt specText i)
+                if ((ch == 10) || (ch == 13)) {
+                } {
+                    i = i + 1
+                    continue
+                }
+            }
+
+            def raw (substring specText lineStart i)
+            def line (this.trim(raw))
+
+            if ((strlen line) > 0) {
+                if (this.isCommentLine(line)) {
+                } {
+                if (this.startsWith(line "Test ")) {
+                    def tc (new NGTestCase())
+                    tc.input = (this.decodeEscapes((this.trim((substring line 5 (strlen line))))))
+                    push cases tc
+                    active = tc
+                } {
+                    if (this.startsWith(line "Expect ")) {
+                        if active {
+                            def ex (this.parseExpect((substring line 7 (strlen line))))
+                            if ((strlen ex.kind) > 0) {
+                                def tc2 (unwrap active)
+                                push tc2.expects ex
+                            }
+                        }
+                    }
+                }
+                }
+            }
+
+            if (i == len) {
+                break
+            }
+
+            def firstNl (charAt specText i)
+            if ((firstNl == 13) && ((i + 1) < len)) {
+                if ((charAt specText (i + 1)) == 10) {
+                    i = i + 1
+                }
+            }
+            i = i + 1
+            lineStart = i
+        }
+
+        return cases
+    }
+}
+
+class NGTestRunner {
+    sfn create:NGTestRunner () {
+        return (new NGTestRunner())
+    }
+
+    fn createDetectors:[TokenDetector] () {
+        return (StandardDetectors.create())
+    }
+
+    fn runSpec:[string] (specText:string) {
+        def out:[string]
+        def parser (NGTestSpecParser.create())
+        def cases (parser.parse(specText))
+
+        for cases tc:NGTestCase i {
+            def p (new Parser(tc.input (this.createDetectors())))
+            p.start()
+
+            if ((p.getCount()) == 0) {
+                push out (((("Test " + ("#" + ("" + (i + 1)))) + " failed: no tokens for input '") + tc.input) + "'")
+                continue
+            }
+
+            def results (p.getResults())
+            def root (itemAt results 0)
+
+            for tc.expects ex:NGExpectRule j {
+                if (ex.kind == "tag") {
+                    if (root.tag == ex.value) {
+                    } {
+                        push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect tag '") + ex.value) + (("' but got '" + root.tag) + "'"))
+                    }
+                    continue
+                }
+
+                if (ex.kind == "child") {
+                    if ((ex.childIndex < 0) || (ex.childIndex >= (root.childCount()))) {
+                        push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect child index out of range: ") + ("" + ex.childIndex)) + ((" childCount=" + ("" + (root.childCount()))) + ""))
+                        continue
+                    }
+
+                    def ch (root.getChild(ex.childIndex))
+                    if (ex.field == "string") {
+                        def got (ch.toString())
+                        if (got == ex.value) {
+                        } {
+                            push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + (("" + ex.childIndex) + " string '") ) + ex.value + (("' but got '" + got) + "'"))
+                        }
+                        continue
+                    }
+
+                    if (ex.field == "tag") {
+                        def gotTag (ch.tag)
+                        if (gotTag == ex.value) {
+                        } {
+                            push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + (("" + ex.childIndex) + " tag '") ) + ex.value + (("' but got '" + gotTag) + "'"))
+                        }
+                        continue
+                    }
+
+                    push out (((("Test " + ("#" + ("" + (i + 1)))) + " unsupported field '") + ex.field) + "' in Expect child")
+                }
+            }
+        }
+
+        return out
+    }
+}

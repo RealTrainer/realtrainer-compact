@@ -109,7 +109,7 @@ Identifier = chars:[a-zA-Z0-9_-]+ { return chars.join(''); }
 
 ContentLine = !("##" / "[") line:Line { return line; }
 // Pyramid and Circuit before Phase (all can start with P when using verbose prefixes)
-Line = Text / Tags / Emojis / Summary / Sport / Pyramid / Circuit / Phase / Food / Drinking / Expense / Reminder / Location / Url / BodyMeasurement / SleepEntry / Health / Section / Exercise / Interval / Run / Duration / Contacts / Max / Best / Feeling / Pain / Vitals / Derived / Custom / GenericMeta / StandaloneSplit / Comment / HorizontalRule / EmptyLine / UnknownLine
+Line = FormatLine / Text / Tags / Emojis / Summary / Sport / Pyramid / Circuit / Phase / Food / Drinking / Expense / Reminder / Location / Url / BodyMeasurement / SleepEntry / Health / Section / Exercise / Interval / Run / Duration / Contacts / Max / Best / Feeling / Pain / Vitals / Derived / Custom / GenericMeta / StandaloneChild / Comment / HorizontalRule / EmptyLine / UnknownLine
 
 // UnknownLine - catch-all for lines that don't match any pattern
 // This prevents one malformed line from breaking the entire document
@@ -149,6 +149,18 @@ EmojiList = chars:[^\n\r]+ {
 Summary = "Summary" _ text:RestOfLine {
   return { type: 'summary', text: text.trim() };
 }
+
+// Explicit format marker for migration / parser mode selection.
+// Supported forms:
+// Format compact
+// Meta format=compact
+FormatLine =
+  "Format" _ value:RestOfLine {
+    return { type: 'meta', key: 'format', value: value.trim() };
+  }
+  / "Meta" _ "format=" value:RestOfLine {
+    return { type: 'meta', key: 'format', value: value.trim() };
+  }
 
 TagList = first:Tag rest:(_ "," _ t:Tag { return t; })* {
   return [first, ...rest];
@@ -343,7 +355,7 @@ Exercise =
   ExercisePrefix _ name:NamePart "|" sets:CommaSetList note:PipeNote? _ NL {
     return { type: 'pyramid', name, sets: sets, note: note || null };
   }
-  // Distance exercise with recovery before weight: E name|3x40m/2min@2x32kg
+  // Distance exercise with recovery before weight: E name|3x40m/2min@32kg
   / ExercisePrefix _ name:NamePart "|" sets:Int "x" dist:Int unit:DistanceUnit recovery:ExerciseRecovery weight:ExerciseWeight note:PipeNote? desc:ExerciseDesc? customFields:CustomFields? _ NL {
     return {
       type: 'exercise',
@@ -1054,14 +1066,89 @@ Run = RunPrefix _ sport:SportName? spec:RunSpec intensity:RunIntensity? recovery
   return { type: 'move', sport: sport || 'juoksu', ...spec, intensity, recovery, note: note || null, description: desc || null, customFields: customFields || null, splits: splits || null };
 }
 
-// Split block: one or more split lines (child entries of a Move)
+// Split block: one or more child lines (metric splits or explicit comments)
 SplitBlock = splits:SplitLine+ { return splits; }
 
-// Split line: > prefix indicates a child split (not counted in statistics)
-// Format: > 150m | note  OR  > Split 150m | note  OR  > 150m 3'39"/100m | note
-// Supports nesting: > > for deeper nested splits
+// Split line: > prefix indicates a child entry (not counted in statistics)
+// Format: > Split 150m | note  OR  > Comment tasainen alku  OR  > Attempt 12x60kg  OR  > Recovery 90s  OR  > Run 800m
+// Supports nesting: > > for deeper child entries
 // Supports pace: 3'39"/100m or 3:39/100m, HR: 124bpm, custom fields: [[käsiräpylät]]
-SplitLine = ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL nestedSplits:NestedSplitBlock? {
+SplitLine = SplitCommentLine / SplitDerivedLine / SplitFeelingLine / SplitAttemptLine / SplitRecoveryLine / SplitMoveLine / SplitMetricLine
+
+SplitCommentLine = ">" _ "Comment" _ text:RestOfLine {
+  return { type: 'text', value: text.trim() };
+}
+/ ">" _ '"' text:$[^"\n\r]* '"' _ NL {
+  return { type: 'text', value: text.trim() };
+}
+
+SplitDerivedLine = ">" _ DerivedPrefix __ name:DerivedNamePart __ value:Number unit:DerivedLineUnit? basis:DerivedBasis? confidence:DerivedConfidence? source:DerivedSource? goodness:DerivedGoodness? note:PipeNote? _ NL {
+  return {
+    type: 'derived',
+    name: name.trim(),
+    value,
+    unit: unit || null,
+    basis: basis || null,
+    confidence: confidence || null,
+    source: source || null,
+    goodness: goodness || null,
+    note: note || null,
+  };
+}
+
+SplitFeelingLine = ">" _ FeelingPrefix _ score:FeelingScore? _ desc:("|" d:RestOfLine { return d.trim(); })? NL? {
+  return { type: 'feeling', ...(score || { scale: 'feeling', value: null }), description: desc || null };
+}
+
+SplitAttemptLine = ">" _ "Attempt" _ reps:Int "x" load:SplitAttemptLoad note:PipeNote? _ NL {
+  return { type: 'attempt', reps, load, note: note || null };
+}
+
+SplitAttemptLoad =
+  value:Number unit:WeightUnit { return { value, unit, count: 1, valueMax: value }; }
+  / "bw"i { return { value: 0, unit: 'bodyweight' }; }
+  / "bodyweight"i { return { value: 0, unit: 'bodyweight' }; }
+  / value:Number "%" of:("1RM"i / "RM"i)? { return { percent: value, of: '1RM' }; }
+
+SplitRecoveryLine = ">" _ "Recovery" _ rec:SplitRecoveryValue note:PipeNote? _ NL {
+  return { type: 'recovery', recovery: rec, note: note || null };
+}
+
+SplitRecoveryValue =
+  value:Number unit:("min" / "sec" / "s") {
+    const mappedUnit = unit === 's' ? 'sec' : unit;
+    return { value, max: null, unit: mappedUnit };
+  }
+  / "walk"i { return { value: null, max: null, unit: 'walk' }; }
+
+SplitMoveLine = ">" _ sport:SplitMoveSport _ spec:RunSpec intensity:RunIntensity? recovery:RunRecovery? afterText:RunAfterText? customFields:CustomFields? note:PipeNote? desc:RunDesc? _ NL nestedSplits:NestedSplitBlock? {
+  if (afterText && recovery === null) {
+    recovery = { value: null, max: null, unit: null, text: afterText };
+  } else if (afterText && recovery) {
+    recovery.text = afterText;
+  }
+  return {
+    type: 'splitMove',
+    sport,
+    ...spec,
+    intensity,
+    recovery,
+    note: note || null,
+    description: desc || null,
+    customFields: customFields || null,
+    splits: nestedSplits || null,
+  };
+}
+
+SplitMoveSport =
+  "Uphill" _ "Run" { return 'uphill run'; }
+  / "Run" { return 'run'; }
+  / "Walk" { return 'walk'; }
+  / "Swim" { return 'swim'; }
+  / "Cycling" { return 'cycling'; }
+  / "Skiing" { return 'skiing'; }
+
+SplitMetricLine = ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL nestedSplits:NestedSplitBlock? {
   return { 
     type: 'split', 
     distance: spec.distance || null, 
@@ -1077,7 +1164,61 @@ SplitLine = ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? 
 
 // Nested split block (2 levels deep: > >)
 NestedSplitBlock = splits:NestedSplitLine+ { return splits; }
-NestedSplitLine = ">" _ ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL {
+NestedSplitLine = NestedSplitCommentLine / NestedSplitDerivedLine / NestedSplitFeelingLine / NestedSplitAttemptLine / NestedSplitRecoveryLine / NestedSplitMoveLine / NestedSplitMetricLine
+
+NestedSplitCommentLine = ">" _ ">" _ "Comment" _ text:RestOfLine {
+  return { type: 'text', value: text.trim() };
+}
+/ ">" _ ">" _ '"' text:$[^"\n\r]* '"' _ NL {
+  return { type: 'text', value: text.trim() };
+}
+
+NestedSplitDerivedLine = ">" _ ">" _ DerivedPrefix __ name:DerivedNamePart __ value:Number unit:DerivedLineUnit? basis:DerivedBasis? confidence:DerivedConfidence? source:DerivedSource? goodness:DerivedGoodness? note:PipeNote? _ NL {
+  return {
+    type: 'derived',
+    name: name.trim(),
+    value,
+    unit: unit || null,
+    basis: basis || null,
+    confidence: confidence || null,
+    source: source || null,
+    goodness: goodness || null,
+    note: note || null,
+  };
+}
+
+NestedSplitFeelingLine = ">" _ ">" _ FeelingPrefix _ score:FeelingScore? _ desc:("|" d:RestOfLine { return d.trim(); })? NL? {
+  return { type: 'feeling', ...(score || { scale: 'feeling', value: null }), description: desc || null };
+}
+
+NestedSplitAttemptLine = ">" _ ">" _ "Attempt" _ reps:Int "x" load:SplitAttemptLoad note:PipeNote? _ NL {
+  return { type: 'attempt', reps, load, note: note || null };
+}
+
+NestedSplitRecoveryLine = ">" _ ">" _ "Recovery" _ rec:SplitRecoveryValue note:PipeNote? _ NL {
+  return { type: 'recovery', recovery: rec, note: note || null };
+}
+
+NestedSplitMoveLine = ">" _ ">" _ sport:SplitMoveSport _ spec:RunSpec intensity:RunIntensity? recovery:RunRecovery? afterText:RunAfterText? customFields:CustomFields? note:PipeNote? desc:RunDesc? _ NL {
+  if (afterText && recovery === null) {
+    recovery = { value: null, max: null, unit: null, text: afterText };
+  } else if (afterText && recovery) {
+    recovery.text = afterText;
+  }
+  return {
+    type: 'splitMove',
+    sport,
+    ...spec,
+    intensity,
+    recovery,
+    note: note || null,
+    description: desc || null,
+    customFields: customFields || null,
+    splits: null,
+  };
+}
+
+NestedSplitMetricLine = ">" _ ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL {
   return { 
     type: 'split', 
     distance: spec.distance || null, 
@@ -1139,8 +1280,62 @@ SplitPace =
 // Heart rate for splits: 124bpm, @124bpm, @ 124bpm
 SplitHR = _ "@"? _ hr:Int "bpm"i _ { return hr; }
 
-// Standalone split: appears as content element (not attached to a Move)
-// Used when splits come after a Section or other non-Move content
+// Standalone child entry: appears as content element (not attached to a Move)
+// Used when >-entries come after a Section or other non-Move content
+StandaloneChild = StandaloneComment / StandaloneDerived / StandaloneFeeling / StandaloneAttempt / StandaloneRecovery / StandaloneSplitMove / StandaloneSplit
+
+StandaloneComment = ">" _ "Comment" _ text:RestOfLine {
+  return { type: 'text', value: text.trim() };
+}
+/ ">" _ '"' text:$[^"\n\r]* '"' _ NL {
+  return { type: 'text', value: text.trim() };
+}
+
+StandaloneDerived = ">" _ DerivedPrefix __ name:DerivedNamePart __ value:Number unit:DerivedLineUnit? basis:DerivedBasis? confidence:DerivedConfidence? source:DerivedSource? goodness:DerivedGoodness? note:PipeNote? _ NL {
+  return {
+    type: 'derived',
+    name: name.trim(),
+    value,
+    unit: unit || null,
+    basis: basis || null,
+    confidence: confidence || null,
+    source: source || null,
+    goodness: goodness || null,
+    note: note || null,
+  };
+}
+
+StandaloneFeeling = ">" _ FeelingPrefix _ score:FeelingScore? _ desc:("|" d:RestOfLine { return d.trim(); })? NL? {
+  return { type: 'feeling', ...(score || { scale: 'feeling', value: null }), description: desc || null };
+}
+
+StandaloneAttempt = ">" _ "Attempt" _ reps:Int "x" load:SplitAttemptLoad note:PipeNote? _ NL {
+  return { type: 'attempt', reps, load, note: note || null };
+}
+
+StandaloneRecovery = ">" _ "Recovery" _ rec:SplitRecoveryValue note:PipeNote? _ NL {
+  return { type: 'recovery', recovery: rec, note: note || null };
+}
+
+StandaloneSplitMove = ">" _ sport:SplitMoveSport _ spec:RunSpec intensity:RunIntensity? recovery:RunRecovery? afterText:RunAfterText? customFields:CustomFields? note:PipeNote? desc:RunDesc? _ NL nestedSplits:NestedSplitBlock? {
+  if (afterText && recovery === null) {
+    recovery = { value: null, max: null, unit: null, text: afterText };
+  } else if (afterText && recovery) {
+    recovery.text = afterText;
+  }
+  return {
+    type: 'splitMove',
+    sport,
+    ...spec,
+    intensity,
+    recovery,
+    note: note || null,
+    description: desc || null,
+    customFields: customFields || null,
+    splits: nestedSplits || null,
+  };
+}
+
 StandaloneSplit = ">" _ "Split"? _ dur:SplitDuration customFields:CustomFields? note:PipeNote? _ NL {
   return {
     type: 'split',
@@ -1154,7 +1349,7 @@ StandaloneSplit = ">" _ "Split"? _ dur:SplitDuration customFields:CustomFields? 
     splits: null
   };
 }
- / ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL {
+ / ">" _ "Split"? _ spec:SplitSpec hr:SplitHR? intensity:RunIntensity? customFields:CustomFields? note:PipeNote? _ NL nestedSplits:NestedSplitBlock? {
   return { 
     type: 'split', 
     distance: spec.distance || null, 
@@ -1164,7 +1359,7 @@ StandaloneSplit = ">" _ "Split"? _ dur:SplitDuration customFields:CustomFields? 
     hr: hr || null,
     customFields: customFields || null,
     note: note || null,
-    splits: null
+    splits: nestedSplits || null
   };
 }
 
@@ -1599,12 +1794,14 @@ TimeResult = mins:Int ":" secs:Int { return mins * 60 + secs; }
 // Feeling                - tyhjä (placeholder)
 // Feeling ?/10           - tuntematon
 // Feeling |kommentti     - pelkkä kommentti
-Feeling = "Feeling" _ score:FeelingScore? desc:("|" d:RestOfLine { return d.trim(); })? NL? {
+FeelingPrefix = "Feelings" / "Feeling"
+Feeling = FeelingPrefix _ score:FeelingScore? _ desc:("|" d:RestOfLine { return d.trim(); })? NL? {
   return { type: 'feeling', ...(score || { scale: 'feeling', value: null }), description: desc || null };
 }
 FeelingScore = 
   "RPE:" rpe:Int { return { scale: 'rpe', value: rpe }; }
   / "?" "/" max:Int { return { scale: 'feeling', value: null, max }; }
+  / value:Int { return { scale: 'feeling', value }; }
   / value:Int "/10" { return { scale: 'feeling', value }; }
 
 // Pain - Kipu / Loukkaantuminen

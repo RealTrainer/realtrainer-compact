@@ -1,0 +1,89 @@
+Import "TokenDetector.rgr"
+Import "DistanceDetector.rgr"
+
+class SpeedDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "speed"
+    }
+
+    sfn create:SpeedDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new SpeedDetector(s))
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def len (slice.length())
+        if (len < 7) {
+            return (this.noMatch())
+        }
+
+        def slashPos (slice.findTokenPos("/"))
+        if (slashPos <= 0) {
+            return (this.noMatch())
+        }
+
+        def left (slice.read(slashPos))
+        def colonPos (left.findTokenPos(":"))
+        if (colonPos <= 0) {
+            return (this.noMatch())
+        }
+        if ((colonPos + 3) != (left.length())) {
+            return (this.noMatch())
+        }
+
+        if (left.hasInteger(0 (colonPos - 1))) {
+        } {
+            return (this.noMatch())
+        }
+        if (left.hasInteger((colonPos + 1) (colonPos + 2))) {
+        } {
+            return (this.noMatch())
+        }
+        def sec (left.parseInteger((colonPos + 1) (colonPos + 2)))
+        if ((sec < 0) || (sec > 59)) {
+            return (this.noMatch())
+        }
+
+        def rightStart (slice.peek(slashPos + 1))
+        def dist (DistanceDetector.create().detect(rightStart))
+        if (dist.isEmpty()) {
+            return (this.noMatch())
+        }
+        if (dist.tag == "distance") {
+        } {
+            return (this.noMatch())
+        }
+
+        def first (left)
+        first.tag = "time-value"
+
+        def second (slice.peek(slashPos).read(1))
+        second.tag = "keyword"
+
+        def third (dist)
+
+        if (second.tag == "keyword") {
+        } {
+            return (this.noMatch())
+        }
+        if ((second.toString()) == "/") {
+        } {
+            return (this.noMatch())
+        }
+        if (third.tag == "distance") {
+        } {
+            return (this.noMatch())
+        }
+
+        def outLen ((first.length()) + (second.length()) + (third.length()))
+        def out (slice.read(outLen))
+        out.tag = detectedTag
+        out.addChild(first)
+        out.addChild(second)
+        out.addChild(third)
+        return out
+    }
+}

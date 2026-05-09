@@ -7,11 +7,35 @@
  * @packageDocumentation
  */
 
-import type { Content, Document, Workout } from './types.js';
+import type { Content, Document, Meta, Workout } from './types.js';
 
 // The generated parser will be imported at runtime
 // @ts-expect-error - No type definitions for generated parser
 import { parse } from './parser-generated.js';
+
+function extractDeclaredFormat(workout: Workout): string | null {
+  const remainingContent: Content[] = [];
+  let declaredFormat: string | null = workout.format ?? null;
+
+  for (const entry of workout.content) {
+    if (entry.type === 'meta') {
+      const metaEntry = entry as Meta;
+      if (metaEntry.key === 'format') {
+        const value = metaEntry.value.trim();
+        if (value.length > 0 && declaredFormat === null) {
+          declaredFormat = value;
+        }
+        continue;
+      }
+    }
+
+    remainingContent.push(entry);
+  }
+
+  workout.content = remainingContent;
+  workout.format = declaredFormat;
+  return declaredFormat;
+}
 
 /**
  * Parse error with location information
@@ -81,6 +105,11 @@ export function parseCompact(input: string): ParseOutcome {
     // Strip trailing empty sections from each workout
     // AI sometimes generates a "Section Sarjat" at the end with no content after it
     for (const workout of document.workouts) {
+      const declaredFormat = extractDeclaredFormat(workout);
+      if (declaredFormat && !document.format) {
+        document.format = declaredFormat;
+      }
+
       while (
         workout.content.length > 0 &&
         workout.content[workout.content.length - 1].type === 'section'
@@ -105,6 +134,38 @@ export function parseCompact(input: string): ParseOutcome {
       },
     };
   }
+}
+
+export function getDeclaredCompactFormat(document: Document | Workout): string | null {
+  if ('workouts' in document) {
+    if (typeof document.format === 'string' && document.format.trim().length > 0) {
+      return document.format;
+    }
+
+    for (const workout of document.workouts) {
+      const format = getDeclaredCompactFormat(workout);
+      if (format) {
+        return format;
+      }
+    }
+
+    return null;
+  }
+
+  if (typeof document.format === 'string' && document.format.trim().length > 0) {
+    return document.format;
+  }
+
+  for (const entry of document.content) {
+    if (entry.type === 'meta') {
+      const metaEntry = entry as Meta;
+      if (metaEntry.key === 'format' && metaEntry.value.trim().length > 0) {
+        return metaEntry.value.trim();
+      }
+    }
+  }
+
+  return null;
 }
 
 export function isParseSuccess<TDocument extends Document = Document>(
@@ -167,6 +228,27 @@ export function formatParseError(error: ParseError): string {
   }
   return error.message;
 }
+
+export type {
+  NormalizedDocument,
+  NormalizedDocumentResult,
+  NormalizedEnduranceRow,
+  NormalizedLegacyRow,
+  NormalizedRow,
+  NormalizedSport,
+  NormalizedStrengthRow,
+  NormalizedStrengthSet,
+  NormalizedStrengthUniformSpec,
+  NormalizedTextResult,
+  NormalizedWorkout,
+  NormalizationWarning,
+} from './normalize.js';
+
+export {
+  normalizeCompactDocument,
+  normalizeCompactText,
+  serializeNormalizedDocument,
+} from './normalize.js';
 
 /**
  * Get the line number where a parse error occurred.

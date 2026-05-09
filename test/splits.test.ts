@@ -59,6 +59,182 @@ Run 5km | intervallit
     expect(move.splits?.[0].distance?.unit).toBe('km');
   });
 
+  it('should parse explicit child comments alongside splits', () => {
+    const input = `[2026-02-03] ## Juoksu
+Run 5km | progressio
+> Comment tasainen alku
+> Split 3km | pääosa
+> > "pidä rytmi"
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const move = result.document.workouts[0].content[0] as Move;
+    expect(move.splits?.length).toBe(2);
+
+    const childComment = move.splits?.[0];
+    expect(childComment?.type).toBe('text');
+    if (childComment?.type === 'text') {
+      expect(childComment.value).toBe('tasainen alku');
+    }
+
+    const split = move.splits?.[1];
+    expect(split?.type).toBe('split');
+    if (split?.type === 'split') {
+      expect(split.distance?.value).toBe(3);
+      expect(split.distance?.unit).toBe('km');
+      expect(split.note).toBe('pääosa');
+      expect(split.splits?.length).toBe(1);
+      expect(split.splits?.[0]?.type).toBe('text');
+      if (split.splits?.[0]?.type === 'text') {
+        expect(split.splits[0].value).toBe('pidä rytmi');
+      }
+    }
+  });
+
+  it('should parse explicit Attempt and Recovery child entries', () => {
+    const input = `[2026-02-03] ## Juoksu
+Run 5km | progressio
+> Attempt 12x60kg | vahva alku
+> Recovery 90s | kevyt kävely
+> Split 3km | pääosa
+> > Attempt 8xbw
+> > Recovery walk
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const move = result.document.workouts[0].content[0] as Move;
+    expect(move.splits?.length).toBe(3);
+
+    const attempt = move.splits?.[0];
+    expect(attempt?.type).toBe('attempt');
+    if (attempt?.type === 'attempt') {
+      expect(attempt.reps).toBe(12);
+      expect(attempt.note).toBe('vahva alku');
+      expect('value' in attempt.load ? attempt.load.value : null).toBe(60);
+      expect('value' in attempt.load ? attempt.load.unit : null).toBe('kg');
+    }
+
+    const recovery = move.splits?.[1];
+    expect(recovery?.type).toBe('recovery');
+    if (recovery?.type === 'recovery') {
+      expect(recovery.recovery.value).toBe(90);
+      expect(recovery.recovery.unit).toBe('sec');
+      expect(recovery.note).toBe('kevyt kävely');
+    }
+
+    const split = move.splits?.[2];
+    expect(split?.type).toBe('split');
+    if (split?.type === 'split') {
+      expect(split.splits?.length).toBe(2);
+      expect(split.splits?.[0]?.type).toBe('attempt');
+      expect(split.splits?.[1]?.type).toBe('recovery');
+      if (split.splits?.[0]?.type === 'attempt') {
+        expect(split.splits[0].reps).toBe(8);
+        expect('value' in split.splits[0].load ? split.splits[0].load.unit : null).toBe('bodyweight');
+      }
+      if (split.splits?.[1]?.type === 'recovery') {
+        expect(split.splits[1].recovery.unit).toBe('walk');
+      }
+    }
+  });
+
+  it('should parse explicit child endurance rows (Run/Walk/Swim)', () => {
+    const input = `[2026-02-03] ## Juoksu
+Run 1km | osiot
+> Run 800m | pääveto
+> Walk 200m | palautus
+> > Swim 50m | cool down
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const move = result.document.workouts[0].content[0] as Move;
+    expect(move.splits?.length).toBe(2);
+
+    const runChild = move.splits?.[0];
+    expect(runChild?.type).toBe('splitMove');
+    if (runChild?.type === 'splitMove') {
+      expect(runChild.sport).toBe('run');
+      expect(runChild.distance?.value).toBe(800);
+      expect(runChild.distance?.unit).toBe('m');
+      expect(runChild.note).toBe('pääveto');
+    }
+
+    const walkChild = move.splits?.[1];
+    expect(walkChild?.type).toBe('splitMove');
+    if (walkChild?.type === 'splitMove') {
+      expect(walkChild.sport).toBe('walk');
+      expect(walkChild.distance?.value).toBe(200);
+      expect(walkChild.splits?.length).toBe(1);
+      expect(walkChild.splits?.[0]?.type).toBe('splitMove');
+      if (walkChild.splits?.[0]?.type === 'splitMove') {
+        expect(walkChild.splits[0].sport).toBe('swim');
+        expect(walkChild.splits[0].distance?.value).toBe(50);
+      }
+    }
+  });
+
+  it('should parse child Derived and Feeling entries', () => {
+    const input = `[2026-02-03] ## Uinti
+Run 1000m | tasainen
+> Derived endurance.zone2_minutes 20|min basis:entity confidence:88 source:hr+pace goodness:4
+> Feelings 3 | kevyt
+> > Derived endurance.zone3_minutes 5|min basis:entity confidence:70 source:segments goodness:3
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const move = result.document.workouts[0].content[0] as Move;
+    expect(move.splits?.length).toBe(2);
+
+    const derived = move.splits?.[0] as any;
+    expect(derived?.type).toBe('derived');
+    expect(derived?.name).toBe('endurance.zone2_minutes');
+    expect(derived?.value).toBe(20);
+    expect(derived?.unit).toBe('min');
+
+    const feeling = move.splits?.[1] as any;
+    expect(feeling?.type).toBe('feeling');
+    expect(feeling?.value).toBe(3);
+    expect(feeling?.description).toBe('kevyt');
+  });
+
+  it('should parse standalone Derived and Feelings child entries as content', () => {
+    const input = `[2026-03-28] ## Uinti
+Section Osiot
+> Derived endurance.zone2_minutes 25|min basis:day confidence:74 source:"all workouts" goodness:5
+> Feelings 4 | hyvä
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const workout = result.document.workouts[0];
+    const derived = workout.content.find((c: any) => c.type === 'derived') as any;
+    const feeling = workout.content.find((c: any) => c.type === 'feeling') as any;
+    const unknowns = workout.content.filter((c) => c.type === 'unknown');
+
+    expect(derived).toBeDefined();
+    expect(derived.name).toBe('endurance.zone2_minutes');
+    expect(derived.value).toBe(25);
+
+    expect(feeling).toBeDefined();
+    expect(feeling.value).toBe(4);
+    expect(feeling.description).toBe('hyvä');
+    expect(unknowns.length).toBe(0);
+  });
+
   it('should parse Move without splits (backwards compatible)', () => {
     const input = `[2026-02-03] ## Juoksu
 Run 10km | helppo lenkki
@@ -413,6 +589,59 @@ Text Reppu selassa, paras vauhti lopussa vahan alle 6min/km, polville ihan OK
     expect(split.duration?.unit).toBe('min');
     expect(split.note).toBe('duration-only split');
     expect(unknowns.length).toBe(0);
+  });
+
+  it('should parse standalone Attempt and Recovery child entries as content', () => {
+    const input = `[2026-03-28] ## Voima
+Section Sarjat
+> Attempt 12x60kg | lämppä
+> Recovery 90s | huili
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const workout = result.document.workouts[0];
+    const attempt = workout.content.find((c: any) => c.type === 'attempt') as any;
+    const recovery = workout.content.find((c: any) => c.type === 'recovery') as any;
+    const unknowns = workout.content.filter((c) => c.type === 'unknown');
+
+    expect(attempt).toBeDefined();
+    expect(attempt.reps).toBe(12);
+    expect(attempt.note).toBe('lämppä');
+    expect(attempt.load.value).toBe(60);
+    expect(attempt.load.unit).toBe('kg');
+
+    expect(recovery).toBeDefined();
+    expect(recovery.recovery.value).toBe(90);
+    expect(recovery.recovery.unit).toBe('sec');
+    expect(recovery.note).toBe('huili');
+    expect(unknowns.length).toBe(0);
+  });
+
+  it('should parse standalone child endurance rows as content', () => {
+    const input = `[2026-03-28] ## Ulko
+Section Osiot
+> Run 800m | pääveto
+> Walk 200m | palautus
+> > Swim 50m | loppu
+`;
+
+    const result = parseCompact(input);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    const workout = result.document.workouts[0];
+    const splitMoves = workout.content.filter((c: any) => c.type === 'splitMove') as any[];
+    expect(splitMoves.length).toBe(2);
+
+    expect(splitMoves[0].sport).toBe('run');
+    expect(splitMoves[0].distance?.value).toBe(800);
+    expect(splitMoves[1].sport).toBe('walk');
+    expect(splitMoves[1].splits?.length).toBe(1);
+    expect(splitMoves[1].splits?.[0]?.type).toBe('splitMove');
+    expect(splitMoves[1].splits?.[0]?.sport).toBe('swim');
   });
 
   it('should parse standalone swim splits with mm:ss durations', () => {

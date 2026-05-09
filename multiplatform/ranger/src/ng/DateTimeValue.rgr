@@ -1,0 +1,10 @@
+class DateTimeValue {
+    def year:int 0
+    def month:int 0
+    def day:int 0
+    def hasTime:boolean false
+    def hour:int 0
+    def minute:int 0
+    def second:int 0
+    def timezone@(optional):string
+}

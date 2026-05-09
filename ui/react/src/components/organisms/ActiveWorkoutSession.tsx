@@ -136,7 +136,7 @@ export function ActiveWorkoutSession({
   const controller = useMemo(() => new WorkoutSessionController(workouts, { clock }), [workouts, clock]);
   const [sessionState, setSessionState] = useState(() => controller.getState());
   const [actualReps, setActualReps] = useState(0);
-  const [feeling, setFeeling] = useState<WorkoutFeeling | null>(null);
+  const [, setFeeling] = useState<WorkoutFeeling | null>(null);
   const [isFullscreenActive, setIsFullscreenActive] = useState(false);
   const [isFallbackFullscreen, setIsFallbackFullscreen] = useState(false);
   const [isSessionStarted, setIsSessionStarted] = useState(startInFullscreen);
@@ -353,9 +353,6 @@ export function ActiveWorkoutSession({
       </div>
     );
   }
-
-  const currentWorkoutNumber = sessionState.currentWorkoutIndex + 1;
-
   const startSession = async (): Promise<void> => {
     setIsSessionStarted(true);
     await enterFullscreen();

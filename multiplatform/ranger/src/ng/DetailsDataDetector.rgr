@@ -1,0 +1,27 @@
+Import "TokenDetector.rgr"
+
+class DetailsDataDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "details-data"
+    }
+
+    sfn create:DetailsDataDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new DetailsDataDetector(s))
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        if ((slice.length()) < 1) {
+            return (this.noMatch())
+        }
+        if ((slice.charCodeAt(0)) != 62) {
+            return (this.noMatch())
+        }
+        def out (slice.read(1))
+        out.tag = detectedTag
+        return out
+    }
+}

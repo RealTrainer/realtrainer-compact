@@ -1,0 +1,133 @@
+// Ordered to roughly follow NG_PARSER.md detector list
+Test 0012
+Expect tag positive-integer
+
+Test 10.4kg
+Expect tag decimal-number
+
+Test 10:10 start
+Expect tag time-value
+
+Test 2026-01-01
+Expect tag datetime
+
+Test 2026-01-01T08:00:00
+Expect tag datetime
+
+Test /10s rest
+Expect tag recovery-time
+
+// Composite token with children
+Test 2:50/100m
+Expect tag speed
+Expect child 0 tag time-value
+Expect child 0 string 2:50
+Expect child 1 tag keyword
+Expect child 1 string /
+Expect child 2 tag distance
+Expect child 2 string 100m
+
+Test 10x squat
+Expect tag positive-integer
+
+Test 100kg bench
+Expect tag weight
+Expect child 0 tag positive-integer
+Expect child 0 string 100
+Expect child 1 tag keyword
+Expect child 1 string kg
+
+Test 100m run
+Expect tag distance
+
+Test 10-50 reps
+Expect tag num-range
+
+Test 2-3x15-20@bw
+Expect tag set-rep-range-load
+
+Test 2-3x15-20x50kg
+Expect tag set-rep-range-load
+
+Test 100-200m target
+Expect tag distance-range
+
+Test 100m-200m target
+Expect tag distance-range
+
+Test 3AM wake
+Expect tag positive-integer
+
+Test > note
+Expect tag details-data
+
+Test # Morning Run\nnext
+Expect tag heading-data
+
+Test 120bpm zone2
+Expect tag bpm
+Expect child 0 tag positive-integer
+Expect child 0 string 120
+Expect child 1 tag keyword
+Expect child 1 string bpm
+
+Test 120kcal
+Expect tag kcal
+Expect child 0 tag positive-integer
+Expect child 0 string 120
+Expect child 1 tag keyword
+Expect child 1 string kcal
+
+Test 70% load
+Expect tag percentage
+
+Test 40-50%
+Expect tag percentage-range
+Expect child 0 tag num-range
+Expect child 0 string 40-50
+Expect child 1 tag keyword
+Expect child 1 string %
+
+Test 40%-40%
+Expect tag percentage-range
+
+Test 1RM test
+Expect tag rm
+Expect child 0 tag positive-integer
+Expect child 0 string 1
+Expect child 1 tag keyword
+Expect child 1 string RM
+
+Test 5RM test
+Expect tag rm
+Expect child 0 tag positive-integer
+Expect child 0 string 5
+Expect child 1 tag keyword
+Expect child 1 string RM
+
+Test Zone1 easy
+Expect tag zone
+
+Test Zone2 easy
+Expect tag zone
+
+Test I easy
+Expect tag zone-roman
+
+Test II easy
+Expect tag zone-roman
+
+Test III easy
+Expect tag zone-roman
+
+Test IV easy
+Expect tag zone-roman
+
+Test V easy
+Expect tag zone-roman
+
+Test 2026-05-09\n2026-05-10
+Expect tag datetime
+
+Test 2026-05-09T14:30+02:00
+Expect tag datetime
