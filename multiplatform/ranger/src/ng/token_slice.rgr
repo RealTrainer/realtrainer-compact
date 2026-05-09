@@ -1,3 +1,18 @@
+Import "DateTimeValue.rgr"
+Import "DistanceValue.rgr"
+Import "PercentageValue.rgr"
+Import "RecoveryTimeValue.rgr"
+Import "WeightValue.rgr"
+Import "NumRangeValue.rgr"
+Import "PercentageRangeValue.rgr"
+Import "RepeatBlockValue.rgr"
+Import "SetRepRangeLoadValue.rgr"
+Import "ZoneValue.rgr"
+Import "PositiveIntegerValue.rgr"
+Import "DetailsLevelValue.rgr"
+Import "RecoveryValue.rgr"
+Import "SliceParsedValue.rgr"
+
 class TokenSlice {
     ; TokenSlice stores source + [start,size] window only.
     ; No substring copying is required for peek/read/slice operations.
@@ -11,6 +26,7 @@ class TokenSlice {
     def size:int 0
     def tag:string ""
     def children:[TokenSlice]
+    def parsedValue@(optional):SliceParsedValue
 
     Constructor (text:string from:int length:int) {
         source = text
@@ -62,6 +78,450 @@ class TokenSlice {
 
     fn hasValue:boolean () {
         return size > 0
+    }
+
+    fn hasDateTimeValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "datetime") && (p.hasDateTime())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setSliceValue:void (value:SliceParsedValue) {
+        parsedValue = value
+    }
+
+    fn hasSliceValue:boolean () {
+        return (!null? parsedValue)
+    }
+
+    fn getSliceValueKind:string () {
+        if (!null? parsedValue) {
+            return ((unwrap parsedValue).kind)
+        }
+        return ""
+    }
+
+    fn setDateTimeValue:void (value:DateTimeValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.dateTime = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "datetime"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromDateTime(value))
+    }
+
+    fn getAsDateTimeValue:DateTimeValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "datetime") && (p.hasDateTime())) {
+                return (p.getDateTime())
+            }
+        }
+        return (new DateTimeValue)
+    }
+
+    fn hasDistanceValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "distance") && (p.hasDistance())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setDistanceValue:void (value:DistanceValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.distance = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "distance"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromDistance(value))
+    }
+
+    fn getAsDistanceValue:DistanceValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "distance") && (p.hasDistance())) {
+                return (p.getDistance())
+            }
+        }
+        return (new DistanceValue)
+    }
+
+    fn hasPercentageValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "percentage") && (p.hasPercentage())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setPercentageValue:void (value:PercentageValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.percentage = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "percentage"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromPercentage(value))
+    }
+
+    fn getAsPercentageValue:PercentageValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "percentage") && (p.hasPercentage())) {
+                return (p.getPercentage())
+            }
+        }
+        return (new PercentageValue)
+    }
+
+    fn hasRecoveryTimeValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "recovery-time") && (p.hasRecoveryTime())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setRecoveryTimeValue:void (value:RecoveryTimeValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.recoveryTime = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "recovery-time"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromRecoveryTime(value))
+    }
+
+    fn getAsRecoveryTimeValue:RecoveryTimeValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "recovery-time") && (p.hasRecoveryTime())) {
+                return (p.getRecoveryTime())
+            }
+        }
+        return (new RecoveryTimeValue)
+    }
+
+    fn hasWeightValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "weight") && (p.hasWeight())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setWeightValue:void (value:WeightValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.weight = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "weight"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromWeight(value))
+    }
+
+    fn getAsWeightValue:WeightValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "weight") && (p.hasWeight())) {
+                return (p.getWeight())
+            }
+        }
+        return (new WeightValue)
+    }
+
+    fn hasNumRangeValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "num-range") && (p.hasNumRange())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setNumRangeValue:void (value:NumRangeValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.numRange = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "num-range"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromNumRange(value))
+    }
+
+    fn getAsNumRangeValue:NumRangeValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "num-range") && (p.hasNumRange())) {
+                return (p.getNumRange())
+            }
+        }
+        return (new NumRangeValue)
+    }
+
+    fn hasPercentageRangeValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "percentage-range") && (p.hasPercentageRange())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setPercentageRangeValue:void (value:PercentageRangeValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.percentageRange = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "percentage-range"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromPercentageRange(value))
+    }
+
+    fn getAsPercentageRangeValue:PercentageRangeValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "percentage-range") && (p.hasPercentageRange())) {
+                return (p.getPercentageRange())
+            }
+        }
+        return (new PercentageRangeValue)
+    }
+
+    fn hasRepeatBlockValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "repeat-block") && (p.hasRepeatBlock())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setRepeatBlockValue:void (value:RepeatBlockValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.repeatBlock = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "repeat-block"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromRepeatBlock(value))
+    }
+
+    fn getAsRepeatBlockValue:RepeatBlockValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "repeat-block") && (p.hasRepeatBlock())) {
+                return (p.getRepeatBlock())
+            }
+        }
+        return (new RepeatBlockValue)
+    }
+
+    fn hasSetRepRangeLoadValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "set-rep-range-load") && (p.hasSetRepRangeLoad())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setSetRepRangeLoadValue:void (value:SetRepRangeLoadValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.setRepRangeLoad = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "set-rep-range-load"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromSetRepRangeLoad(value))
+    }
+
+    fn getAsSetRepRangeLoadValue:SetRepRangeLoadValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "set-rep-range-load") && (p.hasSetRepRangeLoad())) {
+                return (p.getSetRepRangeLoad())
+            }
+        }
+        return (new SetRepRangeLoadValue)
+    }
+
+    fn hasZoneValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "zone") && (p.hasZone())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setZoneValue:void (value:ZoneValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.zone = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "zone"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromZone(value))
+    }
+
+    fn getAsZoneValue:ZoneValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "zone") && (p.hasZone())) {
+                return (p.getZone())
+            }
+        }
+        return (new ZoneValue)
+    }
+
+    fn hasPositiveIntegerValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "positive-integer") && (p.hasPositiveInteger())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setPositiveIntegerValue:void (value:PositiveIntegerValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.positiveInteger = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "positive-integer"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromPositiveInteger(value))
+    }
+
+    fn getAsPositiveIntegerValue:PositiveIntegerValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "positive-integer") && (p.hasPositiveInteger())) {
+                return (p.getPositiveInteger())
+            }
+        }
+        return (new PositiveIntegerValue)
+    }
+
+    fn hasDetailsLevelValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "details-level") && (p.hasDetailsLevel())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setDetailsLevelValue:void (value:DetailsLevelValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.detailsLevel = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "details-level"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromDetailsLevel(value))
+    }
+
+    fn getAsDetailsLevelValue:DetailsLevelValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "details-level") && (p.hasDetailsLevel())) {
+                return (p.getDetailsLevel())
+            }
+        }
+        return (new DetailsLevelValue)
+    }
+
+    fn hasRecoveryValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "recovery") && (p.hasRecovery())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setRecoveryValue:void (value:RecoveryValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.recovery = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "recovery"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromRecovery(value))
+    }
+
+    fn getAsRecoveryValue:RecoveryValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "recovery") && (p.hasRecovery())) {
+                return (p.getRecovery())
+            }
+        }
+        return (new RecoveryValue)
     }
 
     fn toString:string () {

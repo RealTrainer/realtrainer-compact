@@ -1,4 +1,6 @@
 Import "TokenDetector.rgr"
+Import "PositiveIntegerValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class PositiveIntegerDetector {
     Extends(TokenDetector)
@@ -54,6 +56,11 @@ class PositiveIntegerDetector {
 
         def out (slice.read(i))
         out.tag = detectedTag
+        def v (new PositiveIntegerValue)
+        v.value = (out.parseInteger(0 (i - 1)))
+        def payload (SliceParsedValue.fromPositiveInteger(v))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

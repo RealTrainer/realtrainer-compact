@@ -2,6 +2,8 @@ Import "TokenDetector.rgr"
 Import "Parser.rgr"
 Import "PositiveIntegerDetector.rgr"
 Import "KeywordDetector.rgr"
+Import "WeightValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class WeightDetector {
     Extends(TokenDetector)
@@ -51,6 +53,14 @@ class WeightDetector {
         out.tag = detectedTag
         out.addChild(first)
         out.addChild(second)
+
+        def firstLen (first.length())
+        def wv (new WeightValue)
+        wv.value = (first.parseInteger(0 (firstLen - 1)))
+        wv.unit = "kg"
+        def payload (SliceParsedValue.fromWeight(wv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

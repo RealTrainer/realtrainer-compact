@@ -1,0 +1,4 @@
+class WeightValue {
+    def value:int 0
+    def unit:string "kg"
+}

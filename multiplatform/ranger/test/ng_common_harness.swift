@@ -24,6 +24,19 @@ struct NGCommonHarnessSwift {
         let errors = runner.runSpec(specText: specText)
         expect(errors.count == 0, errors.joined(separator: "\n"))
 
+        let jsonRows = runner.exportJson(specText: specText)
+        let outDir = cwd + "/multiplatform/ranger/dist/ng-swift/json"
+        try? FileManager.default.createDirectory(atPath: outDir, withIntermediateDirectories: true)
+        for row in jsonRows {
+            let parts = row.split(separator: "\t", maxSplits: 1, omittingEmptySubsequences: false)
+            if parts.count == 2 {
+                let fileName = String(parts[0])
+                let jsonText = String(parts[1])
+                let filePath = outDir + "/" + fileName
+                try? jsonText.write(toFile: filePath, atomically: true, encoding: .utf8)
+            }
+        }
+
         print("NG common harness (swift) ok")
     }
 }

@@ -1,4 +1,6 @@
 Import "TokenDetector.rgr"
+Import "ZoneValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class ZoneDetector {
     Extends(TokenDetector)
@@ -83,6 +85,11 @@ class ZoneDetector {
 
         def out (slice.read(i))
         out.tag = detectedTag
+        def zv (new ZoneValue)
+        zv.zone = zoneNum
+        def payload (SliceParsedValue.fromZone(zv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

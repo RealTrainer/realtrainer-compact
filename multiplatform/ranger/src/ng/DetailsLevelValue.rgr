@@ -1,0 +1,4 @@
+class DetailsLevelValue {
+    def level:int 0
+    def marker:string ""
+}

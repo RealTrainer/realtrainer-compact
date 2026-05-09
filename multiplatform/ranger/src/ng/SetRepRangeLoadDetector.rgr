@@ -1,4 +1,6 @@
 Import "TokenDetector.rgr"
+Import "SetRepRangeLoadValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class SetRepRangeLoadDetector {
     Extends(TokenDetector)
@@ -138,12 +140,22 @@ class SetRepRangeLoadDetector {
             return (this.noMatch())
         }
 
+        def setsMinVal (setsLeft.parseInteger(0 ((setsLeft.length()) - 1)))
+        def setsMaxVal (setsRight.parseInteger(0 ((setsRight.length()) - 1)))
+        def repsMinVal (repsLeft.parseInteger(0 ((repsLeft.length()) - 1)))
+        def repsMaxVal (repsRight.parseInteger(0 ((repsRight.length()) - 1)))
+
         if (i >= len) {
             return (this.noMatch())
         }
 
         def mode (slice.charCodeAt(i))
+        def modeText@(mutable):string ""
+        def loadVal@(mutable):int 0
+        def unitText@(mutable):string ""
         if (mode == 64) {
+            modeText = "bw"
+            unitText = "bw"
             i = i + 1
             if ((i + 1) >= len) {
                 return (this.noMatch())
@@ -157,6 +169,7 @@ class SetRepRangeLoadDetector {
             i = i + 2
         } {
             if (mode == 120) {
+                modeText = "kg"
                 i = i + 1
                 def loadStart i
                 while (i < len) {
@@ -175,7 +188,8 @@ class SetRepRangeLoadDetector {
                 } {
                     return (this.noMatch())
                 }
-                if ((loadDigits.parseInteger(0 ((loadDigits.length()) - 1))) <= 0) {
+                loadVal = (loadDigits.parseInteger(0 ((loadDigits.length()) - 1)))
+                if (loadVal <= 0) {
                     return (this.noMatch())
                 }
 
@@ -188,6 +202,7 @@ class SetRepRangeLoadDetector {
                 if ((slice.charCodeAt(i + 1)) != 103) {
                     return (this.noMatch())
                 }
+                unitText = "kg"
                 i = i + 2
             } {
                 return (this.noMatch())
@@ -202,6 +217,17 @@ class SetRepRangeLoadDetector {
 
         def out (slice.read(i))
         out.tag = detectedTag
+        def sv (new SetRepRangeLoadValue)
+        sv.setsMin = setsMinVal
+        sv.setsMax = setsMaxVal
+        sv.repsMin = repsMinVal
+        sv.repsMax = repsMaxVal
+        sv.mode = modeText
+        sv.load = loadVal
+        sv.unit = unitText
+        def payload (SliceParsedValue.fromSetRepRangeLoad(sv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

@@ -1,6 +1,6 @@
 # NG Common Harness Report
 
-Generated at: 2026-05-09T21:22:18.864Z
+Generated at: 2026-05-09T22:21:31.234Z
 Spec: multiplatform/ranger/test/ng_common_harness.ngtest
 
 ## Target Runs
@@ -8,12 +8,12 @@ Spec: multiplatform/ranger/test/ng_common_harness.ngtest
 | Target | Script | Status | Exit Code |
 | --- | --- | --- | --- |
 | JavaScript | ranger:ng:common:test | pass | 0 |
-| Kotlin | ranger:ng:test:kotlin | pass | 0 |
+| Kotlin | ranger:ng:test:kotlin | skipped | 0 |
 | Swift | ranger:ng:test:swift | pass | 0 |
 
 ## Case Results (JS NGTestRunner)
 
-Summary: 36 pass, 0 fail, 36 total
+Summary: 41 pass, 0 fail, 41 total
 
 | # | Input | Status | Notes |
 | --- | --- | --- | --- |
@@ -40,19 +40,24 @@ Summary: 36 pass, 0 fail, 36 total
 | 21 | 70% load | pass |  |
 | 22 | Swim 100m | pass |  |
 | 23 | Swim 2:50/100m | pass |  |
-| 24 | 40-50% | pass |  |
-| 25 | 40%-40% | pass |  |
-| 26 | 1RM test | pass |  |
-| 27 | 5RM test | pass |  |
-| 28 | Zone1 easy | pass |  |
-| 29 | Zone2 easy | pass |  |
-| 30 | I easy | pass |  |
-| 31 | II easy | pass |  |
-| 32 | III easy | pass |  |
-| 33 | IV easy | pass |  |
-| 34 | V easy | pass |  |
-| 35 | 2026-05-09\\n2026-05-10 | pass |  |
-| 36 | 2026-05-09T14:30+02:00 | pass |  |
+| 24 | Swim 1000m | pass |  |
+| 25 | > Split 100m 2:45/100m | pass |  |
+| 26 | > Swim 400m | pass |  |
+| 27 | >> Split 100m 2:45/100m | pass |  |
+| 28 | >>> Recovery 1min | pass |  |
+| 29 | 40-50% | pass |  |
+| 30 | 40%-40% | pass |  |
+| 31 | 1RM test | pass |  |
+| 32 | 5RM test | pass |  |
+| 33 | Zone1 easy | pass |  |
+| 34 | Zone2 easy | pass |  |
+| 35 | I easy | pass |  |
+| 36 | II easy | pass |  |
+| 37 | III easy | pass |  |
+| 38 | IV easy | pass |  |
+| 39 | V easy | pass |  |
+| 40 | 2026-05-09\\n2026-05-10 | pass |  |
+| 41 | 2026-05-09T14:30+02:00 | pass |  |
 
 ## Raw Output (truncated)
 
@@ -87,7 +92,7 @@ Livecompiler starting with language => es6
 [OK] Compilation successful!
 
   Output: /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/src/ng/bin/token_slice.cjs
-  Time:   56ms
+  Time:   90ms
 
 Saving results to path : /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/src/ng/bin
 
@@ -115,7 +120,7 @@ Livecompiler starting with language => es6
 [OK] Compilation successful!
 
   Output: /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/src/ng/bin/token_detector.cjs
-  Time:   164ms
+  Time:   211ms
 
 Saving results to path : /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/src/ng/bin
 
@@ -143,7 +148,7 @@ Livecompiler starting with language => es6
 [OK] Compilation successful!
 
   Output: /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/src/ng/bin/parser.cjs
-  Time:   68ms
+  Time:   94ms
 
 Saving results to path : /Users/terotolonen/proj/realtrainer-compact/multiplatform/rang
 ... (truncated)
@@ -180,40 +185,37 @@ Livecompiler starting with language => kotlin
 [OK] Compilation successful!
 
   Output: /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt
-  Time:   169ms
+  Time:   225ms
 
 Saving results to path : /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/dist/ng-kotlin
-NG common harness (kotlin) ok
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:37:3: warning: 'open' has no effect on a final class.
-  open fun  length() : Int {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:41:3: warning: 'open' has no effect on a final class.
-  open fun  childCount() : Int {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:45:3: warning: 'open' has no effect on a final class.
-  open fun  addChild( child : TokenSlice) : Unit {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:49:3: warning: 'open' has no effect on a final class.
-  open fun  getChild( index : Int) : TokenSlice {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:53:3: warning: 'open' has no effect on a final class.
-  open fun  isEmpty() : Boolean {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:57:3: warning: 'open' has no effect on a final class.
-  open fun  hasValue() : Boolean {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:65:3: warning: 'open' has no effect on a final class.
-  open fun  strEquals( value : String) : Boolean {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:81:3: warning: 'open' has no effect on a final class.
-  open fun  charCodeAt( index : Int) : Int {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:91:3: warning: 'open' has no effect on a final class.
-  open fun  hasInteger( from : Int, to : Int) : Boolean {
-  ^^^^
-multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:115:3: warning: 'open' has no effect on a final class.
-  open fun  parseInteger( from : Int, to : Int) : Int {
- 
+kotlinc not found; generated Kotlin NG sources and harness only
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1502:60: error: syntax error: Expecting ')'.
+    out.setSliceValue(SliceParsedValue.fromRecoveryTime(rv);
+                                                           ^
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1503:5: error: syntax error: Expecting an element.
+    );
+    ^
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1504:62: error: syntax error: Expecting ')'.
+    slice.setSliceValue(SliceParsedValue.fromRecoveryTime(rv);
+                                                             ^
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1505:5: error: syntax error: Expecting an element.
+    );
+    ^
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1556:56: error: syntax error: Expecting ')'.
+    out.setSliceValue(SliceParsedValue.fromDistance(dv);
+                                                       ^
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1557:5: error: syntax error: Expecting an element.
+    );
+    ^
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1558:58: error: syntax error: Expecting ')'.
+    slice.setSliceValue(SliceParsedValue.fromDistance(dv);
+                                                         ^
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1559:5: error: syntax error: Expecting an element.
+    );
+    ^
+multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt:1701:59: error: syntax error: Expecting ')'.
+    out.setSliceValue(SliceParsedValue.fromRepeatBlock(rv);
+                                                 
 ... (truncated)
 ```
 
@@ -248,38 +250,38 @@ Livecompiler starting with language => swift6
 [OK] Compilation successful!
 
   Output: /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/dist/ng-swift/token_detector_ng.swift
-  Time:   179ms
+  Time:   209ms
 
 Saving results to path : /Users/terotolonen/proj/realtrainer-compact/multiplatform/ranger/dist/ng-swift
 NG common harness (swift) ok
-multiplatform/ranger/dist/ng-swift/token_detector_ng.swift:1057:9: warning: variable 'parts' was never mutated; consider changing to 'let' constant
-1055 |       return self.noMatch();
-1056 |     }
-1057 |     var parts : [TokenSlice] = p.getResults()
+multiplatform/ranger/dist/ng-swift/token_detector_ng.swift:1665:9: warning: variable 'parts' was never mutated; consider changing to 'let' constant
+1663 |       return self.noMatch();
+1664 |     }
+1665 |     var parts : [TokenSlice] = p.getResults()
      |         `- warning: variable 'parts' was never mutated; consider changing to 'let' constant
-1058 |     let first : TokenSlice = parts[0]
-1059 |     let second : TokenSlice = parts[1]
+1666 |     let first : TokenSlice = parts[0]
+1667 |     let second : TokenSlice = parts[1]
 
-multiplatform/ranger/dist/ng-swift/token_detector_ng.swift:1324:9: warning: variable 'parts' was never mutated; consider changing to 'let' constant
-1322 |       return self.noMatch();
-1323 |     }
-1324 |     var parts : [TokenSlice] = p.getResults()
+multiplatform/ranger/dist/ng-swift/token_detector_ng.swift:1943:9: warning: variable 'parts' was never mutated; consider changing to 'let' constant
+1941 |       return self.noMatch();
+1942 |     }
+1943 |     var parts : [TokenSlice] = p.getResults()
      |         `- warning: variable 'parts' was never mutated; consider changing to 'let' constant
-1325 |     let first : TokenSlice = parts[0]
-1326 |     let second : TokenSlice = parts[1]
+1944 |     let first : TokenSlice = parts[0]
+1945 |     let second : TokenSlice = parts[1]
 
-multiplatform/ranger/dist/ng-swift/token_detector_ng.swift:1370:9: warning: variable 'parts' was never mutated; consider changing to 'let' constant
-1368 |       return self.noMatch();
-1369 |     }
-1370 |     var parts : [TokenSlice] = p.getResults()
+multiplatform/ranger/dist/ng-swift/token_detector_ng.swift:1989:9: warning: variable 'parts' was never mutated; consider changing to 'let' constant
+1987 |       return self.noMatch();
+1988 |     }
+1989 |     var parts : [TokenSlice] = p.getResults()
      |         `- warning: variable 'parts' was never mutated; consider changing to 'let' constant
-1371 |     let first : TokenSlice = parts[0]
-1372 |     let second : TokenSlice = parts[1]
+1990 |     let first : TokenSlice = parts[0]
+1991 |     let second : TokenSlice = parts[1]
 
-multiplatform/ranger/dist/ng-swift/token_detector_ng.swift:1458:9: warning: variable 'parts' was never mutated; consider changing to 'let' constant
-1456 |       return self.noMatch();
-1457 |     }
-1458 |     var
+multiplatform/ranger/dist/ng-swift/token_detector_ng.swift:2082:9: warning: variable 'parts' was never mutated; consider changing to 'let' constant
+2080 |       return self.noMatch();
+2081 |     }
+2082 |     var
 ... (truncated)
 ```
 

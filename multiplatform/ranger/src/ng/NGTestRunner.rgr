@@ -3,6 +3,7 @@ Import "StandardDetectors.rgr"
 Import "Parser.rgr"
 
 class NGExpectRule {
+    def testIndex:int -1
     def kind:string ""
     def childIndex:int -1
     def field:string ""
@@ -12,6 +13,7 @@ class NGExpectRule {
 class NGTestCase {
     def input:string ""
     def expects:[NGExpectRule]
+    def jsonFile:string ""
 }
 
 class NGTestSpecParser {
@@ -133,32 +135,45 @@ class NGTestSpecParser {
             return out
         }
 
-        if (this.startsWith(payload "tag ")) {
+        def body:string payload
+        def idxSep (this.findSpace(payload))
+        if (idxSep > 0) {
+            def idxText (substring payload 0 idxSep)
+            def idxSlice (TokenSlice.fromText(idxText))
+            if ((idxSlice.length()) > 0) {
+                if (idxSlice.hasInteger(0 ((idxSlice.length()) - 1))) {
+                    out.testIndex = (idxSlice.parseInteger(0 ((idxSlice.length()) - 1)))
+                    body = (this.trim((substring payload (idxSep + 1) (strlen payload))))
+                }
+            }
+        }
+
+        if (this.startsWith(body "tag ")) {
             out.kind = "tag"
-            out.value = (this.decodeEscapes((this.trim((substring payload 4 (strlen payload))))))
+            out.value = (this.decodeEscapes((this.trim((substring body 4 (strlen body))))))
             return out
         }
 
-        if (this.startsWith(payload "child ")) {
-            def rest (this.trim((substring payload 6 (strlen payload))))
-            def idxSep (this.findSpace(rest))
-            if (idxSep < 0) {
+        if (this.startsWith(body "child ")) {
+            def rest (this.trim((substring body 6 (strlen body))))
+            def childIdxSep (this.findSpace(rest))
+            if (childIdxSep < 0) {
                 return out
             }
 
-            def idxText (substring rest 0 idxSep)
-            def idxSlice (TokenSlice.fromText(idxText))
-            if ((idxSlice.length()) == 0) {
+            def childIdxText (substring rest 0 childIdxSep)
+            def childIdxSlice (TokenSlice.fromText(childIdxText))
+            if ((childIdxSlice.length()) == 0) {
                 return out
             }
-            if (idxSlice.hasInteger(0 ((idxSlice.length()) - 1))) {
+            if (childIdxSlice.hasInteger(0 ((childIdxSlice.length()) - 1))) {
             } {
                 return out
             }
 
-            out.childIndex = (idxSlice.parseInteger(0 ((idxSlice.length()) - 1)))
+            out.childIndex = (childIdxSlice.parseInteger(0 ((childIdxSlice.length()) - 1)))
 
-            def afterIdx (this.trim((substring rest (idxSep + 1) (strlen rest))))
+            def afterIdx (this.trim((substring rest (childIdxSep + 1) (strlen rest))))
             def fieldSep (this.findSpace(afterIdx))
             if (fieldSep < 0) {
                 return out
@@ -173,9 +188,69 @@ class NGTestSpecParser {
         return out
     }
 
+    fn resolveTargetIndex:int (blockStart:int caseCount:int idx:int) {
+        if (idx >= 0) {
+            return (blockStart + idx)
+        }
+        return (caseCount - 1)
+    }
+
+    fn parseJsonFile:void (line:string cases:[NGTestCase] blockStart:int) {
+        def payload (this.trim(line))
+        if ((strlen payload) == 0) {
+            return
+        }
+
+        if (this.startsWith(payload "all ")) {
+            def allFileName (this.decodeEscapes((this.trim((substring payload 4 (strlen payload))))))
+            if ((strlen allFileName) == 0) {
+                return
+            }
+
+            def from@(mutable):int blockStart
+            def to (size cases)
+            while (from < to) {
+                def tcAll (itemAt cases from)
+                tcAll.jsonFile = allFileName
+                from = from + 1
+            }
+            return
+        }
+
+        def target@(mutable):int -1
+        def fileName:string payload
+
+        def idxSep (this.findSpace(payload))
+        if (idxSep > 0) {
+            def idxText (substring payload 0 idxSep)
+            def idxSlice (TokenSlice.fromText(idxText))
+            if ((idxSlice.length()) > 0) {
+                if (idxSlice.hasInteger(0 ((idxSlice.length()) - 1))) {
+                    def idxValue (idxSlice.parseInteger(0 ((idxSlice.length()) - 1)))
+                    target = (this.resolveTargetIndex(blockStart (size cases) idxValue))
+                    fileName = (this.trim((substring payload (idxSep + 1) (strlen payload))))
+                }
+            }
+        }
+
+        if (target < 0) {
+            target = (this.resolveTargetIndex(blockStart (size cases) -1))
+        }
+
+        if ((strlen fileName) == 0) {
+            return
+        }
+
+        if ((target >= 0) && (target < (size cases))) {
+            def tc (itemAt cases target)
+            tc.jsonFile = (this.decodeEscapes(fileName))
+        }
+    }
+
     fn parse:[NGTestCase] (specText:string) {
         def cases:[NGTestCase]
-        def active@(optional):NGTestCase
+        def blockStart@(mutable):int 0
+        def prevKind@(mutable):string "none"
 
         def len (strlen specText)
         def lineStart@(mutable):int 0
@@ -199,18 +274,29 @@ class NGTestSpecParser {
                 if (this.isCommentLine(line)) {
                 } {
                 if (this.startsWith(line "Test ")) {
+                    if (prevKind != "test") {
+                        blockStart = (size cases)
+                    }
                     def tc (new NGTestCase())
                     tc.input = (this.decodeEscapes((this.trim((substring line 5 (strlen line))))))
                     push cases tc
-                    active = tc
+                    prevKind = "test"
                 } {
                     if (this.startsWith(line "Expect ")) {
-                        if active {
-                            def ex (this.parseExpect((substring line 7 (strlen line))))
-                            if ((strlen ex.kind) > 0) {
-                                def tc2 (unwrap active)
+                        def ex (this.parseExpect((substring line 7 (strlen line))))
+                        if ((strlen ex.kind) > 0) {
+                            def target (this.resolveTargetIndex(blockStart (size cases) ex.testIndex))
+
+                            if ((target >= 0) && (target < (size cases))) {
+                                def tc2 (itemAt cases target)
                                 push tc2.expects ex
                             }
+                        }
+                        prevKind = "expect"
+                    } {
+                        if (this.startsWith(line "JSON ")) {
+                            this.parseJsonFile((substring line 5 (strlen line)) cases blockStart)
+                            prevKind = "json"
                         }
                     }
                 }
@@ -242,6 +328,252 @@ class NGTestRunner {
 
     fn createDetectors:[TokenDetector] () {
         return (StandardDetectors.create())
+    }
+
+    fn escapeJson:string (text:string) {
+        def len (strlen text)
+        if (len == 0) {
+            return ""
+        }
+
+        def out@(mutable):string ""
+        def i@(mutable):int 0
+        while (i < len) {
+            def ch (charAt text i)
+            if (ch == 34) {
+                out = (out + "\\\"")
+                i = i + 1
+                continue
+            }
+            if (ch == 92) {
+                out = (out + "\\\\")
+                i = i + 1
+                continue
+            }
+            if (ch == 10) {
+                out = (out + "\\n")
+                i = i + 1
+                continue
+            }
+            if (ch == 13) {
+                out = (out + "\\r")
+                i = i + 1
+                continue
+            }
+            if (ch == 9) {
+                out = (out + "\\t")
+                i = i + 1
+                continue
+            }
+
+            out = (out + (substring text i (i + 1)))
+            i = i + 1
+        }
+        return out
+    }
+
+    fn indent:string (level:int) {
+        def out@(mutable):string ""
+        def i@(mutable):int 0
+        while (i < level) {
+            out = (out + "  ")
+            i = i + 1
+        }
+        return out
+    }
+
+    fn parsedValueToJson:string (token:TokenSlice level:int) {
+        if (token.hasSliceValue()) {
+        } {
+            return "null"
+        }
+
+        def kind (token.getSliceValueKind())
+        def pad (this.indent(level))
+        def childPad (this.indent(level + 1))
+
+        if (kind == "datetime") {
+            def v (token.getAsDateTimeValue())
+            def out@(mutable):string "{\n"
+            out = (out + (childPad + "\"kind\":\"datetime\",\n"))
+            out = (out + (childPad + ("\"year\":" + ("" + v.year)) + ",\n"))
+            out = (out + (childPad + ("\"month\":" + ("" + v.month)) + ",\n"))
+            out = (out + (childPad + ("\"day\":" + ("" + v.day)) + ",\n"))
+            out = (out + (childPad + ("\"hour\":" + ("" + v.hour)) + ",\n"))
+            out = (out + (childPad + ("\"minute\":" + ("" + v.minute)) + ",\n"))
+            out = (out + (childPad + ("\"second\":" + ("" + v.second))))
+            if (!null? v.timezone) {
+                out = (out + ",\n")
+                out = (out + (childPad + ("\"timezone\":\"" + (this.escapeJson((unwrap v.timezone))) + "\"")))
+            }
+            out = (out + "\n")
+            out = (out + (pad + "}"))
+            return out
+        }
+
+        if (kind == "distance") {
+            def d (token.getAsDistanceValue())
+            def out2@(mutable):string "{\n"
+            out2 = (out2 + (childPad + "\"kind\":\"distance\",\n"))
+            out2 = (out2 + (childPad + ("\"value\":" + ("" + d.value)) + ",\n"))
+            out2 = (out2 + (childPad + ("\"unit\":\"" + (this.escapeJson(d.unit)) + "\"")))
+            out2 = (out2 + "\n")
+            out2 = (out2 + (pad + "}"))
+            return out2
+        }
+
+        if (kind == "percentage") {
+            def p (token.getAsPercentageValue())
+            def out3@(mutable):string "{\n"
+            out3 = (out3 + (childPad + "\"kind\":\"percentage\",\n"))
+            out3 = (out3 + (childPad + ("\"value\":" + ("" + p.value))))
+            out3 = (out3 + "\n")
+            out3 = (out3 + (pad + "}"))
+            return out3
+        }
+
+        if (kind == "recovery-time") {
+            def r (token.getAsRecoveryTimeValue())
+            def out4@(mutable):string "{\n"
+            out4 = (out4 + (childPad + "\"kind\":\"recovery-time\",\n"))
+            out4 = (out4 + (childPad + ("\"value\":" + ("" + r.value)) + ",\n"))
+            out4 = (out4 + (childPad + ("\"unit\":\"" + (this.escapeJson(r.unit)) + "\"")))
+            out4 = (out4 + "\n")
+            out4 = (out4 + (pad + "}"))
+            return out4
+        }
+
+        if (kind == "weight") {
+            def w (token.getAsWeightValue())
+            def out5@(mutable):string "{\n"
+            out5 = (out5 + (childPad + "\"kind\":\"weight\",\n"))
+            out5 = (out5 + (childPad + ("\"value\":" + ("" + w.value)) + ",\n"))
+            out5 = (out5 + (childPad + ("\"unit\":\"" + (this.escapeJson(w.unit)) + "\"")))
+            out5 = (out5 + "\n")
+            out5 = (out5 + (pad + "}"))
+            return out5
+        }
+
+        if (kind == "num-range") {
+            def nr (token.getAsNumRangeValue())
+            def out6@(mutable):string "{\n"
+            out6 = (out6 + (childPad + "\"kind\":\"num-range\",\n"))
+            out6 = (out6 + (childPad + ("\"minValue\":" + ("" + nr.minValue)) + ",\n"))
+            out6 = (out6 + (childPad + ("\"maxValue\":" + ("" + nr.maxValue))))
+            out6 = (out6 + "\n")
+            out6 = (out6 + (pad + "}"))
+            return out6
+        }
+
+        if (kind == "percentage-range") {
+            def pr (token.getAsPercentageRangeValue())
+            def out7@(mutable):string "{\n"
+            out7 = (out7 + (childPad + "\"kind\":\"percentage-range\",\n"))
+            out7 = (out7 + (childPad + ("\"minValue\":" + ("" + pr.minValue)) + ",\n"))
+            out7 = (out7 + (childPad + ("\"maxValue\":" + ("" + pr.maxValue))))
+            out7 = (out7 + "\n")
+            out7 = (out7 + (pad + "}"))
+            return out7
+        }
+
+        if (kind == "repeat-block") {
+            def rb (token.getAsRepeatBlockValue())
+            def out8@(mutable):string "{\n"
+            out8 = (out8 + (childPad + "\"kind\":\"repeat-block\",\n"))
+            out8 = (out8 + (childPad + ("\"count\":" + ("" + rb.count))))
+            out8 = (out8 + "\n")
+            out8 = (out8 + (pad + "}"))
+            return out8
+        }
+
+        if (kind == "set-rep-range-load") {
+            def sr (token.getAsSetRepRangeLoadValue())
+            def out9@(mutable):string "{\n"
+            out9 = (out9 + (childPad + "\"kind\":\"set-rep-range-load\",\n"))
+            out9 = (out9 + (childPad + ("\"setsMin\":" + ("" + sr.setsMin)) + ",\n"))
+            out9 = (out9 + (childPad + ("\"setsMax\":" + ("" + sr.setsMax)) + ",\n"))
+            out9 = (out9 + (childPad + ("\"repsMin\":" + ("" + sr.repsMin)) + ",\n"))
+            out9 = (out9 + (childPad + ("\"repsMax\":" + ("" + sr.repsMax)) + ",\n"))
+            out9 = (out9 + (childPad + ("\"mode\":\"" + (this.escapeJson(sr.mode)) + "\",\n")))
+            out9 = (out9 + (childPad + ("\"load\":" + ("" + sr.load)) + ",\n"))
+            out9 = (out9 + (childPad + ("\"unit\":\"" + (this.escapeJson(sr.unit)) + "\"")))
+            out9 = (out9 + "\n")
+            out9 = (out9 + (pad + "}"))
+            return out9
+        }
+
+        if (kind == "zone") {
+            def z (token.getAsZoneValue())
+            def out10@(mutable):string "{\n"
+            out10 = (out10 + (childPad + "\"kind\":\"zone\",\n"))
+            out10 = (out10 + (childPad + ("\"zone\":" + ("" + z.zone))))
+            out10 = (out10 + "\n")
+            out10 = (out10 + (pad + "}"))
+            return out10
+        }
+
+        if (kind == "positive-integer") {
+            def pi (token.getAsPositiveIntegerValue())
+            def out11@(mutable):string "{\n"
+            out11 = (out11 + (childPad + "\"kind\":\"positive-integer\",\n"))
+            out11 = (out11 + (childPad + ("\"value\":" + ("" + pi.value))))
+            out11 = (out11 + "\n")
+            out11 = (out11 + (pad + "}"))
+            return out11
+        }
+
+        if (kind == "details-level") {
+            def dl (token.getAsDetailsLevelValue())
+            def out12@(mutable):string "{\n"
+            out12 = (out12 + (childPad + "\"kind\":\"details-level\",\n"))
+            out12 = (out12 + (childPad + ("\"level\":" + ("" + dl.level)) + ",\n"))
+            out12 = (out12 + (childPad + ("\"marker\":\"" + (this.escapeJson(dl.marker)) + "\"")))
+            out12 = (out12 + "\n")
+            out12 = (out12 + (pad + "}"))
+            return out12
+        }
+
+        if (kind == "recovery") {
+            def rv (token.getAsRecoveryValue())
+            def out13@(mutable):string "{\n"
+            out13 = (out13 + (childPad + "\"kind\":\"recovery\",\n"))
+            out13 = (out13 + (childPad + ("\"label\":\"" + (this.escapeJson(rv.label)) + "\"")))
+            out13 = (out13 + "\n")
+            out13 = (out13 + (pad + "}"))
+            return out13
+        }
+
+        return ("{\n" + childPad + ("\"kind\":\"" + (this.escapeJson(kind)) + "\"\n") + pad + "}")
+    }
+
+    fn tokenToJson:string (token:TokenSlice level:int) {
+        def pad (this.indent(level))
+        def childPad (this.indent(level + 1))
+        def out@(mutable):string (pad + "{\n")
+        out = (out + (childPad + ("\"tag\":\"" + (this.escapeJson(token.tag)) + "\",\n")))
+        out = (out + (childPad + ("\"text\":\"" + (this.escapeJson((token.toString()))) + "\",\n")))
+        out = (out + (childPad + "\"parsed\":" + (this.parsedValueToJson(token (level + 1))) + ",\n"))
+        out = (out + (childPad + "\"children\":["))
+
+        def cc (token.childCount())
+        def i@(mutable):int 0
+        if (cc > 0) {
+            out = (out + "\n")
+            while (i < cc) {
+                if (i > 0) {
+                    out = (out + ",\n")
+                }
+                def ch (token.getChild(i))
+                out = (out + (this.tokenToJson(ch (level + 2))))
+                i = i + 1
+            }
+            out = (out + "\n")
+            out = (out + childPad)
+        }
+
+        out = (out + "]\n")
+        out = (out + (pad + "}"))
+        return out
     }
 
     fn runSpec:[string] (specText:string) {
@@ -298,6 +630,68 @@ class NGTestRunner {
                     push out (((("Test " + ("#" + ("" + (i + 1)))) + " unsupported field '") + ex.field) + "' in Expect child")
                 }
             }
+        }
+
+        return out
+    }
+
+    fn exportJson:[string] (specText:string) {
+        def out:[string]
+        def parser (NGTestSpecParser.create())
+        def cases (parser.parse(specText))
+
+        def files:[string]
+        def payloads:[string]
+        def counts:[int]
+
+        for cases tc:NGTestCase i {
+            if ((strlen tc.jsonFile) == 0) {
+                continue
+            }
+
+            def p (new Parser(tc.input (this.createDetectors())))
+            p.start()
+            if ((p.getCount()) == 0) {
+                continue
+            }
+
+            def results (p.getResults())
+            def root (itemAt results 0)
+            def json (this.tokenToJson(root 0))
+
+            def fileIdx@(mutable):int -1
+            def search@(mutable):int 0
+            while (search < (size files)) {
+                if ((itemAt files search) == tc.jsonFile) {
+                    fileIdx = search
+                    break
+                }
+                search = search + 1
+            }
+
+            if (fileIdx < 0) {
+                push files tc.jsonFile
+                push payloads json
+                push counts 1
+            } {
+                def prevPayload (itemAt payloads fileIdx)
+                def nextPayload (prevPayload + ",\n" + json)
+                set payloads fileIdx nextPayload
+                def prevCount (itemAt counts fileIdx)
+                set counts fileIdx (prevCount + 1)
+            }
+        }
+
+        def j@(mutable):int 0
+        while (j < (size files)) {
+            def fileName (itemAt files j)
+            def payload (itemAt payloads j)
+            def cnt (itemAt counts j)
+            if (cnt > 1) {
+                payload = ("[\n" + payload + "\n]")
+            }
+            push out (fileName + "\t" + payload)
+            j = j + 1
         }
 
         return out

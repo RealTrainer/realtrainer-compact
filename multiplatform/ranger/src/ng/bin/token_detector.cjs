@@ -1,3 +1,291 @@
+class DateTimeValue  {
+  constructor() {
+    this.year = 0;
+    this.month = 0;
+    this.day = 0;
+    this.hasTime = false;     /** note: unused */
+    this.hour = 0;
+    this.minute = 0;
+    this.second = 0;
+  }
+}
+class DistanceValue  {
+  constructor() {
+    this.value = 0;
+    this.unit = "m";
+  }
+}
+class PercentageValue  {
+  constructor() {
+    this.value = 0;
+  }
+}
+class RecoveryTimeValue  {
+  constructor() {
+    this.value = 0;
+    this.unit = "";
+  }
+}
+class WeightValue  {
+  constructor() {
+    this.value = 0;
+    this.unit = "kg";
+  }
+}
+class NumRangeValue  {
+  constructor() {
+    this.minValue = 0;
+    this.maxValue = 0;
+  }
+}
+class PercentageRangeValue  {
+  constructor() {
+    this.minValue = 0;
+    this.maxValue = 0;
+  }
+}
+class RepeatBlockValue  {
+  constructor() {
+    this.count = 0;
+  }
+}
+class SetRepRangeLoadValue  {
+  constructor() {
+    this.setsMin = 0;
+    this.setsMax = 0;
+    this.repsMin = 0;
+    this.repsMax = 0;
+    this.mode = "";
+    this.load = 0;
+    this.unit = "";
+  }
+}
+class ZoneValue  {
+  constructor() {
+    this.zone = 0;
+  }
+}
+class PositiveIntegerValue  {
+  constructor() {
+    this.value = 0;
+  }
+}
+class DetailsLevelValue  {
+  constructor() {
+    this.level = 0;
+    this.marker = "";
+  }
+}
+class RecoveryValue  {
+  constructor() {
+    this.label = "Recovery";
+  }
+}
+class SliceParsedValue  {
+  constructor() {
+    this.kind = "";
+  }
+  hasDateTime () {
+    return (typeof(this.dateTime) !== "undefined" && this.dateTime != null ) ;
+  };
+  getDateTime () {
+    if ( (typeof(this.dateTime) !== "undefined" && this.dateTime != null )  ) {
+      return this.dateTime;
+    }
+    return new DateTimeValue();
+  };
+  hasDistance () {
+    return (typeof(this.distance) !== "undefined" && this.distance != null ) ;
+  };
+  getDistance () {
+    if ( (typeof(this.distance) !== "undefined" && this.distance != null )  ) {
+      return this.distance;
+    }
+    return new DistanceValue();
+  };
+  hasPercentage () {
+    return (typeof(this.percentage) !== "undefined" && this.percentage != null ) ;
+  };
+  getPercentage () {
+    if ( (typeof(this.percentage) !== "undefined" && this.percentage != null )  ) {
+      return this.percentage;
+    }
+    return new PercentageValue();
+  };
+  hasRecoveryTime () {
+    return (typeof(this.recoveryTime) !== "undefined" && this.recoveryTime != null ) ;
+  };
+  getRecoveryTime () {
+    if ( (typeof(this.recoveryTime) !== "undefined" && this.recoveryTime != null )  ) {
+      return this.recoveryTime;
+    }
+    return new RecoveryTimeValue();
+  };
+  hasWeight () {
+    return (typeof(this.weight) !== "undefined" && this.weight != null ) ;
+  };
+  getWeight () {
+    if ( (typeof(this.weight) !== "undefined" && this.weight != null )  ) {
+      return this.weight;
+    }
+    return new WeightValue();
+  };
+  hasNumRange () {
+    return (typeof(this.numRange) !== "undefined" && this.numRange != null ) ;
+  };
+  getNumRange () {
+    if ( (typeof(this.numRange) !== "undefined" && this.numRange != null )  ) {
+      return this.numRange;
+    }
+    return new NumRangeValue();
+  };
+  hasPercentageRange () {
+    return (typeof(this.percentageRange) !== "undefined" && this.percentageRange != null ) ;
+  };
+  getPercentageRange () {
+    if ( (typeof(this.percentageRange) !== "undefined" && this.percentageRange != null )  ) {
+      return this.percentageRange;
+    }
+    return new PercentageRangeValue();
+  };
+  hasRepeatBlock () {
+    return (typeof(this.repeatBlock) !== "undefined" && this.repeatBlock != null ) ;
+  };
+  getRepeatBlock () {
+    if ( (typeof(this.repeatBlock) !== "undefined" && this.repeatBlock != null )  ) {
+      return this.repeatBlock;
+    }
+    return new RepeatBlockValue();
+  };
+  hasSetRepRangeLoad () {
+    return (typeof(this.setRepRangeLoad) !== "undefined" && this.setRepRangeLoad != null ) ;
+  };
+  getSetRepRangeLoad () {
+    if ( (typeof(this.setRepRangeLoad) !== "undefined" && this.setRepRangeLoad != null )  ) {
+      return this.setRepRangeLoad;
+    }
+    return new SetRepRangeLoadValue();
+  };
+  hasZone () {
+    return (typeof(this.zone) !== "undefined" && this.zone != null ) ;
+  };
+  getZone () {
+    if ( (typeof(this.zone) !== "undefined" && this.zone != null )  ) {
+      return this.zone;
+    }
+    return new ZoneValue();
+  };
+  hasPositiveInteger () {
+    return (typeof(this.positiveInteger) !== "undefined" && this.positiveInteger != null ) ;
+  };
+  getPositiveInteger () {
+    if ( (typeof(this.positiveInteger) !== "undefined" && this.positiveInteger != null )  ) {
+      return this.positiveInteger;
+    }
+    return new PositiveIntegerValue();
+  };
+  hasDetailsLevel () {
+    return (typeof(this.detailsLevel) !== "undefined" && this.detailsLevel != null ) ;
+  };
+  getDetailsLevel () {
+    if ( (typeof(this.detailsLevel) !== "undefined" && this.detailsLevel != null )  ) {
+      return this.detailsLevel;
+    }
+    return new DetailsLevelValue();
+  };
+  hasRecovery () {
+    return (typeof(this.recovery) !== "undefined" && this.recovery != null ) ;
+  };
+  getRecovery () {
+    if ( (typeof(this.recovery) !== "undefined" && this.recovery != null )  ) {
+      return this.recovery;
+    }
+    return new RecoveryValue();
+  };
+}
+SliceParsedValue.create = function(kind) {
+  const out = new SliceParsedValue();
+  out.kind = kind;
+  return out;
+};
+SliceParsedValue.fromDateTime = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "datetime";
+  out.dateTime = value;
+  return out;
+};
+SliceParsedValue.fromDistance = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "distance";
+  out.distance = value;
+  return out;
+};
+SliceParsedValue.fromPercentage = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "percentage";
+  out.percentage = value;
+  return out;
+};
+SliceParsedValue.fromRecoveryTime = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "recovery-time";
+  out.recoveryTime = value;
+  return out;
+};
+SliceParsedValue.fromWeight = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "weight";
+  out.weight = value;
+  return out;
+};
+SliceParsedValue.fromNumRange = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "num-range";
+  out.numRange = value;
+  return out;
+};
+SliceParsedValue.fromPercentageRange = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "percentage-range";
+  out.percentageRange = value;
+  return out;
+};
+SliceParsedValue.fromRepeatBlock = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "repeat-block";
+  out.repeatBlock = value;
+  return out;
+};
+SliceParsedValue.fromSetRepRangeLoad = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "set-rep-range-load";
+  out.setRepRangeLoad = value;
+  return out;
+};
+SliceParsedValue.fromZone = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "zone";
+  out.zone = value;
+  return out;
+};
+SliceParsedValue.fromPositiveInteger = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "positive-integer";
+  out.positiveInteger = value;
+  return out;
+};
+SliceParsedValue.fromDetailsLevel = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "details-level";
+  out.detailsLevel = value;
+  return out;
+};
+SliceParsedValue.fromRecovery = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "recovery";
+  out.recovery = value;
+  return out;
+};
 class TokenSlice  {
   constructor(text, from, length) {
     this.source = "";
@@ -41,6 +329,408 @@ class TokenSlice  {
   };
   hasValue () {
     return this.size > 0;
+  };
+  hasDateTimeValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "datetime") && p.hasDateTime() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setSliceValue (value) {
+    this.parsedValue = value;
+  };
+  hasSliceValue () {
+    return (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null ) ;
+  };
+  getSliceValueKind () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      return ((this.parsedValue)).kind;
+    }
+    return "";
+  };
+  setDateTimeValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.dateTime = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "datetime";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromDateTime(value);
+  };
+  getAsDateTimeValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "datetime") && p.hasDateTime() ) {
+        return p.getDateTime();
+      }
+    }
+    return new DateTimeValue();
+  };
+  hasDistanceValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "distance") && p.hasDistance() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setDistanceValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.distance = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "distance";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromDistance(value);
+  };
+  getAsDistanceValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "distance") && p.hasDistance() ) {
+        return p.getDistance();
+      }
+    }
+    return new DistanceValue();
+  };
+  hasPercentageValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "percentage") && p.hasPercentage() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setPercentageValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.percentage = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "percentage";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromPercentage(value);
+  };
+  getAsPercentageValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "percentage") && p.hasPercentage() ) {
+        return p.getPercentage();
+      }
+    }
+    return new PercentageValue();
+  };
+  hasRecoveryTimeValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "recovery-time") && p.hasRecoveryTime() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setRecoveryTimeValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.recoveryTime = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "recovery-time";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromRecoveryTime(value);
+  };
+  getAsRecoveryTimeValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "recovery-time") && p.hasRecoveryTime() ) {
+        return p.getRecoveryTime();
+      }
+    }
+    return new RecoveryTimeValue();
+  };
+  hasWeightValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "weight") && p.hasWeight() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setWeightValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.weight = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "weight";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromWeight(value);
+  };
+  getAsWeightValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "weight") && p.hasWeight() ) {
+        return p.getWeight();
+      }
+    }
+    return new WeightValue();
+  };
+  hasNumRangeValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "num-range") && p.hasNumRange() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setNumRangeValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.numRange = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "num-range";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromNumRange(value);
+  };
+  getAsNumRangeValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "num-range") && p.hasNumRange() ) {
+        return p.getNumRange();
+      }
+    }
+    return new NumRangeValue();
+  };
+  hasPercentageRangeValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "percentage-range") && p.hasPercentageRange() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setPercentageRangeValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.percentageRange = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "percentage-range";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromPercentageRange(value);
+  };
+  getAsPercentageRangeValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "percentage-range") && p.hasPercentageRange() ) {
+        return p.getPercentageRange();
+      }
+    }
+    return new PercentageRangeValue();
+  };
+  hasRepeatBlockValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "repeat-block") && p.hasRepeatBlock() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setRepeatBlockValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.repeatBlock = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "repeat-block";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromRepeatBlock(value);
+  };
+  getAsRepeatBlockValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "repeat-block") && p.hasRepeatBlock() ) {
+        return p.getRepeatBlock();
+      }
+    }
+    return new RepeatBlockValue();
+  };
+  hasSetRepRangeLoadValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "set-rep-range-load") && p.hasSetRepRangeLoad() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setSetRepRangeLoadValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.setRepRangeLoad = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "set-rep-range-load";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromSetRepRangeLoad(value);
+  };
+  getAsSetRepRangeLoadValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "set-rep-range-load") && p.hasSetRepRangeLoad() ) {
+        return p.getSetRepRangeLoad();
+      }
+    }
+    return new SetRepRangeLoadValue();
+  };
+  hasZoneValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "zone") && p.hasZone() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setZoneValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.zone = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "zone";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromZone(value);
+  };
+  getAsZoneValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "zone") && p.hasZone() ) {
+        return p.getZone();
+      }
+    }
+    return new ZoneValue();
+  };
+  hasPositiveIntegerValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "positive-integer") && p.hasPositiveInteger() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setPositiveIntegerValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.positiveInteger = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "positive-integer";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromPositiveInteger(value);
+  };
+  getAsPositiveIntegerValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "positive-integer") && p.hasPositiveInteger() ) {
+        return p.getPositiveInteger();
+      }
+    }
+    return new PositiveIntegerValue();
+  };
+  hasDetailsLevelValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "details-level") && p.hasDetailsLevel() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setDetailsLevelValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.detailsLevel = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "details-level";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromDetailsLevel(value);
+  };
+  getAsDetailsLevelValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "details-level") && p.hasDetailsLevel() ) {
+        return p.getDetailsLevel();
+      }
+    }
+    return new DetailsLevelValue();
+  };
+  hasRecoveryValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "recovery") && p.hasRecovery() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setRecoveryValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.recovery = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "recovery";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromRecovery(value);
+  };
+  getAsRecoveryValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "recovery") && p.hasRecovery() ) {
+        return p.getRecovery();
+      }
+    }
+    return new RecoveryValue();
   };
   toString () {
     return this.source.substring(this.start, (this.start + this.size) );
@@ -302,17 +992,6 @@ KeywordDetector.create = function(token) {
   const s = TokenDetector.createNoMatchSlice();
   return new KeywordDetector(token, s);
 };
-class DateTimeValue  {
-  constructor() {
-    this.year = 0;
-    this.month = 0;
-    this.day = 0;
-    this.hasTime = false;     /** note: unused */
-    this.hour = 0;
-    this.minute = 0;
-    this.second = 0;
-  }
-}
 class DateTimeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -326,7 +1005,14 @@ class DateTimeDetector  extends TokenDetector {
     if ( ( typeof(this.sliceMap[slice] ) != "undefined" && this.sliceMap.hasOwnProperty(slice) ) ) {
       const cachedHit = ( this.sliceHitMap.hasOwnProperty(slice) ? this.sliceHitMap[slice] : undefined );
       if ( (typeof(cachedHit) !== "undefined" && cachedHit != null )  ) {
-        return cachedHit;
+        const hit = cachedHit;
+        const cachedVal = ( this.sliceMap.hasOwnProperty(slice) ? this.sliceMap[slice] : undefined );
+        if ( (typeof(cachedVal) !== "undefined" && cachedVal != null )  ) {
+          const payload = SliceParsedValue.fromDateTime((cachedVal));
+          hit.setSliceValue(payload);
+          slice.setSliceValue(payload);
+        }
+        return hit;
       }
       return this.noMatch();
     }
@@ -457,6 +1143,9 @@ class DateTimeDetector  extends TokenDetector {
     }
     const newSlice = slice.read(plen);
     newSlice.tag = this.detectedTag;
+    const payload2 = SliceParsedValue.fromDateTime(out);
+    newSlice.setSliceValue(payload2);
+    slice.setSliceValue(payload2);
     this.sliceMap[newSlice] = out;
     this.sliceMap[slice] = out;
     this.sliceHitMap[newSlice] = newSlice;
@@ -464,7 +1153,7 @@ class DateTimeDetector  extends TokenDetector {
     return newSlice;
   };
   detect (slice) {
-    return this.parseDateShape(slice);
+    return this.parseToMap(slice);
   };
 }
 DateTimeDetector.create = function() {
@@ -592,6 +1281,11 @@ class PositiveIntegerDetector  extends TokenDetector {
     }
     const out = slice.read(i);
     out.tag = this.detectedTag;
+    const v = new PositiveIntegerValue();
+    v.value = out.parseInteger(0, (i - 1));
+    const payload = SliceParsedValue.fromPositiveInteger(v);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
     return out;
   };
 }
@@ -702,6 +1396,98 @@ TimeValueDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new TimeValueDetector(s);
 };
+class Parser  {
+  constructor(source, detectors) {
+    this.source = "";
+    this.detectors = [];
+    this.parserdResults = [];
+    this.source = source;
+    this.detectors = detectors;
+    this.slice = new TokenSlice(source, 0, source.length);
+    this.parserdResults.length = 0;
+  }
+  start () {
+    let activeSlice = new TokenSlice(this.source, 0, this.source.length);
+    while ((activeSlice).length() > 0) {
+      let advance = 0;
+      let i = 0;
+      while (i < (this.detectors.length)) {
+        const detector = this.detectors[i];
+        const result = detector.detect(activeSlice);
+        if ( result.isEmpty() ) {
+        } else {
+          if ( result.tag == "space" ) {
+          } else {
+            if ( result.tag == "newline" ) {
+            } else {
+              this.parserdResults.push(result);
+            }
+          }
+          advance = (result).length();
+          break;
+        }
+        i = i + 1;
+      };
+      if ( advance == 0 ) {
+        break;
+      } else {
+        activeSlice = activeSlice.peek(advance);
+      }
+    };
+  };
+  getResults () {
+    return this.parserdResults;
+  };
+  getCount () {
+    return this.parserdResults.length;
+  };
+}
+class DistanceDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "distance";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 2 ) {
+      return this.noMatch();
+    }
+    let valuePart = slice;
+    valuePart = slice.splitWithToken("m");
+    const valueLen = (valuePart).length();
+    if ( valueLen <= 0 ) {
+      return this.noMatch();
+    }
+    if ( (valueLen + 1) > __len ) {
+      return this.noMatch();
+    }
+    if ( valuePart.hasInteger(0, (valueLen - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    const parsed = valuePart.parseInteger(0, (valueLen - 1));
+    if ( parsed <= 0 ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt(valueLen) != 109 ) {
+      return this.noMatch();
+    }
+    const out = slice.read((valueLen + 1));
+    out.tag = this.detectedTag;
+    const dv = new DistanceValue();
+    dv.value = parsed;
+    dv.unit = "m";
+    const payload = SliceParsedValue.fromDistance(dv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
+    return out;
+  };
+}
+DistanceDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new DistanceDetector(s);
+};
 class RecoveryTimeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -755,6 +1541,16 @@ class RecoveryTimeDetector  extends TokenDetector {
     }
     const out = slice.read((i + 1));
     out.tag = this.detectedTag;
+    const rv = new RecoveryTimeValue();
+    rv.value = ((slice.read(i)).peek(1)).parseInteger(0, (i - 2));
+    if ( unit == 115 ) {
+      rv.unit = "s";
+    } else {
+      rv.unit = "m";
+    }
+    const payload = SliceParsedValue.fromRecoveryTime(rv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
     return out;
   };
 }
@@ -762,45 +1558,306 @@ RecoveryTimeDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RecoveryTimeDetector(s);
 };
-class DistanceDetector  extends TokenDetector {
+class AMTimeValueDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
     this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "distance";
+    this.detectedTag = "am-time";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 3 ) {
+      return this.noMatch();
+    }
+    let i = 0;
+    while (i < __len) {
+      const ch = slice.charCodeAt(i);
+      if ( (ch >= 48) && (ch <= 57) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    if ( i <= 0 ) {
+      return this.noMatch();
+    }
+    if ( (i + 1) >= __len ) {
+      return this.noMatch();
+    }
+    const valuePart = slice.read(i);
+    if ( valuePart.hasInteger(0, (i - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    const hour = valuePart.parseInteger(0, (i - 1));
+    if ( (hour < 1) || (hour > 12) ) {
+      return this.noMatch();
+    }
+    const c1 = slice.charCodeAt(i);
+    const c2 = slice.charCodeAt((i + 1));
+    if ( ((c1 == 65) && (c2 == 77)) || ((c1 == 80) && (c2 == 77)) ) {
+      const out = slice.read((i + 2));
+      out.tag = this.detectedTag;
+      return out;
+    }
+    return this.noMatch();
+  };
+}
+AMTimeValueDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new AMTimeValueDetector(s);
+};
+class PercentageDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "percentage";
   }
   detect (slice) {
     const __len = (slice).length();
     if ( __len < 2 ) {
       return this.noMatch();
     }
-    let valuePart = slice;
-    valuePart = slice.splitWithToken("m");
-    const valueLen = (valuePart).length();
-    if ( valueLen <= 0 ) {
+    const valuePart = slice.splitWithToken("%");
+    const vLen = (valuePart).length();
+    if ( vLen <= 0 ) {
       return this.noMatch();
     }
-    if ( (valueLen + 1) > __len ) {
+    if ( (vLen + 1) > __len ) {
       return this.noMatch();
     }
-    if ( valuePart.hasInteger(0, (valueLen - 1)) ) {
+    if ( valuePart.hasInteger(0, (vLen - 1)) ) {
     } else {
       return this.noMatch();
     }
-    const parsed = valuePart.parseInteger(0, (valueLen - 1));
-    if ( parsed <= 0 ) {
+    const v = valuePart.parseInteger(0, (vLen - 1));
+    if ( v <= 0 ) {
       return this.noMatch();
     }
-    if ( slice.charCodeAt(valueLen) != 109 ) {
+    if ( slice.charCodeAt(vLen) != 37 ) {
       return this.noMatch();
     }
-    const out = slice.read((valueLen + 1));
+    const out = slice.read((vLen + 1));
     out.tag = this.detectedTag;
+    const pv = new PercentageValue();
+    pv.value = v;
+    const payload = SliceParsedValue.fromPercentage(pv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
     return out;
   };
 }
-DistanceDetector.create = function() {
+PercentageDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
-  return new DistanceDetector(s);
+  return new PercentageDetector(s);
+};
+class WeightDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "weight";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 3 ) {
+      return this.noMatch();
+    }
+    let detectors = [];
+    detectors.push(PositiveIntegerDetector.create());
+    detectors.push(KeywordDetector.create("kg"));
+    const p = new Parser((slice).toString(), detectors);
+    (p).start();
+    if ( p.getCount() != 2 ) {
+      return this.noMatch();
+    }
+    const parts = p.getResults();
+    const first = parts[0];
+    const second = parts[1];
+    if ( false == (first.tag == "positive-integer") ) {
+      return this.noMatch();
+    }
+    if ( false == (second.tag == "keyword") ) {
+      return this.noMatch();
+    }
+    if ( false == second.strEquals("kg") ) {
+      return this.noMatch();
+    }
+    const outLen = (first).length() + (second).length();
+    const out = slice.read(outLen);
+    out.tag = this.detectedTag;
+    out.addChild(first);
+    out.addChild(second);
+    const firstLen = (first).length();
+    const wv = new WeightValue();
+    wv.value = first.parseInteger(0, (firstLen - 1));
+    wv.unit = "kg";
+    const payload = SliceParsedValue.fromWeight(wv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
+    return out;
+  };
+}
+WeightDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new WeightDetector(s);
+};
+class NumRangeBlockDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "num-range";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 3 ) {
+      return this.noMatch();
+    }
+    const dashPos = slice.findTokenPos("-");
+    if ( dashPos <= 0 ) {
+      return this.noMatch();
+    }
+    const left = slice.read(dashPos);
+    if ( left.hasInteger(0, ((left).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    const rightAll = slice.peek((dashPos + 1));
+    if ( (rightAll).length() <= 0 ) {
+      return this.noMatch();
+    }
+    let i = 0;
+    while (i < (rightAll).length()) {
+      const ch = rightAll.charCodeAt(i);
+      if ( (ch >= 48) && (ch <= 57) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    if ( i == 0 ) {
+      return this.noMatch();
+    }
+    const right = rightAll.read(i);
+    if ( right.hasInteger(0, (i - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lval = left.parseInteger(0, ((left).length() - 1));
+    const rval = right.parseInteger(0, (i - 1));
+    if ( lval <= 0 ) {
+      return this.noMatch();
+    }
+    if ( rval <= 0 ) {
+      return this.noMatch();
+    }
+    const out = slice.read(((dashPos + 1) + i));
+    out.tag = this.detectedTag;
+    const nv = new NumRangeValue();
+    nv.minValue = lval;
+    nv.maxValue = rval;
+    const payload = SliceParsedValue.fromNumRange(nv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
+    return out;
+  };
+}
+NumRangeBlockDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new NumRangeBlockDetector(s);
+};
+class RecoveryDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "recovery";
+  }
+  isAlphaNum (ch) {
+    if ( (ch >= 48) && (ch <= 57) ) {
+      return true;
+    }
+    if ( (ch >= 65) && (ch <= 90) ) {
+      return true;
+    }
+    if ( (ch >= 97) && (ch <= 122) ) {
+      return true;
+    }
+    return false;
+  };
+  createChildDetectors () {
+    let ds = [];
+    ds.push(DistanceDetector.create());
+    ds.push(RecoveryTimeDetector.create());
+    ds.push(TimeValueDetector.create());
+    ds.push(AMTimeValueDetector.create());
+    ds.push(PercentageDetector.create());
+    ds.push(WeightDetector.create());
+    ds.push(NumRangeBlockDetector.create());
+    ds.push(PositiveIntegerDetector.create());
+    ds.push(KeywordDetector.create("min"));
+    ds.push(KeywordDetector.create("sec"));
+    ds.push(KeywordDetector.create("s"));
+    ds.push(KeywordDetector.create("m"));
+    return ds;
+  };
+  detect (slice) {
+    const key = "Recovery";
+    const keyLen = key.length;
+    const __len = (slice).length();
+    if ( __len <= keyLen ) {
+      return this.noMatch();
+    }
+    const head = slice.read(keyLen);
+    if ( head.strEquals(key) ) {
+    } else {
+      return this.noMatch();
+    }
+    const next = slice.charCodeAt(keyLen);
+    if ( this.isAlphaNum(next) ) {
+      return this.noMatch();
+    }
+    let lineEnd = keyLen;
+    while (lineEnd < __len) {
+      const ch = slice.charCodeAt(lineEnd);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const labelToken = slice.read(keyLen);
+    labelToken.tag = "keyword";
+    out.addChild(labelToken);
+    let restStart = keyLen;
+    while (restStart < lineEnd) {
+      const ch2 = slice.charCodeAt(restStart);
+      if ( (ch2 == 32) || (ch2 == 9) ) {
+        restStart = restStart + 1;
+      } else {
+        break;
+      }
+    };
+    if ( restStart < lineEnd ) {
+      const rest = (slice.peek(restStart)).read((lineEnd - restStart));
+      const p = new Parser((rest).toString(), this.createChildDetectors());
+      (p).start();
+      const children = p.getResults();
+      for ( let i = 0; i < children.length; i++) {
+        var ch_1 = children[i];
+        out.addChild(ch_1);
+      };
+    }
+    const rv = new RecoveryValue();
+    rv.label = "Recovery";
+    const payload = SliceParsedValue.fromRecovery(rv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
+    return out;
+  };
+}
+RecoveryDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new RecoveryDetector(s);
 };
 class SpeedDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -918,159 +1975,18 @@ class RepeatBlockDetector  extends TokenDetector {
     }
     const out = slice.read((i + 1));
     out.tag = this.detectedTag;
+    const countSlice = slice.read(i);
+    const rv = new RepeatBlockValue();
+    rv.count = countSlice.parseInteger(0, (i - 1));
+    const payload = SliceParsedValue.fromRepeatBlock(rv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
     return out;
   };
 }
 RepeatBlockDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RepeatBlockDetector(s);
-};
-class Parser  {
-  constructor(source, detectors) {
-    this.source = "";
-    this.detectors = [];
-    this.parserdResults = [];
-    this.source = source;
-    this.detectors = detectors;
-    this.slice = new TokenSlice(source, 0, source.length);
-    this.parserdResults.length = 0;
-  }
-  start () {
-    let activeSlice = new TokenSlice(this.source, 0, this.source.length);
-    while ((activeSlice).length() > 0) {
-      let advance = 0;
-      let i = 0;
-      while (i < (this.detectors.length)) {
-        const detector = this.detectors[i];
-        const result = detector.detect(activeSlice);
-        if ( result.isEmpty() ) {
-        } else {
-          if ( result.tag == "space" ) {
-          } else {
-            if ( result.tag == "newline" ) {
-            } else {
-              this.parserdResults.push(result);
-            }
-          }
-          advance = (result).length();
-          break;
-        }
-        i = i + 1;
-      };
-      if ( advance == 0 ) {
-        break;
-      } else {
-        activeSlice = activeSlice.peek(advance);
-      }
-    };
-  };
-  getResults () {
-    return this.parserdResults;
-  };
-  getCount () {
-    return this.parserdResults.length;
-  };
-}
-class WeightDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "weight";
-  }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 3 ) {
-      return this.noMatch();
-    }
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    detectors.push(KeywordDetector.create("kg"));
-    const p = new Parser((slice).toString(), detectors);
-    (p).start();
-    if ( p.getCount() != 2 ) {
-      return this.noMatch();
-    }
-    const parts = p.getResults();
-    const first = parts[0];
-    const second = parts[1];
-    if ( false == (first.tag == "positive-integer") ) {
-      return this.noMatch();
-    }
-    if ( false == (second.tag == "keyword") ) {
-      return this.noMatch();
-    }
-    if ( false == second.strEquals("kg") ) {
-      return this.noMatch();
-    }
-    const outLen = (first).length() + (second).length();
-    const out = slice.read(outLen);
-    out.tag = this.detectedTag;
-    out.addChild(first);
-    out.addChild(second);
-    return out;
-  };
-}
-WeightDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new WeightDetector(s);
-};
-class NumRangeBlockDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "num-range";
-  }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 3 ) {
-      return this.noMatch();
-    }
-    const dashPos = slice.findTokenPos("-");
-    if ( dashPos <= 0 ) {
-      return this.noMatch();
-    }
-    const left = slice.read(dashPos);
-    if ( left.hasInteger(0, ((left).length() - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    const rightAll = slice.peek((dashPos + 1));
-    if ( (rightAll).length() <= 0 ) {
-      return this.noMatch();
-    }
-    let i = 0;
-    while (i < (rightAll).length()) {
-      const ch = rightAll.charCodeAt(i);
-      if ( (ch >= 48) && (ch <= 57) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    if ( i == 0 ) {
-      return this.noMatch();
-    }
-    const right = rightAll.read(i);
-    if ( right.hasInteger(0, (i - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lval = left.parseInteger(0, ((left).length() - 1));
-    const rval = right.parseInteger(0, (i - 1));
-    if ( lval <= 0 ) {
-      return this.noMatch();
-    }
-    if ( rval <= 0 ) {
-      return this.noMatch();
-    }
-    const out = slice.read(((dashPos + 1) + i));
-    out.tag = this.detectedTag;
-    return out;
-  };
-}
-NumRangeBlockDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new NumRangeBlockDetector(s);
 };
 class DistanceRangeBlockDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -1150,55 +2066,6 @@ class DistanceRangeBlockDetector  extends TokenDetector {
 DistanceRangeBlockDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new DistanceRangeBlockDetector(s);
-};
-class AMTimeValueDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "am-time";
-  }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 3 ) {
-      return this.noMatch();
-    }
-    let i = 0;
-    while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( (ch >= 48) && (ch <= 57) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    if ( i <= 0 ) {
-      return this.noMatch();
-    }
-    if ( (i + 1) >= __len ) {
-      return this.noMatch();
-    }
-    const valuePart = slice.read(i);
-    if ( valuePart.hasInteger(0, (i - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    const hour = valuePart.parseInteger(0, (i - 1));
-    if ( (hour < 1) || (hour > 12) ) {
-      return this.noMatch();
-    }
-    const c1 = slice.charCodeAt(i);
-    const c2 = slice.charCodeAt((i + 1));
-    if ( ((c1 == 65) && (c2 == 77)) || ((c1 == 80) && (c2 == 77)) ) {
-      const out = slice.read((i + 2));
-      out.tag = this.detectedTag;
-      return out;
-    }
-    return this.noMatch();
-  };
-}
-AMTimeValueDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new AMTimeValueDetector(s);
 };
 class NGSharedLists  {
   constructor() {
@@ -1354,6 +2221,12 @@ class PercentageRangeDetector  extends TokenDetector {
           if ( (lval > 0) && (rval > 0) ) {
             const out2 = slice.read((j + 1));
             out2.tag = this.detectedTag;
+            const pv2 = new PercentageRangeValue();
+            pv2.minValue = lval;
+            pv2.maxValue = rval;
+            const payload2 = SliceParsedValue.fromPercentageRange(pv2);
+            out2.setSliceValue(payload2);
+            slice.setSliceValue(payload2);
             return out2;
           }
         }
@@ -1384,6 +2257,13 @@ class PercentageRangeDetector  extends TokenDetector {
     out.tag = this.detectedTag;
     out.addChild(first);
     out.addChild(second);
+    const nrv = first.getAsNumRangeValue();
+    const pv = new PercentageRangeValue();
+    pv.minValue = nrv.minValue;
+    pv.maxValue = nrv.maxValue;
+    const payload = SliceParsedValue.fromPercentageRange(pv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
     return out;
   };
 }
@@ -1509,11 +2389,20 @@ class SetRepRangeLoadDetector  extends TokenDetector {
     if ( repsRight.parseInteger(0, ((repsRight).length() - 1)) <= 0 ) {
       return this.noMatch();
     }
+    const setsMinVal = setsLeft.parseInteger(0, ((setsLeft).length() - 1));
+    const setsMaxVal = setsRight.parseInteger(0, ((setsRight).length() - 1));
+    const repsMinVal = repsLeft.parseInteger(0, ((repsLeft).length() - 1));
+    const repsMaxVal = repsRight.parseInteger(0, ((repsRight).length() - 1));
     if ( i >= __len ) {
       return this.noMatch();
     }
     const mode = slice.charCodeAt(i);
+    let modeText = "";
+    let loadVal = 0;
+    let unitText = "";
     if ( mode == 64 ) {
+      modeText = "bw";
+      unitText = "bw";
       i = i + 1;
       if ( (i + 1) >= __len ) {
         return this.noMatch();
@@ -1527,6 +2416,7 @@ class SetRepRangeLoadDetector  extends TokenDetector {
       i = i + 2;
     } else {
       if ( mode == 120 ) {
+        modeText = "kg";
         i = i + 1;
         const loadStart = i;
         while (i < __len) {
@@ -1544,7 +2434,8 @@ class SetRepRangeLoadDetector  extends TokenDetector {
         } else {
           return this.noMatch();
         }
-        if ( loadDigits.parseInteger(0, ((loadDigits).length() - 1)) <= 0 ) {
+        loadVal = loadDigits.parseInteger(0, ((loadDigits).length() - 1));
+        if ( loadVal <= 0 ) {
           return this.noMatch();
         }
         if ( (i + 1) >= __len ) {
@@ -1556,6 +2447,7 @@ class SetRepRangeLoadDetector  extends TokenDetector {
         if ( slice.charCodeAt((i + 1)) != 103 ) {
           return this.noMatch();
         }
+        unitText = "kg";
         i = i + 2;
       } else {
         return this.noMatch();
@@ -1568,51 +2460,23 @@ class SetRepRangeLoadDetector  extends TokenDetector {
     }
     const out = slice.read(i);
     out.tag = this.detectedTag;
+    const sv = new SetRepRangeLoadValue();
+    sv.setsMin = setsMinVal;
+    sv.setsMax = setsMaxVal;
+    sv.repsMin = repsMinVal;
+    sv.repsMax = repsMaxVal;
+    sv.mode = modeText;
+    sv.load = loadVal;
+    sv.unit = unitText;
+    const payload = SliceParsedValue.fromSetRepRangeLoad(sv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
     return out;
   };
 }
 SetRepRangeLoadDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new SetRepRangeLoadDetector(s);
-};
-class PercentageDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "percentage";
-  }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 2 ) {
-      return this.noMatch();
-    }
-    const valuePart = slice.splitWithToken("%");
-    const vLen = (valuePart).length();
-    if ( vLen <= 0 ) {
-      return this.noMatch();
-    }
-    if ( (vLen + 1) > __len ) {
-      return this.noMatch();
-    }
-    if ( valuePart.hasInteger(0, (vLen - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    const v = valuePart.parseInteger(0, (vLen - 1));
-    if ( v <= 0 ) {
-      return this.noMatch();
-    }
-    if ( slice.charCodeAt(vLen) != 37 ) {
-      return this.noMatch();
-    }
-    const out = slice.read((vLen + 1));
-    out.tag = this.detectedTag;
-    return out;
-  };
-}
-PercentageDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new PercentageDetector(s);
 };
 class RMDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -1723,6 +2587,11 @@ class ZoneDetector  extends TokenDetector {
     }
     const out = slice.read(i);
     out.tag = this.detectedTag;
+    const zv = new ZoneValue();
+    zv.zone = zoneNum;
+    const payload = SliceParsedValue.fromZone(zv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
     return out;
   };
 }
@@ -1787,28 +2656,6 @@ RomanZoneDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RomanZoneDetector(s);
 };
-class DetailsDataDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "details-data";
-  }
-  detect (slice) {
-    if ( (slice).length() < 1 ) {
-      return this.noMatch();
-    }
-    if ( slice.charCodeAt(0) != 62 ) {
-      return this.noMatch();
-    }
-    const out = slice.read(1);
-    out.tag = this.detectedTag;
-    return out;
-  };
-}
-DetailsDataDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new DetailsDataDetector(s);
-};
 class HeadingDataDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -1845,6 +2692,184 @@ class HeadingDataDetector  extends TokenDetector {
 HeadingDataDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new HeadingDataDetector(s);
+};
+class StandardDetectors  {
+  constructor() {
+  }
+}
+StandardDetectors.create = function() {
+  let ds = [];
+  ds.push(SpaceDetector.create());
+  ds.push(NewlineDetector.create());
+  ds.push(DateTimeDetector.create());
+  ds.push(SpeedDetector.create());
+  ds.push(KCALDetector.create());
+  ds.push(BPMDetector.create());
+  ds.push(WeightDetector.create());
+  ds.push(DistanceRangeBlockDetector.create());
+  ds.push(PercentageRangeDetector.create());
+  ds.push(SetRepRangeLoadDetector.create());
+  ds.push(NumRangeBlockDetector.create());
+  ds.push(DistanceDetector.create());
+  ds.push(PercentageDetector.create());
+  ds.push(RMDetector.create());
+  ds.push(ZoneDetector.create());
+  ds.push(RomanZoneDetector.create());
+  ds.push(RecoveryTimeDetector.create());
+  ds.push(TimeValueDetector.create());
+  ds.push(RecoveryDetector.create());
+  ds.push(SportExerciseDetector.create());
+  ds.push(DecimalNumberDetector.create());
+  ds.push(PositiveIntegerDetector.create());
+  ds.push(RepeatBlockDetector.create());
+  ds.push(AMTimeValueDetector.create());
+  ds.push(DetailsDataDetector.create());
+  ds.push(HeadingDataDetector.create());
+  return ds;
+};
+class DetailsDataDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "details-data";
+  }
+  createChildDetectors () {
+    return StandardDetectors.create();
+  };
+  findFirstNumberOffset (slice) {
+    let i = 0;
+    const __len = (slice).length();
+    while (i < __len) {
+      const ch = slice.charCodeAt(i);
+      if ( (ch >= 48) && (ch <= 57) ) {
+        return i;
+      }
+      i = i + 1;
+    };
+    return -1;
+  };
+  isLetter (ch) {
+    if ( (ch >= 65) && (ch <= 90) ) {
+      return true;
+    }
+    if ( (ch >= 97) && (ch <= 122) ) {
+      return true;
+    }
+    return false;
+  };
+  addChildrenFromParser (out, payload) {
+    const p = new Parser((payload).toString(), this.createChildDetectors());
+    (p).start();
+    const ch = p.getResults();
+    for ( let i = 0; i < ch.length; i++) {
+      var item = ch[i];
+      out.addChild(item);
+    };
+  };
+  addParsedChildren (out, payload) {
+    const p = new Parser((payload).toString(), this.createChildDetectors());
+    (p).start();
+    if ( p.getCount() > 0 ) {
+      const ch = p.getResults();
+      for ( let i = 0; i < ch.length; i++) {
+        var item = ch[i];
+        out.addChild(item);
+      };
+      return;
+    }
+    const __len = (payload).length();
+    let wordEnd = 0;
+    while (wordEnd < __len) {
+      const chw = payload.charCodeAt(wordEnd);
+      if ( this.isLetter(chw) ) {
+        wordEnd = wordEnd + 1;
+      } else {
+        break;
+      }
+    };
+    if ( wordEnd > 0 ) {
+      const label = payload.read(wordEnd);
+      label.tag = "keyword";
+      out.addChild(label);
+      let tailStart = wordEnd;
+      while (tailStart < __len) {
+        const cht = payload.charCodeAt(tailStart);
+        if ( (cht == 32) || (cht == 9) ) {
+          tailStart = tailStart + 1;
+        } else {
+          break;
+        }
+      };
+      if ( tailStart < __len ) {
+        const tail = (payload.peek(tailStart)).read((__len - tailStart));
+        this.addChildrenFromParser(out, tail);
+      }
+      return;
+    }
+    const firstNum = this.findFirstNumberOffset(payload);
+    if ( (firstNum > 0) && (firstNum < (payload).length()) ) {
+      const numericTail = (payload.peek(firstNum)).read(((payload).length() - firstNum));
+      this.addChildrenFromParser(out, numericTail);
+    }
+  };
+  detect (slice) {
+    if ( (slice).length() < 1 ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt(0) != 62 ) {
+      return this.noMatch();
+    }
+    const __len = (slice).length();
+    let markerEnd = 0;
+    while (markerEnd < __len) {
+      const chm = slice.charCodeAt(markerEnd);
+      if ( chm == 62 ) {
+        markerEnd = markerEnd + 1;
+      } else {
+        break;
+      }
+    };
+    if ( markerEnd == 0 ) {
+      return this.noMatch();
+    }
+    let lineEnd = markerEnd;
+    while (lineEnd < __len) {
+      const ch = slice.charCodeAt(lineEnd);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const levelToken = slice.read(markerEnd);
+    levelToken.tag = "details-level";
+    const dlv = new DetailsLevelValue();
+    dlv.level = markerEnd;
+    dlv.marker = (levelToken).toString();
+    const payload = SliceParsedValue.fromDetailsLevel(dlv);
+    levelToken.setSliceValue(payload);
+    out.addChild(levelToken);
+    let contentStart = markerEnd;
+    while (contentStart < lineEnd) {
+      const ch2 = slice.charCodeAt(contentStart);
+      if ( (ch2 == 32) || (ch2 == 9) ) {
+        contentStart = contentStart + 1;
+      } else {
+        break;
+      }
+    };
+    if ( contentStart >= lineEnd ) {
+      return out;
+    }
+    const payload_2 = (slice.peek(contentStart)).read((lineEnd - contentStart));
+    this.addParsedChildren(out, payload_2);
+    return out;
+  };
+}
+DetailsDataDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new DetailsDataDetector(s);
 };
 class NGSharedDetectorFactory  {
   constructor() {
@@ -1962,41 +2987,9 @@ SportExerciseDetector.createWithSports = function(sportNames) {
   const s = TokenDetector.createNoMatchSlice();
   return new SportExerciseDetector(s, sportNames);
 };
-class StandardDetectors  {
-  constructor() {
-  }
-}
-StandardDetectors.create = function() {
-  let ds = [];
-  ds.push(SpaceDetector.create());
-  ds.push(NewlineDetector.create());
-  ds.push(DateTimeDetector.create());
-  ds.push(SpeedDetector.create());
-  ds.push(KCALDetector.create());
-  ds.push(BPMDetector.create());
-  ds.push(WeightDetector.create());
-  ds.push(DistanceRangeBlockDetector.create());
-  ds.push(PercentageRangeDetector.create());
-  ds.push(SetRepRangeLoadDetector.create());
-  ds.push(NumRangeBlockDetector.create());
-  ds.push(DistanceDetector.create());
-  ds.push(PercentageDetector.create());
-  ds.push(RMDetector.create());
-  ds.push(ZoneDetector.create());
-  ds.push(RomanZoneDetector.create());
-  ds.push(RecoveryTimeDetector.create());
-  ds.push(TimeValueDetector.create());
-  ds.push(SportExerciseDetector.create());
-  ds.push(DecimalNumberDetector.create());
-  ds.push(PositiveIntegerDetector.create());
-  ds.push(RepeatBlockDetector.create());
-  ds.push(AMTimeValueDetector.create());
-  ds.push(DetailsDataDetector.create());
-  ds.push(HeadingDataDetector.create());
-  return ds;
-};
 class NGExpectRule  {
   constructor() {
+    this.testIndex = -1;
     this.kind = "";
     this.childIndex = -1;
     this.field = "";
@@ -2007,6 +3000,7 @@ class NGTestCase  {
   constructor() {
     this.input = "";
     this.expects = [];
+    this.jsonFile = "";
   }
 }
 class NGTestSpecParser  {
@@ -2115,28 +3109,40 @@ class NGTestSpecParser  {
     if ( (payload.length) == 0 ) {
       return out;
     }
-    if ( (this).startsWith(payload, "tag ") ) {
+    let body = payload;
+    const idxSep = this.findSpace(payload);
+    if ( idxSep > 0 ) {
+      const idxText = payload.substring(0, idxSep );
+      const idxSlice = TokenSlice.fromText(idxText);
+      if ( (idxSlice).length() > 0 ) {
+        if ( idxSlice.hasInteger(0, ((idxSlice).length() - 1)) ) {
+          out.testIndex = idxSlice.parseInteger(0, ((idxSlice).length() - 1));
+          body = (this).trim((payload.substring((idxSep + 1), (payload.length) )));
+        }
+      }
+    }
+    if ( (this).startsWith(body, "tag ") ) {
       out.kind = "tag";
-      out.value = this.decodeEscapes((this).trim((payload.substring(4, (payload.length) ))));
+      out.value = this.decodeEscapes((this).trim((body.substring(4, (body.length) ))));
       return out;
     }
-    if ( (this).startsWith(payload, "child ") ) {
-      const rest = (this).trim((payload.substring(6, (payload.length) )));
-      const idxSep = this.findSpace(rest);
-      if ( idxSep < 0 ) {
+    if ( (this).startsWith(body, "child ") ) {
+      const rest = (this).trim((body.substring(6, (body.length) )));
+      const childIdxSep = this.findSpace(rest);
+      if ( childIdxSep < 0 ) {
         return out;
       }
-      const idxText = rest.substring(0, idxSep );
-      const idxSlice = TokenSlice.fromText(idxText);
-      if ( (idxSlice).length() == 0 ) {
+      const childIdxText = rest.substring(0, childIdxSep );
+      const childIdxSlice = TokenSlice.fromText(childIdxText);
+      if ( (childIdxSlice).length() == 0 ) {
         return out;
       }
-      if ( idxSlice.hasInteger(0, ((idxSlice).length() - 1)) ) {
+      if ( childIdxSlice.hasInteger(0, ((childIdxSlice).length() - 1)) ) {
       } else {
         return out;
       }
-      out.childIndex = idxSlice.parseInteger(0, ((idxSlice).length() - 1));
-      const afterIdx = (this).trim((rest.substring((idxSep + 1), (rest.length) )));
+      out.childIndex = childIdxSlice.parseInteger(0, ((childIdxSlice).length() - 1));
+      const afterIdx = (this).trim((rest.substring((childIdxSep + 1), (rest.length) )));
       const fieldSep = this.findSpace(afterIdx);
       if ( fieldSep < 0 ) {
         return out;
@@ -2148,9 +3154,60 @@ class NGTestSpecParser  {
     }
     return out;
   };
+  resolveTargetIndex (blockStart, caseCount, idx) {
+    if ( idx >= 0 ) {
+      return blockStart + idx;
+    }
+    return caseCount - 1;
+  };
+  parseJsonFile (line, cases, blockStart) {
+    const payload = (this).trim(line);
+    if ( (payload.length) == 0 ) {
+      return;
+    }
+    if ( (this).startsWith(payload, "all ") ) {
+      const allFileName = this.decodeEscapes((this).trim((payload.substring(4, (payload.length) ))));
+      if ( (allFileName.length) == 0 ) {
+        return;
+      }
+      let from = blockStart;
+      const to = cases.length;
+      while (from < to) {
+        const tcAll = cases[from];
+        tcAll.jsonFile = allFileName;
+        from = from + 1;
+      };
+      return;
+    }
+    let target = -1;
+    let fileName = payload;
+    const idxSep = this.findSpace(payload);
+    if ( idxSep > 0 ) {
+      const idxText = payload.substring(0, idxSep );
+      const idxSlice = TokenSlice.fromText(idxText);
+      if ( (idxSlice).length() > 0 ) {
+        if ( idxSlice.hasInteger(0, ((idxSlice).length() - 1)) ) {
+          const idxValue = idxSlice.parseInteger(0, ((idxSlice).length() - 1));
+          target = this.resolveTargetIndex(blockStart, (cases.length), idxValue);
+          fileName = (this).trim((payload.substring((idxSep + 1), (payload.length) )));
+        }
+      }
+    }
+    if ( target < 0 ) {
+      target = this.resolveTargetIndex(blockStart, (cases.length), -1);
+    }
+    if ( (fileName.length) == 0 ) {
+      return;
+    }
+    if ( (target >= 0) && (target < (cases.length)) ) {
+      const tc = cases[target];
+      tc.jsonFile = this.decodeEscapes(fileName);
+    }
+  };
   parse (specText) {
     let cases = [];
-    let active;
+    let blockStart = 0;
+    let prevKind = "none";
     const __len = specText.length;
     let lineStart = 0;
     let i = 0;
@@ -2170,18 +3227,28 @@ class NGTestSpecParser  {
         if ( this.isCommentLine(line) ) {
         } else {
           if ( (this).startsWith(line, "Test ") ) {
+            if ( prevKind != "test" ) {
+              blockStart = cases.length;
+            }
             const tc = new NGTestCase();
             tc.input = this.decodeEscapes((this).trim((line.substring(5, (line.length) ))));
             cases.push(tc);
-            active = tc;
+            prevKind = "test";
           } else {
             if ( (this).startsWith(line, "Expect ") ) {
-              if ( typeof(active) != "undefined" ) {
-                const ex = this.parseExpect((line.substring(7, (line.length) )));
-                if ( (ex.kind.length) > 0 ) {
-                  const tc2 = active;
+              const ex = this.parseExpect((line.substring(7, (line.length) )));
+              if ( (ex.kind.length) > 0 ) {
+                const target = this.resolveTargetIndex(blockStart, (cases.length), ex.testIndex);
+                if ( (target >= 0) && (target < (cases.length)) ) {
+                  const tc2 = cases[target];
                   tc2.expects.push(ex);
                 }
+              }
+              prevKind = "expect";
+            } else {
+              if ( (this).startsWith(line, "JSON ") ) {
+                this.parseJsonFile(line.substring(5, (line.length) ), cases, blockStart);
+                prevKind = "json";
               }
             }
           }
@@ -2210,6 +3277,229 @@ class NGTestRunner  {
   }
   createDetectors () {
     return StandardDetectors.create();
+  };
+  escapeJson (text) {
+    const __len = text.length;
+    if ( __len == 0 ) {
+      return "";
+    }
+    let out = "";
+    let i = 0;
+    while (i < __len) {
+      const ch = text.charCodeAt(i );
+      if ( ch == 34 ) {
+        out = out + "\\\"";
+        i = i + 1;
+        continue;
+      }
+      if ( ch == 92 ) {
+        out = out + "\\\\";
+        i = i + 1;
+        continue;
+      }
+      if ( ch == 10 ) {
+        out = out + "\\n";
+        i = i + 1;
+        continue;
+      }
+      if ( ch == 13 ) {
+        out = out + "\\r";
+        i = i + 1;
+        continue;
+      }
+      if ( ch == 9 ) {
+        out = out + "\\t";
+        i = i + 1;
+        continue;
+      }
+      out = out + (text.substring(i, (i + 1) ));
+      i = i + 1;
+    };
+    return out;
+  };
+  indent (level) {
+    let out = "";
+    let i = 0;
+    while (i < level) {
+      out = out + "  ";
+      i = i + 1;
+    };
+    return out;
+  };
+  parsedValueToJson (token, level) {
+    if ( token.hasSliceValue() ) {
+    } else {
+      return "null";
+    }
+    const kind = token.getSliceValueKind();
+    const pad = this.indent(level);
+    const childPad = this.indent((level + 1));
+    if ( kind == "datetime" ) {
+      const v = token.getAsDateTimeValue();
+      let out = "{\n";
+      out = out + (childPad + "\"kind\":\"datetime\",\n");
+      out = out + ((childPad + ("\"year\":" + ("" + v.year))) + ",\n");
+      out = out + ((childPad + ("\"month\":" + ("" + v.month))) + ",\n");
+      out = out + ((childPad + ("\"day\":" + ("" + v.day))) + ",\n");
+      out = out + ((childPad + ("\"hour\":" + ("" + v.hour))) + ",\n");
+      out = out + ((childPad + ("\"minute\":" + ("" + v.minute))) + ",\n");
+      out = out + (childPad + ("\"second\":" + ("" + v.second)));
+      if ( (typeof(v.timezone) !== "undefined" && v.timezone != null )  ) {
+        out = out + ",\n";
+        out = out + (childPad + (("\"timezone\":\"" + this.escapeJson((v.timezone))) + "\""));
+      }
+      out = out + "\n";
+      out = out + (pad + "}");
+      return out;
+    }
+    if ( kind == "distance" ) {
+      const d = token.getAsDistanceValue();
+      let out2 = "{\n";
+      out2 = out2 + (childPad + "\"kind\":\"distance\",\n");
+      out2 = out2 + ((childPad + ("\"value\":" + ("" + d.value))) + ",\n");
+      out2 = out2 + (childPad + (("\"unit\":\"" + this.escapeJson(d.unit)) + "\""));
+      out2 = out2 + "\n";
+      out2 = out2 + (pad + "}");
+      return out2;
+    }
+    if ( kind == "percentage" ) {
+      const p = token.getAsPercentageValue();
+      let out3 = "{\n";
+      out3 = out3 + (childPad + "\"kind\":\"percentage\",\n");
+      out3 = out3 + (childPad + ("\"value\":" + ("" + p.value)));
+      out3 = out3 + "\n";
+      out3 = out3 + (pad + "}");
+      return out3;
+    }
+    if ( kind == "recovery-time" ) {
+      const r = token.getAsRecoveryTimeValue();
+      let out4 = "{\n";
+      out4 = out4 + (childPad + "\"kind\":\"recovery-time\",\n");
+      out4 = out4 + ((childPad + ("\"value\":" + ("" + r.value))) + ",\n");
+      out4 = out4 + (childPad + (("\"unit\":\"" + this.escapeJson(r.unit)) + "\""));
+      out4 = out4 + "\n";
+      out4 = out4 + (pad + "}");
+      return out4;
+    }
+    if ( kind == "weight" ) {
+      const w = token.getAsWeightValue();
+      let out5 = "{\n";
+      out5 = out5 + (childPad + "\"kind\":\"weight\",\n");
+      out5 = out5 + ((childPad + ("\"value\":" + ("" + w.value))) + ",\n");
+      out5 = out5 + (childPad + (("\"unit\":\"" + this.escapeJson(w.unit)) + "\""));
+      out5 = out5 + "\n";
+      out5 = out5 + (pad + "}");
+      return out5;
+    }
+    if ( kind == "num-range" ) {
+      const nr = token.getAsNumRangeValue();
+      let out6 = "{\n";
+      out6 = out6 + (childPad + "\"kind\":\"num-range\",\n");
+      out6 = out6 + ((childPad + ("\"minValue\":" + ("" + nr.minValue))) + ",\n");
+      out6 = out6 + (childPad + ("\"maxValue\":" + ("" + nr.maxValue)));
+      out6 = out6 + "\n";
+      out6 = out6 + (pad + "}");
+      return out6;
+    }
+    if ( kind == "percentage-range" ) {
+      const pr = token.getAsPercentageRangeValue();
+      let out7 = "{\n";
+      out7 = out7 + (childPad + "\"kind\":\"percentage-range\",\n");
+      out7 = out7 + ((childPad + ("\"minValue\":" + ("" + pr.minValue))) + ",\n");
+      out7 = out7 + (childPad + ("\"maxValue\":" + ("" + pr.maxValue)));
+      out7 = out7 + "\n";
+      out7 = out7 + (pad + "}");
+      return out7;
+    }
+    if ( kind == "repeat-block" ) {
+      const rb = token.getAsRepeatBlockValue();
+      let out8 = "{\n";
+      out8 = out8 + (childPad + "\"kind\":\"repeat-block\",\n");
+      out8 = out8 + (childPad + ("\"count\":" + ("" + rb.count)));
+      out8 = out8 + "\n";
+      out8 = out8 + (pad + "}");
+      return out8;
+    }
+    if ( kind == "set-rep-range-load" ) {
+      const sr = token.getAsSetRepRangeLoadValue();
+      let out9 = "{\n";
+      out9 = out9 + (childPad + "\"kind\":\"set-rep-range-load\",\n");
+      out9 = out9 + ((childPad + ("\"setsMin\":" + ("" + sr.setsMin))) + ",\n");
+      out9 = out9 + ((childPad + ("\"setsMax\":" + ("" + sr.setsMax))) + ",\n");
+      out9 = out9 + ((childPad + ("\"repsMin\":" + ("" + sr.repsMin))) + ",\n");
+      out9 = out9 + ((childPad + ("\"repsMax\":" + ("" + sr.repsMax))) + ",\n");
+      out9 = out9 + (childPad + (("\"mode\":\"" + this.escapeJson(sr.mode)) + "\",\n"));
+      out9 = out9 + ((childPad + ("\"load\":" + ("" + sr.load))) + ",\n");
+      out9 = out9 + (childPad + (("\"unit\":\"" + this.escapeJson(sr.unit)) + "\""));
+      out9 = out9 + "\n";
+      out9 = out9 + (pad + "}");
+      return out9;
+    }
+    if ( kind == "zone" ) {
+      const z = token.getAsZoneValue();
+      let out10 = "{\n";
+      out10 = out10 + (childPad + "\"kind\":\"zone\",\n");
+      out10 = out10 + (childPad + ("\"zone\":" + ("" + z.zone)));
+      out10 = out10 + "\n";
+      out10 = out10 + (pad + "}");
+      return out10;
+    }
+    if ( kind == "positive-integer" ) {
+      const pi = token.getAsPositiveIntegerValue();
+      let out11 = "{\n";
+      out11 = out11 + (childPad + "\"kind\":\"positive-integer\",\n");
+      out11 = out11 + (childPad + ("\"value\":" + ("" + pi.value)));
+      out11 = out11 + "\n";
+      out11 = out11 + (pad + "}");
+      return out11;
+    }
+    if ( kind == "details-level" ) {
+      const dl = token.getAsDetailsLevelValue();
+      let out12 = "{\n";
+      out12 = out12 + (childPad + "\"kind\":\"details-level\",\n");
+      out12 = out12 + ((childPad + ("\"level\":" + ("" + dl.level))) + ",\n");
+      out12 = out12 + (childPad + (("\"marker\":\"" + this.escapeJson(dl.marker)) + "\""));
+      out12 = out12 + "\n";
+      out12 = out12 + (pad + "}");
+      return out12;
+    }
+    if ( kind == "recovery" ) {
+      const rv = token.getAsRecoveryValue();
+      let out13 = "{\n";
+      out13 = out13 + (childPad + "\"kind\":\"recovery\",\n");
+      out13 = out13 + (childPad + (("\"label\":\"" + this.escapeJson(rv.label)) + "\""));
+      out13 = out13 + "\n";
+      out13 = out13 + (pad + "}");
+      return out13;
+    }
+    return ((("{\n" + childPad) + (("\"kind\":\"" + this.escapeJson(kind)) + "\"\n")) + pad) + "}";
+  };
+  tokenToJson (token, level) {
+    const pad = this.indent(level);
+    const childPad = this.indent((level + 1));
+    let out = pad + "{\n";
+    out = out + (childPad + (("\"tag\":\"" + this.escapeJson(token.tag)) + "\",\n"));
+    out = out + (childPad + (("\"text\":\"" + this.escapeJson((token).toString())) + "\",\n"));
+    out = out + (((childPad + "\"parsed\":") + this.parsedValueToJson(token, (level + 1))) + ",\n");
+    out = out + (childPad + "\"children\":[");
+    const cc = token.childCount();
+    let i = 0;
+    if ( cc > 0 ) {
+      out = out + "\n";
+      while (i < cc) {
+        if ( i > 0 ) {
+          out = out + ",\n";
+        }
+        const ch = token.getChild(i);
+        out = out + this.tokenToJson(ch, (level + 2));
+        i = i + 1;
+      };
+      out = out + "\n";
+      out = out + childPad;
+    }
+    out = out + "]\n";
+    out = out + (pad + "}");
+    return out;
   };
   runSpec (specText) {
     let out = [];
@@ -2262,6 +3552,60 @@ class NGTestRunner  {
     };
     return out;
   };
+  exportJson (specText) {
+    let out = [];
+    const parser = NGTestSpecParser.create();
+    const cases = parser.parse(specText);
+    let files = [];
+    let payloads = [];
+    let counts = [];
+    for ( let i = 0; i < cases.length; i++) {
+      var tc = cases[i];
+      if ( (tc.jsonFile.length) == 0 ) {
+        continue;
+      }
+      const p = new Parser(tc.input, this.createDetectors());
+      (p).start();
+      if ( p.getCount() == 0 ) {
+        continue;
+      }
+      const results = p.getResults();
+      const root = results[0];
+      const json = this.tokenToJson(root, 0);
+      let fileIdx = -1;
+      let search = 0;
+      while (search < (files.length)) {
+        if ( (files[search]) == tc.jsonFile ) {
+          fileIdx = search;
+          break;
+        }
+        search = search + 1;
+      };
+      if ( fileIdx < 0 ) {
+        files.push(tc.jsonFile);
+        payloads.push(json);
+        counts.push(1);
+      } else {
+        const prevPayload = payloads[fileIdx];
+        const nextPayload = (prevPayload + ",\n") + json;
+        payloads[fileIdx] = nextPayload;
+        const prevCount = counts[fileIdx];
+        counts[fileIdx] = prevCount + 1;
+      }
+    };
+    let j = 0;
+    while (j < (files.length)) {
+      const fileName = files[j];
+      let payload = payloads[j];
+      const cnt = counts[j];
+      if ( cnt > 1 ) {
+        payload = ("[\n" + payload) + "\n]";
+      }
+      out.push((fileName + "\t") + payload);
+      j = j + 1;
+    };
+    return out;
+  };
 }
 NGTestRunner.create = function() {
   return new NGTestRunner();
@@ -2293,6 +3637,9 @@ TokenDetectorModule.createTimeValue = function() {
 };
 TokenDetectorModule.createRecoveryTime = function() {
   return RecoveryTimeDetector.create();
+};
+TokenDetectorModule.createRecovery = function() {
+  return RecoveryDetector.create();
 };
 TokenDetectorModule.createSpeed = function() {
   return SpeedDetector.create();
@@ -2361,39 +3708,53 @@ TokenDetectorModule.createNGTestRunner = function() {
 TokenDetectorModule.createNGTestSpecParser = function() {
   return NGTestSpecParser.create();
 };
+module.exports.DateTimeValue = DateTimeValue;
+module.exports.DistanceValue = DistanceValue;
+module.exports.PercentageValue = PercentageValue;
+module.exports.RecoveryTimeValue = RecoveryTimeValue;
+module.exports.WeightValue = WeightValue;
+module.exports.NumRangeValue = NumRangeValue;
+module.exports.PercentageRangeValue = PercentageRangeValue;
+module.exports.RepeatBlockValue = RepeatBlockValue;
+module.exports.SetRepRangeLoadValue = SetRepRangeLoadValue;
+module.exports.ZoneValue = ZoneValue;
+module.exports.PositiveIntegerValue = PositiveIntegerValue;
+module.exports.DetailsLevelValue = DetailsLevelValue;
+module.exports.RecoveryValue = RecoveryValue;
+module.exports.SliceParsedValue = SliceParsedValue;
 module.exports.TokenSlice = TokenSlice;
 module.exports.TokenDetector = TokenDetector;
 module.exports.KeywordDetector = KeywordDetector;
-module.exports.DateTimeValue = DateTimeValue;
 module.exports.DateTimeDetector = DateTimeDetector;
 module.exports.SpaceDetector = SpaceDetector;
 module.exports.NewlineDetector = NewlineDetector;
 module.exports.PositiveIntegerDetector = PositiveIntegerDetector;
 module.exports.DecimalNumberDetector = DecimalNumberDetector;
 module.exports.TimeValueDetector = TimeValueDetector;
-module.exports.RecoveryTimeDetector = RecoveryTimeDetector;
-module.exports.DistanceDetector = DistanceDetector;
-module.exports.SpeedDetector = SpeedDetector;
-module.exports.RepeatBlockDetector = RepeatBlockDetector;
 module.exports.Parser = Parser;
+module.exports.DistanceDetector = DistanceDetector;
+module.exports.RecoveryTimeDetector = RecoveryTimeDetector;
+module.exports.AMTimeValueDetector = AMTimeValueDetector;
+module.exports.PercentageDetector = PercentageDetector;
 module.exports.WeightDetector = WeightDetector;
 module.exports.NumRangeBlockDetector = NumRangeBlockDetector;
+module.exports.RecoveryDetector = RecoveryDetector;
+module.exports.SpeedDetector = SpeedDetector;
+module.exports.RepeatBlockDetector = RepeatBlockDetector;
 module.exports.DistanceRangeBlockDetector = DistanceRangeBlockDetector;
-module.exports.AMTimeValueDetector = AMTimeValueDetector;
 module.exports.NGSharedLists = NGSharedLists;
 module.exports.KCALDetector = KCALDetector;
 module.exports.BPMDetector = BPMDetector;
 module.exports.PercentageRangeDetector = PercentageRangeDetector;
 module.exports.SetRepRangeLoadDetector = SetRepRangeLoadDetector;
-module.exports.PercentageDetector = PercentageDetector;
 module.exports.RMDetector = RMDetector;
 module.exports.ZoneDetector = ZoneDetector;
 module.exports.RomanZoneDetector = RomanZoneDetector;
-module.exports.DetailsDataDetector = DetailsDataDetector;
 module.exports.HeadingDataDetector = HeadingDataDetector;
+module.exports.StandardDetectors = StandardDetectors;
+module.exports.DetailsDataDetector = DetailsDataDetector;
 module.exports.NGSharedDetectorFactory = NGSharedDetectorFactory;
 module.exports.SportExerciseDetector = SportExerciseDetector;
-module.exports.StandardDetectors = StandardDetectors;
 module.exports.NGExpectRule = NGExpectRule;
 module.exports.NGTestCase = NGTestCase;
 module.exports.NGTestSpecParser = NGTestSpecParser;

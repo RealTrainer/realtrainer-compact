@@ -1,4 +1,6 @@
 Import "TokenDetector.rgr"
+Import "PercentageValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class PercentageDetector {
     Extends(TokenDetector)
@@ -40,6 +42,11 @@ class PercentageDetector {
 
         def out (slice.read(vLen + 1))
         out.tag = detectedTag
+        def pv (new PercentageValue)
+        pv.value = v
+        def payload (SliceParsedValue.fromPercentage(pv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

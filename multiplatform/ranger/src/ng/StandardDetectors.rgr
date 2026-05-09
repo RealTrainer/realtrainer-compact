@@ -17,6 +17,7 @@ Import "ZoneDetector.rgr"
 Import "RomanZoneDetector.rgr"
 Import "RecoveryTimeDetector.rgr"
 Import "TimeValueDetector.rgr"
+Import "RecoveryDetector.rgr"
 Import "SportExerciseDetector.rgr"
 Import "DecimalNumberDetector.rgr"
 Import "PositiveIntegerDetector.rgr"
@@ -46,6 +47,7 @@ class StandardDetectors {
         push ds (RomanZoneDetector.create())
         push ds (RecoveryTimeDetector.create())
         push ds (TimeValueDetector.create())
+        push ds (RecoveryDetector.create())
         push ds (SportExerciseDetector.create())
         push ds (DecimalNumberDetector.create())
         push ds (PositiveIntegerDetector.create())

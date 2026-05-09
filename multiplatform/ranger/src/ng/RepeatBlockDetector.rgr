@@ -1,4 +1,6 @@
 Import "TokenDetector.rgr"
+Import "RepeatBlockValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class RepeatBlockDetector {
     Extends(TokenDetector)
@@ -59,6 +61,12 @@ class RepeatBlockDetector {
 
         def out (slice.read(i + 1))
         out.tag = detectedTag
+        def countSlice (slice.read(i))
+        def rv (new RepeatBlockValue)
+        rv.count = (countSlice.parseInteger(0 (i - 1)))
+        def payload (SliceParsedValue.fromRepeatBlock(rv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

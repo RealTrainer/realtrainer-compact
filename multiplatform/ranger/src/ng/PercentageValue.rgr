@@ -1,0 +1,3 @@
+class PercentageValue {
+    def value:int 0
+}

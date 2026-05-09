@@ -1,4 +1,6 @@
 Import "TokenDetector.rgr"
+Import "DistanceValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class DistanceDetector {
     Extends(TokenDetector)
@@ -43,6 +45,12 @@ class DistanceDetector {
 
         def out (slice.read(valueLen + 1))
         out.tag = detectedTag
+        def dv (new DistanceValue)
+        dv.value = parsed
+        dv.unit = "m"
+        def payload (SliceParsedValue.fromDistance(dv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

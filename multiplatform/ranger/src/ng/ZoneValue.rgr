@@ -1,0 +1,3 @@
+class ZoneValue {
+    def zone:int 0
+}

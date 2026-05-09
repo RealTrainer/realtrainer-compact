@@ -1,4 +1,6 @@
 Import "TokenDetector.rgr"
+Import "NumRangeValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class NumRangeBlockDetector {
     Extends(TokenDetector)
@@ -64,6 +66,12 @@ class NumRangeBlockDetector {
 
         def out (slice.read(dashPos + 1 + i))
         out.tag = detectedTag
+        def nv (new NumRangeValue)
+        nv.minValue = lval
+        nv.maxValue = rval
+        def payload (SliceParsedValue.fromNumRange(nv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

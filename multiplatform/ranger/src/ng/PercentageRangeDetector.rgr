@@ -2,6 +2,8 @@ Import "TokenDetector.rgr"
 Import "Parser.rgr"
 Import "NumRangeBlockDetector.rgr"
 Import "KeywordDetector.rgr"
+Import "PercentageRangeValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class PercentageRangeDetector {
     Extends(TokenDetector)
@@ -60,6 +62,12 @@ class PercentageRangeDetector {
                     if ((lval > 0) && (rval > 0)) {
                         def out2 (slice.read(j + 1))
                         out2.tag = detectedTag
+                        def pv2 (new PercentageRangeValue)
+                        pv2.minValue = lval
+                        pv2.maxValue = rval
+                        def payload2 (SliceParsedValue.fromPercentageRange(pv2))
+                        out2.setSliceValue(payload2)
+                        slice.setSliceValue(payload2)
                         return out2
                     }
                 }
@@ -94,6 +102,14 @@ class PercentageRangeDetector {
         out.tag = detectedTag
         out.addChild(first)
         out.addChild(second)
+
+        def nrv (first.getAsNumRangeValue())
+        def pv (new PercentageRangeValue)
+        pv.minValue = nrv.minValue
+        pv.maxValue = nrv.maxValue
+        def payload (SliceParsedValue.fromPercentageRange(pv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

@@ -1,0 +1,3 @@
+class RepeatBlockValue {
+    def count:int 0
+}

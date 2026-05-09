@@ -6,6 +6,7 @@ Import "NewlineDetector.rgr"
 Import "PositiveIntegerDetector.rgr"
 Import "DecimalNumberDetector.rgr"
 Import "TimeValueDetector.rgr"
+Import "RecoveryDetector.rgr"
 Import "RecoveryTimeDetector.rgr"
 Import "SpeedDetector.rgr"
 Import "RepeatBlockDetector.rgr"
@@ -60,6 +61,10 @@ class TokenDetectorModule {
 
     sfn createRecoveryTime:RecoveryTimeDetector () {
         return (RecoveryTimeDetector.create())
+    }
+
+    sfn createRecovery:RecoveryDetector () {
+        return (RecoveryDetector.create())
     }
 
     sfn createSpeed:SpeedDetector () {

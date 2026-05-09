@@ -1,5 +1,6 @@
 Import "TokenDetector.rgr"
 Import "DateTimeValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class DateTimeDetector {
     Extends(TokenDetector)
@@ -23,7 +24,14 @@ class DateTimeDetector {
         if (has sliceMap slice) {
             def cachedHit@(optional):TokenSlice (get sliceHitMap slice)
             if (!null? cachedHit) {
-                return (unwrap cachedHit)
+                def hit (unwrap cachedHit)
+                def cachedVal@(optional):DateTimeValue (get sliceMap slice)
+                if (!null? cachedVal) {
+                    def payload (SliceParsedValue.fromDateTime((unwrap cachedVal)))
+                    hit.setSliceValue(payload)
+                    slice.setSliceValue(payload)
+                }
+                return hit
             }
             return (this.noMatch())
         }
@@ -182,6 +190,9 @@ class DateTimeDetector {
         ; create new slice 0, plen
         def newSlice (slice.read(plen))
         newSlice.tag = detectedTag
+        def payload2 (SliceParsedValue.fromDateTime(out))
+        newSlice.setSliceValue(payload2)
+        slice.setSliceValue(payload2)
 
         ; add both the slice and the new value to the map
         ; so that we can detect the same slice faster next time
@@ -195,6 +206,6 @@ class DateTimeDetector {
 
 
     fn detect:TokenSlice (slice:TokenSlice) {
-        return (this.parseDateShape(slice))
+        return (this.parseToMap(slice))
     }
 }

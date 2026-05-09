@@ -1,0 +1,4 @@
+class NumRangeValue {
+    def minValue:int 0
+    def maxValue:int 0
+}

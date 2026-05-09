@@ -101,7 +101,48 @@ Expect child 0 string 2:50
 Expect child 2 string 100m
 
 
+Test Swim 1000m
+Test > Split 100m 2:45/100m
+Expect 0 tag exercise
+Expect 0 child 0 tag exercise-name
+Expect 0 child 1 tag distance
+Expect 1 tag details-data
 
+Kun on useita peräkkäisiä `Test`-rivejä ilman väliin tulevaa `Expect`-riviä,
+`Expect N ...` kohdistuu saman blokin N:nteen testiin (0-pohjainen indeksi).
+
+Vanha muoto toimii edelleen:
+
+Test 100kg bench
+Expect tag weight
+Expect child 0 string 100
+
+JSON-export per testi:
+
+Test > Swim 400m
+JSON swim_details.json
+
+Tai blokki-indeksillä:
+
+Test > Swim 400m
+Test >> Split 100m 2:45/100m
+Test >>> Recovery 1min
+JSON 2 common_recovery_data.json
+
+`JSON tiedosto.json` kohdistuu viimeisimpään testiin.
+`JSON N tiedosto.json` kohdistuu saman peräkkäisen Test-blokin N:nteen testiin.
+
+Harness kirjoittaa tiedoston kielen output-kansioon:
+- JS: `multiplatform/ranger/dist/ng/json/`
+- Kotlin: `multiplatform/ranger/dist/ng-kotlin/json/`
+- Swift: `multiplatform/ranger/dist/ng-swift/json/`
+
+## Esimerkki
+
+Circuit 3
+> Swim 400m
+>> Split 100m 2:45/100m
+>>> Recovery 1min
 
 
 

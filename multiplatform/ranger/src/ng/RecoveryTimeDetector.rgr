@@ -1,4 +1,6 @@
 Import "TokenDetector.rgr"
+Import "RecoveryTimeValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class RecoveryTimeDetector {
     Extends(TokenDetector)
@@ -65,6 +67,16 @@ class RecoveryTimeDetector {
 
         def out (slice.read(i + 1))
         out.tag = detectedTag
+        def rv (new RecoveryTimeValue)
+        rv.value = (slice.read(i).peek(1).parseInteger(0 (i - 2)))
+        if (unit == 115) {
+            rv.unit = "s"
+        } {
+            rv.unit = "m"
+        }
+        def payload (SliceParsedValue.fromRecoveryTime(rv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
         return out
     }
 }

@@ -1,4 +1,8 @@
 Import "TokenDetector.rgr"
+Import "Parser.rgr"
+Import "StandardDetectors.rgr"
+Import "DetailsLevelValue.rgr"
+Import "SliceParsedValue.rgr"
 
 class DetailsDataDetector {
     Extends(TokenDetector)
@@ -13,6 +17,94 @@ class DetailsDataDetector {
         return (new DetailsDataDetector(s))
     }
 
+    fn createChildDetectors:[TokenDetector] () {
+        return (StandardDetectors.create())
+    }
+
+    fn findFirstNumberOffset:int (slice:TokenSlice) {
+        def i@(mutable):int 0
+        def len (slice.length())
+        while (i < len) {
+            def ch (slice.charCodeAt(i))
+            if ((ch >= 48) && (ch <= 57)) {
+                return i
+            }
+            i = i + 1
+        }
+        return -1
+    }
+
+    fn isLetter:boolean (ch:int) {
+        if ((ch >= 65) && (ch <= 90)) {
+            return true
+        }
+        if ((ch >= 97) && (ch <= 122)) {
+            return true
+        }
+        return false
+    }
+
+    fn addChildrenFromParser:void (out:TokenSlice payload:TokenSlice) {
+        def p (new Parser((payload.toString()) (this.createChildDetectors())))
+        p.start()
+        def ch (p.getResults())
+        for ch item:TokenSlice i {
+            out.addChild(item)
+        }
+    }
+
+    fn addParsedChildren:void (out:TokenSlice payload:TokenSlice) {
+        def p (new Parser((payload.toString()) (this.createChildDetectors())))
+        p.start()
+
+        if ((p.getCount()) > 0) {
+            def ch (p.getResults())
+            for ch item:TokenSlice i {
+                out.addChild(item)
+            }
+            return
+        }
+
+        def len (payload.length())
+        def wordEnd@(mutable):int 0
+        while (wordEnd < len) {
+            def chw (payload.charCodeAt(wordEnd))
+            if (this.isLetter(chw)) {
+                wordEnd = wordEnd + 1
+            } {
+                break
+            }
+        }
+
+        if (wordEnd > 0) {
+            def label (payload.read(wordEnd))
+            label.tag = "keyword"
+            out.addChild(label)
+
+            def tailStart@(mutable):int wordEnd
+            while (tailStart < len) {
+                def cht (payload.charCodeAt(tailStart))
+                if ((cht == 32) || (cht == 9)) {
+                    tailStart = tailStart + 1
+                } {
+                    break
+                }
+            }
+
+            if (tailStart < len) {
+                def tail (payload.peek(tailStart).read(len - tailStart))
+                this.addChildrenFromParser(out tail)
+            }
+            return
+        }
+
+        def firstNum (this.findFirstNumberOffset(payload))
+        if ((firstNum > 0) && (firstNum < (payload.length()))) {
+            def numericTail (payload.peek(firstNum).read((payload.length()) - firstNum))
+            this.addChildrenFromParser(out numericTail)
+        }
+    }
+
     fn detect:TokenSlice (slice:TokenSlice) {
         if ((slice.length()) < 1) {
             return (this.noMatch())
@@ -20,8 +112,59 @@ class DetailsDataDetector {
         if ((slice.charCodeAt(0)) != 62) {
             return (this.noMatch())
         }
-        def out (slice.read(1))
+
+        def len (slice.length())
+        def markerEnd@(mutable):int 0
+        while (markerEnd < len) {
+            def chm (slice.charCodeAt(markerEnd))
+            if (chm == 62) {
+                markerEnd = markerEnd + 1
+            } {
+                break
+            }
+        }
+
+        if (markerEnd == 0) {
+            return (this.noMatch())
+        }
+
+        def lineEnd@(mutable):int markerEnd
+        while (lineEnd < len) {
+            def ch (slice.charCodeAt(lineEnd))
+            if ((ch == 10) || (ch == 13)) {
+                break
+            }
+            lineEnd = lineEnd + 1
+        }
+
+        def out (slice.read(lineEnd))
         out.tag = detectedTag
+
+        def levelToken (slice.read(markerEnd))
+        levelToken.tag = "details-level"
+        def dlv (new DetailsLevelValue)
+        dlv.level = markerEnd
+        dlv.marker = (levelToken.toString())
+        def payload (SliceParsedValue.fromDetailsLevel(dlv))
+        levelToken.setSliceValue(payload)
+        out.addChild(levelToken)
+
+        def contentStart@(mutable):int markerEnd
+        while (contentStart < lineEnd) {
+            def ch2 (slice.charCodeAt(contentStart))
+            if ((ch2 == 32) || (ch2 == 9)) {
+                contentStart = contentStart + 1
+            } {
+                break
+            }
+        }
+
+        if (contentStart >= lineEnd) {
+            return out
+        }
+
+        def payload (slice.peek(contentStart).read(lineEnd - contentStart))
+        this.addParsedChildren(out payload)
         return out
     }
 }

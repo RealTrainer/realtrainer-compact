@@ -1,0 +1,4 @@
+class DistanceValue {
+    def value:int 0
+    def unit:string "m"
+}
