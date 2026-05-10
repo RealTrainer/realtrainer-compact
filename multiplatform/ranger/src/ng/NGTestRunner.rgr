@@ -5,6 +5,7 @@ Import "JSON.rgr"
 
 class NGExpectRule {
     def testIndex:int -1
+    def negated:boolean false
     def kind:string ""
     def childIndex:int -1
     def field:string ""
@@ -163,6 +164,11 @@ class NGTestSpecParser {
                     body = (this.trim((substring payload (idxSep + 1) (strlen payload))))
                 }
             }
+        }
+
+        if (this.startsWith(body "not ")) {
+            out.negated = true
+            body = (this.trim((substring body 4 (strlen body))))
         }
 
         if (this.startsWith(body "tag ")) {
@@ -965,9 +971,18 @@ class NGTestRunner {
 
             for tc.expects ex:NGExpectRule j {
                 if (ex.kind == "tag") {
-                    if (root.tag == ex.value) {
+                    def tagMatches (root.tag == ex.value)
+                    if (ex.negated) {
+                        if (tagMatches) {
+                            def msgNotTag ((("Test " + ("#" + ("" + (i + 1)))) + " expect not tag '") + ex.value)
+                            push out (msgNotTag + "' but it matched")
+                        }
                     } {
-                        push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect tag '") + ex.value) + (("' but got '" + root.tag) + "'"))
+                        if (tagMatches) {
+                        } {
+                            def msgTag ((("Test " + ("#" + ("" + (i + 1)))) + " expect tag '") + ex.value)
+                            push out ((msgTag + "' but got '") + root.tag + "'")
+                        }
                     }
                     continue
                 }
@@ -981,18 +996,36 @@ class NGTestRunner {
                     def ch (root.getChild(ex.childIndex))
                     if (ex.field == "string") {
                         def got (ch.toString())
-                        if (got == ex.value) {
+                        def strMatches (got == ex.value)
+                        if (ex.negated) {
+                            if (strMatches) {
+                                def msgNotStr ((((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + ("" + ex.childIndex)) + " not string '") + ex.value)
+                                push out (msgNotStr + "' but it matched")
+                            }
                         } {
-                            push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + (("" + ex.childIndex) + " string '") ) + ex.value + (("' but got '" + got) + "'"))
+                            if (strMatches) {
+                            } {
+                                def msgStr ((((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + ("" + ex.childIndex)) + " string '") + ex.value)
+                                push out ((msgStr + "' but got '") + got + "'")
+                            }
                         }
                         continue
                     }
 
                     if (ex.field == "tag") {
                         def gotTag (ch.tag)
-                        if (gotTag == ex.value) {
+                        def tagMatches (gotTag == ex.value)
+                        if (ex.negated) {
+                            if (tagMatches) {
+                                def msgNotTag ((((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + ("" + ex.childIndex)) + " not tag '") + ex.value)
+                                push out (msgNotTag + "' but it matched")
+                            }
                         } {
-                            push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + (("" + ex.childIndex) + " tag '") ) + ex.value + (("' but got '" + gotTag) + "'"))
+                            if (tagMatches) {
+                            } {
+                                def msgTag ((((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + ("" + ex.childIndex)) + " tag '") + ex.value)
+                                push out ((msgTag + "' but got '") + gotTag + "'")
+                            }
                         }
                         continue
                     }
@@ -1004,12 +1037,24 @@ class NGTestRunner {
                 if (ex.kind == "json") {
                     def gotJson (this.jsonTokenValue(root ex.field))
                     if ((strlen gotJson) == 0) {
-                        push out ((((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' was not found"))
+                        if (ex.negated) {
+                            continue
+                        }
+                        push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' was not found")
                         continue
                     }
-                    if (gotJson == ex.value) {
+                    def jsonMatches (gotJson == ex.value)
+                    if (ex.negated) {
+                        if (jsonMatches) {
+                            def msgNotJson (((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' not to be '")
+                            push out ((msgNotJson + ex.value) + "' but it matched")
+                        }
                     } {
-                        push out ((((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' value '") + ex.value + (("' but got '" + gotJson) + "'"))
+                        if (jsonMatches) {
+                        } {
+                            def msgJson (((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' value '")
+                            push out (((msgJson + ex.value) + "' but got '") + gotJson + "'")
+                        }
                     }
                     continue
                 }

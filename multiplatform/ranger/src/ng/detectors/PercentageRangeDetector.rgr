@@ -2,6 +2,7 @@ Import "detectors/TokenDetector.rgr"
 Import "Parser.rgr"
 Import "detectors/NumRangeBlockDetector.rgr"
 Import "detectors/KeywordDetector.rgr"
+Import "detectors/SpaceDetector.rgr"
 Import "values/PercentageRangeValue.rgr"
 Import "values/SliceParsedValue.rgr"
 
@@ -75,6 +76,7 @@ class PercentageRangeDetector {
         }
 
         def detectors:[TokenDetector]
+        push detectors (SpaceDetector.create())
         push detectors (NumRangeBlockDetector.create())
         push detectors (KeywordDetector.create("%"))
 

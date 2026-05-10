@@ -31,6 +31,27 @@ class SportExerciseDetector {
         return (shared.createSportExerciseChildDetectors())
     }
 
+    fn isWhitespace:boolean (ch:int) {
+        if (ch == 32) {
+            return true
+        }
+        if (ch == 9) {
+            return true
+        }
+        return false
+    }
+
+    fn isSeparator:boolean (ch:int) {
+        if (this.isWhitespace(ch)) {
+            return true
+        }
+        ; ';'
+        if (ch == 59) {
+            return true
+        }
+        return false
+    }
+
     fn detect:TokenSlice (slice:TokenSlice) {
         def len (slice.length())
         if (len < 6) {
@@ -42,10 +63,20 @@ class SportExerciseDetector {
         def matched@(mutable):boolean false
 
         for sports sportName:string i {
-            def head ((sportName + " "))
-            if (slice.hasToken(head)) {
+            def sportLen (strlen sportName)
+            if (len <= sportLen) {
+                continue
+            }
+
+            def head (slice.read(sportLen))
+            if (!(head.strEquals(sportName))) {
+                continue
+            }
+
+            def chAfterName (slice.charCodeAt(sportLen))
+            if (this.isSeparator(chAfterName)) {
                 name = sportName
-                nameLen = (strlen sportName)
+                nameLen = sportLen
                 matched = true
                 break
             }
@@ -55,7 +86,16 @@ class SportExerciseDetector {
              return (this.noMatch())
          }
 
-        def restStart (nameLen + 1)
+        def restStart@(mutable):int nameLen
+        while (restStart < len) {
+            def chSpace (slice.charCodeAt(restStart))
+            if (this.isSeparator(chSpace)) {
+                restStart = restStart + 1
+            } {
+                break
+            }
+        }
+
         if (restStart >= len) {
             return (this.noMatch())
         }

@@ -1,5 +1,6 @@
 Import "detectors/TokenDetector.rgr"
 Import "detectors/SpaceDetector.rgr"
+Import "detectors/SemicolonSeparatorDetector.rgr"
 Import "detectors/NewlineDetector.rgr"
 Import "detectors/DateTimeDetector.rgr"
 Import "detectors/SpeedDetector.rgr"
@@ -34,6 +35,7 @@ class NGSharedDetectorFactory@(singleton) {
     fn createSportExerciseChildDetectors:[TokenDetector] () {
         def ds:[TokenDetector]
         push ds (SpaceDetector.create())
+        push ds (SemicolonSeparatorDetector.create())
         push ds (NewlineDetector.create())
         push ds (DateTimeDetector.create())
         push ds (SpeedDetector.create())

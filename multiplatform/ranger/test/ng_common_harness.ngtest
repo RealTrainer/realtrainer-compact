@@ -28,6 +28,16 @@ Expect json $.parsed.hour 8
 Expect json $.parsed.minute 0
 Expect json $.parsed.second 0
 
+// Invalid datetime forms should not be tagged as datetime
+Test 2026-13-01T08:00:00
+Expect not tag datetime
+
+Test 2026-01-32
+Expect not tag datetime
+
+Test 2026-01-01T25:00:00
+Expect not tag datetime
+
 Test /10s rest
 Expect tag recovery-time
 Expect child 0 tag keyword
@@ -81,6 +91,12 @@ JSON distance_value.json
 Test 10-50 reps
 Expect tag num-range
 JSON num_range_value.json
+
+Test 10 - 50 reps
+Expect tag num-range
+Expect json $.parsed.kind num-range
+Expect json $.parsed.minValue 10
+Expect json $.parsed.maxValue 50
 
 Test 2-3x15-20@bw
 Expect tag set-rep-range-load
@@ -157,6 +173,16 @@ Expect json $.children[1].parsed.kind distance
 Expect json $.children[1].parsed.value 100
 Expect json $.children[1].parsed.unit m
 
+Test Swim  100m
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Swim
+Expect child 1 tag distance
+Expect child 1 string 100m
+Expect json $.children[1].parsed.kind distance
+Expect json $.children[1].parsed.value 100
+Expect json $.children[1].parsed.unit m
+
 Test Swim 2:50/100m
 Expect tag exercise
 Expect child 0 tag exercise-name
@@ -169,6 +195,24 @@ Expect json $.children[1].children[0].parsed.seconds 50
 Expect json $.children[1].children[2].parsed.kind distance
 Expect json $.children[1].children[2].parsed.value 100
 Expect json $.children[1].children[2].parsed.unit m
+
+Test Swim  2:50/100m   1000m
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Swim
+Expect child 1 tag speed
+Expect child 1 string 2:50/100m
+Expect child 2 tag distance
+Expect child 2 string 1000m
+Expect json $.children[1].children[0].parsed.kind time-value
+Expect json $.children[1].children[0].parsed.minutes 2
+Expect json $.children[1].children[0].parsed.seconds 50
+Expect json $.children[1].children[2].parsed.kind distance
+Expect json $.children[1].children[2].parsed.value 100
+Expect json $.children[1].children[2].parsed.unit m
+Expect json $.children[2].parsed.kind distance
+Expect json $.children[2].parsed.value 1000
+Expect json $.children[2].parsed.unit m
 
 Test Swim 2:50/100m 1000m Zone2
 Expect tag exercise
@@ -204,6 +248,28 @@ Expect child 2 string 500m
 Expect child 3 tag zone
 Expect child 3 string Zone3
 JSON run_speed_distance_zone_value.json
+
+Test Run ; 4:30/1000m ; 500m ; Zone3
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Run
+Expect child 1 tag speed
+Expect child 1 string 4:30/1000m
+Expect child 2 tag distance
+Expect child 2 string 500m
+Expect child 3 tag zone
+Expect child 3 string Zone3
+
+Test Run;4:30/1000m;500m;Zone3
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Run
+Expect child 1 tag speed
+Expect child 1 string 4:30/1000m
+Expect child 2 tag distance
+Expect child 2 string 500m
+Expect child 3 tag zone
+Expect child 3 string Zone3
 
 // Multi-Test block: indexed expects refer to tests in this consecutive block
 Test Swim 1000m
@@ -437,6 +503,15 @@ Expect json $.children[0].parsed.kind num-range
 Expect json $.children[0].parsed.minValue 40
 Expect json $.children[0].parsed.maxValue 50
 JSON percentage_range_value.json
+
+Test 40 - 50 %
+Expect tag percentage-range
+Expect child 0 tag num-range
+Expect child 1 tag keyword
+Expect child 1 string %
+Expect json $.parsed.kind percentage-range
+Expect json $.parsed.minValue 40
+Expect json $.parsed.maxValue 50
 
 Test 40%-60%
 Expect tag percentage-range

@@ -2709,50 +2709,95 @@ class NumRangeBlockDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "num-range";
   }
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  isDigit (ch) {
+    return (ch >= 48) && (ch <= 57);
+  };
   detect (slice) {
     const __len = (slice).length();
     if ( __len < 3 ) {
       return this.noMatch();
     }
-    const dashPos = slice.findTokenPos("-");
-    if ( dashPos <= 0 ) {
-      return this.noMatch();
-    }
-    const left = slice.read(dashPos);
-    if ( left.hasInteger(0, ((left).length() - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    const rightAll = slice.peek((dashPos + 1));
-    if ( (rightAll).length() <= 0 ) {
-      return this.noMatch();
-    }
     let i = 0;
-    while (i < (rightAll).length()) {
-      const ch = rightAll.charCodeAt(i);
-      if ( (ch >= 48) && (ch <= 57) ) {
+    while (i < __len) {
+      const chSkipLeft = slice.charCodeAt(i);
+      if ( this.isWhitespace(chSkipLeft) ) {
         i = i + 1;
       } else {
         break;
       }
     };
-    if ( i == 0 ) {
+    const leftStart = i;
+    while (i < __len) {
+      const chLeft = slice.charCodeAt(i);
+      if ( this.isDigit(chLeft) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    const leftEnd = i;
+    if ( leftEnd <= leftStart ) {
       return this.noMatch();
     }
-    const right = rightAll.read(i);
-    if ( right.hasInteger(0, (i - 1)) ) {
-    } else {
+    while (i < __len) {
+      const chBeforeDash = slice.charCodeAt(i);
+      if ( this.isWhitespace(chBeforeDash) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
+      return this.noMatch();
+    }
+    i = i + 1;
+    while (i < __len) {
+      const chAfterDash = slice.charCodeAt(i);
+      if ( this.isWhitespace(chAfterDash) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    const rightStart = i;
+    while (i < __len) {
+      const chRight = slice.charCodeAt(i);
+      if ( this.isDigit(chRight) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    const rightEnd = i;
+    if ( rightEnd <= rightStart ) {
+      return this.noMatch();
+    }
+    const left = (slice.peek(leftStart)).read((leftEnd - leftStart));
+    const right = (slice.peek(rightStart)).read((rightEnd - rightStart));
+    if ( false == left.hasInteger(0, ((left).length() - 1)) ) {
+      return this.noMatch();
+    }
+    if ( false == right.hasInteger(0, ((right).length() - 1)) ) {
       return this.noMatch();
     }
     const lval = left.parseInteger(0, ((left).length() - 1));
-    const rval = right.parseInteger(0, (i - 1));
+    const rval = right.parseInteger(0, ((right).length() - 1));
     if ( lval <= 0 ) {
       return this.noMatch();
     }
     if ( rval <= 0 ) {
       return this.noMatch();
     }
-    const out = slice.read(((dashPos + 1) + i));
+    const out = slice.read(rightEnd);
     out.tag = this.detectedTag;
     const nv = new NumRangeValue();
     nv.minValue = lval;
@@ -3977,6 +4022,28 @@ NGSharedLists.__singleton = function() {
   }
   return NGSharedLists.__singleton_instance;
 };
+class SemicolonSeparatorDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "space";
+  }
+  detect (slice) {
+    if ( (slice).length() == 0 ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt(0) != 59 ) {
+      return this.noMatch();
+    }
+    const out = slice.read(1);
+    out.tag = this.detectedTag;
+    return out;
+  };
+}
+SemicolonSeparatorDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new SemicolonSeparatorDetector(s);
+};
 class KCALDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -4123,6 +4190,7 @@ class PercentageRangeDetector  extends TokenDetector {
       }
     }
     let detectors = [];
+    detectors.push(SpaceDetector.create());
     detectors.push(NumRangeBlockDetector.create());
     detectors.push(KeywordDetector.create("%"));
     const p = new Parser((slice).toString(), detectors);
@@ -4487,6 +4555,7 @@ class NGSharedDetectorFactory  {
   createSportExerciseChildDetectors () {
     let ds = [];
     ds.push(SpaceDetector.create());
+    ds.push(SemicolonSeparatorDetector.create());
     ds.push(NewlineDetector.create());
     ds.push(DateTimeDetector.create());
     ds.push(SpeedDetector.create());
@@ -4538,6 +4607,24 @@ class SportExerciseDetector  extends TokenDetector {
     const shared = NGSharedDetectorFactory.__singleton();
     return shared.createSportExerciseChildDetectors();
   };
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  isSeparator (ch) {
+    if ( this.isWhitespace(ch) ) {
+      return true;
+    }
+    if ( ch == 59 ) {
+      return true;
+    }
+    return false;
+  };
   detect (slice) {
     const __len = (slice).length();
     if ( __len < 6 ) {
@@ -4548,10 +4635,18 @@ class SportExerciseDetector  extends TokenDetector {
     let matched = false;
     for ( let i = 0; i < this.sports.length; i++) {
       var sportName = this.sports[i];
-      const head = sportName + " ";
-      if ( slice.hasToken(head) ) {
+      const sportLen = sportName.length;
+      if ( __len <= sportLen ) {
+        continue;
+      }
+      const head = slice.read(sportLen);
+      if ( false == head.strEquals(sportName) ) {
+        continue;
+      }
+      const chAfterName = slice.charCodeAt(sportLen);
+      if ( this.isSeparator(chAfterName) ) {
         name = sportName;
-        nameLen = sportName.length;
+        nameLen = sportLen;
         matched = true;
         break;
       }
@@ -4559,7 +4654,15 @@ class SportExerciseDetector  extends TokenDetector {
     if ( matched == false ) {
       return this.noMatch();
     }
-    const restStart = nameLen + 1;
+    let restStart = nameLen;
+    while (restStart < __len) {
+      const chSpace = slice.charCodeAt(restStart);
+      if ( this.isSeparator(chSpace) ) {
+        restStart = restStart + 1;
+      } else {
+        break;
+      }
+    };
     if ( restStart >= __len ) {
       return this.noMatch();
     }
@@ -4606,6 +4709,7 @@ SportExerciseDetector.createWithSports = function(sportNames) {
 class NGExpectRule  {
   constructor() {
     this.testIndex = -1;
+    this.negated = false;
     this.kind = "";
     this.childIndex = -1;
     this.field = "";
@@ -4750,6 +4854,10 @@ class NGTestSpecParser  {
           body = (this).trim((payload.substring((idxSep + 1), (payload.length) )));
         }
       }
+    }
+    if ( (this).startsWith(body, "not ") ) {
+      out.negated = true;
+      body = (this).trim((body.substring(4, (body.length) )));
     }
     if ( (this).startsWith(body, "tag ") ) {
       out.kind = "tag";
@@ -5463,9 +5571,18 @@ class NGTestRunner  {
       for ( let j = 0; j < tc.expects.length; j++) {
         var ex = tc.expects[j];
         if ( ex.kind == "tag" ) {
-          if ( root.tag == ex.value ) {
+          const tagMatches = root.tag == ex.value;
+          if ( ex.negated ) {
+            if ( tagMatches ) {
+              const msgNotTag = (("Test " + ("#" + ("" + (i + 1)))) + " expect not tag '") + ex.value;
+              out.push(msgNotTag + "' but it matched");
+            }
           } else {
-            out.push(((("Test " + ("#" + ("" + (i + 1)))) + " expect tag '") + ex.value) + (("' but got '" + root.tag) + "'"));
+            if ( tagMatches ) {
+            } else {
+              const msgTag = (("Test " + ("#" + ("" + (i + 1)))) + " expect tag '") + ex.value;
+              out.push(((msgTag + "' but got '") + root.tag) + "'");
+            }
           }
           continue;
         }
@@ -5477,17 +5594,35 @@ class NGTestRunner  {
           const ch = root.getChild(ex.childIndex);
           if ( ex.field == "string" ) {
             const got = (ch).toString();
-            if ( got == ex.value ) {
+            const strMatches = got == ex.value;
+            if ( ex.negated ) {
+              if ( strMatches ) {
+                const msgNotStr = (((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + ("" + ex.childIndex)) + " not string '") + ex.value;
+                out.push(msgNotStr + "' but it matched");
+              }
             } else {
-              out.push((((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + (("" + ex.childIndex) + " string '")) + ex.value) + (("' but got '" + got) + "'"));
+              if ( strMatches ) {
+              } else {
+                const msgStr = (((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + ("" + ex.childIndex)) + " string '") + ex.value;
+                out.push(((msgStr + "' but got '") + got) + "'");
+              }
             }
             continue;
           }
           if ( ex.field == "tag" ) {
             const gotTag = ch.tag;
-            if ( gotTag == ex.value ) {
+            const tagMatches_1 = gotTag == ex.value;
+            if ( ex.negated ) {
+              if ( tagMatches_1 ) {
+                const msgNotTag_1 = (((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + ("" + ex.childIndex)) + " not tag '") + ex.value;
+                out.push(msgNotTag_1 + "' but it matched");
+              }
             } else {
-              out.push((((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + (("" + ex.childIndex) + " tag '")) + ex.value) + (("' but got '" + gotTag) + "'"));
+              if ( tagMatches_1 ) {
+              } else {
+                const msgTag_1 = (((("Test " + ("#" + ("" + (i + 1)))) + " expect child ") + ("" + ex.childIndex)) + " tag '") + ex.value;
+                out.push(((msgTag_1 + "' but got '") + gotTag) + "'");
+              }
             }
             continue;
           }
@@ -5497,12 +5632,24 @@ class NGTestRunner  {
         if ( ex.kind == "json" ) {
           const gotJson = this.jsonTokenValue(root, ex.field);
           if ( (gotJson.length) == 0 ) {
+            if ( ex.negated ) {
+              continue;
+            }
             out.push(((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' was not found");
             continue;
           }
-          if ( gotJson == ex.value ) {
+          const jsonMatches = gotJson == ex.value;
+          if ( ex.negated ) {
+            if ( jsonMatches ) {
+              const msgNotJson = ((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' not to be '";
+              out.push((msgNotJson + ex.value) + "' but it matched");
+            }
           } else {
-            out.push(((((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' value '") + ex.value) + (("' but got '" + gotJson) + "'"));
+            if ( jsonMatches ) {
+            } else {
+              const msgJson = ((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' value '";
+              out.push((((msgJson + ex.value) + "' but got '") + gotJson) + "'");
+            }
           }
           continue;
         }
@@ -5729,6 +5876,7 @@ module.exports.CircuitDetector = CircuitDetector;
 module.exports.ContextEntryDetector = ContextEntryDetector;
 module.exports.DistanceRangeBlockDetector = DistanceRangeBlockDetector;
 module.exports.NGSharedLists = NGSharedLists;
+module.exports.SemicolonSeparatorDetector = SemicolonSeparatorDetector;
 module.exports.KCALDetector = KCALDetector;
 module.exports.BPMDetector = BPMDetector;
 module.exports.PercentageRangeDetector = PercentageRangeDetector;

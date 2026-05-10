@@ -15,48 +15,98 @@ class NumRangeBlockDetector {
         return (new NumRangeBlockDetector(s))
     }
 
+    fn isWhitespace:boolean (ch:int) {
+        if (ch == 32) {
+            return true
+        }
+        if (ch == 9) {
+            return true
+        }
+        return false
+    }
+
+    fn isDigit:boolean (ch:int) {
+        return ((ch >= 48) && (ch <= 57))
+    }
+
     fn detect:TokenSlice (slice:TokenSlice) {
         def len (slice.length())
         if (len < 3) {
             return (this.noMatch())
         }
 
-        def dashPos (slice.findTokenPos("-"))
-        if (dashPos <= 0) {
-            return (this.noMatch())
-        }
-
-        def left (slice.read(dashPos))
-        if (left.hasInteger(0 ((left.length()) - 1))) {
-        } {
-            return (this.noMatch())
-        }
-        def rightAll (slice.peek(dashPos + 1))
-        if ((rightAll.length()) <= 0) {
-            return (this.noMatch())
-        }
-
         def i@(mutable):int 0
-        while (i < (rightAll.length())) {
-            def ch (rightAll.charCodeAt(i))
-            if ((ch >= 48) && (ch <= 57)) {
+        while (i < len) {
+            def chSkipLeft (slice.charCodeAt(i))
+            if (this.isWhitespace(chSkipLeft)) {
                 i = i + 1
             } {
                 break
             }
         }
-        if (i == 0) {
+
+        def leftStart i
+        while (i < len) {
+            def chLeft (slice.charCodeAt(i))
+            if (this.isDigit(chLeft)) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        def leftEnd i
+        if (leftEnd <= leftStart) {
             return (this.noMatch())
         }
 
-        def right (rightAll.read(i))
-        if (right.hasInteger(0 (i - 1))) {
-        } {
+        while (i < len) {
+            def chBeforeDash (slice.charCodeAt(i))
+            if (this.isWhitespace(chBeforeDash)) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+
+        if ((i >= len) || ((slice.charCodeAt(i)) != 45)) {
+            return (this.noMatch())
+        }
+        i = i + 1
+
+        while (i < len) {
+            def chAfterDash (slice.charCodeAt(i))
+            if (this.isWhitespace(chAfterDash)) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+
+        def rightStart i
+        while (i < len) {
+            def chRight (slice.charCodeAt(i))
+            if (this.isDigit(chRight)) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        def rightEnd i
+        if (rightEnd <= rightStart) {
+            return (this.noMatch())
+        }
+
+        def left (slice.peek(leftStart).read(leftEnd - leftStart))
+        def right (slice.peek(rightStart).read(rightEnd - rightStart))
+        if (!(left.hasInteger(0 ((left.length()) - 1)))) {
+            return (this.noMatch())
+        }
+        if (!(right.hasInteger(0 ((right.length()) - 1)))) {
             return (this.noMatch())
         }
 
         def lval (left.parseInteger(0 ((left.length()) - 1)))
-        def rval (right.parseInteger(0 (i - 1)))
+        def rval (right.parseInteger(0 ((right.length()) - 1)))
         if (lval <= 0) {
             return (this.noMatch())
         }
@@ -64,7 +114,7 @@ class NumRangeBlockDetector {
             return (this.noMatch())
         }
 
-        def out (slice.read(dashPos + 1 + i))
+        def out (slice.read(rightEnd))
         out.tag = detectedTag
         def nv (new NumRangeValue)
         nv.minValue = lval

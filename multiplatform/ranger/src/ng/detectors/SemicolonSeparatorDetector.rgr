@@ -1,0 +1,30 @@
+Import "detectors/TokenDetector.rgr"
+
+class SemicolonSeparatorDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        ; Reuse "space" tag so Parser drops these tokens like whitespace.
+        detectedTag = "space"
+    }
+
+    sfn create:SemicolonSeparatorDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new SemicolonSeparatorDetector(s))
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        if ((slice.length()) == 0) {
+            return (this.noMatch())
+        }
+
+        if ((slice.charCodeAt(0)) != 59) {
+            return (this.noMatch())
+        }
+
+        def out (slice.read(1))
+        out.tag = detectedTag
+        return out
+    }
+}
