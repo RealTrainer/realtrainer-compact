@@ -1,0 +1,98 @@
+Import "detectors/TokenDetector.rgr"
+Import "detectors/PositiveIntegerDetector.rgr"
+Import "Parser.rgr"
+Import "values/FeelingValue.rgr"
+Import "values/SliceParsedValue.rgr"
+
+class FeelingDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "feeling"
+    }
+
+    sfn create:FeelingDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new FeelingDetector(s))
+    }
+
+    fn parseKind:string (slice:TokenSlice) {
+        if (slice.hasToken("Feeling ")) {
+            return "feeling"
+        }
+        if (slice.hasToken("Feelings ")) {
+            return "feeling"
+        }
+        if (slice.hasToken("Pain ")) {
+            return "pain"
+        }
+        return ""
+    }
+
+    fn prefixLength:int (slice:TokenSlice kind:string) {
+        if (kind == "pain") {
+            return 5
+        }
+        if (slice.hasToken("Feelings ")) {
+            return 9
+        }
+        return 8
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def kind (this.parseKind(slice))
+        if ((strlen kind) == 0) {
+            return (this.noMatch())
+        }
+
+        def keyLen (this.prefixLength(slice kind))
+        def len (slice.length())
+        if (keyLen >= len) {
+            return (this.noMatch())
+        }
+
+        def lineEnd@(mutable):int keyLen
+        while (lineEnd < len) {
+            def ch (slice.charCodeAt(lineEnd))
+            if ((ch == 10) || (ch == 13)) {
+                break
+            }
+            lineEnd = lineEnd + 1
+        }
+
+        def valueSlice (slice.peek(keyLen).read(lineEnd - keyLen))
+        def detectors:[TokenDetector]
+        push detectors (PositiveIntegerDetector.create())
+        def p (new Parser((valueSlice.toString()) detectors))
+        p.start()
+        if ((p.getCount()) != 1) {
+            return (this.noMatch())
+        }
+        def scoreToken (itemAt (p.getResults()) 0)
+        if (scoreToken.tag == "positive-integer") {
+        } {
+            return (this.noMatch())
+        }
+
+        def out (slice.read(lineEnd))
+        out.tag = detectedTag
+
+        def labelLen@(mutable):int (keyLen - 1)
+        if (labelLen < 1) {
+            labelLen = 1
+        }
+        def label (slice.read(labelLen))
+        label.tag = "keyword"
+        out.addChild(label)
+        out.addChild(scoreToken)
+
+        def fv (new FeelingValue)
+        fv.kind = kind
+        fv.score = (scoreToken.parseInteger(0 ((scoreToken.length()) - 1)))
+        def parsed (SliceParsedValue.fromFeeling(fv))
+        out.setSliceValue(parsed)
+        slice.setSliceValue(parsed)
+        return out
+    }
+}

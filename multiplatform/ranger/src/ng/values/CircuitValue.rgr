@@ -1,0 +1,6 @@
+class CircuitValue @serialize(true) {
+    def kind:string "circuit"
+    def rounds:int 0
+    def restValue:int 0
+    def restUnit:string ""
+}

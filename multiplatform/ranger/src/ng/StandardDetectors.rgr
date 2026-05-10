@@ -1,30 +1,35 @@
-Import "TokenDetector.rgr"
-Import "SpaceDetector.rgr"
-Import "NewlineDetector.rgr"
-Import "DateTimeDetector.rgr"
-Import "SpeedDetector.rgr"
-Import "KCALDetector.rgr"
-Import "BPMDetector.rgr"
-Import "WeightDetector.rgr"
-Import "DistanceRangeBlockDetector.rgr"
-Import "PercentageRangeDetector.rgr"
-Import "SetRepRangeLoadDetector.rgr"
-Import "NumRangeBlockDetector.rgr"
-Import "DistanceDetector.rgr"
-Import "PercentageDetector.rgr"
-Import "RMDetector.rgr"
-Import "ZoneDetector.rgr"
-Import "RomanZoneDetector.rgr"
-Import "RecoveryTimeDetector.rgr"
-Import "TimeValueDetector.rgr"
-Import "RecoveryDetector.rgr"
-Import "SportExerciseDetector.rgr"
-Import "DecimalNumberDetector.rgr"
-Import "PositiveIntegerDetector.rgr"
-Import "RepeatBlockDetector.rgr"
-Import "AMTimeValueDetector.rgr"
-Import "DetailsDataDetector.rgr"
-Import "HeadingDataDetector.rgr"
+Import "detectors/TokenDetector.rgr"
+Import "detectors/SpaceDetector.rgr"
+Import "detectors/NewlineDetector.rgr"
+Import "detectors/DateTimeDetector.rgr"
+Import "detectors/SpeedDetector.rgr"
+Import "detectors/KCALDetector.rgr"
+Import "detectors/BPMDetector.rgr"
+Import "detectors/WeightDetector.rgr"
+Import "detectors/DistanceRangeBlockDetector.rgr"
+Import "detectors/PercentageRangeDetector.rgr"
+Import "detectors/SetRepRangeLoadDetector.rgr"
+Import "detectors/NumRangeBlockDetector.rgr"
+Import "detectors/DistanceDetector.rgr"
+Import "detectors/PercentageDetector.rgr"
+Import "detectors/RMDetector.rgr"
+Import "detectors/ZoneDetector.rgr"
+Import "detectors/RomanZoneDetector.rgr"
+Import "detectors/RecoveryTimeDetector.rgr"
+Import "detectors/TimeValueDetector.rgr"
+Import "detectors/RecoveryDetector.rgr"
+Import "detectors/LeftRightDetector.rgr"
+Import "detectors/FeelingDetector.rgr"
+Import "detectors/BodyMetricDetector.rgr"
+Import "detectors/CircuitDetector.rgr"
+Import "detectors/ContextEntryDetector.rgr"
+Import "detectors/SportExerciseDetector.rgr"
+Import "detectors/DecimalNumberDetector.rgr"
+Import "detectors/PositiveIntegerDetector.rgr"
+Import "detectors/RepeatBlockDetector.rgr"
+Import "detectors/AMTimeValueDetector.rgr"
+Import "detectors/DetailsDataDetector.rgr"
+Import "detectors/HeadingDataDetector.rgr"
 
 class StandardDetectors {
     sfn create:[TokenDetector] () {
@@ -48,6 +53,11 @@ class StandardDetectors {
         push ds (RecoveryTimeDetector.create())
         push ds (TimeValueDetector.create())
         push ds (RecoveryDetector.create())
+        push ds (LeftRightDetector.create())
+        push ds (FeelingDetector.create())
+        push ds (BodyMetricDetector.create())
+        push ds (CircuitDetector.create())
+        push ds (ContextEntryDetector.create())
         push ds (SportExerciseDetector.create())
         push ds (DecimalNumberDetector.create())
         push ds (PositiveIntegerDetector.create())

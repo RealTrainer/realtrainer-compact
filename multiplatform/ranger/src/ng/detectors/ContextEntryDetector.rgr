@@ -1,0 +1,125 @@
+Import "detectors/TokenDetector.rgr"
+Import "values/ContextEntryValue.rgr"
+Import "values/SliceParsedValue.rgr"
+
+class ContextEntryDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "context-entry"
+    }
+
+    sfn create:ContextEntryDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new ContextEntryDetector(s))
+    }
+
+    fn toTag:string (kind:string) {
+        if (kind == "food") {
+            return "food"
+        }
+        if (kind == "drinking") {
+            return "drinking"
+        }
+        if (kind == "expense") {
+            return "expense"
+        }
+        if (kind == "reminder") {
+            return "reminder"
+        }
+        if (kind == "protein") {
+            return "protein"
+        }
+        return detectedTag
+    }
+
+    fn detectKind:string (slice:TokenSlice) {
+        if (slice.hasToken("Food ")) {
+            return "food"
+        }
+        if (slice.hasToken("Drinking ")) {
+            return "drinking"
+        }
+        if (slice.hasToken("Expense ")) {
+            return "expense"
+        }
+        if (slice.hasToken("Reminder ")) {
+            return "reminder"
+        }
+        if (slice.hasToken("Protein ")) {
+            return "protein"
+        }
+        return ""
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def kind (this.detectKind(slice))
+        if ((strlen kind) == 0) {
+            return (this.noMatch())
+        }
+
+        def keyLen@(mutable):int 0
+        if (kind == "food") {
+            keyLen = 5
+        }
+        if (kind == "drinking") {
+            keyLen = 9
+        }
+        if (kind == "expense") {
+            keyLen = 8
+        }
+        if (kind == "reminder") {
+            keyLen = 9
+        }
+        if (kind == "protein") {
+            keyLen = 8
+        }
+        if (keyLen <= 0) {
+            return (this.noMatch())
+        }
+
+        def len (slice.length())
+        if (keyLen >= len) {
+            return (this.noMatch())
+        }
+
+        def lineEnd@(mutable):int keyLen
+        while (lineEnd < len) {
+            def ch (slice.charCodeAt(lineEnd))
+            if ((ch == 10) || (ch == 13)) {
+                break
+            }
+            lineEnd = lineEnd + 1
+        }
+
+        def out (slice.read(lineEnd))
+        out.tag = (this.toTag(kind))
+
+        def labelLen (keyLen - 1)
+        def label (slice.read(labelLen))
+        label.tag = "keyword"
+        out.addChild(label)
+
+        if (keyLen < lineEnd) {
+            def contentSlice (slice.peek(keyLen).read(lineEnd - keyLen))
+            def content (contentSlice.toString())
+            if ((strlen content) > 0) {
+                def textToken (contentSlice.read((strlen content)))
+                textToken.tag = "text"
+                out.addChild(textToken)
+            }
+        }
+
+        def cv (new ContextEntryValue)
+        cv.kind = kind
+        if (keyLen < lineEnd) {
+            cv.content = (slice.peek(keyLen).read(lineEnd - keyLen).toString())
+        }
+
+        def parsed (SliceParsedValue.fromContextEntry(cv))
+        out.setSliceValue(parsed)
+        slice.setSliceValue(parsed)
+        return out
+    }
+}

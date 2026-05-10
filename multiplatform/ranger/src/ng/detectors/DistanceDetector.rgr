@@ -1,0 +1,56 @@
+Import "detectors/TokenDetector.rgr"
+Import "values/DistanceValue.rgr"
+Import "values/SliceParsedValue.rgr"
+
+class DistanceDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "distance"
+    }
+
+    sfn create:DistanceDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new DistanceDetector(s))
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def len (slice.length())
+        if (len < 2) {
+            return (this.noMatch())
+        }
+
+        def valuePart@(mutable):TokenSlice (slice)
+        valuePart = (slice.splitWithToken("m"))
+        def valueLen (valuePart.length())
+
+        if (valueLen <= 0) {
+            return (this.noMatch())
+        }
+        if ((valueLen + 1) > len) {
+            return (this.noMatch())
+        }
+        if (valuePart.hasInteger(0 (valueLen - 1))) {
+        } {
+            return (this.noMatch())
+        }
+        def parsed (valuePart.parseInteger(0 (valueLen - 1)))
+        if (parsed <= 0) {
+            return (this.noMatch())
+        }
+        if ((slice.charCodeAt(valueLen)) != 109) {
+            return (this.noMatch())
+        }
+
+        def out (slice.read(valueLen + 1))
+        out.tag = detectedTag
+        def dv (new DistanceValue)
+        dv.value = parsed
+        dv.unit = "m"
+        def payload (SliceParsedValue.fromDistance(dv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
+        return out
+    }
+}

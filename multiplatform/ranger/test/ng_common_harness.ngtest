@@ -7,15 +7,37 @@ Expect tag decimal-number
 
 Test 10:10 start
 Expect tag time-value
+Expect json $.parsed.kind time-value
+Expect json $.parsed.minutes 10
+Expect json $.parsed.seconds 10
 
 Test 2026-01-01
 Expect tag datetime
+Expect json $.parsed.kind datetime
+Expect json $.parsed.year 2026
+Expect json $.parsed.month 1
+Expect json $.parsed.day 1
 
 Test 2026-01-01T08:00:00
 Expect tag datetime
+Expect json $.parsed.kind datetime
+Expect json $.parsed.year 2026
+Expect json $.parsed.month 1
+Expect json $.parsed.day 1
+Expect json $.parsed.hour 8
+Expect json $.parsed.minute 0
+Expect json $.parsed.second 0
 
 Test /10s rest
 Expect tag recovery-time
+Expect child 0 tag keyword
+Expect child 0 string /
+Expect child 1 tag positive-integer
+Expect child 1 string 10
+Expect child 2 tag keyword
+Expect child 2 string s
+Expect json $.parsed.value 10
+Expect json $.parsed.unit s
 JSON recovery_time_value.json
 
 // Composite token with children
@@ -27,9 +49,17 @@ Expect child 1 tag keyword
 Expect child 1 string /
 Expect child 2 tag distance
 Expect child 2 string 100m
+Expect json $.children[0].parsed.kind time-value
+Expect json $.children[0].parsed.minutes 2
+Expect json $.children[0].parsed.seconds 50
+Expect json $.children[2].parsed.kind distance
+Expect json $.children[2].parsed.value 100
+Expect json $.children[2].parsed.unit m
 
 Test 10x squat
 Expect tag positive-integer
+Expect json $.parsed.kind positive-integer
+Expect json $.parsed.value 10
 
 Test 100kg bench
 Expect tag weight
@@ -37,6 +67,11 @@ Expect child 0 tag positive-integer
 Expect child 0 string 100
 Expect child 1 tag keyword
 Expect child 1 string kg
+Expect json $.parsed.kind weight
+Expect json $.parsed.value 100
+Expect json $.parsed.unit kg
+Expect json $.children[0].parsed.kind positive-integer
+Expect json $.children[0].parsed.value 100
 JSON weight_value.json
 
 Test 100m run
@@ -49,10 +84,26 @@ JSON num_range_value.json
 
 Test 2-3x15-20@bw
 Expect tag set-rep-range-load
+Expect json $.parsed.kind set-rep-range-load
+Expect json $.parsed.setsMin 2
+Expect json $.parsed.setsMax 3
+Expect json $.parsed.repsMin 15
+Expect json $.parsed.repsMax 20
+Expect json $.parsed.mode bw
+Expect json $.parsed.load 0
+Expect json $.parsed.unit bw
 JSON set_rep_range_load_bw_value.json
 
 Test 2-3x15-20x50kg
 Expect tag set-rep-range-load
+Expect json $.parsed.kind set-rep-range-load
+Expect json $.parsed.setsMin 2
+Expect json $.parsed.setsMax 3
+Expect json $.parsed.repsMin 15
+Expect json $.parsed.repsMax 20
+Expect json $.parsed.mode kg
+Expect json $.parsed.load 50
+Expect json $.parsed.unit kg
 JSON set_rep_range_load_kg_value.json
 
 Test 100-200m target
@@ -78,6 +129,8 @@ Expect child 0 tag positive-integer
 Expect child 0 string 120
 Expect child 1 tag keyword
 Expect child 1 string bpm
+Expect json $.children[0].parsed.kind positive-integer
+Expect json $.children[0].parsed.value 120
 
 Test 120kcal
 Expect tag kcal
@@ -85,9 +138,13 @@ Expect child 0 tag positive-integer
 Expect child 0 string 120
 Expect child 1 tag keyword
 Expect child 1 string kcal
+Expect json $.children[0].parsed.kind positive-integer
+Expect json $.children[0].parsed.value 120
 
 Test 70% load
 Expect tag percentage
+Expect json $.parsed.kind percentage
+Expect json $.parsed.value 70
 JSON percentage_value.json
 
 Test Swim 100m
@@ -96,6 +153,9 @@ Expect child 0 tag exercise-name
 Expect child 0 string Swim
 Expect child 1 tag distance
 Expect child 1 string 100m
+Expect json $.children[1].parsed.kind distance
+Expect json $.children[1].parsed.value 100
+Expect json $.children[1].parsed.unit m
 
 Test Swim 2:50/100m
 Expect tag exercise
@@ -103,6 +163,47 @@ Expect child 0 tag exercise-name
 Expect child 0 string Swim
 Expect child 1 tag speed
 Expect child 1 string 2:50/100m
+Expect json $.children[1].children[0].parsed.kind time-value
+Expect json $.children[1].children[0].parsed.minutes 2
+Expect json $.children[1].children[0].parsed.seconds 50
+Expect json $.children[1].children[2].parsed.kind distance
+Expect json $.children[1].children[2].parsed.value 100
+Expect json $.children[1].children[2].parsed.unit m
+
+Test Swim 2:50/100m 1000m Zone2
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Swim
+Expect child 1 tag speed
+Expect child 1 string 2:50/100m
+Expect child 2 tag distance
+Expect child 2 string 1000m
+Expect child 3 tag zone
+Expect child 3 string Zone2
+Expect json $.children[1].children[0].parsed.kind time-value
+Expect json $.children[1].children[0].parsed.minutes 2
+Expect json $.children[1].children[0].parsed.seconds 50
+Expect json $.children[1].children[2].parsed.kind distance
+Expect json $.children[1].children[2].parsed.value 100
+Expect json $.children[1].children[2].parsed.unit m
+Expect json $.children[2].parsed.kind distance
+Expect json $.children[2].parsed.value 1000
+Expect json $.children[2].parsed.unit m
+Expect json $.children[3].parsed.kind zone
+Expect json $.children[3].parsed.zone 2
+JSON swim_speed_distance_zone_value.json
+
+Test Run 4:30/1000m 500m Zone3
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Run
+Expect child 1 tag speed
+Expect child 1 string 4:30/1000m
+Expect child 2 tag distance
+Expect child 2 string 500m
+Expect child 3 tag zone
+Expect child 3 string Zone3
+JSON run_speed_distance_zone_value.json
 
 // Multi-Test block: indexed expects refer to tests in this consecutive block
 Test Swim 1000m
@@ -140,12 +241,188 @@ Expect 1 child 2 tag distance
 Expect 1 child 2 string 100m
 Expect 1 child 3 tag speed
 Expect 1 child 3 string 2:45/100m
+Expect 0 json $.children[1].parsed.value 400
+Expect 0 json $.children[1].parsed.unit m
+Expect 1 json $.children[0].parsed.level 1
+Expect 1 json $.children[2].parsed.value 100
+Expect 1 json $.children[2].parsed.unit m
+Expect 1 json $.children[3].children[0].parsed.minutes 2
+Expect 1 json $.children[3].children[0].parsed.seconds 45
+Expect 1 json $.children[3].children[2].parsed.value 100
+Expect 1 json $.children[3].children[2].parsed.unit m
 Expect 2 tag details-data
 Expect 2 child 0 tag details-level
 Expect 2 child 0 string >>
 Expect 2 child 1 tag recovery
 Expect 2 child 1 string Recovery 1min
+Expect 2 json $.children[0].parsed.level 2
+Expect 2 json $.children[1].parsed.label Recovery
+Expect 2 json $.children[1].children[1].parsed.value 1
+Expect 2 json $.children[1].children[1].parsed.unit m
 JSON all common_recovery_data.json
+
+Test Left 10x16kg
+Expect tag left-right
+Expect child 0 tag keyword
+Expect child 0 string Left
+Expect child 1 tag repeat-block
+Expect child 1 string 10x
+Expect child 2 tag weight
+Expect child 2 string 16kg
+Expect json $.parsed.kind left-right
+Expect json $.parsed.side Left
+Expect json $.children[1].parsed.kind repeat-block
+Expect json $.children[1].parsed.count 10
+Expect json $.children[2].parsed.kind weight
+Expect json $.children[2].parsed.value 16
+Expect json $.children[2].parsed.unit kg
+Expect json $.children[2].children[0].parsed.kind positive-integer
+Expect json $.children[2].children[0].parsed.value 16
+JSON left_right_value.json
+
+Test Right 8x20kg
+Expect tag left-right
+Expect child 0 tag keyword
+Expect child 0 string Right
+Expect child 1 tag repeat-block
+Expect child 1 string 8x
+Expect child 2 tag weight
+Expect child 2 string 20kg
+Expect json $.parsed.kind left-right
+Expect json $.parsed.side Right
+Expect json $.children[1].parsed.kind repeat-block
+Expect json $.children[1].parsed.count 8
+Expect json $.children[2].parsed.kind weight
+Expect json $.children[2].parsed.value 20
+Expect json $.children[2].parsed.unit kg
+Expect json $.children[2].children[0].parsed.kind positive-integer
+Expect json $.children[2].children[0].parsed.value 20
+JSON left_right_value.json
+
+Test Feeling 3
+Test Feelings 4
+Test Pain 2
+Expect 0 tag feeling
+Expect 0 child 0 tag keyword
+Expect 0 child 0 string Feeling
+Expect 0 child 1 tag positive-integer
+Expect 0 child 1 string 3
+Expect 1 tag feeling
+Expect 1 child 0 tag keyword
+Expect 1 child 0 string Feelings
+Expect 1 child 1 tag positive-integer
+Expect 1 child 1 string 4
+Expect 2 tag feeling
+Expect 2 child 0 tag keyword
+Expect 2 child 0 string Pain
+Expect 2 child 1 tag positive-integer
+Expect 2 child 1 string 2
+Expect 0 json $.parsed.type feeling
+Expect 0 json $.parsed.score 3
+Expect 1 json $.parsed.type feeling
+Expect 1 json $.parsed.score 4
+Expect 2 json $.parsed.type pain
+Expect 2 json $.parsed.score 2
+JSON all feeling_value.json
+
+Test Weight 95.5kg
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Weight
+Expect json $.parsed.metric weight
+Expect json $.parsed.primaryValue 95.5
+Expect json $.parsed.unit kg
+JSON body_metric_value.json
+
+Test BodyFat 17%
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string BodyFat
+Expect json $.parsed.metric body-fat
+Expect json $.parsed.primaryValue 17
+Expect json $.parsed.unit %
+JSON body_metric_value.json
+
+Test Sleep 7.5h
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Sleep
+Expect json $.parsed.metric sleep
+Expect json $.parsed.primaryValue 7.5
+Expect json $.parsed.unit h
+JSON body_metric_value.json
+
+Test Health resting_hr 52
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Health resting_hr
+Expect json $.parsed.metric resting-hr
+Expect json $.parsed.primaryValue 52
+Expect json $.parsed.unit bpm
+JSON body_metric_value.json
+
+Test Vitals bp 120/75
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Vitals bp
+Expect json $.parsed.metric blood-pressure
+Expect json $.parsed.primaryValue 120
+Expect json $.parsed.secondaryValue 75
+Expect json $.parsed.unit mmhg
+JSON body_metric_value.json
+
+Test Circuit 3
+Expect tag circuit
+Expect child 0 tag keyword
+Expect child 0 string Circuit
+Expect child 1 tag positive-integer
+Expect child 1 string 3
+Expect json $.parsed.rounds 3
+Expect json $.parsed.restValue 0
+JSON circuit_value.json
+
+Test Circuit 4/2min
+Expect tag circuit
+Expect child 0 tag keyword
+Expect child 0 string Circuit
+Expect child 1 tag positive-integer
+Expect child 1 string 4
+Expect child 2 tag recovery-time
+Expect child 2 string /2min
+Expect json $.parsed.rounds 4
+Expect json $.parsed.restValue 2
+Expect json $.parsed.restUnit min
+JSON circuit_value.json
+
+Test Food Chicken salad | lunch
+Expect tag food
+Expect child 0 tag keyword
+Expect child 0 string Food
+JSON context_entry_value.json
+
+Test Drinking 500ml water
+Expect tag drinking
+Expect child 0 tag keyword
+Expect child 0 string Drinking
+JSON context_entry_value.json
+
+Test Expense 14.90 | groceries
+Expect tag expense
+Expect child 0 tag keyword
+Expect child 0 string Expense
+JSON context_entry_value.json
+
+Test Reminder Buy resistance bands
+Expect tag reminder
+Expect child 0 tag keyword
+Expect child 0 string Reminder
+JSON context_entry_value.json
+
+Test Protein 30g
+Expect tag protein
+Expect child 0 tag keyword
+Expect child 0 string Protein
+JSON context_entry_value.json
 
 Test 40-50%
 Expect tag percentage-range
@@ -153,10 +430,19 @@ Expect child 0 tag num-range
 Expect child 0 string 40-50
 Expect child 1 tag keyword
 Expect child 1 string %
+Expect json $.parsed.kind percentage-range
+Expect json $.parsed.minValue 40
+Expect json $.parsed.maxValue 50
+Expect json $.children[0].parsed.kind num-range
+Expect json $.children[0].parsed.minValue 40
+Expect json $.children[0].parsed.maxValue 50
 JSON percentage_range_value.json
 
-Test 40%-40%
+Test 40%-60%
 Expect tag percentage-range
+Expect json $.parsed.kind percentage-range
+Expect json $.parsed.minValue 40
+Expect json $.parsed.maxValue 60
 
 Test 1RM test
 Expect tag rm
@@ -164,6 +450,8 @@ Expect child 0 tag positive-integer
 Expect child 0 string 1
 Expect child 1 tag keyword
 Expect child 1 string RM
+Expect json $.children[0].parsed.kind positive-integer
+Expect json $.children[0].parsed.value 1
 
 Test 5RM test
 Expect tag rm
@@ -171,12 +459,18 @@ Expect child 0 tag positive-integer
 Expect child 0 string 5
 Expect child 1 tag keyword
 Expect child 1 string RM
+Expect json $.children[0].parsed.kind positive-integer
+Expect json $.children[0].parsed.value 5
 
 Test Zone1 easy
 Expect tag zone
+Expect json $.parsed.kind zone
+Expect json $.parsed.zone 1
 
 Test Zone2 easy
 Expect tag zone
+Expect json $.parsed.kind zone
+Expect json $.parsed.zone 2
 JSON zone_value.json
 
 Test I easy

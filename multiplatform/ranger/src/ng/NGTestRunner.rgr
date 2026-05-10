@@ -1,6 +1,7 @@
-Import "TokenDetector.rgr"
+Import "detectors/TokenDetector.rgr"
 Import "StandardDetectors.rgr"
 Import "Parser.rgr"
+Import "JSON.rgr"
 
 class NGExpectRule {
     def testIndex:int -1
@@ -70,6 +71,22 @@ class NGTestSpecParser {
             return false
         }
         return ((substring text 0 pLen) == prefix)
+    }
+
+    fn endsWith:boolean (text:string suffix:string) {
+        def tLen (strlen text)
+        def sLen (strlen suffix)
+        if (sLen > tLen) {
+            return false
+        }
+        return ((substring text (tLen - sLen) tLen) == suffix)
+    }
+
+    fn normalizeNumericText:string (text:string) {
+        if (this.endsWith(text ".0")) {
+            return (substring text 0 ((strlen text) - 2))
+        }
+        return text
     }
 
     fn isCommentLine:boolean (line:string) {
@@ -182,6 +199,18 @@ class NGTestSpecParser {
             out.kind = "child"
             out.field = (substring afterIdx 0 fieldSep)
             out.value = (this.decodeEscapes((this.trim((substring afterIdx (fieldSep + 1) (strlen afterIdx))))))
+            return out
+        }
+
+        if (this.startsWith(body "json ")) {
+            def restJson (this.trim((substring body 5 (strlen body))))
+            def pathSep (this.findSpace(restJson))
+            if (pathSep < 0) {
+                return out
+            }
+            out.kind = "json"
+            out.field = (this.trim((substring restJson 0 pathSep)))
+            out.value = (this.decodeEscapes((this.trim((substring restJson (pathSep + 1) (strlen restJson))))))
             return out
         }
 
@@ -326,6 +355,57 @@ class NGTestRunner {
         return (new NGTestRunner())
     }
 
+    fn isSpace:boolean (ch:int) {
+        if (ch == 32) {
+            return true
+        }
+        if (ch == 9) {
+            return true
+        }
+        return false
+    }
+
+    fn trim:string (text:string) {
+        def len (strlen text)
+        if (len == 0) {
+            return ""
+        }
+
+        def start@(mutable):int 0
+        while (start < len) {
+            def ch (charAt text start)
+            if (this.isSpace(ch)) {
+                start = start + 1
+            } {
+                break
+            }
+        }
+
+        def stop@(mutable):int len
+        while (stop > start) {
+            def ch2 (charAt text (stop - 1))
+            if (this.isSpace(ch2)) {
+                stop = stop - 1
+            } {
+                break
+            }
+        }
+
+        if (stop <= start) {
+            return ""
+        }
+        return (substring text start stop)
+    }
+
+    fn startsWith:boolean (text:string prefix:string) {
+        def tLen (strlen text)
+        def pLen (strlen prefix)
+        if (pLen > tLen) {
+            return false
+        }
+        return ((substring text 0 pLen) == prefix)
+    }
+
     fn createDetectors:[TokenDetector] () {
         return (StandardDetectors.create())
     }
@@ -382,6 +462,32 @@ class NGTestRunner {
         return out
     }
 
+    fn jsonKVString:string (key:string value:string) {
+        return ("\"" + key + "\":\"" + (this.escapeJson(value)) + "\"")
+    }
+
+    fn jsonKVNumber:string (key:string value:string) {
+        return ("\"" + key + "\":" + value)
+    }
+
+    fn jsonObject:string (level:int fields:[string]) {
+        def pad (this.indent(level))
+        def childPad (this.indent(level + 1))
+        def out@(mutable):string "{\n"
+        def cnt (size fields)
+        def i@(mutable):int 0
+        while (i < cnt) {
+            out = (out + childPad + (itemAt fields i))
+            if ((i + 1) < cnt) {
+                out = (out + ",")
+            }
+            out = (out + "\n")
+            i = i + 1
+        }
+        out = (out + pad + "}")
+        return out
+    }
+
     fn parsedValueToJson:string (token:TokenSlice level:int) {
         if (token.hasSliceValue()) {
         } {
@@ -389,161 +495,66 @@ class NGTestRunner {
         }
 
         def kind (token.getSliceValueKind())
-        def pad (this.indent(level))
-        def childPad (this.indent(level + 1))
 
         if (kind == "datetime") {
-            def v (token.getAsDateTimeValue())
-            def out@(mutable):string "{\n"
-            out = (out + (childPad + "\"kind\":\"datetime\",\n"))
-            out = (out + (childPad + ("\"year\":" + ("" + v.year)) + ",\n"))
-            out = (out + (childPad + ("\"month\":" + ("" + v.month)) + ",\n"))
-            out = (out + (childPad + ("\"day\":" + ("" + v.day)) + ",\n"))
-            out = (out + (childPad + ("\"hour\":" + ("" + v.hour)) + ",\n"))
-            out = (out + (childPad + ("\"minute\":" + ("" + v.minute)) + ",\n"))
-            out = (out + (childPad + ("\"second\":" + ("" + v.second))))
-            if (!null? v.timezone) {
-                out = (out + ",\n")
-                out = (out + (childPad + ("\"timezone\":\"" + (this.escapeJson((unwrap v.timezone))) + "\"")))
-            }
-            out = (out + "\n")
-            out = (out + (pad + "}"))
-            return out
+            return (to_string((token.getAsDateTimeValue().toDictionary())))
         }
-
         if (kind == "distance") {
-            def d (token.getAsDistanceValue())
-            def out2@(mutable):string "{\n"
-            out2 = (out2 + (childPad + "\"kind\":\"distance\",\n"))
-            out2 = (out2 + (childPad + ("\"value\":" + ("" + d.value)) + ",\n"))
-            out2 = (out2 + (childPad + ("\"unit\":\"" + (this.escapeJson(d.unit)) + "\"")))
-            out2 = (out2 + "\n")
-            out2 = (out2 + (pad + "}"))
-            return out2
+            return (to_string((token.getAsDistanceValue().toDictionary())))
         }
-
         if (kind == "percentage") {
-            def p (token.getAsPercentageValue())
-            def out3@(mutable):string "{\n"
-            out3 = (out3 + (childPad + "\"kind\":\"percentage\",\n"))
-            out3 = (out3 + (childPad + ("\"value\":" + ("" + p.value))))
-            out3 = (out3 + "\n")
-            out3 = (out3 + (pad + "}"))
-            return out3
+            return (to_string((token.getAsPercentageValue().toDictionary())))
         }
-
         if (kind == "recovery-time") {
-            def r (token.getAsRecoveryTimeValue())
-            def out4@(mutable):string "{\n"
-            out4 = (out4 + (childPad + "\"kind\":\"recovery-time\",\n"))
-            out4 = (out4 + (childPad + ("\"value\":" + ("" + r.value)) + ",\n"))
-            out4 = (out4 + (childPad + ("\"unit\":\"" + (this.escapeJson(r.unit)) + "\"")))
-            out4 = (out4 + "\n")
-            out4 = (out4 + (pad + "}"))
-            return out4
+            return (to_string((token.getAsRecoveryTimeValue().toDictionary())))
         }
-
+        if (kind == "time-value") {
+            return (to_string((token.getAsTimeValueValue().toDictionary())))
+        }
         if (kind == "weight") {
-            def w (token.getAsWeightValue())
-            def out5@(mutable):string "{\n"
-            out5 = (out5 + (childPad + "\"kind\":\"weight\",\n"))
-            out5 = (out5 + (childPad + ("\"value\":" + ("" + w.value)) + ",\n"))
-            out5 = (out5 + (childPad + ("\"unit\":\"" + (this.escapeJson(w.unit)) + "\"")))
-            out5 = (out5 + "\n")
-            out5 = (out5 + (pad + "}"))
-            return out5
+            return (to_string((token.getAsWeightValue().toDictionary())))
         }
-
         if (kind == "num-range") {
-            def nr (token.getAsNumRangeValue())
-            def out6@(mutable):string "{\n"
-            out6 = (out6 + (childPad + "\"kind\":\"num-range\",\n"))
-            out6 = (out6 + (childPad + ("\"minValue\":" + ("" + nr.minValue)) + ",\n"))
-            out6 = (out6 + (childPad + ("\"maxValue\":" + ("" + nr.maxValue))))
-            out6 = (out6 + "\n")
-            out6 = (out6 + (pad + "}"))
-            return out6
+            return (to_string((token.getAsNumRangeValue().toDictionary())))
         }
-
         if (kind == "percentage-range") {
-            def pr (token.getAsPercentageRangeValue())
-            def out7@(mutable):string "{\n"
-            out7 = (out7 + (childPad + "\"kind\":\"percentage-range\",\n"))
-            out7 = (out7 + (childPad + ("\"minValue\":" + ("" + pr.minValue)) + ",\n"))
-            out7 = (out7 + (childPad + ("\"maxValue\":" + ("" + pr.maxValue))))
-            out7 = (out7 + "\n")
-            out7 = (out7 + (pad + "}"))
-            return out7
+            return (to_string((token.getAsPercentageRangeValue().toDictionary())))
         }
-
         if (kind == "repeat-block") {
-            def rb (token.getAsRepeatBlockValue())
-            def out8@(mutable):string "{\n"
-            out8 = (out8 + (childPad + "\"kind\":\"repeat-block\",\n"))
-            out8 = (out8 + (childPad + ("\"count\":" + ("" + rb.count))))
-            out8 = (out8 + "\n")
-            out8 = (out8 + (pad + "}"))
-            return out8
+            return (to_string((token.getAsRepeatBlockValue().toDictionary())))
         }
-
         if (kind == "set-rep-range-load") {
-            def sr (token.getAsSetRepRangeLoadValue())
-            def out9@(mutable):string "{\n"
-            out9 = (out9 + (childPad + "\"kind\":\"set-rep-range-load\",\n"))
-            out9 = (out9 + (childPad + ("\"setsMin\":" + ("" + sr.setsMin)) + ",\n"))
-            out9 = (out9 + (childPad + ("\"setsMax\":" + ("" + sr.setsMax)) + ",\n"))
-            out9 = (out9 + (childPad + ("\"repsMin\":" + ("" + sr.repsMin)) + ",\n"))
-            out9 = (out9 + (childPad + ("\"repsMax\":" + ("" + sr.repsMax)) + ",\n"))
-            out9 = (out9 + (childPad + ("\"mode\":\"" + (this.escapeJson(sr.mode)) + "\",\n")))
-            out9 = (out9 + (childPad + ("\"load\":" + ("" + sr.load)) + ",\n"))
-            out9 = (out9 + (childPad + ("\"unit\":\"" + (this.escapeJson(sr.unit)) + "\"")))
-            out9 = (out9 + "\n")
-            out9 = (out9 + (pad + "}"))
-            return out9
+            return (to_string((token.getAsSetRepRangeLoadValue().toDictionary())))
         }
-
         if (kind == "zone") {
-            def z (token.getAsZoneValue())
-            def out10@(mutable):string "{\n"
-            out10 = (out10 + (childPad + "\"kind\":\"zone\",\n"))
-            out10 = (out10 + (childPad + ("\"zone\":" + ("" + z.zone))))
-            out10 = (out10 + "\n")
-            out10 = (out10 + (pad + "}"))
-            return out10
+            return (to_string((token.getAsZoneValue().toDictionary())))
         }
-
         if (kind == "positive-integer") {
-            def pi (token.getAsPositiveIntegerValue())
-            def out11@(mutable):string "{\n"
-            out11 = (out11 + (childPad + "\"kind\":\"positive-integer\",\n"))
-            out11 = (out11 + (childPad + ("\"value\":" + ("" + pi.value))))
-            out11 = (out11 + "\n")
-            out11 = (out11 + (pad + "}"))
-            return out11
+            return (to_string((token.getAsPositiveIntegerValue().toDictionary())))
         }
-
         if (kind == "details-level") {
-            def dl (token.getAsDetailsLevelValue())
-            def out12@(mutable):string "{\n"
-            out12 = (out12 + (childPad + "\"kind\":\"details-level\",\n"))
-            out12 = (out12 + (childPad + ("\"level\":" + ("" + dl.level)) + ",\n"))
-            out12 = (out12 + (childPad + ("\"marker\":\"" + (this.escapeJson(dl.marker)) + "\"")))
-            out12 = (out12 + "\n")
-            out12 = (out12 + (pad + "}"))
-            return out12
+            return (to_string((token.getAsDetailsLevelValue().toDictionary())))
         }
-
         if (kind == "recovery") {
-            def rv (token.getAsRecoveryValue())
-            def out13@(mutable):string "{\n"
-            out13 = (out13 + (childPad + "\"kind\":\"recovery\",\n"))
-            out13 = (out13 + (childPad + ("\"label\":\"" + (this.escapeJson(rv.label)) + "\"")))
-            out13 = (out13 + "\n")
-            out13 = (out13 + (pad + "}"))
-            return out13
+            return (to_string((token.getAsRecoveryValue().toDictionary())))
+        }
+        if (kind == "left-right") {
+            return (to_string((token.getAsLeftRightValue().toDictionary())))
+        }
+        if (kind == "feeling") {
+            return (to_string((token.getAsFeelingValue().toDictionary())))
+        }
+        if (kind == "body-metric") {
+            return (to_string((token.getAsBodyMetricValue().toDictionary())))
+        }
+        if (kind == "circuit") {
+            return (to_string((token.getAsCircuitValue().toDictionary())))
+        }
+        if (kind == "context-entry") {
+            return (to_string((token.getAsContextEntryValue().toDictionary())))
         }
 
-        return ("{\n" + childPad + ("\"kind\":\"" + (this.escapeJson(kind)) + "\"\n") + pad + "}")
+        return ("{\"kind\":\"" + (this.escapeJson(kind)) + "\"}")
     }
 
     fn tokenToJson:string (token:TokenSlice level:int) {
@@ -574,6 +585,365 @@ class NGTestRunner {
         out = (out + "]\n")
         out = (out + (pad + "}"))
         return out
+    }
+
+    fn findDot:int (text:string) {
+        def len (strlen text)
+        def i@(mutable):int 0
+        while (i < len) {
+            if ((charAt text i) == 46) {
+                return i
+            }
+            i = i + 1
+        }
+        return -1
+    }
+
+    fn normalizeJsonPath:string (path:string) {
+        def raw (this.trim(path))
+        if ((strlen raw) == 0) {
+            return ""
+        }
+
+        def out@(mutable):string ""
+        def len (strlen raw)
+        def i@(mutable):int 0
+
+        if (raw == "$") {
+            return ""
+        }
+
+        if (this.startsWith(raw "$.")) {
+            i = 2
+        } {
+            if (this.startsWith(raw "$")) {
+                i = 1
+            }
+        }
+
+        while (i < len) {
+            def ch (charAt raw i)
+            if (ch == 91) {
+                i = i + 1
+                if ((strlen out) > 0) {
+                    out = (out + ".")
+                }
+                while (i < len) {
+                    def ch2 (charAt raw i)
+                    if (ch2 == 93) {
+                        i = i + 1
+                        break
+                    }
+                    out = (out + (substring raw i (i + 1)))
+                    i = i + 1
+                }
+                continue
+            }
+            out = (out + (substring raw i (i + 1)))
+            i = i + 1
+        }
+
+        if (this.startsWith(out ".")) {
+            out = (substring out 1 (strlen out))
+        }
+
+        return out
+    }
+
+    fn jsonTokenValue:string (token:TokenSlice path:string) {
+        def p (this.normalizeJsonPath(path))
+        if ((strlen p) == 0) {
+            return ""
+        }
+
+        def dotPos (this.findDot(p))
+        def head:string p
+        def tail:string ""
+        if (dotPos >= 0) {
+            head = (substring p 0 dotPos)
+            tail = (substring p (dotPos + 1) (strlen p))
+        }
+
+        if (head == "tag") {
+            if ((strlen tail) == 0) {
+                return token.tag
+            }
+            return ""
+        }
+
+        if (head == "text") {
+            if ((strlen tail) == 0) {
+                return (token.toString())
+            }
+            return ""
+        }
+
+        if (head == "children") {
+            if ((strlen tail) == 0) {
+                return ""
+            }
+
+            def dotPos2 (this.findDot(tail))
+            def idxText:string tail
+            def rest:string ""
+            if (dotPos2 >= 0) {
+                idxText = (substring tail 0 dotPos2)
+                rest = (substring tail (dotPos2 + 1) (strlen tail))
+            }
+
+            def idxSlice (TokenSlice.fromText(idxText))
+            if ((idxSlice.length()) == 0) {
+                return ""
+            }
+            if (idxSlice.hasInteger(0 ((idxSlice.length()) - 1))) {
+            } {
+                return ""
+            }
+
+            def childIdx (idxSlice.parseInteger(0 ((idxSlice.length()) - 1)))
+            if ((childIdx < 0) || (childIdx >= (token.childCount()))) {
+                return ""
+            }
+
+            def ch (token.getChild(childIdx))
+            if ((strlen rest) == 0) {
+                return (ch.toString())
+            }
+            return (this.jsonTokenValue(ch rest))
+        }
+
+        if (head == "parsed") {
+            if ((strlen tail) == 0) {
+                return (token.getSliceValueKind())
+            }
+
+            if (token.hasSliceValue()) {
+            } {
+                return ""
+            }
+
+            def kind (token.getSliceValueKind())
+            if (tail == "kind") {
+                return kind
+            }
+
+            if (kind == "recovery-time") {
+                def rv (token.getAsRecoveryTimeValue())
+                if (tail == "value") {
+                    return ("" + rv.value)
+                }
+                if (tail == "unit") {
+                    return rv.unit
+                }
+            }
+
+            if (kind == "time-value") {
+                def tv (token.getAsTimeValueValue())
+                if (tail == "minutes") {
+                    return ("" + tv.minutes)
+                }
+                if (tail == "seconds") {
+                    return ("" + tv.seconds)
+                }
+            }
+
+            if (kind == "datetime") {
+                def dtv (token.getAsDateTimeValue())
+                if (tail == "year") {
+                    return ("" + dtv.year)
+                }
+                if (tail == "month") {
+                    return ("" + dtv.month)
+                }
+                if (tail == "day") {
+                    return ("" + dtv.day)
+                }
+                if (tail == "hour") {
+                    return ("" + dtv.hour)
+                }
+                if (tail == "minute") {
+                    return ("" + dtv.minute)
+                }
+                if (tail == "second") {
+                    return ("" + dtv.second)
+                }
+                if (tail == "timezone") {
+                    if (!null? dtv.timezone) {
+                        return (unwrap dtv.timezone)
+                    }
+                    return ""
+                }
+            }
+
+            if (kind == "distance") {
+                def dv (token.getAsDistanceValue())
+                if (tail == "value") {
+                    return ("" + dv.value)
+                }
+                if (tail == "unit") {
+                    return dv.unit
+                }
+            }
+
+            if (kind == "weight") {
+                def wv (token.getAsWeightValue())
+                if (tail == "value") {
+                    return ("" + wv.value)
+                }
+                if (tail == "unit") {
+                    return wv.unit
+                }
+            }
+
+            if (kind == "percentage") {
+                def pv (token.getAsPercentageValue())
+                if (tail == "value") {
+                    return ("" + pv.value)
+                }
+            }
+
+            if (kind == "num-range") {
+                def nr (token.getAsNumRangeValue())
+                if (tail == "minValue") {
+                    return ("" + nr.minValue)
+                }
+                if (tail == "maxValue") {
+                    return ("" + nr.maxValue)
+                }
+            }
+
+            if (kind == "percentage-range") {
+                def pr (token.getAsPercentageRangeValue())
+                if (tail == "minValue") {
+                    return ("" + pr.minValue)
+                }
+                if (tail == "maxValue") {
+                    return ("" + pr.maxValue)
+                }
+            }
+
+            if (kind == "zone") {
+                def zv (token.getAsZoneValue())
+                if (tail == "zone") {
+                    return ("" + zv.zone)
+                }
+            }
+
+            if (kind == "repeat-block") {
+                def rb (token.getAsRepeatBlockValue())
+                if (tail == "count") {
+                    return ("" + rb.count)
+                }
+            }
+
+            if (kind == "left-right") {
+                def lr (token.getAsLeftRightValue())
+                if (tail == "side") {
+                    return lr.side
+                }
+            }
+
+            if (kind == "set-rep-range-load") {
+                def sr (token.getAsSetRepRangeLoadValue())
+                if (tail == "setsMin") {
+                    return ("" + sr.setsMin)
+                }
+                if (tail == "setsMax") {
+                    return ("" + sr.setsMax)
+                }
+                if (tail == "repsMin") {
+                    return ("" + sr.repsMin)
+                }
+                if (tail == "repsMax") {
+                    return ("" + sr.repsMax)
+                }
+                if (tail == "mode") {
+                    return sr.mode
+                }
+                if (tail == "load") {
+                    return ("" + sr.load)
+                }
+                if (tail == "unit") {
+                    return sr.unit
+                }
+            }
+
+            if (kind == "feeling") {
+                def fv (token.getAsFeelingValue())
+                if (tail == "type") {
+                    return fv.kind
+                }
+                if (tail == "score") {
+                    return ("" + fv.score)
+                }
+            }
+
+            if (kind == "body-metric") {
+                def bm (token.getAsBodyMetricValue())
+                if (tail == "metric") {
+                    return bm.metric
+                }
+                if (tail == "primaryValue") {
+                    return ("" + bm.primaryValue)
+                }
+                if (tail == "secondaryValue") {
+                    return ("" + bm.secondaryValue)
+                }
+                if (tail == "unit") {
+                    return bm.unit
+                }
+            }
+
+            if (kind == "circuit") {
+                def cv (token.getAsCircuitValue())
+                if (tail == "rounds") {
+                    return ("" + cv.rounds)
+                }
+                if (tail == "restValue") {
+                    return ("" + cv.restValue)
+                }
+                if (tail == "restUnit") {
+                    return cv.restUnit
+                }
+            }
+
+            if (kind == "details-level") {
+                def dl (token.getAsDetailsLevelValue())
+                if (tail == "level") {
+                    return ("" + dl.level)
+                }
+                if (tail == "marker") {
+                    return dl.marker
+                }
+            }
+
+            if (kind == "recovery") {
+                def rv2 (token.getAsRecoveryValue())
+                if (tail == "label") {
+                    return rv2.label
+                }
+            }
+
+            if (kind == "context-entry") {
+                def ce (token.getAsContextEntryValue())
+                if (tail == "type") {
+                    return ce.kind
+                }
+                if (tail == "content") {
+                    return ce.content
+                }
+            }
+
+            if (kind == "positive-integer") {
+                def piv (token.getAsPositiveIntegerValue())
+                if (tail == "value") {
+                    return ("" + piv.value)
+                }
+            }
+            return ""
+        }
+
+        return ""
     }
 
     fn runSpec:[string] (specText:string) {
@@ -628,6 +998,20 @@ class NGTestRunner {
                     }
 
                     push out (((("Test " + ("#" + ("" + (i + 1)))) + " unsupported field '") + ex.field) + "' in Expect child")
+                    continue
+                }
+
+                if (ex.kind == "json") {
+                    def gotJson (this.jsonTokenValue(root ex.field))
+                    if ((strlen gotJson) == 0) {
+                        push out ((((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' was not found"))
+                        continue
+                    }
+                    if (gotJson == ex.value) {
+                    } {
+                        push out ((((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' value '") + ex.value + (("' but got '" + gotJson) + "'"))
+                    }
+                    continue
                 }
             }
         }

@@ -1,0 +1,4 @@
+class LeftRightValue @serialize(true) {
+    def kind:string "left-right"
+    def side:string ""
+}

@@ -1,0 +1,393 @@
+Import "values/DateTimeValue.rgr"
+Import "values/DistanceValue.rgr"
+Import "values/PercentageValue.rgr"
+Import "values/RecoveryTimeValue.rgr"
+Import "values/WeightValue.rgr"
+Import "values/NumRangeValue.rgr"
+Import "values/PercentageRangeValue.rgr"
+Import "values/RepeatBlockValue.rgr"
+Import "values/SetRepRangeLoadValue.rgr"
+Import "values/ZoneValue.rgr"
+Import "values/PositiveIntegerValue.rgr"
+Import "values/DetailsLevelValue.rgr"
+Import "values/RecoveryValue.rgr"
+Import "values/TimeValueValue.rgr"
+Import "values/LeftRightValue.rgr"
+Import "values/FeelingValue.rgr"
+Import "values/BodyMetricValue.rgr"
+Import "values/CircuitValue.rgr"
+Import "values/ContextEntryValue.rgr"
+
+class SliceParsedValue {
+    ; Discriminator for the active payload type.
+    def kind:string ""
+
+    ; Concrete payloads (optional, exactly one should be set for a given kind).
+    def dateTime@(optional):DateTimeValue
+    def distance@(optional):DistanceValue
+    def percentage@(optional):PercentageValue
+    def recoveryTime@(optional):RecoveryTimeValue
+    def weight@(optional):WeightValue
+    def numRange@(optional):NumRangeValue
+    def percentageRange@(optional):PercentageRangeValue
+    def repeatBlock@(optional):RepeatBlockValue
+    def setRepRangeLoad@(optional):SetRepRangeLoadValue
+    def zone@(optional):ZoneValue
+    def positiveInteger@(optional):PositiveIntegerValue
+    def detailsLevel@(optional):DetailsLevelValue
+    def recovery@(optional):RecoveryValue
+    def timeValue@(optional):TimeValueValue
+    def leftRight@(optional):LeftRightValue
+    def feeling@(optional):FeelingValue
+    def bodyMetric@(optional):BodyMetricValue
+    def circuit@(optional):CircuitValue
+    def contextEntry@(optional):ContextEntryValue
+
+    sfn create:SliceParsedValue (kind:string) {
+        def out (new SliceParsedValue)
+        out.kind = kind
+        return out
+    }
+
+    sfn fromDateTime:SliceParsedValue (value:DateTimeValue) {
+        def out (new SliceParsedValue)
+        out.kind = "datetime"
+        out.dateTime = value
+        return out
+    }
+
+    sfn fromDistance:SliceParsedValue (value:DistanceValue) {
+        def out (new SliceParsedValue)
+        out.kind = "distance"
+        out.distance = value
+        return out
+    }
+
+    sfn fromPercentage:SliceParsedValue (value:PercentageValue) {
+        def out (new SliceParsedValue)
+        out.kind = "percentage"
+        out.percentage = value
+        return out
+    }
+
+    sfn fromRecoveryTime:SliceParsedValue (value:RecoveryTimeValue) {
+        def out (new SliceParsedValue)
+        out.kind = "recovery-time"
+        out.recoveryTime = value
+        return out
+    }
+
+    sfn fromWeight:SliceParsedValue (value:WeightValue) {
+        def out (new SliceParsedValue)
+        out.kind = "weight"
+        out.weight = value
+        return out
+    }
+
+    sfn fromNumRange:SliceParsedValue (value:NumRangeValue) {
+        def out (new SliceParsedValue)
+        out.kind = "num-range"
+        out.numRange = value
+        return out
+    }
+
+    sfn fromPercentageRange:SliceParsedValue (value:PercentageRangeValue) {
+        def out (new SliceParsedValue)
+        out.kind = "percentage-range"
+        out.percentageRange = value
+        return out
+    }
+
+    sfn fromRepeatBlock:SliceParsedValue (value:RepeatBlockValue) {
+        def out (new SliceParsedValue)
+        out.kind = "repeat-block"
+        out.repeatBlock = value
+        return out
+    }
+
+    sfn fromSetRepRangeLoad:SliceParsedValue (value:SetRepRangeLoadValue) {
+        def out (new SliceParsedValue)
+        out.kind = "set-rep-range-load"
+        out.setRepRangeLoad = value
+        return out
+    }
+
+    sfn fromZone:SliceParsedValue (value:ZoneValue) {
+        def out (new SliceParsedValue)
+        out.kind = "zone"
+        out.zone = value
+        return out
+    }
+
+    sfn fromPositiveInteger:SliceParsedValue (value:PositiveIntegerValue) {
+        def out (new SliceParsedValue)
+        out.kind = "positive-integer"
+        out.positiveInteger = value
+        return out
+    }
+
+    sfn fromDetailsLevel:SliceParsedValue (value:DetailsLevelValue) {
+        def out (new SliceParsedValue)
+        out.kind = "details-level"
+        out.detailsLevel = value
+        return out
+    }
+
+    sfn fromRecovery:SliceParsedValue (value:RecoveryValue) {
+        def out (new SliceParsedValue)
+        out.kind = "recovery"
+        out.recovery = value
+        return out
+    }
+
+    sfn fromTimeValue:SliceParsedValue (value:TimeValueValue) {
+        def out (new SliceParsedValue)
+        out.kind = "time-value"
+        out.timeValue = value
+        return out
+    }
+
+    sfn fromLeftRight:SliceParsedValue (value:LeftRightValue) {
+        def out (new SliceParsedValue)
+        out.kind = "left-right"
+        out.leftRight = value
+        return out
+    }
+
+    sfn fromFeeling:SliceParsedValue (value:FeelingValue) {
+        def out (new SliceParsedValue)
+        out.kind = "feeling"
+        out.feeling = value
+        return out
+    }
+
+    sfn fromBodyMetric:SliceParsedValue (value:BodyMetricValue) {
+        def out (new SliceParsedValue)
+        out.kind = "body-metric"
+        out.bodyMetric = value
+        return out
+    }
+
+    sfn fromCircuit:SliceParsedValue (value:CircuitValue) {
+        def out (new SliceParsedValue)
+        out.kind = "circuit"
+        out.circuit = value
+        return out
+    }
+
+    sfn fromContextEntry:SliceParsedValue (value:ContextEntryValue) {
+        def out (new SliceParsedValue)
+        out.kind = "context-entry"
+        out.contextEntry = value
+        return out
+    }
+
+    fn hasDateTime:boolean () {
+        return (!null? dateTime)
+    }
+
+    fn getDateTime:DateTimeValue () {
+        if (!null? dateTime) {
+            return (unwrap dateTime)
+        }
+        return (new DateTimeValue)
+    }
+
+    fn hasDistance:boolean () {
+        return (!null? distance)
+    }
+
+    fn getDistance:DistanceValue () {
+        if (!null? distance) {
+            return (unwrap distance)
+        }
+        return (new DistanceValue)
+    }
+
+    fn hasPercentage:boolean () {
+        return (!null? percentage)
+    }
+
+    fn getPercentage:PercentageValue () {
+        if (!null? percentage) {
+            return (unwrap percentage)
+        }
+        return (new PercentageValue)
+    }
+
+    fn hasRecoveryTime:boolean () {
+        return (!null? recoveryTime)
+    }
+
+    fn getRecoveryTime:RecoveryTimeValue () {
+        if (!null? recoveryTime) {
+            return (unwrap recoveryTime)
+        }
+        return (new RecoveryTimeValue)
+    }
+
+    fn hasWeight:boolean () {
+        return (!null? weight)
+    }
+
+    fn getWeight:WeightValue () {
+        if (!null? weight) {
+            return (unwrap weight)
+        }
+        return (new WeightValue)
+    }
+
+    fn hasNumRange:boolean () {
+        return (!null? numRange)
+    }
+
+    fn getNumRange:NumRangeValue () {
+        if (!null? numRange) {
+            return (unwrap numRange)
+        }
+        return (new NumRangeValue)
+    }
+
+    fn hasPercentageRange:boolean () {
+        return (!null? percentageRange)
+    }
+
+    fn getPercentageRange:PercentageRangeValue () {
+        if (!null? percentageRange) {
+            return (unwrap percentageRange)
+        }
+        return (new PercentageRangeValue)
+    }
+
+    fn hasRepeatBlock:boolean () {
+        return (!null? repeatBlock)
+    }
+
+    fn getRepeatBlock:RepeatBlockValue () {
+        if (!null? repeatBlock) {
+            return (unwrap repeatBlock)
+        }
+        return (new RepeatBlockValue)
+    }
+
+    fn hasSetRepRangeLoad:boolean () {
+        return (!null? setRepRangeLoad)
+    }
+
+    fn getSetRepRangeLoad:SetRepRangeLoadValue () {
+        if (!null? setRepRangeLoad) {
+            return (unwrap setRepRangeLoad)
+        }
+        return (new SetRepRangeLoadValue)
+    }
+
+    fn hasZone:boolean () {
+        return (!null? zone)
+    }
+
+    fn getZone:ZoneValue () {
+        if (!null? zone) {
+            return (unwrap zone)
+        }
+        return (new ZoneValue)
+    }
+
+    fn hasPositiveInteger:boolean () {
+        return (!null? positiveInteger)
+    }
+
+    fn getPositiveInteger:PositiveIntegerValue () {
+        if (!null? positiveInteger) {
+            return (unwrap positiveInteger)
+        }
+        return (new PositiveIntegerValue)
+    }
+
+    fn hasDetailsLevel:boolean () {
+        return (!null? detailsLevel)
+    }
+
+    fn getDetailsLevel:DetailsLevelValue () {
+        if (!null? detailsLevel) {
+            return (unwrap detailsLevel)
+        }
+        return (new DetailsLevelValue)
+    }
+
+    fn hasRecovery:boolean () {
+        return (!null? recovery)
+    }
+
+    fn getRecovery:RecoveryValue () {
+        if (!null? recovery) {
+            return (unwrap recovery)
+        }
+        return (new RecoveryValue)
+    }
+
+    fn hasTimeValue:boolean () {
+        return (!null? timeValue)
+    }
+
+    fn getTimeValue:TimeValueValue () {
+        if (!null? timeValue) {
+            return (unwrap timeValue)
+        }
+        return (new TimeValueValue)
+    }
+
+    fn hasLeftRight:boolean () {
+        return (!null? leftRight)
+    }
+
+    fn getLeftRight:LeftRightValue () {
+        if (!null? leftRight) {
+            return (unwrap leftRight)
+        }
+        return (new LeftRightValue)
+    }
+
+    fn hasFeeling:boolean () {
+        return (!null? feeling)
+    }
+
+    fn getFeeling:FeelingValue () {
+        if (!null? feeling) {
+            return (unwrap feeling)
+        }
+        return (new FeelingValue)
+    }
+
+    fn hasBodyMetric:boolean () {
+        return (!null? bodyMetric)
+    }
+
+    fn getBodyMetric:BodyMetricValue () {
+        if (!null? bodyMetric) {
+            return (unwrap bodyMetric)
+        }
+        return (new BodyMetricValue)
+    }
+
+    fn hasCircuit:boolean () {
+        return (!null? circuit)
+    }
+
+    fn getCircuit:CircuitValue () {
+        if (!null? circuit) {
+            return (unwrap circuit)
+        }
+        return (new CircuitValue)
+    }
+
+    fn hasContextEntry:boolean () {
+        return (!null? contextEntry)
+    }
+
+    fn getContextEntry:ContextEntryValue () {
+        if (!null? contextEntry) {
+            return (unwrap contextEntry)
+        }
+        return (new ContextEntryValue)
+    }
+}

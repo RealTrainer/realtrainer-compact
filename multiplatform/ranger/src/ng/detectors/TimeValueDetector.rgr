@@ -1,0 +1,61 @@
+Import "detectors/TokenDetector.rgr"
+Import "values/TimeValueValue.rgr"
+Import "values/SliceParsedValue.rgr"
+
+class TimeValueDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "time-value"
+    }
+
+    sfn create:TimeValueDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new TimeValueDetector(s))
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        if ((slice.length()) < 5) {
+            return (this.noMatch())
+        }
+
+        if (slice.hasInteger(0 1)) {
+        } {
+            return (this.noMatch())
+        }
+        if ((slice.charCodeAt(2)) != 58) {
+            return (this.noMatch())
+        }
+        if (slice.hasInteger(3 4)) {
+        } {
+            return (this.noMatch())
+        }
+
+        def hour (slice.parseInteger(0 1))
+        def minute (slice.parseInteger(3 4))
+
+        if (hour < 0) {
+            return (this.noMatch())
+        }
+        if (hour > 23) {
+            return (this.noMatch())
+        }
+        if (minute < 0) {
+            return (this.noMatch())
+        }
+        if (minute > 59) {
+            return (this.noMatch())
+        }
+
+        def out (slice.read(5))
+        out.tag = detectedTag
+        def tv (new TimeValueValue)
+        tv.minutes = hour
+        tv.seconds = minute
+        def payload (SliceParsedValue.fromTimeValue(tv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
+        return out
+    }
+}

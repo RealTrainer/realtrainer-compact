@@ -1,0 +1,58 @@
+Import "detectors/TokenDetector.rgr"
+
+class AMTimeValueDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "am-time"
+    }
+
+    sfn create:AMTimeValueDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new AMTimeValueDetector(s))
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def len (slice.length())
+        if (len < 3) {
+            return (this.noMatch())
+        }
+
+        def i@(mutable):int 0
+        while (i < len) {
+            def ch (slice.charCodeAt(i))
+            if ((ch >= 48) && (ch <= 57)) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        if (i <= 0) {
+            return (this.noMatch())
+        }
+        if ((i + 1) >= len) {
+            return (this.noMatch())
+        }
+
+        def valuePart (slice.read(i))
+        if (valuePart.hasInteger(0 (i - 1))) {
+        } {
+            return (this.noMatch())
+        }
+        def hour (valuePart.parseInteger(0 (i - 1)))
+        if ((hour < 1) || (hour > 12)) {
+            return (this.noMatch())
+        }
+
+        def c1 (slice.charCodeAt(i))
+        def c2 (slice.charCodeAt(i + 1))
+        if (((c1 == 65) && (c2 == 77)) || ((c1 == 80) && (c2 == 77))) {
+            def out (slice.read(i + 2))
+            out.tag = detectedTag
+            return out
+        }
+
+        return (this.noMatch())
+    }
+}

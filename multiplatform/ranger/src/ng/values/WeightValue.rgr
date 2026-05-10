@@ -1,0 +1,5 @@
+class WeightValue @serialize(true) {
+    def kind:string "weight"
+    def value:int 0
+    def unit:string "kg"
+}

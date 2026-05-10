@@ -1,0 +1,92 @@
+Import "detectors/TokenDetector.rgr"
+
+class DistanceRangeBlockDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "distance-range"
+    }
+
+    sfn create:DistanceRangeBlockDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new DistanceRangeBlockDetector(s))
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def len (slice.length())
+        if (len < 5) {
+            return (this.noMatch())
+        }
+
+        def dashPos (slice.findTokenPos("-"))
+        if (dashPos <= 0) {
+            return (this.noMatch())
+        }
+
+        ; variant A: 100-200m
+        def leftA (slice.read(dashPos))
+        if (leftA.hasInteger(0 ((leftA.length()) - 1))) {
+            def rightA (slice.peek(dashPos + 1))
+            def rightPartA (rightA.splitWithToken("m"))
+            def rLenA (rightPartA.length())
+            if (rLenA > 0) {
+                if (rightPartA.hasInteger(0 (rLenA - 1))) {
+                    if ((rLenA + 1) <= (rightA.length())) {
+                        if ((rightA.charCodeAt(rLenA)) == 109) {
+                            def lvalA (leftA.parseInteger(0 ((leftA.length()) - 1)))
+                            def rvalA (rightPartA.parseInteger(0 (rLenA - 1)))
+                            if ((lvalA > 0) && (rvalA > 0)) {
+                                def outA (slice.read(dashPos + 1 + rLenA + 1))
+                                outA.tag = detectedTag
+                                return outA
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        ; variant B: 100m-200m
+        def leftPartB (slice.splitWithToken("m-"))
+        def lLenB (leftPartB.length())
+        if (lLenB <= 0) {
+            return (this.noMatch())
+        }
+        if (leftPartB.hasInteger(0 (lLenB - 1))) {
+        } {
+            return (this.noMatch())
+        }
+
+        def rightBStart (lLenB + 2)
+        if (rightBStart >= len) {
+            return (this.noMatch())
+        }
+        def rightB (slice.peek(rightBStart))
+        def rightPartB (rightB.splitWithToken("m"))
+        def rLenB (rightPartB.length())
+        if (rLenB <= 0) {
+            return (this.noMatch())
+        }
+        if (rightPartB.hasInteger(0 (rLenB - 1))) {
+        } {
+            return (this.noMatch())
+        }
+        if ((rLenB + 1) > (rightB.length())) {
+            return (this.noMatch())
+        }
+        if ((rightB.charCodeAt(rLenB)) != 109) {
+            return (this.noMatch())
+        }
+
+        def lvalB (leftPartB.parseInteger(0 (lLenB - 1)))
+        def rvalB (rightPartB.parseInteger(0 (rLenB - 1)))
+        if ((lvalB <= 0) || (rvalB <= 0)) {
+            return (this.noMatch())
+        }
+
+        def outB (slice.read(rightBStart + rLenB + 1))
+        outB.tag = detectedTag
+        return outB
+    }
+}

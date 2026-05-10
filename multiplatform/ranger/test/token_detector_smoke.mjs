@@ -14,6 +14,11 @@ const {
 	TimeValueDetector,
 	RecoveryTimeDetector,
 	RecoveryDetector,
+	LeftRightDetector,
+	FeelingDetector,
+	BodyMetricDetector,
+	CircuitDetector,
+	ContextEntryDetector,
 	SpeedDetector,
 	RepeatBlockDetector,
 	WeightDetector,
@@ -156,6 +161,13 @@ const rt = RecoveryTimeDetector.create();
 const rtHit = rt.detect(TokenSlice.fromText('/10s rest'));
 assert.equal(rtHit.toString(), '/10s');
 assert.equal(rtHit.tag, 'recovery-time');
+assert.equal(rtHit.childCount(), 3);
+assert.equal(rtHit.getChild(0).tag, 'keyword');
+assert.equal(rtHit.getChild(0).toString(), '/');
+assert.equal(rtHit.getChild(1).tag, 'positive-integer');
+assert.equal(rtHit.getChild(1).toString(), '10');
+assert.equal(rtHit.getChild(2).tag, 'keyword');
+assert.equal(rtHit.getChild(2).toString(), 's');
 assert.equal(rtHit.hasRecoveryTimeValue(), true);
 assert.equal(rtHit.getSliceValueKind(), 'recovery-time');
 const rtValue = rtHit.getAsRecoveryTimeValue();
@@ -177,6 +189,47 @@ assert.equal(recHit.getChild(0).tag, 'keyword');
 assert.equal(recHit.getChild(0).toString(), 'Recovery');
 assert.equal(recHit.getChild(1).tag, 'distance');
 assert.equal(recHit.getChild(1).toString(), '1m');
+
+const lr = LeftRightDetector.create();
+const lrHit = lr.detect(TokenSlice.fromText('Left 10x16kg'));
+assert.equal(lrHit.tag, 'left-right');
+assert.equal(lrHit.hasLeftRightValue(), true);
+assert.equal(lrHit.getSliceValueKind(), 'left-right');
+assert.equal(lrHit.getAsLeftRightValue().side, 'Left');
+
+const feel = FeelingDetector.create();
+const feelHit = feel.detect(TokenSlice.fromText('Feeling 3'));
+assert.equal(feelHit.tag, 'feeling');
+assert.equal(feelHit.hasFeelingValue(), true);
+assert.equal(feelHit.getSliceValueKind(), 'feeling');
+assert.equal(feelHit.getAsFeelingValue().kind, 'feeling');
+assert.equal(feelHit.getAsFeelingValue().score, 3);
+
+const metric = BodyMetricDetector.create();
+const metricHit = metric.detect(TokenSlice.fromText('Vitals bp 120/75'));
+assert.equal(metricHit.tag, 'body-metric');
+assert.equal(metricHit.hasBodyMetricValue(), true);
+assert.equal(metricHit.getSliceValueKind(), 'body-metric');
+assert.equal(metricHit.getAsBodyMetricValue().metric, 'blood-pressure');
+assert.equal(metricHit.getAsBodyMetricValue().primaryValue, 120);
+assert.equal(metricHit.getAsBodyMetricValue().secondaryValue, 75);
+
+const circuit = CircuitDetector.create();
+const circuitHit = circuit.detect(TokenSlice.fromText('Circuit 4/2min'));
+assert.equal(circuitHit.tag, 'circuit');
+assert.equal(circuitHit.hasCircuitValue(), true);
+assert.equal(circuitHit.getSliceValueKind(), 'circuit');
+assert.equal(circuitHit.getAsCircuitValue().rounds, 4);
+assert.equal(circuitHit.getAsCircuitValue().restValue, 2);
+assert.equal(circuitHit.getAsCircuitValue().restUnit, 'min');
+
+const ce = ContextEntryDetector.create();
+const ceHit = ce.detect(TokenSlice.fromText('Food Chicken salad | lunch'));
+assert.equal(ceHit.tag, 'food');
+assert.equal(ceHit.hasContextEntryValue(), true);
+assert.equal(ceHit.getSliceValueKind(), 'context-entry');
+assert.equal(ceHit.getAsContextEntryValue().kind, 'food');
+assert.equal(ceHit.getAsContextEntryValue().content, 'Chicken salad | lunch');
 
 const speed = SpeedDetector.create();
 const speedHit = speed.detect(TokenSlice.fromText('2:50/100m hard'));

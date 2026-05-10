@@ -1,0 +1,4 @@
+class RepeatBlockValue @serialize(true) {
+    def kind:string "repeat-block"
+    def count:int 0
+}

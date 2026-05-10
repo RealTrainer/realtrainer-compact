@@ -1,0 +1,5 @@
+class ContextEntryValue @serialize(true) {
+    def kind:string "context-entry"
+    def kind:string ""
+    def content:string ""
+}

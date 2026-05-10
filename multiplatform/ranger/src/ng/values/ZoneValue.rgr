@@ -1,0 +1,4 @@
+class ZoneValue @serialize(true) {
+    def kind:string "zone"
+    def zone:int 0
+}

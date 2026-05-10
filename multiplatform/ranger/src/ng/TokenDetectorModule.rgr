@@ -1,32 +1,37 @@
-Import "TokenDetector.rgr"
-Import "KeywordDetector.rgr"
-Import "DateTimeDetector.rgr"
-Import "SpaceDetector.rgr"
-Import "NewlineDetector.rgr"
-Import "PositiveIntegerDetector.rgr"
-Import "DecimalNumberDetector.rgr"
-Import "TimeValueDetector.rgr"
-Import "RecoveryDetector.rgr"
-Import "RecoveryTimeDetector.rgr"
-Import "SpeedDetector.rgr"
-Import "RepeatBlockDetector.rgr"
-Import "WeightDetector.rgr"
-Import "DistanceDetector.rgr"
-Import "NumRangeBlockDetector.rgr"
-Import "DistanceRangeBlockDetector.rgr"
-Import "AMTimeValueDetector.rgr"
+Import "detectors/TokenDetector.rgr"
+Import "detectors/KeywordDetector.rgr"
+Import "detectors/DateTimeDetector.rgr"
+Import "detectors/SpaceDetector.rgr"
+Import "detectors/NewlineDetector.rgr"
+Import "detectors/PositiveIntegerDetector.rgr"
+Import "detectors/DecimalNumberDetector.rgr"
+Import "detectors/TimeValueDetector.rgr"
+Import "detectors/RecoveryDetector.rgr"
+Import "detectors/LeftRightDetector.rgr"
+Import "detectors/FeelingDetector.rgr"
+Import "detectors/BodyMetricDetector.rgr"
+Import "detectors/CircuitDetector.rgr"
+Import "detectors/ContextEntryDetector.rgr"
+Import "detectors/RecoveryTimeDetector.rgr"
+Import "detectors/SpeedDetector.rgr"
+Import "detectors/RepeatBlockDetector.rgr"
+Import "detectors/WeightDetector.rgr"
+Import "detectors/DistanceDetector.rgr"
+Import "detectors/NumRangeBlockDetector.rgr"
+Import "detectors/DistanceRangeBlockDetector.rgr"
+Import "detectors/AMTimeValueDetector.rgr"
 Import "NGSharedLists.rgr"
-Import "SportExerciseDetector.rgr"
-Import "DetailsDataDetector.rgr"
-Import "HeadingDataDetector.rgr"
-Import "BPMDetector.rgr"
-Import "KCALDetector.rgr"
-Import "PercentageDetector.rgr"
-Import "PercentageRangeDetector.rgr"
-Import "RMDetector.rgr"
-Import "SetRepRangeLoadDetector.rgr"
-Import "ZoneDetector.rgr"
-Import "RomanZoneDetector.rgr"
+Import "detectors/SportExerciseDetector.rgr"
+Import "detectors/DetailsDataDetector.rgr"
+Import "detectors/HeadingDataDetector.rgr"
+Import "detectors/BPMDetector.rgr"
+Import "detectors/KCALDetector.rgr"
+Import "detectors/PercentageDetector.rgr"
+Import "detectors/PercentageRangeDetector.rgr"
+Import "detectors/RMDetector.rgr"
+Import "detectors/SetRepRangeLoadDetector.rgr"
+Import "detectors/ZoneDetector.rgr"
+Import "detectors/RomanZoneDetector.rgr"
 Import "StandardDetectors.rgr"
 Import "NGTestRunner.rgr"
 
@@ -65,6 +70,26 @@ class TokenDetectorModule {
 
     sfn createRecovery:RecoveryDetector () {
         return (RecoveryDetector.create())
+    }
+
+    sfn createLeftRight:LeftRightDetector () {
+        return (LeftRightDetector.create())
+    }
+
+    sfn createFeeling:FeelingDetector () {
+        return (FeelingDetector.create())
+    }
+
+    sfn createBodyMetric:BodyMetricDetector () {
+        return (BodyMetricDetector.create())
+    }
+
+    sfn createCircuit:CircuitDetector () {
+        return (CircuitDetector.create())
+    }
+
+    sfn createContextEntry:ContextEntryDetector () {
+        return (ContextEntryDetector.create())
     }
 
     sfn createSpeed:SpeedDetector () {

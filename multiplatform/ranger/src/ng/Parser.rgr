@@ -1,8 +1,8 @@
 
 
 Import "token_slice.rgr"
-Import "DateTimeDetector.rgr"
-Import "TokenDetector.rgr"
+Import "detectors/DateTimeDetector.rgr"
+Import "detectors/TokenDetector.rgr"
 
 class Parser {
 

@@ -1,0 +1,107 @@
+Import "detectors/TokenDetector.rgr"
+Import "Parser.rgr"
+Import "detectors/RepeatBlockDetector.rgr"
+Import "detectors/WeightDetector.rgr"
+Import "detectors/SetRepRangeLoadDetector.rgr"
+Import "detectors/DistanceDetector.rgr"
+Import "detectors/SpeedDetector.rgr"
+Import "detectors/ZoneDetector.rgr"
+Import "detectors/PositiveIntegerDetector.rgr"
+Import "detectors/DecimalNumberDetector.rgr"
+Import "values/LeftRightValue.rgr"
+Import "values/SliceParsedValue.rgr"
+
+class LeftRightDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "left-right"
+    }
+
+    sfn create:LeftRightDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new LeftRightDetector(s))
+    }
+
+    fn createChildDetectors:[TokenDetector] () {
+        def ds:[TokenDetector]
+        push ds (SetRepRangeLoadDetector.create())
+        push ds (RepeatBlockDetector.create())
+        push ds (WeightDetector.create())
+        push ds (DistanceDetector.create())
+        push ds (SpeedDetector.create())
+        push ds (ZoneDetector.create())
+        push ds (DecimalNumberDetector.create())
+        push ds (PositiveIntegerDetector.create())
+        return ds
+    }
+
+    fn detectWithSide:TokenSlice (slice:TokenSlice side:string) {
+        def key (side + " ")
+        if (slice.hasToken(key)) {
+        } {
+            return (this.noMatch())
+        }
+
+        def keyLen (strlen key)
+        def len (slice.length())
+        if (keyLen >= len) {
+            return (this.noMatch())
+        }
+
+        def lineEnd@(mutable):int keyLen
+        while (lineEnd < len) {
+            def ch (slice.charCodeAt(lineEnd))
+            if ((ch == 10) || (ch == 13)) {
+                break
+            }
+            lineEnd = lineEnd + 1
+        }
+
+        def out (slice.read(lineEnd))
+        out.tag = detectedTag
+
+        def sideToken (slice.read((strlen side)))
+        sideToken.tag = "keyword"
+        out.addChild(sideToken)
+
+        def restStart@(mutable):int keyLen
+        while (restStart < lineEnd) {
+            def ch2 (slice.charCodeAt(restStart))
+            if ((ch2 == 32) || (ch2 == 9)) {
+                restStart = restStart + 1
+            } {
+                break
+            }
+        }
+
+        if (restStart < lineEnd) {
+            def payload (slice.peek(restStart).read(lineEnd - restStart))
+            def p (new Parser((payload.toString()) (this.createChildDetectors())))
+            p.start()
+            def children (p.getResults())
+            for children ch3:TokenSlice i {
+                out.addChild(ch3)
+            }
+        }
+
+        def lv (new LeftRightValue)
+        lv.side = side
+        def parsed (SliceParsedValue.fromLeftRight(lv))
+        out.setSliceValue(parsed)
+        slice.setSliceValue(parsed)
+
+        return out
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def left (this.detectWithSide(slice "Left"))
+        if (left.isEmpty()) {
+        } {
+            return left
+        }
+
+        return (this.detectWithSide(slice "Right"))
+    }
+}

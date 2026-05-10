@@ -1,56 +1,346 @@
 class DateTimeValue  {
   constructor() {
+    this.kind = "datetime";
     this.year = 0;
     this.month = 0;
     this.day = 0;
-    this.hasTime = false;     /** note: unused */
+    this.hasTime = false;
     this.hour = 0;
     this.minute = 0;
     this.second = 0;
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["year"] = this.year;
+      res["month"] = this.month;
+      res["day"] = this.day;
+      res["hasTime"] = this.hasTime;
+      res["hour"] = this.hour;
+      res["minute"] = this.minute;
+      res["second"] = this.second;
+      if ( (typeof(this.timezone) !== "undefined" && this.timezone != null )  ) {
+        res["timezone"] = this.timezone;
+      }
+    } catch(e) {
+    }
+    return res;
+  };
 }
+DateTimeValue.fromDictionary = function(dict) {
+  const obj = new DateTimeValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["year"]) ) ? undefined : parseInt(dict ["year"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.year = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["month"]) ) ? undefined : parseInt(dict ["month"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.month = v_2;
+    }
+    const v_3 = isNaN( parseInt(dict ["day"]) ) ? undefined : parseInt(dict ["day"]) 
+    ;
+    if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
+      obj.day = v_3;
+    }
+    const v_4 = typeof(dict ["hasTime"]) === "undefined" ? undefined :(dict ["hasTime"]) ;
+    if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
+      obj.hasTime = v_4;
+    }
+    const v_5 = isNaN( parseInt(dict ["hour"]) ) ? undefined : parseInt(dict ["hour"]) 
+    ;
+    if ( (typeof(v_5) !== "undefined" && v_5 != null )  ) {
+      obj.hour = v_5;
+    }
+    const v_6 = isNaN( parseInt(dict ["minute"]) ) ? undefined : parseInt(dict ["minute"]) 
+    ;
+    if ( (typeof(v_6) !== "undefined" && v_6 != null )  ) {
+      obj.minute = v_6;
+    }
+    const v_7 = isNaN( parseInt(dict ["second"]) ) ? undefined : parseInt(dict ["second"]) 
+    ;
+    if ( (typeof(v_7) !== "undefined" && v_7 != null )  ) {
+      obj.second = v_7;
+    }
+    const v_8 = (typeof (dict ["timezone"]) != "string" ) ? undefined : dict ["timezone"] 
+    ;
+    if ( (typeof(v_8) !== "undefined" && v_8 != null )  ) {
+      obj.timezone = v_8;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class DistanceValue  {
   constructor() {
+    this.kind = "distance";
     this.value = 0;
     this.unit = "m";
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["value"] = this.value;
+      res["unit"] = this.unit;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+DistanceValue.fromDictionary = function(dict) {
+  const obj = new DistanceValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+    const v_2 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.unit = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class PercentageValue  {
   constructor() {
+    this.kind = "percentage";
     this.value = 0;
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["value"] = this.value;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+PercentageValue.fromDictionary = function(dict) {
+  const obj = new PercentageValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class RecoveryTimeValue  {
   constructor() {
+    this.kind = "recovery-time";
     this.value = 0;
     this.unit = "";
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["value"] = this.value;
+      res["unit"] = this.unit;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+RecoveryTimeValue.fromDictionary = function(dict) {
+  const obj = new RecoveryTimeValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+    const v_2 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.unit = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class WeightValue  {
   constructor() {
+    this.kind = "weight";
     this.value = 0;
     this.unit = "kg";
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["value"] = this.value;
+      res["unit"] = this.unit;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+WeightValue.fromDictionary = function(dict) {
+  const obj = new WeightValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+    const v_2 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.unit = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class NumRangeValue  {
   constructor() {
+    this.kind = "num-range";
     this.minValue = 0;
     this.maxValue = 0;
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["minValue"] = this.minValue;
+      res["maxValue"] = this.maxValue;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+NumRangeValue.fromDictionary = function(dict) {
+  const obj = new NumRangeValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["minValue"]) ) ? undefined : parseInt(dict ["minValue"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.minValue = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["maxValue"]) ) ? undefined : parseInt(dict ["maxValue"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.maxValue = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class PercentageRangeValue  {
   constructor() {
+    this.kind = "percentage-range";
     this.minValue = 0;
     this.maxValue = 0;
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["minValue"] = this.minValue;
+      res["maxValue"] = this.maxValue;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+PercentageRangeValue.fromDictionary = function(dict) {
+  const obj = new PercentageRangeValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["minValue"]) ) ? undefined : parseInt(dict ["minValue"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.minValue = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["maxValue"]) ) ? undefined : parseInt(dict ["maxValue"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.maxValue = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class RepeatBlockValue  {
   constructor() {
+    this.kind = "repeat-block";
     this.count = 0;
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["count"] = this.count;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+RepeatBlockValue.fromDictionary = function(dict) {
+  const obj = new RepeatBlockValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["count"]) ) ? undefined : parseInt(dict ["count"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.count = v_1;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class SetRepRangeLoadValue  {
   constructor() {
+    this.kind = "set-rep-range-load";
     this.setsMin = 0;
     this.setsMax = 0;
     this.repsMin = 0;
@@ -59,28 +349,452 @@ class SetRepRangeLoadValue  {
     this.load = 0;
     this.unit = "";
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["setsMin"] = this.setsMin;
+      res["setsMax"] = this.setsMax;
+      res["repsMin"] = this.repsMin;
+      res["repsMax"] = this.repsMax;
+      res["mode"] = this.mode;
+      res["load"] = this.load;
+      res["unit"] = this.unit;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+SetRepRangeLoadValue.fromDictionary = function(dict) {
+  const obj = new SetRepRangeLoadValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["setsMin"]) ) ? undefined : parseInt(dict ["setsMin"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.setsMin = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["setsMax"]) ) ? undefined : parseInt(dict ["setsMax"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.setsMax = v_2;
+    }
+    const v_3 = isNaN( parseInt(dict ["repsMin"]) ) ? undefined : parseInt(dict ["repsMin"]) 
+    ;
+    if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
+      obj.repsMin = v_3;
+    }
+    const v_4 = isNaN( parseInt(dict ["repsMax"]) ) ? undefined : parseInt(dict ["repsMax"]) 
+    ;
+    if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
+      obj.repsMax = v_4;
+    }
+    const v_5 = (typeof (dict ["mode"]) != "string" ) ? undefined : dict ["mode"] 
+    ;
+    if ( (typeof(v_5) !== "undefined" && v_5 != null )  ) {
+      obj.mode = v_5;
+    }
+    const v_6 = isNaN( parseInt(dict ["load"]) ) ? undefined : parseInt(dict ["load"]) 
+    ;
+    if ( (typeof(v_6) !== "undefined" && v_6 != null )  ) {
+      obj.load = v_6;
+    }
+    const v_7 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_7) !== "undefined" && v_7 != null )  ) {
+      obj.unit = v_7;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class ZoneValue  {
   constructor() {
+    this.kind = "zone";
     this.zone = 0;
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["zone"] = this.zone;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+ZoneValue.fromDictionary = function(dict) {
+  const obj = new ZoneValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["zone"]) ) ? undefined : parseInt(dict ["zone"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.zone = v_1;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class PositiveIntegerValue  {
   constructor() {
+    this.kind = "positive-integer";
     this.value = 0;
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["value"] = this.value;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+PositiveIntegerValue.fromDictionary = function(dict) {
+  const obj = new PositiveIntegerValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class DetailsLevelValue  {
   constructor() {
+    this.kind = "details-level";
     this.level = 0;
     this.marker = "";
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["level"] = this.level;
+      res["marker"] = this.marker;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+DetailsLevelValue.fromDictionary = function(dict) {
+  const obj = new DetailsLevelValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["level"]) ) ? undefined : parseInt(dict ["level"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.level = v_1;
+    }
+    const v_2 = (typeof (dict ["marker"]) != "string" ) ? undefined : dict ["marker"] 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.marker = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class RecoveryValue  {
   constructor() {
+    this.kind = "recovery";
     this.label = "Recovery";
   }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["label"] = this.label;
+    } catch(e) {
+    }
+    return res;
+  };
 }
+RecoveryValue.fromDictionary = function(dict) {
+  const obj = new RecoveryValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = (typeof (dict ["label"]) != "string" ) ? undefined : dict ["label"] 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.label = v_1;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class TimeValueValue  {
+  constructor() {
+    this.kind = "time-value";
+    this.minutes = 0;
+    this.seconds = 0;
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["minutes"] = this.minutes;
+      res["seconds"] = this.seconds;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+TimeValueValue.fromDictionary = function(dict) {
+  const obj = new TimeValueValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["minutes"]) ) ? undefined : parseInt(dict ["minutes"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.minutes = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["seconds"]) ) ? undefined : parseInt(dict ["seconds"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.seconds = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class LeftRightValue  {
+  constructor() {
+    this.kind = "left-right";
+    this.side = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["side"] = this.side;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+LeftRightValue.fromDictionary = function(dict) {
+  const obj = new LeftRightValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = (typeof (dict ["side"]) != "string" ) ? undefined : dict ["side"] 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.side = v_1;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class FeelingValue  {
+  constructor() {
+    this.kind = "feeling";
+    this.kind = "";     /** note: unused */
+    this.score = 0;
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["kind"] = this.kind;
+      res["score"] = this.score;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+FeelingValue.fromDictionary = function(dict) {
+  const obj = new FeelingValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.kind = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["score"]) ) ? undefined : parseInt(dict ["score"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.score = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class BodyMetricValue  {
+  constructor() {
+    this.kind = "body-metric";
+    this.metric = "";
+    this.primaryValue = 0.0;
+    this.secondaryValue = 0;
+    this.unit = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["metric"] = this.metric;
+      res["primaryValue"] = this.primaryValue;
+      res["secondaryValue"] = this.secondaryValue;
+      res["unit"] = this.unit;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+BodyMetricValue.fromDictionary = function(dict) {
+  const obj = new BodyMetricValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = (typeof (dict ["metric"]) != "string" ) ? undefined : dict ["metric"] 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.metric = v_1;
+    }
+    const v_2 = isNaN( parseFloat(dict ["primaryValue"]) ) ? undefined : parseFloat(dict ["primaryValue"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.primaryValue = v_2;
+    }
+    const v_3 = isNaN( parseInt(dict ["secondaryValue"]) ) ? undefined : parseInt(dict ["secondaryValue"]) 
+    ;
+    if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
+      obj.secondaryValue = v_3;
+    }
+    const v_4 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
+      obj.unit = v_4;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class CircuitValue  {
+  constructor() {
+    this.kind = "circuit";
+    this.rounds = 0;
+    this.restValue = 0;
+    this.restUnit = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["rounds"] = this.rounds;
+      res["restValue"] = this.restValue;
+      res["restUnit"] = this.restUnit;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+CircuitValue.fromDictionary = function(dict) {
+  const obj = new CircuitValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["rounds"]) ) ? undefined : parseInt(dict ["rounds"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.rounds = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["restValue"]) ) ? undefined : parseInt(dict ["restValue"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.restValue = v_2;
+    }
+    const v_3 = (typeof (dict ["restUnit"]) != "string" ) ? undefined : dict ["restUnit"] 
+    ;
+    if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
+      obj.restUnit = v_3;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class ContextEntryValue  {
+  constructor() {
+    this.kind = "context-entry";
+    this.kind = "";     /** note: unused */
+    this.content = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["kind"] = this.kind;
+      res["content"] = this.content;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+ContextEntryValue.fromDictionary = function(dict) {
+  const obj = new ContextEntryValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.kind = v_1;
+    }
+    const v_2 = (typeof (dict ["content"]) != "string" ) ? undefined : dict ["content"] 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.content = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
 class SliceParsedValue  {
   constructor() {
     this.kind = "";
@@ -202,6 +916,60 @@ class SliceParsedValue  {
     }
     return new RecoveryValue();
   };
+  hasTimeValue () {
+    return (typeof(this.timeValue) !== "undefined" && this.timeValue != null ) ;
+  };
+  getTimeValue () {
+    if ( (typeof(this.timeValue) !== "undefined" && this.timeValue != null )  ) {
+      return this.timeValue;
+    }
+    return new TimeValueValue();
+  };
+  hasLeftRight () {
+    return (typeof(this.leftRight) !== "undefined" && this.leftRight != null ) ;
+  };
+  getLeftRight () {
+    if ( (typeof(this.leftRight) !== "undefined" && this.leftRight != null )  ) {
+      return this.leftRight;
+    }
+    return new LeftRightValue();
+  };
+  hasFeeling () {
+    return (typeof(this.feeling) !== "undefined" && this.feeling != null ) ;
+  };
+  getFeeling () {
+    if ( (typeof(this.feeling) !== "undefined" && this.feeling != null )  ) {
+      return this.feeling;
+    }
+    return new FeelingValue();
+  };
+  hasBodyMetric () {
+    return (typeof(this.bodyMetric) !== "undefined" && this.bodyMetric != null ) ;
+  };
+  getBodyMetric () {
+    if ( (typeof(this.bodyMetric) !== "undefined" && this.bodyMetric != null )  ) {
+      return this.bodyMetric;
+    }
+    return new BodyMetricValue();
+  };
+  hasCircuit () {
+    return (typeof(this.circuit) !== "undefined" && this.circuit != null ) ;
+  };
+  getCircuit () {
+    if ( (typeof(this.circuit) !== "undefined" && this.circuit != null )  ) {
+      return this.circuit;
+    }
+    return new CircuitValue();
+  };
+  hasContextEntry () {
+    return (typeof(this.contextEntry) !== "undefined" && this.contextEntry != null ) ;
+  };
+  getContextEntry () {
+    if ( (typeof(this.contextEntry) !== "undefined" && this.contextEntry != null )  ) {
+      return this.contextEntry;
+    }
+    return new ContextEntryValue();
+  };
 }
 SliceParsedValue.create = function(kind) {
   const out = new SliceParsedValue();
@@ -284,6 +1052,42 @@ SliceParsedValue.fromRecovery = function(value) {
   const out = new SliceParsedValue();
   out.kind = "recovery";
   out.recovery = value;
+  return out;
+};
+SliceParsedValue.fromTimeValue = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "time-value";
+  out.timeValue = value;
+  return out;
+};
+SliceParsedValue.fromLeftRight = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "left-right";
+  out.leftRight = value;
+  return out;
+};
+SliceParsedValue.fromFeeling = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "feeling";
+  out.feeling = value;
+  return out;
+};
+SliceParsedValue.fromBodyMetric = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "body-metric";
+  out.bodyMetric = value;
+  return out;
+};
+SliceParsedValue.fromCircuit = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "circuit";
+  out.circuit = value;
+  return out;
+};
+SliceParsedValue.fromContextEntry = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "context-entry";
+  out.contextEntry = value;
   return out;
 };
 class TokenSlice  {
@@ -731,6 +1535,186 @@ class TokenSlice  {
       }
     }
     return new RecoveryValue();
+  };
+  hasTimeValueValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "time-value") && p.hasTimeValue() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setTimeValueValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.timeValue = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "time-value";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromTimeValue(value);
+  };
+  getAsTimeValueValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "time-value") && p.hasTimeValue() ) {
+        return p.getTimeValue();
+      }
+    }
+    return new TimeValueValue();
+  };
+  hasLeftRightValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "left-right") && p.hasLeftRight() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setLeftRightValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.leftRight = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "left-right";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromLeftRight(value);
+  };
+  getAsLeftRightValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "left-right") && p.hasLeftRight() ) {
+        return p.getLeftRight();
+      }
+    }
+    return new LeftRightValue();
+  };
+  hasFeelingValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "feeling") && p.hasFeeling() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setFeelingValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.feeling = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "feeling";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromFeeling(value);
+  };
+  getAsFeelingValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "feeling") && p.hasFeeling() ) {
+        return p.getFeeling();
+      }
+    }
+    return new FeelingValue();
+  };
+  hasBodyMetricValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "body-metric") && p.hasBodyMetric() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setBodyMetricValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.bodyMetric = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "body-metric";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromBodyMetric(value);
+  };
+  getAsBodyMetricValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "body-metric") && p.hasBodyMetric() ) {
+        return p.getBodyMetric();
+      }
+    }
+    return new BodyMetricValue();
+  };
+  hasCircuitValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "circuit") && p.hasCircuit() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setCircuitValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.circuit = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "circuit";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromCircuit(value);
+  };
+  getAsCircuitValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "circuit") && p.hasCircuit() ) {
+        return p.getCircuit();
+      }
+    }
+    return new CircuitValue();
+  };
+  hasContextEntryValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "context-entry") && p.hasContextEntry() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setContextEntryValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.contextEntry = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "context-entry";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromContextEntry(value);
+  };
+  getAsContextEntryValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "context-entry") && p.hasContextEntry() ) {
+        return p.getContextEntry();
+      }
+    }
+    return new ContextEntryValue();
   };
   toString () {
     return this.source.substring(this.start, (this.start + this.size) );
@@ -1389,6 +2373,12 @@ class TimeValueDetector  extends TokenDetector {
     }
     const out = slice.read(5);
     out.tag = this.detectedTag;
+    const tv = new TimeValueValue();
+    tv.minutes = hour;
+    tv.seconds = minute;
+    const payload = SliceParsedValue.fromTimeValue(tv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
     return out;
   };
 }
@@ -1541,6 +2531,18 @@ class RecoveryTimeDetector  extends TokenDetector {
     }
     const out = slice.read((i + 1));
     out.tag = this.detectedTag;
+    const slashToken = slice.read(1);
+    slashToken.tag = "keyword";
+    out.addChild(slashToken);
+    const valueToken = (slice.peek(1)).read((i - 1));
+    valueToken.tag = "positive-integer";
+    const piv = new PositiveIntegerValue();
+    piv.value = valueToken.parseInteger(0, ((valueToken).length() - 1));
+    valueToken.setSliceValue(SliceParsedValue.fromPositiveInteger(piv));
+    out.addChild(valueToken);
+    const unitToken = (slice.peek(i)).read(1);
+    unitToken.tag = "keyword";
+    out.addChild(unitToken);
     const rv = new RecoveryTimeValue();
     rv.value = ((slice.read(i)).peek(1)).parseInteger(0, (i - 2));
     if ( unit == 115 ) {
@@ -1859,74 +2861,6 @@ RecoveryDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RecoveryDetector(s);
 };
-class SpeedDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "speed";
-  }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 7 ) {
-      return this.noMatch();
-    }
-    const slashPos = slice.findTokenPos("/");
-    if ( slashPos <= 0 ) {
-      return this.noMatch();
-    }
-    const left = slice.read(slashPos);
-    const colonPos = left.findTokenPos(":");
-    if ( colonPos <= 0 ) {
-      return this.noMatch();
-    }
-    if ( (colonPos + 3) != (left).length() ) {
-      return this.noMatch();
-    }
-    if ( false == left.hasInteger(0, (colonPos - 1)) ) {
-      return this.noMatch();
-    }
-    if ( false == left.hasInteger((colonPos + 1), (colonPos + 2)) ) {
-      return this.noMatch();
-    }
-    const sec = left.parseInteger((colonPos + 1), (colonPos + 2));
-    if ( (sec < 0) || (sec > 59) ) {
-      return this.noMatch();
-    }
-    const rightStart = slice.peek((slashPos + 1));
-    const dist = (DistanceDetector.create()).detect(rightStart);
-    if ( dist.isEmpty() ) {
-      return this.noMatch();
-    }
-    if ( false == (dist.tag == "distance") ) {
-      return this.noMatch();
-    }
-    const first = left;
-    first.tag = "time-value";
-    const second = (slice.peek(slashPos)).read(1);
-    second.tag = "keyword";
-    const third = dist;
-    if ( false == (second.tag == "keyword") ) {
-      return this.noMatch();
-    }
-    if ( false == second.strEquals("/") ) {
-      return this.noMatch();
-    }
-    if ( false == (third.tag == "distance") ) {
-      return this.noMatch();
-    }
-    const outLen = ((first).length() + (second).length()) + (third).length();
-    const out = slice.read(outLen);
-    out.tag = this.detectedTag;
-    out.addChild(first);
-    out.addChild(second);
-    out.addChild(third);
-    return out;
-  };
-}
-SpeedDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new SpeedDetector(s);
-};
 class RepeatBlockDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -1987,6 +2921,962 @@ class RepeatBlockDetector  extends TokenDetector {
 RepeatBlockDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RepeatBlockDetector(s);
+};
+class SetRepRangeLoadDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "set-rep-range-load";
+  }
+  isDigit (ch) {
+    return (ch >= 48) && (ch <= 57);
+  };
+  isAlphaNum (ch) {
+    if ( (ch >= 48) && (ch <= 57) ) {
+      return true;
+    }
+    if ( (ch >= 65) && (ch <= 90) ) {
+      return true;
+    }
+    if ( (ch >= 97) && (ch <= 122) ) {
+      return true;
+    }
+    return false;
+  };
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 9 ) {
+      return this.noMatch();
+    }
+    let i = 0;
+    while (i < __len) {
+      if ( this.isDigit(slice.charCodeAt(i)) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    const setsLeftEnd = i;
+    if ( setsLeftEnd <= 0 ) {
+      return this.noMatch();
+    }
+    if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
+      return this.noMatch();
+    }
+    i = i + 1;
+    const setsRightStart = i;
+    while (i < __len) {
+      if ( this.isDigit(slice.charCodeAt(i)) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    const setsRightEnd = i;
+    if ( setsRightEnd <= setsRightStart ) {
+      return this.noMatch();
+    }
+    if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
+      return this.noMatch();
+    }
+    i = i + 1;
+    const repsLeftStart = i;
+    while (i < __len) {
+      if ( this.isDigit(slice.charCodeAt(i)) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    const repsLeftEnd = i;
+    if ( repsLeftEnd <= repsLeftStart ) {
+      return this.noMatch();
+    }
+    if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
+      return this.noMatch();
+    }
+    i = i + 1;
+    const repsRightStart = i;
+    while (i < __len) {
+      if ( this.isDigit(slice.charCodeAt(i)) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    const repsRightEnd = i;
+    if ( repsRightEnd <= repsRightStart ) {
+      return this.noMatch();
+    }
+    const setsLeft = slice.read(setsLeftEnd);
+    const setsRight = (slice.peek(setsRightStart)).read((setsRightEnd - setsRightStart));
+    const repsLeft = (slice.peek(repsLeftStart)).read((repsLeftEnd - repsLeftStart));
+    const repsRight = (slice.peek(repsRightStart)).read((repsRightEnd - repsRightStart));
+    if ( setsLeft.hasInteger(0, ((setsLeft).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    if ( setsRight.hasInteger(0, ((setsRight).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    if ( repsLeft.hasInteger(0, ((repsLeft).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    if ( repsRight.hasInteger(0, ((repsRight).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    if ( setsLeft.parseInteger(0, ((setsLeft).length() - 1)) <= 0 ) {
+      return this.noMatch();
+    }
+    if ( setsRight.parseInteger(0, ((setsRight).length() - 1)) <= 0 ) {
+      return this.noMatch();
+    }
+    if ( repsLeft.parseInteger(0, ((repsLeft).length() - 1)) <= 0 ) {
+      return this.noMatch();
+    }
+    if ( repsRight.parseInteger(0, ((repsRight).length() - 1)) <= 0 ) {
+      return this.noMatch();
+    }
+    const setsMinVal = setsLeft.parseInteger(0, ((setsLeft).length() - 1));
+    const setsMaxVal = setsRight.parseInteger(0, ((setsRight).length() - 1));
+    const repsMinVal = repsLeft.parseInteger(0, ((repsLeft).length() - 1));
+    const repsMaxVal = repsRight.parseInteger(0, ((repsRight).length() - 1));
+    if ( i >= __len ) {
+      return this.noMatch();
+    }
+    const mode = slice.charCodeAt(i);
+    let modeText = "";
+    let loadVal = 0;
+    let unitText = "";
+    if ( mode == 64 ) {
+      modeText = "bw";
+      unitText = "bw";
+      i = i + 1;
+      if ( (i + 1) >= __len ) {
+        return this.noMatch();
+      }
+      if ( slice.charCodeAt(i) != 98 ) {
+        return this.noMatch();
+      }
+      if ( slice.charCodeAt((i + 1)) != 119 ) {
+        return this.noMatch();
+      }
+      i = i + 2;
+    } else {
+      if ( mode == 120 ) {
+        modeText = "kg";
+        i = i + 1;
+        const loadStart = i;
+        while (i < __len) {
+          if ( this.isDigit(slice.charCodeAt(i)) ) {
+            i = i + 1;
+          } else {
+            break;
+          }
+        };
+        if ( i <= loadStart ) {
+          return this.noMatch();
+        }
+        const loadDigits = (slice.peek(loadStart)).read((i - loadStart));
+        if ( loadDigits.hasInteger(0, ((loadDigits).length() - 1)) ) {
+        } else {
+          return this.noMatch();
+        }
+        loadVal = loadDigits.parseInteger(0, ((loadDigits).length() - 1));
+        if ( loadVal <= 0 ) {
+          return this.noMatch();
+        }
+        if ( (i + 1) >= __len ) {
+          return this.noMatch();
+        }
+        if ( slice.charCodeAt(i) != 107 ) {
+          return this.noMatch();
+        }
+        if ( slice.charCodeAt((i + 1)) != 103 ) {
+          return this.noMatch();
+        }
+        unitText = "kg";
+        i = i + 2;
+      } else {
+        return this.noMatch();
+      }
+    }
+    if ( i < __len ) {
+      if ( this.isAlphaNum(slice.charCodeAt(i)) ) {
+        return this.noMatch();
+      }
+    }
+    const out = slice.read(i);
+    out.tag = this.detectedTag;
+    const sv = new SetRepRangeLoadValue();
+    sv.setsMin = setsMinVal;
+    sv.setsMax = setsMaxVal;
+    sv.repsMin = repsMinVal;
+    sv.repsMax = repsMaxVal;
+    sv.mode = modeText;
+    sv.load = loadVal;
+    sv.unit = unitText;
+    const payload = SliceParsedValue.fromSetRepRangeLoad(sv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
+    return out;
+  };
+}
+SetRepRangeLoadDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new SetRepRangeLoadDetector(s);
+};
+class SpeedDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "speed";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 7 ) {
+      return this.noMatch();
+    }
+    const slashPos = slice.findTokenPos("/");
+    if ( slashPos <= 0 ) {
+      return this.noMatch();
+    }
+    const left = slice.read(slashPos);
+    const colonPos = left.findTokenPos(":");
+    if ( colonPos <= 0 ) {
+      return this.noMatch();
+    }
+    if ( (colonPos + 3) != (left).length() ) {
+      return this.noMatch();
+    }
+    if ( false == left.hasInteger(0, (colonPos - 1)) ) {
+      return this.noMatch();
+    }
+    if ( false == left.hasInteger((colonPos + 1), (colonPos + 2)) ) {
+      return this.noMatch();
+    }
+    const sec = left.parseInteger((colonPos + 1), (colonPos + 2));
+    if ( (sec < 0) || (sec > 59) ) {
+      return this.noMatch();
+    }
+    const rightStart = slice.peek((slashPos + 1));
+    const dist = (DistanceDetector.create()).detect(rightStart);
+    if ( dist.isEmpty() ) {
+      return this.noMatch();
+    }
+    if ( false == (dist.tag == "distance") ) {
+      return this.noMatch();
+    }
+    const first = left;
+    first.tag = "time-value";
+    const tv = new TimeValueValue();
+    tv.minutes = left.parseInteger(0, (colonPos - 1));
+    tv.seconds = sec;
+    first.setSliceValue(SliceParsedValue.fromTimeValue(tv));
+    const second = (slice.peek(slashPos)).read(1);
+    second.tag = "keyword";
+    const third = dist;
+    if ( false == (second.tag == "keyword") ) {
+      return this.noMatch();
+    }
+    if ( false == second.strEquals("/") ) {
+      return this.noMatch();
+    }
+    if ( false == (third.tag == "distance") ) {
+      return this.noMatch();
+    }
+    const outLen = ((first).length() + (second).length()) + (third).length();
+    const out = slice.read(outLen);
+    out.tag = this.detectedTag;
+    out.addChild(first);
+    out.addChild(second);
+    out.addChild(third);
+    return out;
+  };
+}
+SpeedDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new SpeedDetector(s);
+};
+class ZoneDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "zone";
+  }
+  isDigit (ch) {
+    return (ch >= 48) && (ch <= 57);
+  };
+  isAlphaNum (ch) {
+    if ( (ch >= 48) && (ch <= 57) ) {
+      return true;
+    }
+    if ( (ch >= 65) && (ch <= 90) ) {
+      return true;
+    }
+    if ( (ch >= 97) && (ch <= 122) ) {
+      return true;
+    }
+    return false;
+  };
+  detect (slice) {
+    if ( slice.hasToken("Zone") ) {
+    } else {
+      return this.noMatch();
+    }
+    const __len = (slice).length();
+    if ( __len <= 4 ) {
+      return this.noMatch();
+    }
+    let i = 4;
+    if ( (i < __len) && (slice.charCodeAt(i) == 32) ) {
+      i = i + 1;
+    }
+    if ( i >= __len ) {
+      return this.noMatch();
+    }
+    const startDigits = i;
+    while (i < __len) {
+      const ch = slice.charCodeAt(i);
+      if ( this.isDigit(ch) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    if ( i == startDigits ) {
+      return this.noMatch();
+    }
+    const zoneDigits = (slice.peek(startDigits)).read((i - startDigits));
+    if ( zoneDigits.hasInteger(0, ((zoneDigits).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    const zoneNum = zoneDigits.parseInteger(0, ((zoneDigits).length() - 1));
+    if ( (zoneNum < 1) || (zoneNum > 5) ) {
+      return this.noMatch();
+    }
+    if ( i < __len ) {
+      const next = slice.charCodeAt(i);
+      if ( this.isAlphaNum(next) ) {
+        return this.noMatch();
+      }
+    }
+    const out = slice.read(i);
+    out.tag = this.detectedTag;
+    const zv = new ZoneValue();
+    zv.zone = zoneNum;
+    const payload = SliceParsedValue.fromZone(zv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
+    return out;
+  };
+}
+ZoneDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new ZoneDetector(s);
+};
+class LeftRightDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "left-right";
+  }
+  createChildDetectors () {
+    let ds = [];
+    ds.push(SetRepRangeLoadDetector.create());
+    ds.push(RepeatBlockDetector.create());
+    ds.push(WeightDetector.create());
+    ds.push(DistanceDetector.create());
+    ds.push(SpeedDetector.create());
+    ds.push(ZoneDetector.create());
+    ds.push(DecimalNumberDetector.create());
+    ds.push(PositiveIntegerDetector.create());
+    return ds;
+  };
+  detectWithSide (slice, side) {
+    const key = side + " ";
+    if ( slice.hasToken(key) ) {
+    } else {
+      return this.noMatch();
+    }
+    const keyLen = key.length;
+    const __len = (slice).length();
+    if ( keyLen >= __len ) {
+      return this.noMatch();
+    }
+    let lineEnd = keyLen;
+    while (lineEnd < __len) {
+      const ch = slice.charCodeAt(lineEnd);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const sideToken = slice.read((side.length));
+    sideToken.tag = "keyword";
+    out.addChild(sideToken);
+    let restStart = keyLen;
+    while (restStart < lineEnd) {
+      const ch2 = slice.charCodeAt(restStart);
+      if ( (ch2 == 32) || (ch2 == 9) ) {
+        restStart = restStart + 1;
+      } else {
+        break;
+      }
+    };
+    if ( restStart < lineEnd ) {
+      const payload = (slice.peek(restStart)).read((lineEnd - restStart));
+      const p = new Parser((payload).toString(), this.createChildDetectors());
+      (p).start();
+      const children = p.getResults();
+      for ( let i = 0; i < children.length; i++) {
+        var ch3 = children[i];
+        out.addChild(ch3);
+      };
+    }
+    const lv = new LeftRightValue();
+    lv.side = side;
+    const parsed = SliceParsedValue.fromLeftRight(lv);
+    out.setSliceValue(parsed);
+    slice.setSliceValue(parsed);
+    return out;
+  };
+  detect (slice) {
+    const left = this.detectWithSide(slice, "Left");
+    if ( left.isEmpty() ) {
+    } else {
+      return left;
+    }
+    return this.detectWithSide(slice, "Right");
+  };
+}
+LeftRightDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new LeftRightDetector(s);
+};
+class FeelingDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "feeling";
+  }
+  parseKind (slice) {
+    if ( slice.hasToken("Feeling ") ) {
+      return "feeling";
+    }
+    if ( slice.hasToken("Feelings ") ) {
+      return "feeling";
+    }
+    if ( slice.hasToken("Pain ") ) {
+      return "pain";
+    }
+    return "";
+  };
+  prefixLength (slice, kind) {
+    if ( kind == "pain" ) {
+      return 5;
+    }
+    if ( slice.hasToken("Feelings ") ) {
+      return 9;
+    }
+    return 8;
+  };
+  detect (slice) {
+    const kind = this.parseKind(slice);
+    if ( (kind.length) == 0 ) {
+      return this.noMatch();
+    }
+    const keyLen = this.prefixLength(slice, kind);
+    const __len = (slice).length();
+    if ( keyLen >= __len ) {
+      return this.noMatch();
+    }
+    let lineEnd = keyLen;
+    while (lineEnd < __len) {
+      const ch = slice.charCodeAt(lineEnd);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
+    const valueSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
+    let detectors = [];
+    detectors.push(PositiveIntegerDetector.create());
+    const p = new Parser((valueSlice).toString(), detectors);
+    (p).start();
+    if ( p.getCount() != 1 ) {
+      return this.noMatch();
+    }
+    const scoreToken = p.getResults()[0];
+    if ( scoreToken.tag == "positive-integer" ) {
+    } else {
+      return this.noMatch();
+    }
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    let labelLen = keyLen - 1;
+    if ( labelLen < 1 ) {
+      labelLen = 1;
+    }
+    const label = slice.read(labelLen);
+    label.tag = "keyword";
+    out.addChild(label);
+    out.addChild(scoreToken);
+    const fv = new FeelingValue();
+    fv.kind = kind;
+    fv.score = scoreToken.parseInteger(0, ((scoreToken).length() - 1));
+    const parsed = SliceParsedValue.fromFeeling(fv);
+    out.setSliceValue(parsed);
+    slice.setSliceValue(parsed);
+    return out;
+  };
+}
+FeelingDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new FeelingDetector(s);
+};
+class BodyMetricDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "body-metric";
+  }
+  findLineEnd (slice, from) {
+    const __len = (slice).length();
+    let i = from;
+    while (i < __len) {
+      const ch = slice.charCodeAt(i);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      i = i + 1;
+    };
+    return i;
+  };
+  createMetricSlice (slice, offset, lineEnd) {
+    if ( offset >= lineEnd ) {
+      return slice.read(0);
+    }
+    return (slice.peek(offset)).read((lineEnd - offset));
+  };
+  parseDoublePrefix (metricSlice) {
+    const __len = (metricSlice).length();
+    let i = 0;
+    while (i < __len) {
+      const ch = metricSlice.charCodeAt(i);
+      if ( (ch >= 48) && (ch <= 57) ) {
+        i = i + 1;
+        continue;
+      }
+      if ( ch == 46 ) {
+        i = i + 1;
+        continue;
+      }
+      break;
+    };
+    if ( i == 0 ) {
+      return -1.0;
+    }
+    if ( metricSlice.hasDouble(0, (i - 1)) ) {
+      return metricSlice.parseDouble(0, (i - 1));
+    }
+    return -1.0;
+  };
+  parseIntegerPrefix (metricSlice) {
+    const __len = (metricSlice).length();
+    let i = 0;
+    while (i < __len) {
+      const ch = metricSlice.charCodeAt(i);
+      if ( (ch >= 48) && (ch <= 57) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    if ( i == 0 ) {
+      return -1;
+    }
+    if ( metricSlice.hasInteger(0, (i - 1)) ) {
+      return metricSlice.parseInteger(0, (i - 1));
+    }
+    return -1;
+  };
+  setCommon (out, source, value) {
+    const parsed = SliceParsedValue.fromBodyMetric(value);
+    out.setSliceValue(parsed);
+    source.setSliceValue(parsed);
+  };
+  detectWeight (slice) {
+    const prefix = "Weight ";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(6);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value <= 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "weight";
+    mv.primaryValue = value;
+    mv.unit = "kg";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detectBodyFat (slice) {
+    const prefix = "BodyFat ";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(7);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value < 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "body-fat";
+    mv.primaryValue = value;
+    mv.unit = "%";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detectSleep (slice) {
+    const prefix = "Sleep ";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(5);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value <= 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "sleep";
+    mv.primaryValue = value;
+    mv.unit = "h";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detectRestingHr (slice) {
+    const prefix = "Health resting_hr ";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(17);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value <= 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "resting-hr";
+    mv.primaryValue = value;
+    mv.unit = "bpm";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detectBp (slice) {
+    const prefix = "Vitals bp ";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const slashPos = metric.findTokenPos("/");
+    if ( (slashPos < 1) || (slashPos >= ((metric).length() - 1)) ) {
+      return this.noMatch();
+    }
+    const left = metric.read(slashPos);
+    const right = (metric.peek((slashPos + 1))).read((((metric).length() - slashPos) - 1));
+    if ( left.hasInteger(0, ((left).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    if ( right.hasInteger(0, ((right).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(9);
+    label.tag = "keyword";
+    out.addChild(label);
+    const mv = new BodyMetricValue();
+    mv.metric = "blood-pressure";
+    mv.primaryValue = left.parseDouble(0, ((left).length() - 1));
+    mv.secondaryValue = right.parseInteger(0, ((right).length() - 1));
+    mv.unit = "mmhg";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detect (slice) {
+    const w = this.detectWeight(slice);
+    if ( w.isEmpty() ) {
+    } else {
+      return w;
+    }
+    const bf = this.detectBodyFat(slice);
+    if ( bf.isEmpty() ) {
+    } else {
+      return bf;
+    }
+    const sl = this.detectSleep(slice);
+    if ( sl.isEmpty() ) {
+    } else {
+      return sl;
+    }
+    const hr = this.detectRestingHr(slice);
+    if ( hr.isEmpty() ) {
+    } else {
+      return hr;
+    }
+    return this.detectBp(slice);
+  };
+}
+BodyMetricDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new BodyMetricDetector(s);
+};
+class CircuitDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "circuit";
+  }
+  detect (slice) {
+    const prefix = "Circuit ";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const __len = (slice).length();
+    const roundsStart = prefix.length;
+    let roundsEnd = roundsStart;
+    while (roundsEnd < __len) {
+      const ch = slice.charCodeAt(roundsEnd);
+      if ( (ch >= 48) && (ch <= 57) ) {
+        roundsEnd = roundsEnd + 1;
+      } else {
+        break;
+      }
+    };
+    if ( roundsEnd <= roundsStart ) {
+      return this.noMatch();
+    }
+    const roundsSlice = (slice.peek(roundsStart)).read((roundsEnd - roundsStart));
+    if ( roundsSlice.hasInteger(0, ((roundsSlice).length() - 1)) ) {
+    } else {
+      return this.noMatch();
+    }
+    let lineEnd = roundsEnd;
+    while (lineEnd < __len) {
+      const ch2 = slice.charCodeAt(lineEnd);
+      if ( (ch2 == 10) || (ch2 == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const circuitToken = slice.read(7);
+    circuitToken.tag = "keyword";
+    out.addChild(circuitToken);
+    const roundsToken = (slice.peek(roundsStart)).read((roundsEnd - roundsStart));
+    roundsToken.tag = "positive-integer";
+    out.addChild(roundsToken);
+    const cv = new CircuitValue();
+    cv.rounds = roundsSlice.parseInteger(0, ((roundsSlice).length() - 1));
+    if ( (roundsEnd < lineEnd) && (slice.charCodeAt(roundsEnd) == 47) ) {
+      let i = roundsEnd + 1;
+      while (i < lineEnd) {
+        const ch3 = slice.charCodeAt(i);
+        if ( (ch3 >= 48) && (ch3 <= 57) ) {
+          i = i + 1;
+        } else {
+          break;
+        }
+      };
+      if ( i > (roundsEnd + 1) ) {
+        let j = i;
+        while (j < lineEnd) {
+          const ch4 = slice.charCodeAt(j);
+          if ( (ch4 >= 65) && (ch4 <= 90) ) {
+            j = j + 1;
+            continue;
+          }
+          if ( (ch4 >= 97) && (ch4 <= 122) ) {
+            j = j + 1;
+            continue;
+          }
+          break;
+        };
+        if ( j > i ) {
+          const restToken = (slice.peek(roundsEnd)).read((j - roundsEnd));
+          restToken.tag = "recovery-time";
+          out.addChild(restToken);
+          const vSlice = (slice.peek((roundsEnd + 1))).read(((i - roundsEnd) - 1));
+          cv.restValue = vSlice.parseInteger(0, ((vSlice).length() - 1));
+          const unitRaw = ((slice.peek(i)).read((j - i))).toString();
+          if ( (unitRaw == "min") || (unitRaw == "m") ) {
+            cv.restUnit = "min";
+          }
+          if ( (unitRaw == "sec") || (unitRaw == "s") ) {
+            cv.restUnit = "sec";
+          }
+        }
+      }
+    }
+    const parsed = SliceParsedValue.fromCircuit(cv);
+    out.setSliceValue(parsed);
+    slice.setSliceValue(parsed);
+    return out;
+  };
+}
+CircuitDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new CircuitDetector(s);
+};
+class ContextEntryDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "context-entry";
+  }
+  toTag (kind) {
+    if ( kind == "food" ) {
+      return "food";
+    }
+    if ( kind == "drinking" ) {
+      return "drinking";
+    }
+    if ( kind == "expense" ) {
+      return "expense";
+    }
+    if ( kind == "reminder" ) {
+      return "reminder";
+    }
+    if ( kind == "protein" ) {
+      return "protein";
+    }
+    return this.detectedTag;
+  };
+  detectKind (slice) {
+    if ( slice.hasToken("Food ") ) {
+      return "food";
+    }
+    if ( slice.hasToken("Drinking ") ) {
+      return "drinking";
+    }
+    if ( slice.hasToken("Expense ") ) {
+      return "expense";
+    }
+    if ( slice.hasToken("Reminder ") ) {
+      return "reminder";
+    }
+    if ( slice.hasToken("Protein ") ) {
+      return "protein";
+    }
+    return "";
+  };
+  detect (slice) {
+    const kind = this.detectKind(slice);
+    if ( (kind.length) == 0 ) {
+      return this.noMatch();
+    }
+    let keyLen = 0;
+    if ( kind == "food" ) {
+      keyLen = 5;
+    }
+    if ( kind == "drinking" ) {
+      keyLen = 9;
+    }
+    if ( kind == "expense" ) {
+      keyLen = 8;
+    }
+    if ( kind == "reminder" ) {
+      keyLen = 9;
+    }
+    if ( kind == "protein" ) {
+      keyLen = 8;
+    }
+    if ( keyLen <= 0 ) {
+      return this.noMatch();
+    }
+    const __len = (slice).length();
+    if ( keyLen >= __len ) {
+      return this.noMatch();
+    }
+    let lineEnd = keyLen;
+    while (lineEnd < __len) {
+      const ch = slice.charCodeAt(lineEnd);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
+    const out = slice.read(lineEnd);
+    out.tag = this.toTag(kind);
+    const labelLen = keyLen - 1;
+    const label = slice.read(labelLen);
+    label.tag = "keyword";
+    out.addChild(label);
+    if ( keyLen < lineEnd ) {
+      const contentSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
+      const content = (contentSlice).toString();
+      if ( (content.length) > 0 ) {
+        const textToken = contentSlice.read((content.length));
+        textToken.tag = "text";
+        out.addChild(textToken);
+      }
+    }
+    const cv = new ContextEntryValue();
+    cv.kind = kind;
+    if ( keyLen < lineEnd ) {
+      cv.content = ((slice.peek(keyLen)).read((lineEnd - keyLen))).toString();
+    }
+    const parsed = SliceParsedValue.fromContextEntry(cv);
+    out.setSliceValue(parsed);
+    slice.setSliceValue(parsed);
+    return out;
+  };
+}
+ContextEntryDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new ContextEntryDetector(s);
 };
 class DistanceRangeBlockDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -2271,213 +4161,6 @@ PercentageRangeDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new PercentageRangeDetector(s);
 };
-class SetRepRangeLoadDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "set-rep-range-load";
-  }
-  isDigit (ch) {
-    return (ch >= 48) && (ch <= 57);
-  };
-  isAlphaNum (ch) {
-    if ( (ch >= 48) && (ch <= 57) ) {
-      return true;
-    }
-    if ( (ch >= 65) && (ch <= 90) ) {
-      return true;
-    }
-    if ( (ch >= 97) && (ch <= 122) ) {
-      return true;
-    }
-    return false;
-  };
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 9 ) {
-      return this.noMatch();
-    }
-    let i = 0;
-    while (i < __len) {
-      if ( this.isDigit(slice.charCodeAt(i)) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    const setsLeftEnd = i;
-    if ( setsLeftEnd <= 0 ) {
-      return this.noMatch();
-    }
-    if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
-      return this.noMatch();
-    }
-    i = i + 1;
-    const setsRightStart = i;
-    while (i < __len) {
-      if ( this.isDigit(slice.charCodeAt(i)) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    const setsRightEnd = i;
-    if ( setsRightEnd <= setsRightStart ) {
-      return this.noMatch();
-    }
-    if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
-      return this.noMatch();
-    }
-    i = i + 1;
-    const repsLeftStart = i;
-    while (i < __len) {
-      if ( this.isDigit(slice.charCodeAt(i)) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    const repsLeftEnd = i;
-    if ( repsLeftEnd <= repsLeftStart ) {
-      return this.noMatch();
-    }
-    if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
-      return this.noMatch();
-    }
-    i = i + 1;
-    const repsRightStart = i;
-    while (i < __len) {
-      if ( this.isDigit(slice.charCodeAt(i)) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    const repsRightEnd = i;
-    if ( repsRightEnd <= repsRightStart ) {
-      return this.noMatch();
-    }
-    const setsLeft = slice.read(setsLeftEnd);
-    const setsRight = (slice.peek(setsRightStart)).read((setsRightEnd - setsRightStart));
-    const repsLeft = (slice.peek(repsLeftStart)).read((repsLeftEnd - repsLeftStart));
-    const repsRight = (slice.peek(repsRightStart)).read((repsRightEnd - repsRightStart));
-    if ( setsLeft.hasInteger(0, ((setsLeft).length() - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    if ( setsRight.hasInteger(0, ((setsRight).length() - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    if ( repsLeft.hasInteger(0, ((repsLeft).length() - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    if ( repsRight.hasInteger(0, ((repsRight).length() - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    if ( setsLeft.parseInteger(0, ((setsLeft).length() - 1)) <= 0 ) {
-      return this.noMatch();
-    }
-    if ( setsRight.parseInteger(0, ((setsRight).length() - 1)) <= 0 ) {
-      return this.noMatch();
-    }
-    if ( repsLeft.parseInteger(0, ((repsLeft).length() - 1)) <= 0 ) {
-      return this.noMatch();
-    }
-    if ( repsRight.parseInteger(0, ((repsRight).length() - 1)) <= 0 ) {
-      return this.noMatch();
-    }
-    const setsMinVal = setsLeft.parseInteger(0, ((setsLeft).length() - 1));
-    const setsMaxVal = setsRight.parseInteger(0, ((setsRight).length() - 1));
-    const repsMinVal = repsLeft.parseInteger(0, ((repsLeft).length() - 1));
-    const repsMaxVal = repsRight.parseInteger(0, ((repsRight).length() - 1));
-    if ( i >= __len ) {
-      return this.noMatch();
-    }
-    const mode = slice.charCodeAt(i);
-    let modeText = "";
-    let loadVal = 0;
-    let unitText = "";
-    if ( mode == 64 ) {
-      modeText = "bw";
-      unitText = "bw";
-      i = i + 1;
-      if ( (i + 1) >= __len ) {
-        return this.noMatch();
-      }
-      if ( slice.charCodeAt(i) != 98 ) {
-        return this.noMatch();
-      }
-      if ( slice.charCodeAt((i + 1)) != 119 ) {
-        return this.noMatch();
-      }
-      i = i + 2;
-    } else {
-      if ( mode == 120 ) {
-        modeText = "kg";
-        i = i + 1;
-        const loadStart = i;
-        while (i < __len) {
-          if ( this.isDigit(slice.charCodeAt(i)) ) {
-            i = i + 1;
-          } else {
-            break;
-          }
-        };
-        if ( i <= loadStart ) {
-          return this.noMatch();
-        }
-        const loadDigits = (slice.peek(loadStart)).read((i - loadStart));
-        if ( loadDigits.hasInteger(0, ((loadDigits).length() - 1)) ) {
-        } else {
-          return this.noMatch();
-        }
-        loadVal = loadDigits.parseInteger(0, ((loadDigits).length() - 1));
-        if ( loadVal <= 0 ) {
-          return this.noMatch();
-        }
-        if ( (i + 1) >= __len ) {
-          return this.noMatch();
-        }
-        if ( slice.charCodeAt(i) != 107 ) {
-          return this.noMatch();
-        }
-        if ( slice.charCodeAt((i + 1)) != 103 ) {
-          return this.noMatch();
-        }
-        unitText = "kg";
-        i = i + 2;
-      } else {
-        return this.noMatch();
-      }
-    }
-    if ( i < __len ) {
-      if ( this.isAlphaNum(slice.charCodeAt(i)) ) {
-        return this.noMatch();
-      }
-    }
-    const out = slice.read(i);
-    out.tag = this.detectedTag;
-    const sv = new SetRepRangeLoadValue();
-    sv.setsMin = setsMinVal;
-    sv.setsMax = setsMaxVal;
-    sv.repsMin = repsMinVal;
-    sv.repsMax = repsMaxVal;
-    sv.mode = modeText;
-    sv.load = loadVal;
-    sv.unit = unitText;
-    const payload = SliceParsedValue.fromSetRepRangeLoad(sv);
-    out.setSliceValue(payload);
-    slice.setSliceValue(payload);
-    return out;
-  };
-}
-SetRepRangeLoadDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new SetRepRangeLoadDetector(s);
-};
 class RMDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -2520,84 +4203,6 @@ class RMDetector  extends TokenDetector {
 RMDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RMDetector(s);
-};
-class ZoneDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "zone";
-  }
-  isDigit (ch) {
-    return (ch >= 48) && (ch <= 57);
-  };
-  isAlphaNum (ch) {
-    if ( (ch >= 48) && (ch <= 57) ) {
-      return true;
-    }
-    if ( (ch >= 65) && (ch <= 90) ) {
-      return true;
-    }
-    if ( (ch >= 97) && (ch <= 122) ) {
-      return true;
-    }
-    return false;
-  };
-  detect (slice) {
-    if ( slice.hasToken("Zone") ) {
-    } else {
-      return this.noMatch();
-    }
-    const __len = (slice).length();
-    if ( __len <= 4 ) {
-      return this.noMatch();
-    }
-    let i = 4;
-    if ( (i < __len) && (slice.charCodeAt(i) == 32) ) {
-      i = i + 1;
-    }
-    if ( i >= __len ) {
-      return this.noMatch();
-    }
-    const startDigits = i;
-    while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( this.isDigit(ch) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    if ( i == startDigits ) {
-      return this.noMatch();
-    }
-    const zoneDigits = (slice.peek(startDigits)).read((i - startDigits));
-    if ( zoneDigits.hasInteger(0, ((zoneDigits).length() - 1)) ) {
-    } else {
-      return this.noMatch();
-    }
-    const zoneNum = zoneDigits.parseInteger(0, ((zoneDigits).length() - 1));
-    if ( (zoneNum < 1) || (zoneNum > 5) ) {
-      return this.noMatch();
-    }
-    if ( i < __len ) {
-      const next = slice.charCodeAt(i);
-      if ( this.isAlphaNum(next) ) {
-        return this.noMatch();
-      }
-    }
-    const out = slice.read(i);
-    out.tag = this.detectedTag;
-    const zv = new ZoneValue();
-    zv.zone = zoneNum;
-    const payload = SliceParsedValue.fromZone(zv);
-    out.setSliceValue(payload);
-    slice.setSliceValue(payload);
-    return out;
-  };
-}
-ZoneDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new ZoneDetector(s);
 };
 class RomanZoneDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -2718,6 +4323,11 @@ StandardDetectors.create = function() {
   ds.push(RecoveryTimeDetector.create());
   ds.push(TimeValueDetector.create());
   ds.push(RecoveryDetector.create());
+  ds.push(LeftRightDetector.create());
+  ds.push(FeelingDetector.create());
+  ds.push(BodyMetricDetector.create());
+  ds.push(CircuitDetector.create());
+  ds.push(ContextEntryDetector.create());
   ds.push(SportExerciseDetector.create());
   ds.push(DecimalNumberDetector.create());
   ds.push(PositiveIntegerDetector.create());
@@ -2894,6 +4504,12 @@ class NGSharedDetectorFactory  {
     ds.push(RomanZoneDetector.create());
     ds.push(RecoveryTimeDetector.create());
     ds.push(TimeValueDetector.create());
+    ds.push(RecoveryDetector.create());
+    ds.push(LeftRightDetector.create());
+    ds.push(FeelingDetector.create());
+    ds.push(BodyMetricDetector.create());
+    ds.push(CircuitDetector.create());
+    ds.push(ContextEntryDetector.create());
     ds.push(DecimalNumberDetector.create());
     ds.push(PositiveIntegerDetector.create());
     ds.push(RepeatBlockDetector.create());
@@ -3051,6 +4667,20 @@ class NGTestSpecParser  {
     }
     return (text.substring(0, pLen )) == prefix;
   };
+  endsWith (text, suffix) {
+    const tLen = text.length;
+    const sLen = suffix.length;
+    if ( sLen > tLen ) {
+      return false;
+    }
+    return (text.substring((tLen - sLen), tLen )) == suffix;
+  };
+  normalizeNumericText (text) {
+    if ( (this).endsWith(text, ".0") ) {
+      return text.substring(0, ((text.length) - 2) );
+    }
+    return text;
+  };
   isCommentLine (line) {
     return (this).startsWith(line, "//");
   };
@@ -3150,6 +4780,17 @@ class NGTestSpecParser  {
       out.kind = "child";
       out.field = afterIdx.substring(0, fieldSep );
       out.value = this.decodeEscapes((this).trim((afterIdx.substring((fieldSep + 1), (afterIdx.length) ))));
+      return out;
+    }
+    if ( (this).startsWith(body, "json ") ) {
+      const restJson = (this).trim((body.substring(5, (body.length) )));
+      const pathSep = this.findSpace(restJson);
+      if ( pathSep < 0 ) {
+        return out;
+      }
+      out.kind = "json";
+      out.field = (this).trim((restJson.substring(0, pathSep )));
+      out.value = this.decodeEscapes((this).trim((restJson.substring((pathSep + 1), (restJson.length) ))));
       return out;
     }
     return out;
@@ -3275,6 +4916,51 @@ NGTestSpecParser.create = function() {
 class NGTestRunner  {
   constructor() {
   }
+  isSpace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  trim (text) {
+    const __len = text.length;
+    if ( __len == 0 ) {
+      return "";
+    }
+    let start = 0;
+    while (start < __len) {
+      const ch = text.charCodeAt(start );
+      if ( this.isSpace(ch) ) {
+        start = start + 1;
+      } else {
+        break;
+      }
+    };
+    let stop = __len;
+    while (stop > start) {
+      const ch2 = text.charCodeAt((stop - 1) );
+      if ( this.isSpace(ch2) ) {
+        stop = stop - 1;
+      } else {
+        break;
+      }
+    };
+    if ( stop <= start ) {
+      return "";
+    }
+    return text.substring(start, stop );
+  };
+  startsWith (text, prefix) {
+    const tLen = text.length;
+    const pLen = prefix.length;
+    if ( pLen > tLen ) {
+      return false;
+    }
+    return (text.substring(0, pLen )) == prefix;
+  };
   createDetectors () {
     return StandardDetectors.create();
   };
@@ -3326,153 +5012,93 @@ class NGTestRunner  {
     };
     return out;
   };
+  jsonKVString (key, value) {
+    return ((("\"" + key) + "\":\"") + this.escapeJson(value)) + "\"";
+  };
+  jsonKVNumber (key, value) {
+    return (("\"" + key) + "\":") + value;
+  };
+  jsonObject (level, fields) {
+    const pad = this.indent(level);
+    const childPad = this.indent((level + 1));
+    let out = "{\n";
+    const cnt = fields.length;
+    let i = 0;
+    while (i < cnt) {
+      out = (out + childPad) + (fields[i]);
+      if ( (i + 1) < cnt ) {
+        out = out + ",";
+      }
+      out = out + "\n";
+      i = i + 1;
+    };
+    out = (out + pad) + "}";
+    return out;
+  };
   parsedValueToJson (token, level) {
     if ( token.hasSliceValue() ) {
     } else {
       return "null";
     }
     const kind = token.getSliceValueKind();
-    const pad = this.indent(level);
-    const childPad = this.indent((level + 1));
     if ( kind == "datetime" ) {
-      const v = token.getAsDateTimeValue();
-      let out = "{\n";
-      out = out + (childPad + "\"kind\":\"datetime\",\n");
-      out = out + ((childPad + ("\"year\":" + ("" + v.year))) + ",\n");
-      out = out + ((childPad + ("\"month\":" + ("" + v.month))) + ",\n");
-      out = out + ((childPad + ("\"day\":" + ("" + v.day))) + ",\n");
-      out = out + ((childPad + ("\"hour\":" + ("" + v.hour))) + ",\n");
-      out = out + ((childPad + ("\"minute\":" + ("" + v.minute))) + ",\n");
-      out = out + (childPad + ("\"second\":" + ("" + v.second)));
-      if ( (typeof(v.timezone) !== "undefined" && v.timezone != null )  ) {
-        out = out + ",\n";
-        out = out + (childPad + (("\"timezone\":\"" + this.escapeJson((v.timezone))) + "\""));
-      }
-      out = out + "\n";
-      out = out + (pad + "}");
-      return out;
+      return JSON.stringify((token.getAsDateTimeValue()).toDictionary());
     }
     if ( kind == "distance" ) {
-      const d = token.getAsDistanceValue();
-      let out2 = "{\n";
-      out2 = out2 + (childPad + "\"kind\":\"distance\",\n");
-      out2 = out2 + ((childPad + ("\"value\":" + ("" + d.value))) + ",\n");
-      out2 = out2 + (childPad + (("\"unit\":\"" + this.escapeJson(d.unit)) + "\""));
-      out2 = out2 + "\n";
-      out2 = out2 + (pad + "}");
-      return out2;
+      return JSON.stringify((token.getAsDistanceValue()).toDictionary());
     }
     if ( kind == "percentage" ) {
-      const p = token.getAsPercentageValue();
-      let out3 = "{\n";
-      out3 = out3 + (childPad + "\"kind\":\"percentage\",\n");
-      out3 = out3 + (childPad + ("\"value\":" + ("" + p.value)));
-      out3 = out3 + "\n";
-      out3 = out3 + (pad + "}");
-      return out3;
+      return JSON.stringify((token.getAsPercentageValue()).toDictionary());
     }
     if ( kind == "recovery-time" ) {
-      const r = token.getAsRecoveryTimeValue();
-      let out4 = "{\n";
-      out4 = out4 + (childPad + "\"kind\":\"recovery-time\",\n");
-      out4 = out4 + ((childPad + ("\"value\":" + ("" + r.value))) + ",\n");
-      out4 = out4 + (childPad + (("\"unit\":\"" + this.escapeJson(r.unit)) + "\""));
-      out4 = out4 + "\n";
-      out4 = out4 + (pad + "}");
-      return out4;
+      return JSON.stringify((token.getAsRecoveryTimeValue()).toDictionary());
+    }
+    if ( kind == "time-value" ) {
+      return JSON.stringify((token.getAsTimeValueValue()).toDictionary());
     }
     if ( kind == "weight" ) {
-      const w = token.getAsWeightValue();
-      let out5 = "{\n";
-      out5 = out5 + (childPad + "\"kind\":\"weight\",\n");
-      out5 = out5 + ((childPad + ("\"value\":" + ("" + w.value))) + ",\n");
-      out5 = out5 + (childPad + (("\"unit\":\"" + this.escapeJson(w.unit)) + "\""));
-      out5 = out5 + "\n";
-      out5 = out5 + (pad + "}");
-      return out5;
+      return JSON.stringify((token.getAsWeightValue()).toDictionary());
     }
     if ( kind == "num-range" ) {
-      const nr = token.getAsNumRangeValue();
-      let out6 = "{\n";
-      out6 = out6 + (childPad + "\"kind\":\"num-range\",\n");
-      out6 = out6 + ((childPad + ("\"minValue\":" + ("" + nr.minValue))) + ",\n");
-      out6 = out6 + (childPad + ("\"maxValue\":" + ("" + nr.maxValue)));
-      out6 = out6 + "\n";
-      out6 = out6 + (pad + "}");
-      return out6;
+      return JSON.stringify((token.getAsNumRangeValue()).toDictionary());
     }
     if ( kind == "percentage-range" ) {
-      const pr = token.getAsPercentageRangeValue();
-      let out7 = "{\n";
-      out7 = out7 + (childPad + "\"kind\":\"percentage-range\",\n");
-      out7 = out7 + ((childPad + ("\"minValue\":" + ("" + pr.minValue))) + ",\n");
-      out7 = out7 + (childPad + ("\"maxValue\":" + ("" + pr.maxValue)));
-      out7 = out7 + "\n";
-      out7 = out7 + (pad + "}");
-      return out7;
+      return JSON.stringify((token.getAsPercentageRangeValue()).toDictionary());
     }
     if ( kind == "repeat-block" ) {
-      const rb = token.getAsRepeatBlockValue();
-      let out8 = "{\n";
-      out8 = out8 + (childPad + "\"kind\":\"repeat-block\",\n");
-      out8 = out8 + (childPad + ("\"count\":" + ("" + rb.count)));
-      out8 = out8 + "\n";
-      out8 = out8 + (pad + "}");
-      return out8;
+      return JSON.stringify((token.getAsRepeatBlockValue()).toDictionary());
     }
     if ( kind == "set-rep-range-load" ) {
-      const sr = token.getAsSetRepRangeLoadValue();
-      let out9 = "{\n";
-      out9 = out9 + (childPad + "\"kind\":\"set-rep-range-load\",\n");
-      out9 = out9 + ((childPad + ("\"setsMin\":" + ("" + sr.setsMin))) + ",\n");
-      out9 = out9 + ((childPad + ("\"setsMax\":" + ("" + sr.setsMax))) + ",\n");
-      out9 = out9 + ((childPad + ("\"repsMin\":" + ("" + sr.repsMin))) + ",\n");
-      out9 = out9 + ((childPad + ("\"repsMax\":" + ("" + sr.repsMax))) + ",\n");
-      out9 = out9 + (childPad + (("\"mode\":\"" + this.escapeJson(sr.mode)) + "\",\n"));
-      out9 = out9 + ((childPad + ("\"load\":" + ("" + sr.load))) + ",\n");
-      out9 = out9 + (childPad + (("\"unit\":\"" + this.escapeJson(sr.unit)) + "\""));
-      out9 = out9 + "\n";
-      out9 = out9 + (pad + "}");
-      return out9;
+      return JSON.stringify((token.getAsSetRepRangeLoadValue()).toDictionary());
     }
     if ( kind == "zone" ) {
-      const z = token.getAsZoneValue();
-      let out10 = "{\n";
-      out10 = out10 + (childPad + "\"kind\":\"zone\",\n");
-      out10 = out10 + (childPad + ("\"zone\":" + ("" + z.zone)));
-      out10 = out10 + "\n";
-      out10 = out10 + (pad + "}");
-      return out10;
+      return JSON.stringify((token.getAsZoneValue()).toDictionary());
     }
     if ( kind == "positive-integer" ) {
-      const pi = token.getAsPositiveIntegerValue();
-      let out11 = "{\n";
-      out11 = out11 + (childPad + "\"kind\":\"positive-integer\",\n");
-      out11 = out11 + (childPad + ("\"value\":" + ("" + pi.value)));
-      out11 = out11 + "\n";
-      out11 = out11 + (pad + "}");
-      return out11;
+      return JSON.stringify((token.getAsPositiveIntegerValue()).toDictionary());
     }
     if ( kind == "details-level" ) {
-      const dl = token.getAsDetailsLevelValue();
-      let out12 = "{\n";
-      out12 = out12 + (childPad + "\"kind\":\"details-level\",\n");
-      out12 = out12 + ((childPad + ("\"level\":" + ("" + dl.level))) + ",\n");
-      out12 = out12 + (childPad + (("\"marker\":\"" + this.escapeJson(dl.marker)) + "\""));
-      out12 = out12 + "\n";
-      out12 = out12 + (pad + "}");
-      return out12;
+      return JSON.stringify((token.getAsDetailsLevelValue()).toDictionary());
     }
     if ( kind == "recovery" ) {
-      const rv = token.getAsRecoveryValue();
-      let out13 = "{\n";
-      out13 = out13 + (childPad + "\"kind\":\"recovery\",\n");
-      out13 = out13 + (childPad + (("\"label\":\"" + this.escapeJson(rv.label)) + "\""));
-      out13 = out13 + "\n";
-      out13 = out13 + (pad + "}");
-      return out13;
+      return JSON.stringify((token.getAsRecoveryValue()).toDictionary());
     }
-    return ((("{\n" + childPad) + (("\"kind\":\"" + this.escapeJson(kind)) + "\"\n")) + pad) + "}";
+    if ( kind == "left-right" ) {
+      return JSON.stringify((token.getAsLeftRightValue()).toDictionary());
+    }
+    if ( kind == "feeling" ) {
+      return JSON.stringify((token.getAsFeelingValue()).toDictionary());
+    }
+    if ( kind == "body-metric" ) {
+      return JSON.stringify((token.getAsBodyMetricValue()).toDictionary());
+    }
+    if ( kind == "circuit" ) {
+      return JSON.stringify((token.getAsCircuitValue()).toDictionary());
+    }
+    if ( kind == "context-entry" ) {
+      return JSON.stringify((token.getAsContextEntryValue()).toDictionary());
+    }
+    return ("{\"kind\":\"" + this.escapeJson(kind)) + "\"}";
   };
   tokenToJson (token, level) {
     const pad = this.indent(level);
@@ -3500,6 +5126,325 @@ class NGTestRunner  {
     out = out + "]\n";
     out = out + (pad + "}");
     return out;
+  };
+  findDot (text) {
+    const __len = text.length;
+    let i = 0;
+    while (i < __len) {
+      if ( (text.charCodeAt(i )) == 46 ) {
+        return i;
+      }
+      i = i + 1;
+    };
+    return -1;
+  };
+  normalizeJsonPath (path) {
+    const raw = (this).trim(path);
+    if ( (raw.length) == 0 ) {
+      return "";
+    }
+    let out = "";
+    const __len = raw.length;
+    let i = 0;
+    if ( raw == "$" ) {
+      return "";
+    }
+    if ( (this).startsWith(raw, "$.") ) {
+      i = 2;
+    } else {
+      if ( (this).startsWith(raw, "$") ) {
+        i = 1;
+      }
+    }
+    while (i < __len) {
+      const ch = raw.charCodeAt(i );
+      if ( ch == 91 ) {
+        i = i + 1;
+        if ( (out.length) > 0 ) {
+          out = out + ".";
+        }
+        while (i < __len) {
+          const ch2 = raw.charCodeAt(i );
+          if ( ch2 == 93 ) {
+            i = i + 1;
+            break;
+          }
+          out = out + (raw.substring(i, (i + 1) ));
+          i = i + 1;
+        };
+        continue;
+      }
+      out = out + (raw.substring(i, (i + 1) ));
+      i = i + 1;
+    };
+    if ( (this).startsWith(out, ".") ) {
+      out = out.substring(1, (out.length) );
+    }
+    return out;
+  };
+  jsonTokenValue (token, path) {
+    const p = this.normalizeJsonPath(path);
+    if ( (p.length) == 0 ) {
+      return "";
+    }
+    const dotPos = this.findDot(p);
+    let head = p;
+    let tail = "";
+    if ( dotPos >= 0 ) {
+      head = p.substring(0, dotPos );
+      tail = p.substring((dotPos + 1), (p.length) );
+    }
+    if ( head == "tag" ) {
+      if ( (tail.length) == 0 ) {
+        return token.tag;
+      }
+      return "";
+    }
+    if ( head == "text" ) {
+      if ( (tail.length) == 0 ) {
+        return (token).toString();
+      }
+      return "";
+    }
+    if ( head == "children" ) {
+      if ( (tail.length) == 0 ) {
+        return "";
+      }
+      const dotPos2 = this.findDot(tail);
+      let idxText = tail;
+      let rest = "";
+      if ( dotPos2 >= 0 ) {
+        idxText = tail.substring(0, dotPos2 );
+        rest = tail.substring((dotPos2 + 1), (tail.length) );
+      }
+      const idxSlice = TokenSlice.fromText(idxText);
+      if ( (idxSlice).length() == 0 ) {
+        return "";
+      }
+      if ( idxSlice.hasInteger(0, ((idxSlice).length() - 1)) ) {
+      } else {
+        return "";
+      }
+      const childIdx = idxSlice.parseInteger(0, ((idxSlice).length() - 1));
+      if ( (childIdx < 0) || (childIdx >= token.childCount()) ) {
+        return "";
+      }
+      const ch = token.getChild(childIdx);
+      if ( (rest.length) == 0 ) {
+        return (ch).toString();
+      }
+      return this.jsonTokenValue(ch, rest);
+    }
+    if ( head == "parsed" ) {
+      if ( (tail.length) == 0 ) {
+        return token.getSliceValueKind();
+      }
+      if ( token.hasSliceValue() ) {
+      } else {
+        return "";
+      }
+      const kind = token.getSliceValueKind();
+      if ( tail == "kind" ) {
+        return kind;
+      }
+      if ( kind == "recovery-time" ) {
+        const rv = token.getAsRecoveryTimeValue();
+        if ( tail == "value" ) {
+          return "" + rv.value;
+        }
+        if ( tail == "unit" ) {
+          return rv.unit;
+        }
+      }
+      if ( kind == "time-value" ) {
+        const tv = token.getAsTimeValueValue();
+        if ( tail == "minutes" ) {
+          return "" + tv.minutes;
+        }
+        if ( tail == "seconds" ) {
+          return "" + tv.seconds;
+        }
+      }
+      if ( kind == "datetime" ) {
+        const dtv = token.getAsDateTimeValue();
+        if ( tail == "year" ) {
+          return "" + dtv.year;
+        }
+        if ( tail == "month" ) {
+          return "" + dtv.month;
+        }
+        if ( tail == "day" ) {
+          return "" + dtv.day;
+        }
+        if ( tail == "hour" ) {
+          return "" + dtv.hour;
+        }
+        if ( tail == "minute" ) {
+          return "" + dtv.minute;
+        }
+        if ( tail == "second" ) {
+          return "" + dtv.second;
+        }
+        if ( tail == "timezone" ) {
+          if ( (typeof(dtv.timezone) !== "undefined" && dtv.timezone != null )  ) {
+            return dtv.timezone;
+          }
+          return "";
+        }
+      }
+      if ( kind == "distance" ) {
+        const dv = token.getAsDistanceValue();
+        if ( tail == "value" ) {
+          return "" + dv.value;
+        }
+        if ( tail == "unit" ) {
+          return dv.unit;
+        }
+      }
+      if ( kind == "weight" ) {
+        const wv = token.getAsWeightValue();
+        if ( tail == "value" ) {
+          return "" + wv.value;
+        }
+        if ( tail == "unit" ) {
+          return wv.unit;
+        }
+      }
+      if ( kind == "percentage" ) {
+        const pv = token.getAsPercentageValue();
+        if ( tail == "value" ) {
+          return "" + pv.value;
+        }
+      }
+      if ( kind == "num-range" ) {
+        const nr = token.getAsNumRangeValue();
+        if ( tail == "minValue" ) {
+          return "" + nr.minValue;
+        }
+        if ( tail == "maxValue" ) {
+          return "" + nr.maxValue;
+        }
+      }
+      if ( kind == "percentage-range" ) {
+        const pr = token.getAsPercentageRangeValue();
+        if ( tail == "minValue" ) {
+          return "" + pr.minValue;
+        }
+        if ( tail == "maxValue" ) {
+          return "" + pr.maxValue;
+        }
+      }
+      if ( kind == "zone" ) {
+        const zv = token.getAsZoneValue();
+        if ( tail == "zone" ) {
+          return "" + zv.zone;
+        }
+      }
+      if ( kind == "repeat-block" ) {
+        const rb = token.getAsRepeatBlockValue();
+        if ( tail == "count" ) {
+          return "" + rb.count;
+        }
+      }
+      if ( kind == "left-right" ) {
+        const lr = token.getAsLeftRightValue();
+        if ( tail == "side" ) {
+          return lr.side;
+        }
+      }
+      if ( kind == "set-rep-range-load" ) {
+        const sr = token.getAsSetRepRangeLoadValue();
+        if ( tail == "setsMin" ) {
+          return "" + sr.setsMin;
+        }
+        if ( tail == "setsMax" ) {
+          return "" + sr.setsMax;
+        }
+        if ( tail == "repsMin" ) {
+          return "" + sr.repsMin;
+        }
+        if ( tail == "repsMax" ) {
+          return "" + sr.repsMax;
+        }
+        if ( tail == "mode" ) {
+          return sr.mode;
+        }
+        if ( tail == "load" ) {
+          return "" + sr.load;
+        }
+        if ( tail == "unit" ) {
+          return sr.unit;
+        }
+      }
+      if ( kind == "feeling" ) {
+        const fv = token.getAsFeelingValue();
+        if ( tail == "type" ) {
+          return fv.kind;
+        }
+        if ( tail == "score" ) {
+          return "" + fv.score;
+        }
+      }
+      if ( kind == "body-metric" ) {
+        const bm = token.getAsBodyMetricValue();
+        if ( tail == "metric" ) {
+          return bm.metric;
+        }
+        if ( tail == "primaryValue" ) {
+          return "" + bm.primaryValue;
+        }
+        if ( tail == "secondaryValue" ) {
+          return "" + bm.secondaryValue;
+        }
+        if ( tail == "unit" ) {
+          return bm.unit;
+        }
+      }
+      if ( kind == "circuit" ) {
+        const cv = token.getAsCircuitValue();
+        if ( tail == "rounds" ) {
+          return "" + cv.rounds;
+        }
+        if ( tail == "restValue" ) {
+          return "" + cv.restValue;
+        }
+        if ( tail == "restUnit" ) {
+          return cv.restUnit;
+        }
+      }
+      if ( kind == "details-level" ) {
+        const dl = token.getAsDetailsLevelValue();
+        if ( tail == "level" ) {
+          return "" + dl.level;
+        }
+        if ( tail == "marker" ) {
+          return dl.marker;
+        }
+      }
+      if ( kind == "recovery" ) {
+        const rv2 = token.getAsRecoveryValue();
+        if ( tail == "label" ) {
+          return rv2.label;
+        }
+      }
+      if ( kind == "context-entry" ) {
+        const ce = token.getAsContextEntryValue();
+        if ( tail == "type" ) {
+          return ce.kind;
+        }
+        if ( tail == "content" ) {
+          return ce.content;
+        }
+      }
+      if ( kind == "positive-integer" ) {
+        const piv = token.getAsPositiveIntegerValue();
+        if ( tail == "value" ) {
+          return "" + piv.value;
+        }
+      }
+      return "";
+    }
+    return "";
   };
   runSpec (specText) {
     let out = [];
@@ -3547,6 +5492,19 @@ class NGTestRunner  {
             continue;
           }
           out.push(((("Test " + ("#" + ("" + (i + 1)))) + " unsupported field '") + ex.field) + "' in Expect child");
+          continue;
+        }
+        if ( ex.kind == "json" ) {
+          const gotJson = this.jsonTokenValue(root, ex.field);
+          if ( (gotJson.length) == 0 ) {
+            out.push(((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' was not found");
+            continue;
+          }
+          if ( gotJson == ex.value ) {
+          } else {
+            out.push(((((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' value '") + ex.value) + (("' but got '" + gotJson) + "'"));
+          }
+          continue;
         }
       };
     };
@@ -3641,6 +5599,21 @@ TokenDetectorModule.createRecoveryTime = function() {
 TokenDetectorModule.createRecovery = function() {
   return RecoveryDetector.create();
 };
+TokenDetectorModule.createLeftRight = function() {
+  return LeftRightDetector.create();
+};
+TokenDetectorModule.createFeeling = function() {
+  return FeelingDetector.create();
+};
+TokenDetectorModule.createBodyMetric = function() {
+  return BodyMetricDetector.create();
+};
+TokenDetectorModule.createCircuit = function() {
+  return CircuitDetector.create();
+};
+TokenDetectorModule.createContextEntry = function() {
+  return ContextEntryDetector.create();
+};
 TokenDetectorModule.createSpeed = function() {
   return SpeedDetector.create();
 };
@@ -3721,6 +5694,12 @@ module.exports.ZoneValue = ZoneValue;
 module.exports.PositiveIntegerValue = PositiveIntegerValue;
 module.exports.DetailsLevelValue = DetailsLevelValue;
 module.exports.RecoveryValue = RecoveryValue;
+module.exports.TimeValueValue = TimeValueValue;
+module.exports.LeftRightValue = LeftRightValue;
+module.exports.FeelingValue = FeelingValue;
+module.exports.BodyMetricValue = BodyMetricValue;
+module.exports.CircuitValue = CircuitValue;
+module.exports.ContextEntryValue = ContextEntryValue;
 module.exports.SliceParsedValue = SliceParsedValue;
 module.exports.TokenSlice = TokenSlice;
 module.exports.TokenDetector = TokenDetector;
@@ -3739,16 +5718,21 @@ module.exports.PercentageDetector = PercentageDetector;
 module.exports.WeightDetector = WeightDetector;
 module.exports.NumRangeBlockDetector = NumRangeBlockDetector;
 module.exports.RecoveryDetector = RecoveryDetector;
-module.exports.SpeedDetector = SpeedDetector;
 module.exports.RepeatBlockDetector = RepeatBlockDetector;
+module.exports.SetRepRangeLoadDetector = SetRepRangeLoadDetector;
+module.exports.SpeedDetector = SpeedDetector;
+module.exports.ZoneDetector = ZoneDetector;
+module.exports.LeftRightDetector = LeftRightDetector;
+module.exports.FeelingDetector = FeelingDetector;
+module.exports.BodyMetricDetector = BodyMetricDetector;
+module.exports.CircuitDetector = CircuitDetector;
+module.exports.ContextEntryDetector = ContextEntryDetector;
 module.exports.DistanceRangeBlockDetector = DistanceRangeBlockDetector;
 module.exports.NGSharedLists = NGSharedLists;
 module.exports.KCALDetector = KCALDetector;
 module.exports.BPMDetector = BPMDetector;
 module.exports.PercentageRangeDetector = PercentageRangeDetector;
-module.exports.SetRepRangeLoadDetector = SetRepRangeLoadDetector;
 module.exports.RMDetector = RMDetector;
-module.exports.ZoneDetector = ZoneDetector;
 module.exports.RomanZoneDetector = RomanZoneDetector;
 module.exports.HeadingDataDetector = HeadingDataDetector;
 module.exports.StandardDetectors = StandardDetectors;

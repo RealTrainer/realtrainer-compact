@@ -1,3 +1,0 @@
-class RecoveryValue {
-    def label:string "Recovery"
-}

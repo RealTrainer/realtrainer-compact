@@ -1,0 +1,5 @@
+class DetailsLevelValue @serialize(true) {
+    def kind:string "details-level"
+    def level:int 0
+    def marker:string ""
+}

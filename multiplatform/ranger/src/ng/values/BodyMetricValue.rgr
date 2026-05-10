@@ -1,0 +1,7 @@
+class BodyMetricValue @serialize(true) {
+    def kind:string "body-metric"
+    def metric:string ""
+    def primaryValue:double 0.0
+    def secondaryValue:int 0
+    def unit:string ""
+}

@@ -1,17 +1,23 @@
-Import "DateTimeValue.rgr"
-Import "DistanceValue.rgr"
-Import "PercentageValue.rgr"
-Import "RecoveryTimeValue.rgr"
-Import "WeightValue.rgr"
-Import "NumRangeValue.rgr"
-Import "PercentageRangeValue.rgr"
-Import "RepeatBlockValue.rgr"
-Import "SetRepRangeLoadValue.rgr"
-Import "ZoneValue.rgr"
-Import "PositiveIntegerValue.rgr"
-Import "DetailsLevelValue.rgr"
-Import "RecoveryValue.rgr"
-Import "SliceParsedValue.rgr"
+Import "values/DateTimeValue.rgr"
+Import "values/DistanceValue.rgr"
+Import "values/PercentageValue.rgr"
+Import "values/RecoveryTimeValue.rgr"
+Import "values/WeightValue.rgr"
+Import "values/NumRangeValue.rgr"
+Import "values/PercentageRangeValue.rgr"
+Import "values/RepeatBlockValue.rgr"
+Import "values/SetRepRangeLoadValue.rgr"
+Import "values/ZoneValue.rgr"
+Import "values/PositiveIntegerValue.rgr"
+Import "values/DetailsLevelValue.rgr"
+Import "values/RecoveryValue.rgr"
+Import "values/TimeValueValue.rgr"
+Import "values/LeftRightValue.rgr"
+Import "values/FeelingValue.rgr"
+Import "values/BodyMetricValue.rgr"
+Import "values/CircuitValue.rgr"
+Import "values/ContextEntryValue.rgr"
+Import "values/SliceParsedValue.rgr"
 
 class TokenSlice {
     ; TokenSlice stores source + [start,size] window only.
@@ -522,6 +528,204 @@ class TokenSlice {
             }
         }
         return (new RecoveryValue)
+    }
+
+    fn hasTimeValueValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "time-value") && (p.hasTimeValue())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setTimeValueValue:void (value:TimeValueValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.timeValue = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "time-value"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromTimeValue(value))
+    }
+
+    fn getAsTimeValueValue:TimeValueValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "time-value") && (p.hasTimeValue())) {
+                return (p.getTimeValue())
+            }
+        }
+        return (new TimeValueValue)
+    }
+
+    fn hasLeftRightValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "left-right") && (p.hasLeftRight())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setLeftRightValue:void (value:LeftRightValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.leftRight = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "left-right"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromLeftRight(value))
+    }
+
+    fn getAsLeftRightValue:LeftRightValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "left-right") && (p.hasLeftRight())) {
+                return (p.getLeftRight())
+            }
+        }
+        return (new LeftRightValue)
+    }
+
+    fn hasFeelingValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "feeling") && (p.hasFeeling())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setFeelingValue:void (value:FeelingValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.feeling = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "feeling"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromFeeling(value))
+    }
+
+    fn getAsFeelingValue:FeelingValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "feeling") && (p.hasFeeling())) {
+                return (p.getFeeling())
+            }
+        }
+        return (new FeelingValue)
+    }
+
+    fn hasBodyMetricValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "body-metric") && (p.hasBodyMetric())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setBodyMetricValue:void (value:BodyMetricValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.bodyMetric = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "body-metric"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromBodyMetric(value))
+    }
+
+    fn getAsBodyMetricValue:BodyMetricValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "body-metric") && (p.hasBodyMetric())) {
+                return (p.getBodyMetric())
+            }
+        }
+        return (new BodyMetricValue)
+    }
+
+    fn hasCircuitValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "circuit") && (p.hasCircuit())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setCircuitValue:void (value:CircuitValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.circuit = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "circuit"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromCircuit(value))
+    }
+
+    fn getAsCircuitValue:CircuitValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "circuit") && (p.hasCircuit())) {
+                return (p.getCircuit())
+            }
+        }
+        return (new CircuitValue)
+    }
+
+    fn hasContextEntryValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "context-entry") && (p.hasContextEntry())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setContextEntryValue:void (value:ContextEntryValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.contextEntry = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "context-entry"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromContextEntry(value))
+    }
+
+    fn getAsContextEntryValue:ContextEntryValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "context-entry") && (p.hasContextEntry())) {
+                return (p.getContextEntry())
+            }
+        }
+        return (new ContextEntryValue)
     }
 
     fn toString:string () {

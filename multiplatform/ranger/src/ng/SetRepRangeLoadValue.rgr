@@ -1,9 +1,0 @@
-class SetRepRangeLoadValue {
-    def setsMin:int 0
-    def setsMax:int 0
-    def repsMin:int 0
-    def repsMax:int 0
-    def mode:string ""
-    def load:int 0
-    def unit:string ""
-}

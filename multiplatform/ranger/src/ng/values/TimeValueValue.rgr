@@ -1,0 +1,5 @@
+class TimeValueValue @serialize(true) {
+    def kind:string "time-value"
+    def minutes:int 0
+    def seconds:int 0
+}

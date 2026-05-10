@@ -1,0 +1,66 @@
+Import "detectors/TokenDetector.rgr"
+
+class RomanZoneDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "zone-roman"
+    }
+
+    sfn create:RomanZoneDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new RomanZoneDetector(s))
+    }
+
+    fn isAlphaNum:boolean (ch:int) {
+        if ((ch >= 48) && (ch <= 57)) {
+            return true
+        }
+        if ((ch >= 65) && (ch <= 90)) {
+            return true
+        }
+        if ((ch >= 97) && (ch <= 122)) {
+            return true
+        }
+        return false
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def tokenLen@(mutable):int 0
+
+        if (slice.hasToken("III")) {
+            tokenLen = 3
+        } {
+            if (slice.hasToken("II")) {
+                tokenLen = 2
+            } {
+                if (slice.hasToken("IV")) {
+                    tokenLen = 2
+                } {
+                    if (slice.hasToken("V")) {
+                        tokenLen = 1
+                    } {
+                        if (slice.hasToken("I")) {
+                            tokenLen = 1
+                        } {
+                            return (this.noMatch())
+                        }
+                    }
+                }
+            }
+        }
+
+        def len (slice.length())
+        if (len > tokenLen) {
+            def next (slice.charCodeAt(tokenLen))
+            if (this.isAlphaNum(next)) {
+                return (this.noMatch())
+            }
+        }
+
+        def out (slice.read(tokenLen))
+        out.tag = detectedTag
+        return out
+    }
+}

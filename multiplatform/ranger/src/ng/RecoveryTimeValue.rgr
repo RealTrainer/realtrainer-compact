@@ -1,4 +1,0 @@
-class RecoveryTimeValue {
-    def value:int 0
-    def unit:string ""
-}
