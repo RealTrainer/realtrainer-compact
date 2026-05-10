@@ -73,10 +73,12 @@
     ,"ranger:ng:common:test": "npm run ranger:ng:build && npm run ranger:ng:detector:build && npm run ranger:ng:parser:build && node multiplatform/ranger/test/ng_common_harness.mjs"
     ,"ranger:ng:build:kotlin": "cd multiplatform/ranger && mkdir -p dist/ng-kotlin && ranger-compiler ./src/ng/TokenDetectorModule.rgr -l=kotlin -d=./dist/ng-kotlin -o=token_detector_ng.kt"
     ,"ranger:ng:build:swift": "cd multiplatform/ranger && mkdir -p dist/ng-swift && ranger-compiler ./src/ng/TokenDetectorModule.rgr -l=swift6 -d=./dist/ng-swift -o=token_detector_ng.swift"
-    ,"ranger:ng:test:kotlin": "npm run ranger:ng:build:kotlin && (command -v kotlinc >/dev/null && kotlinc multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt multiplatform/ranger/test/ng_common_harness.kt -include-runtime -d multiplatform/ranger/dist/ng-kotlin/ng_common_harness.jar && java -jar multiplatform/ranger/dist/ng-kotlin/ng_common_harness.jar || (echo 'kotlinc not found; generated Kotlin NG sources and harness only' && exit 0))"
+    ,"ranger:ng:test:kotlin": "npm run ranger:ng:build:kotlin && (command -v kotlinc >/dev/null && kotlinc multiplatform/ranger/test/org_json_shims.kt multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt multiplatform/ranger/test/ng_common_harness.kt -include-runtime -d multiplatform/ranger/dist/ng-kotlin/ng_common_harness.jar && java -jar multiplatform/ranger/dist/ng-kotlin/ng_common_harness.jar || (echo 'kotlinc not found; generated Kotlin NG sources and harness only' && exit 0))"
     ,"ranger:ng:test:swift": "npm run ranger:ng:build:swift && (swiftc multiplatform/ranger/test/ranger_swift_shims.swift multiplatform/ranger/dist/ng-swift/token_detector_ng.swift multiplatform/ranger/test/ng_common_harness.swift -o multiplatform/ranger/dist/ng-swift/ng_common_harness && ./multiplatform/ranger/dist/ng-swift/ng_common_harness || (echo 'Swift compile currently fails with Ranger-generated NG source for this target. NG harness source exists in multiplatform/ranger/test/ng_common_harness.swift.' && exit 0))"
     ,"ranger:ng:test:targets": "npm run ranger:ng:common:test && npm run ranger:ng:test:kotlin && npm run ranger:ng:test:swift"
     ,"ranger:ng:test:report": "node multiplatform/ranger/tools/ng_harness_report.mjs"
+    ,"ranger:ng:json:pretty": "node multiplatform/ranger/tools/pretty_print_json_dir.mjs multiplatform/ranger/dist/ng/json"
+    ,"ranger:ng:kotlin:json:pretty": "node multiplatform/ranger/tools/pretty_print_json_dir.mjs multiplatform/ranger/dist/ng-kotlin/json"
     ,"ranger:test": "npm run ranger:build && node multiplatform/ranger/test/ranger_smoke.mjs"
     ,"ranger:test:swift": "npm run ranger:build:swift && (swiftc multiplatform/ranger/test/ranger_swift_shims.swift multiplatform/ranger/dist/swift/compact_ranger_parser.swift multiplatform/ranger/test/ranger_smoke.swift -o multiplatform/ranger/dist/swift/ranger_smoke && ./multiplatform/ranger/dist/swift/ranger_smoke || (echo 'Swift compile currently fails with Ranger-generated source for this parser target (for example splice/length emissions). Smoke source is generated in multiplatform/ranger/test/ranger_smoke.swift.' && exit 0))"
     ,"ranger:test:kotlin": "npm run ranger:build:kotlin && (command -v kotlinc >/dev/null && kotlinc multiplatform/ranger/dist/kotlin/compact_ranger_parser.kt multiplatform/ranger/test/ranger_smoke.kt -include-runtime -d multiplatform/ranger/dist/kotlin/ranger_smoke.jar && java -jar multiplatform/ranger/dist/kotlin/ranger_smoke.jar || (echo 'kotlinc not found; generated Kotlin parser+test sources only' && exit 0))"
@@ -88,6 +90,9 @@
     ,"ranger:parity:targets": "npm run ranger:parity:js && npm run ranger:parity:kotlin && npm run ranger:parity:swift"
     ,"ranger:bench": "node multiplatform/ranger/tools/parser_benchmark_report.mjs"
     ,"ranger:compare": "npm run build && npm run ranger:build && node multiplatform/ranger/tools/compare_pegjs_ranger.mjs"
+    ,"build:converter": "esbuild src/tools/compact_v1_to_ng_converter.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/tools/compact_v1_to_ng_converter.js --sourcemap"
+    ,"convert:v1:to:ng": "npm run build:converter && node dist/tools/compact_v1_to_ng_converter.js"
+    ,"convert:minimonster": "npm run convert:v1:to:ng -- data/minimonster.compact data/minimonster.ng.compact"
   },
   "keywords": [
     "parser",

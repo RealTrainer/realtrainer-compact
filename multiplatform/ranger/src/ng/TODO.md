@@ -106,6 +106,34 @@ Tama lista tarkentaa mita NG-kerroksessa pitaa tehda, jotta v2-suunnitelman sisa
 - [ ] Tarkenna Drinking-yksikot rakenteiseksi payloadiksi (ml/l parsinta erillisiksi kentiksi).
 - [ ] Paivita REVIEW.md vastaamaan uutta detectorikattavuutta.
 
+## Kirjaukset 2026-05-10 (MINIMONSTER parity)
+
+- [x] Paatos: `Level0-3` voidaan jattaa NG feature parity -laajuuden ulkopuolelle.
+- [ ] KRIITTINEN: Toteuta TypeScript + esbuild pohjainen Compact v1 -> Compact NG konvertteri.
+  - Tavoite:
+    - Tyokalu lukee Compact v1 tiedoston.
+    - Parsii sisallon ensin JSON-rakenteeksi v1 parserin kautta.
+    - Tuottaa Compact NG -yhteensopivan tiedoston Compact tekstimuodossa (idiomaattinen NG-tyyli).
+  - Rajaukset:
+    - Putkiformaatin 1:1 syntaksisailytys ei ole pakollinen, kunhan semantiikka sailyy.
+    - Kommentti- ja lisakenttamuotoilu voi normalisoitua NG-idiomiin.
+  - Tekninen toteutus:
+    - CLI/skripti TypeScriptilla.
+    - Build esbuildilla.
+    - Selkea sisaan/ulos rajapinta: input v1 compact tiedosto, output ng compact tiedosto.
+  - Hyvaksyntakriteerit:
+    - Konvertteri ajaa onnistuneesti esimerkkisyotteella.
+    - Tuotettu NG-tiedosto parsiytyy nykyisella NG parserilla ilman no-match virheita kriittisissa riveissa.
+    - Harnessiin lisataan ainakin yksi end-to-end regressiotesti konversiopolulle.
+- [ ] `Phase`-rivit toteutetaan (riittava baseline-tuki parityyn).
+- [ ] `Vitals` on korkean prioriteetin toteutus (pakollinen parityyn).
+- [ ] Korjaa vaarat luokittelut, joissa rivi paatyy virheellisesti `exercise`-tagiin.
+  - Tarkista erityisesti: `Tags`, `Emojis`, `Summary`, `Derived`, `URL`, `Waist`, `Hip`, `Blorple`.
+  - Lisaa harnessiin regressiotestit: ensin nykyinen virheluokittelu, sitten odotettu uusi tagi tai `NO_MATCH`.
+- [ ] Pyramid-linjaus: ei erillista `Pyramid`-rivityyppia jatkossa.
+  - Tavoite: sama sisalto mallinnetaan useana erillisena sarjarivina.
+  - Toimenpide: tee testicase, jossa pyramidin sisalto kuvataan useina riveina ja varmista parse + UI-polku.
+
 ## Ehdotettu toteutusjarjestys (jaljella)
 
 1. Generic child semantics (`>`) dokumentointi + detector-prioriteetit

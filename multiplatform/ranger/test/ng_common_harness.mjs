@@ -24,7 +24,8 @@ for (const row of jsonRows) {
   if (sep < 0) continue;
   const fileName = row.slice(0, sep);
   const jsonText = row.slice(sep + 1);
-  writeFileSync(resolve(outDir, fileName), jsonText, 'utf8');
+  const pretty = `${JSON.stringify(JSON.parse(jsonText), null, 2)}\n`;
+  writeFileSync(resolve(outDir, fileName), pretty, 'utf8');
 }
 
 console.log('NG common harness ok');

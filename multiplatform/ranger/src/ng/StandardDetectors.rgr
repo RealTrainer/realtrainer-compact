@@ -20,8 +20,10 @@ Import "detectors/TimeValueDetector.rgr"
 Import "detectors/RecoveryDetector.rgr"
 Import "detectors/LeftRightDetector.rgr"
 Import "detectors/FeelingDetector.rgr"
+Import "detectors/EffortDetector.rgr"
 Import "detectors/BodyMetricDetector.rgr"
 Import "detectors/CircuitDetector.rgr"
+Import "detectors/PhaseDetector.rgr"
 Import "detectors/ContextEntryDetector.rgr"
 Import "detectors/SportExerciseDetector.rgr"
 Import "detectors/DecimalNumberDetector.rgr"
@@ -55,8 +57,10 @@ class StandardDetectors {
         push ds (RecoveryDetector.create())
         push ds (LeftRightDetector.create())
         push ds (FeelingDetector.create())
+        push ds (EffortDetector.create())
         push ds (BodyMetricDetector.create())
         push ds (CircuitDetector.create())
+        push ds (PhaseDetector.create())
         push ds (ContextEntryDetector.create())
         push ds (SportExerciseDetector.create())
         push ds (DecimalNumberDetector.create())

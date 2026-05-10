@@ -122,6 +122,19 @@ Expect json $.parsed.load 50
 Expect json $.parsed.unit kg
 JSON set_rep_range_load_kg_value.json
 
+Test 3x5x10x50kg
+Expect tag set-rep-range-load
+Expect json $.parsed.kind set-rep-range-load
+Expect json $.parsed.count 3
+Expect json $.parsed.setsMin 5
+Expect json $.parsed.setsMax 5
+Expect json $.parsed.repsMin 10
+Expect json $.parsed.repsMax 10
+Expect json $.parsed.mode kg
+Expect json $.parsed.load 50
+Expect json $.parsed.unit kg
+JSON count_set_rep.json
+
 Test 100-200m target
 Expect tag distance-range
 
@@ -137,6 +150,12 @@ Expect child 0 tag details-level
 Expect child 0 string >
 
 Test # Morning Run\nnext
+Expect tag heading-data
+
+Test [2026-02-23] ## MINIMONSTER - All Content Types
+Expect tag heading-data
+
+Test [2026-02-23#minimonster] ## MINIMONSTER - All Content Types
 Expect tag heading-data
 
 Test 120bpm zone2
@@ -163,7 +182,119 @@ Expect json $.parsed.kind percentage
 Expect json $.parsed.value 70
 JSON percentage_value.json
 
-Test Swim 100m
+Test Tags juoksu, voimakestävyys, test
+Expect tag tags
+Expect child 0 tag keyword
+Expect child 0 string Tags
+
+Test Emojis 🏃💪
+Expect tag emojis
+Expect child 0 tag keyword
+Expect child 0 string Emojis
+
+Test Summary Testataan kaikki renderöitävät muodot
+Expect tag summary
+Expect child 0 tag keyword
+Expect child 0 string Summary
+
+Test Derived strength.neural_stress 72|score basis:entity confidence:88% source:exercise+load goodness:4
+Expect tag derived
+Expect child 0 tag keyword
+Expect child 0 string Derived
+Expect json $.parsed.subKind derived
+Expect json $.parsed.content strength.neural_stress 72|score basis:entity confidence:88% source:exercise+load goodness:4
+Expect json $.parsed.customField strength.neural_stress
+Expect json $.parsed.customValue 72
+Expect json $.parsed.hasCustomNumeric true
+Expect json $.parsed.customNumericValue 72
+Expect json $.parsed.unit score
+Expect json $.parsed.basis entity
+Expect json $.parsed.hasConfidence true
+Expect json $.parsed.confidence 88
+Expect json $.parsed.source exercise+load
+Expect json $.parsed.hasGoodness true
+Expect json $.parsed.goodness 4
+JSON derived_strength_neural_stress.json
+
+Test Derived strength.max_strength_emphasis 45|score basis:entity confidence:75% source:rep-range goodness:3
+Expect tag derived
+Expect child 0 tag keyword
+Expect child 0 string Derived
+Expect json $.parsed.subKind derived
+Expect json $.parsed.content strength.max_strength_emphasis 45|score basis:entity confidence:75% source:rep-range goodness:3
+Expect json $.parsed.customField strength.max_strength_emphasis
+Expect json $.parsed.customValue 45
+Expect json $.parsed.hasCustomNumeric true
+Expect json $.parsed.customNumericValue 45
+Expect json $.parsed.unit score
+Expect json $.parsed.basis entity
+Expect json $.parsed.hasConfidence true
+Expect json $.parsed.confidence 75
+Expect json $.parsed.source rep-range
+Expect json $.parsed.hasGoodness true
+Expect json $.parsed.goodness 3
+JSON derived_strength_max_strength_emphasis.json
+
+Test Derived strength.power_emphasis 80|score basis:entity confidence:90% source:movement-speed goodness:5
+Expect tag derived
+Expect child 0 tag keyword
+Expect child 0 string Derived
+Expect json $.parsed.subKind derived
+Expect json $.parsed.content strength.power_emphasis 80|score basis:entity confidence:90% source:movement-speed goodness:5
+Expect json $.parsed.customField strength.power_emphasis
+Expect json $.parsed.customValue 80
+Expect json $.parsed.hasCustomNumeric true
+Expect json $.parsed.customNumericValue 80
+Expect json $.parsed.unit score
+Expect json $.parsed.basis entity
+Expect json $.parsed.hasConfidence true
+Expect json $.parsed.confidence 90
+Expect json $.parsed.source movement-speed
+Expect json $.parsed.hasGoodness true
+Expect json $.parsed.goodness 5
+JSON derived_strength_power_emphasis.json
+
+Test Derived strength.speed_strength_emphasis 65|score basis:entity confidence:80% source:velocity goodness:4
+Expect tag derived
+Expect child 0 tag keyword
+Expect child 0 string Derived
+Expect json $.parsed.subKind derived
+Expect json $.parsed.content strength.speed_strength_emphasis 65|score basis:entity confidence:80% source:velocity goodness:4
+Expect json $.parsed.customField strength.speed_strength_emphasis
+Expect json $.parsed.customValue 65
+Expect json $.parsed.hasCustomNumeric true
+Expect json $.parsed.customNumericValue 65
+Expect json $.parsed.unit score
+Expect json $.parsed.basis entity
+Expect json $.parsed.hasConfidence true
+Expect json $.parsed.confidence 80
+Expect json $.parsed.source velocity
+Expect json $.parsed.hasGoodness true
+Expect json $.parsed.goodness 4
+JSON derived_strength_speed_strength_emphasis.json
+
+Test URL https://example.com
+Expect tag url
+Expect child 0 tag keyword
+Expect child 0 string URL
+
+Test Phase1 Alkuverryttely|1km
+Expect tag phase
+Expect child 0 tag keyword
+Expect child 0 string Phase1
+
+Test Phase Yleinen vaihe
+Expect tag phase
+Expect child 0 tag keyword
+Expect child 0 string Phase
+
+// Testing freeform exercise name
+Test Uinti koiraa
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Uinti koiraa
+
+Test Swim; 100m
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string Swim
@@ -173,7 +304,7 @@ Expect json $.children[1].parsed.kind distance
 Expect json $.children[1].parsed.value 100
 Expect json $.children[1].parsed.unit m
 
-Test Swim  100m
+Test Swim ; 100m
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string Swim
@@ -183,7 +314,7 @@ Expect json $.children[1].parsed.kind distance
 Expect json $.children[1].parsed.value 100
 Expect json $.children[1].parsed.unit m
 
-Test Swim 2:50/100m
+Test Swim; 2:50/100m
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string Swim
@@ -196,7 +327,7 @@ Expect json $.children[1].children[2].parsed.kind distance
 Expect json $.children[1].children[2].parsed.value 100
 Expect json $.children[1].children[2].parsed.unit m
 
-Test Swim  2:50/100m   1000m
+Test Swim; 2:50/100m ; 1000m
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string Swim
@@ -214,7 +345,7 @@ Expect json $.children[2].parsed.kind distance
 Expect json $.children[2].parsed.value 1000
 Expect json $.children[2].parsed.unit m
 
-Test Swim 2:50/100m 1000m Zone2
+Test Swim; 2:50/100m ; 1000m ; Zone2
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string Swim
@@ -237,7 +368,7 @@ Expect json $.children[3].parsed.kind zone
 Expect json $.children[3].parsed.zone 2
 JSON swim_speed_distance_zone_value.json
 
-Test Run 4:30/1000m 500m Zone3
+Test Run; 4:30/1000m ; 500m ; Zone3
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string Run
@@ -271,8 +402,33 @@ Expect child 2 string 500m
 Expect child 3 tag zone
 Expect child 3 string Zone3
 
+// Tricky name forms: number suffix, numeric prefix, and distance-like token in name
+Test Darts 501; 120bpm
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string Darts 501
+Expect child 1 tag bpm
+Expect child 1 string 120bpm
+
+Test 8-pallo; 100m
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string 8-pallo
+Expect child 1 tag distance
+Expect child 1 string 100m
+Expect json $.children[1].parsed.kind distance
+Expect json $.children[1].parsed.value 100
+Expect json $.children[1].parsed.unit m
+
+Test 4x400m viesti; 130bpm
+Expect tag exercise
+Expect child 0 tag exercise-name
+Expect child 0 string 4x400m viesti
+Expect child 1 tag bpm
+Expect child 1 string 130bpm
+
 // Multi-Test block: indexed expects refer to tests in this consecutive block
-Test Swim 1000m
+Test Swim; 1000m
 Test > Split 100m 2:45/100m
 Expect 0 tag exercise
 Expect 0 child 0 tag exercise-name
@@ -290,7 +446,7 @@ Expect 1 child 3 tag speed
 Expect 1 child 3 string 2:45/100m
 
 // Nested details levels should all be accepted and parsed generically
-Test Swim 400m
+Test Swim; 400m
 Test > Split 100m 2:45/100m
 Test >> Recovery 1min
 Expect 0 tag exercise
@@ -326,6 +482,272 @@ Expect 2 json $.children[1].parsed.label Recovery
 Expect 2 json $.children[1].children[1].parsed.value 1
 Expect 2 json $.children[1].children[1].parsed.unit m
 JSON all common_recovery_data.json
+
+// Hyrox-style hierarchical block with top-level mode and nested notes
+Test Hyrox; 1h
+Test > Run; 1000m
+Test >> Feelings 4
+Test > SledPush; 50m
+Test >> Comment Grip fading
+Expect 0 tag exercise
+Expect 0 child 0 tag exercise-name
+Expect 0 child 0 string Hyrox
+Expect 0 child 1 tag positive-integer
+Expect 0 child 1 string 1
+Expect 0 child 2 tag keyword
+Expect 0 child 2 string h
+Expect 0 json $.children[1].parsed.kind positive-integer
+Expect 0 json $.children[1].parsed.value 1
+Expect 1 tag details-data
+Expect 1 child 0 tag details-level
+Expect 1 child 0 string >
+Expect 1 child 1 tag exercise
+Expect 1 child 1 string Run; 1000m
+Expect 1 json $.children[0].parsed.level 1
+Expect 1 json $.children[1].children[1].parsed.kind distance
+Expect 1 json $.children[1].children[1].parsed.value 1000
+Expect 1 json $.children[1].children[1].parsed.unit m
+Expect 2 tag details-data
+Expect 2 child 0 tag details-level
+Expect 2 child 0 string >>
+Expect 2 child 1 tag feeling
+Expect 2 child 1 string Feelings 4
+Expect 2 json $.children[0].parsed.level 2
+Expect 2 json $.children[1].parsed.subKind feeling
+Expect 2 json $.children[1].parsed.score 4
+Expect 3 tag details-data
+Expect 3 child 0 tag details-level
+Expect 3 child 0 string >
+Expect 3 child 1 tag exercise
+Expect 3 child 1 string SledPush; 50m
+Expect 3 json $.children[1].children[1].parsed.kind distance
+Expect 3 json $.children[1].children[1].parsed.value 50
+Expect 3 json $.children[1].children[1].parsed.unit m
+Expect 4 tag details-data
+Expect 4 child 0 tag details-level
+Expect 4 child 0 string >>
+Expect 4 child 1 tag comment
+Expect 4 child 1 string Comment Grip fading
+Expect 4 json $.children[0].parsed.level 2
+Expect 4 json $.children[1].parsed.subKind comment
+Expect 4 json $.children[1].parsed.content Grip fading
+
+// Trialthon hierarchy: sub rows should parse as exercise entries
+Test Trialthon; 2h
+Test > Swim; 1000m
+Test > Bike; 20000m
+Test > Run; 5000m
+Expect 0 tag exercise
+Expect 0 child 0 tag exercise-name
+Expect 0 child 0 string Trialthon
+Expect 0 child 1 tag positive-integer
+Expect 0 child 1 string 2
+Expect 0 child 2 tag keyword
+Expect 0 child 2 string h
+Expect 1 tag details-data
+Expect 1 child 0 tag details-level
+Expect 1 child 0 string >
+Expect 1 child 1 tag exercise
+Expect 1 child 1 string Swim; 1000m
+Expect 2 tag details-data
+Expect 2 child 0 tag details-level
+Expect 2 child 0 string >
+Expect 2 child 1 tag exercise
+Expect 2 child 1 string Bike; 20000m
+Expect 3 tag details-data
+Expect 3 child 0 tag details-level
+Expect 3 child 0 string >
+Expect 3 child 1 tag exercise
+Expect 3 child 1 string Run; 5000m
+
+// Pubikierros hierarchy with named sub-rows as exercises
+Test Pubikierros; 4h
+Test > Irish Pub; 1h
+Test > Karaoke Bar; 90bpm
+Test > Kotiin Walk; 2000m
+Expect 0 tag exercise
+Expect 0 child 0 tag exercise-name
+Expect 0 child 0 string Pubikierros
+Expect 0 child 1 tag positive-integer
+Expect 0 child 1 string 4
+Expect 0 child 2 tag keyword
+Expect 0 child 2 string h
+Expect 1 tag details-data
+Expect 1 child 0 tag details-level
+Expect 1 child 0 string >
+Expect 1 child 1 tag exercise
+Expect 1 child 1 string Irish Pub; 1h
+Expect 2 tag details-data
+Expect 2 child 0 tag details-level
+Expect 2 child 0 string >
+Expect 2 child 1 tag exercise
+Expect 2 child 1 string Karaoke Bar; 90bpm
+Expect 3 tag details-data
+Expect 3 child 0 tag details-level
+Expect 3 child 0 string >
+Expect 3 child 1 tag exercise
+Expect 3 child 1 string Kotiin Walk; 2000m
+
+// Bench Press style hierarchical set details with per-attempt notes
+Test Bench Press; 4x3-8x60kg
+Test > Attempt 5x60kg 130bpm
+Test >> Feelings 4
+Test >> Recovery 2min
+Test >> Comment Fast concentric
+Test >> "Bar path stable"
+Expect 0 tag exercise
+Expect 0 child 0 tag exercise-name
+Expect 0 child 0 string Bench Press
+Expect 0 child 1 tag set-rep-range-load
+Expect 0 child 1 string 4x3-8x60kg
+Expect 0 json $.children[1].parsed.kind set-rep-range-load
+Expect 0 json $.children[1].parsed.setsMin 4
+Expect 0 json $.children[1].parsed.setsMax 4
+Expect 0 json $.children[1].parsed.repsMin 3
+Expect 0 json $.children[1].parsed.repsMax 8
+Expect 0 json $.children[1].parsed.load 60
+Expect 0 json $.children[1].parsed.unit kg
+Expect 1 tag details-data
+Expect 1 child 0 tag details-level
+Expect 1 child 0 string >
+Expect 1 child 1 tag keyword
+Expect 1 child 1 string Attempt
+Expect 1 child 2 tag repeat-block
+Expect 1 child 2 string 5x
+Expect 1 child 3 tag weight
+Expect 1 child 3 string 60kg
+Expect 1 child 4 tag bpm
+Expect 1 child 4 string 130bpm
+Expect 1 json $.children[0].parsed.level 1
+Expect 1 json $.children[2].parsed.kind repeat-block
+Expect 1 json $.children[2].parsed.count 5
+Expect 1 json $.children[3].parsed.kind weight
+Expect 1 json $.children[3].parsed.value 60
+Expect 1 json $.children[3].parsed.unit kg
+Expect 2 tag details-data
+Expect 2 child 0 tag details-level
+Expect 2 child 0 string >>
+Expect 2 child 1 tag feeling
+Expect 2 child 1 string Feelings 4
+Expect 2 json $.children[1].parsed.subKind feeling
+Expect 2 json $.children[1].parsed.score 4
+Expect 3 tag details-data
+Expect 3 child 0 tag details-level
+Expect 3 child 0 string >>
+Expect 3 child 1 tag recovery
+Expect 3 child 1 string Recovery 2min
+Expect 3 json $.children[1].parsed.label Recovery
+Expect 4 tag details-data
+Expect 4 child 0 tag details-level
+Expect 4 child 0 string >>
+Expect 4 child 1 tag comment
+Expect 4 child 1 string Comment Fast concentric
+Expect 4 json $.children[1].parsed.subKind comment
+Expect 4 json $.children[1].parsed.content Fast concentric
+Expect 5 tag details-data
+Expect 5 child 0 tag details-level
+Expect 5 child 0 string >>
+Expect 5 child 1 tag comment
+Expect 5 child 1 string "Bar path stable"
+Expect 5 json $.children[1].parsed.subKind comment
+Expect 5 json $.children[1].parsed.content Bar path stable
+
+// Bench Press pyramid as sub-series using Attempt rows
+Test Bench Press
+Test > Attempt 10x40kg
+Test > Attempt 8x50kg
+Test > Attempt 6x60kg
+Test > Attempt 4x70kg
+Expect 0 tag exercise
+Expect 0 child 0 tag exercise-name
+Expect 0 child 0 string Bench Press
+Expect 1 tag details-data
+Expect 1 child 0 tag details-level
+Expect 1 child 0 string >
+Expect 1 child 1 tag keyword
+Expect 1 child 1 string Attempt
+Expect 1 child 2 tag repeat-block
+Expect 1 child 2 string 10x
+Expect 1 child 3 tag weight
+Expect 1 child 3 string 40kg
+Expect 1 json $.children[2].parsed.count 10
+Expect 1 json $.children[3].parsed.value 40
+Expect 2 tag details-data
+Expect 2 child 0 tag details-level
+Expect 2 child 0 string >
+Expect 2 child 1 tag keyword
+Expect 2 child 1 string Attempt
+Expect 2 child 2 tag repeat-block
+Expect 2 child 2 string 8x
+Expect 2 child 3 tag weight
+Expect 2 child 3 string 50kg
+Expect 2 json $.children[2].parsed.count 8
+Expect 2 json $.children[3].parsed.value 50
+Expect 3 tag details-data
+Expect 3 child 0 tag details-level
+Expect 3 child 0 string >
+Expect 3 child 1 tag keyword
+Expect 3 child 1 string Attempt
+Expect 3 child 2 tag repeat-block
+Expect 3 child 2 string 6x
+Expect 3 child 3 tag weight
+Expect 3 child 3 string 60kg
+Expect 3 json $.children[2].parsed.count 6
+Expect 3 json $.children[3].parsed.value 60
+Expect 4 tag details-data
+Expect 4 child 0 tag details-level
+Expect 4 child 0 string >
+Expect 4 child 1 tag keyword
+Expect 4 child 1 string Attempt
+Expect 4 child 2 tag repeat-block
+Expect 4 child 2 string 4x
+Expect 4 child 3 tag weight
+Expect 4 child 3 string 70kg
+Expect 4 json $.children[2].parsed.count 4
+Expect 4 json $.children[3].parsed.value 70
+
+// Second multi-word strength movement regression
+Test Back Squat; 5x3-5x100kg
+Test > Attempt 4x100kg
+Test >> RPE 8
+Test >> "Depth solid"
+Expect 0 tag exercise
+Expect 0 child 0 tag exercise-name
+Expect 0 child 0 string Back Squat
+Expect 0 child 1 tag set-rep-range-load
+Expect 0 child 1 string 5x3-5x100kg
+Expect 0 json $.children[1].parsed.kind set-rep-range-load
+Expect 0 json $.children[1].parsed.setsMin 5
+Expect 0 json $.children[1].parsed.setsMax 5
+Expect 0 json $.children[1].parsed.repsMin 3
+Expect 0 json $.children[1].parsed.repsMax 5
+Expect 0 json $.children[1].parsed.load 100
+Expect 0 json $.children[1].parsed.unit kg
+Expect 1 tag details-data
+Expect 1 child 0 tag details-level
+Expect 1 child 0 string >
+Expect 1 child 1 tag keyword
+Expect 1 child 1 string Attempt
+Expect 1 child 2 tag repeat-block
+Expect 1 child 2 string 4x
+Expect 1 child 3 tag weight
+Expect 1 child 3 string 100kg
+Expect 1 json $.children[2].parsed.count 4
+Expect 1 json $.children[3].parsed.value 100
+Expect 2 tag details-data
+Expect 2 child 0 tag details-level
+Expect 2 child 0 string >>
+Expect 2 child 1 tag effort
+Expect 2 child 1 string RPE 8
+Expect 2 json $.children[1].parsed.subKind effort
+Expect 2 json $.children[1].parsed.score 8
+Expect 3 tag details-data
+Expect 3 child 0 tag details-level
+Expect 3 child 0 string >>
+Expect 3 child 1 tag comment
+Expect 3 child 1 string "Depth solid"
+Expect 3 json $.children[1].parsed.subKind comment
+Expect 3 json $.children[1].parsed.content Depth solid
 
 Test Left 10x16kg
 Expect tag left-right
@@ -368,6 +790,13 @@ JSON left_right_value.json
 Test Feeling 3
 Test Feelings 4
 Test Pain 2
+Test Effort 8
+Test RPE 7
+Test Feeling RPE:7
+Test Feeling ?/10
+Test Feeling |pelkkä kommentti
+Test Pain polvi|2/10 lievä jäykkyys
+Test Pain -|palautunut
 Expect 0 tag feeling
 Expect 0 child 0 tag keyword
 Expect 0 child 0 string Feeling
@@ -383,13 +812,51 @@ Expect 2 child 0 tag keyword
 Expect 2 child 0 string Pain
 Expect 2 child 1 tag positive-integer
 Expect 2 child 1 string 2
-Expect 0 json $.parsed.type feeling
+Expect 0 json $.parsed.subKind feeling
 Expect 0 json $.parsed.score 3
-Expect 1 json $.parsed.type feeling
+Expect 1 json $.parsed.subKind feeling
 Expect 1 json $.parsed.score 4
-Expect 2 json $.parsed.type pain
+Expect 2 json $.parsed.subKind pain
 Expect 2 json $.parsed.score 2
-JSON all feeling_value.json
+Expect 3 tag effort
+Expect 3 child 0 tag keyword
+Expect 3 child 0 string Effort
+Expect 3 child 1 tag positive-integer
+Expect 3 child 1 string 8
+Expect 4 tag effort
+Expect 4 child 0 tag keyword
+Expect 4 child 0 string RPE
+Expect 4 child 1 tag positive-integer
+Expect 4 child 1 string 7
+Expect 3 json $.parsed.subKind effort
+Expect 3 json $.parsed.score 8
+Expect 4 json $.parsed.subKind effort
+Expect 4 json $.parsed.score 7
+Expect 5 tag feeling
+Expect 5 json $.parsed.subKind feeling
+Expect 5 json $.parsed.score 7
+Expect 6 tag feeling
+Expect 6 json $.parsed.subKind feeling
+Expect 6 json $.parsed.score 0
+Expect 7 tag feeling
+Expect 7 json $.parsed.subKind feeling
+Expect 7 json $.parsed.score 0
+Expect 8 tag feeling
+Expect 8 json $.parsed.subKind pain
+Expect 8 json $.parsed.score 2
+Expect 9 tag feeling
+Expect 9 json $.parsed.subKind pain
+Expect 9 json $.parsed.score 0
+JSON 0 feeling_value.json
+JSON 1 feeling_value.json
+JSON 2 feeling_value.json
+JSON 3 effort_value.json
+JSON 4 effort_value.json
+JSON 5 feeling_value.json
+JSON 6 feeling_value.json
+JSON 7 feeling_value.json
+JSON 8 feeling_value.json
+JSON 9 feeling_value.json
 
 Test Weight 95.5kg
 Expect tag body-metric
@@ -436,6 +903,46 @@ Expect json $.parsed.primaryValue 120
 Expect json $.parsed.secondaryValue 75
 Expect json $.parsed.unit mmhg
 JSON body_metric_value.json
+
+Test Vitals weight:85.2kg
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Vitals weight
+Expect json $.parsed.metric weight
+Expect json $.parsed.primaryValue 85.2
+Expect json $.parsed.unit kg
+
+Test Vitals sleep:7.5h
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Vitals sleep
+Expect json $.parsed.metric sleep
+Expect json $.parsed.primaryValue 7.5
+Expect json $.parsed.unit h
+
+Test Vitals rhr:52bpm
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Vitals rhr
+Expect json $.parsed.metric resting-hr
+Expect json $.parsed.primaryValue 52
+Expect json $.parsed.unit bpm
+
+Test Waist 82cm
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Waist
+Expect json $.parsed.metric waist
+Expect json $.parsed.primaryValue 82
+Expect json $.parsed.unit cm
+
+Test Hip 95cm
+Expect tag body-metric
+Expect child 0 tag keyword
+Expect child 0 string Hip
+Expect json $.parsed.metric hip
+Expect json $.parsed.primaryValue 95
+Expect json $.parsed.unit cm
 
 Test Circuit 3
 Expect tag circuit
@@ -489,6 +996,29 @@ Expect tag protein
 Expect child 0 tag keyword
 Expect child 0 string Protein
 JSON context_entry_value.json
+
+Test Custom HRV 48
+Expect tag custom
+Expect child 0 tag keyword
+Expect child 0 string Custom
+Expect child 1 tag text
+Expect child 1 string HRV 48
+Expect json $.parsed.subKind custom
+Expect json $.parsed.customField HRV
+Expect json $.parsed.customValue 48
+Expect json $.parsed.hasCustomNumeric true
+Expect json $.parsed.customNumericValue 48
+
+Test Custom Readiness Green
+Expect tag custom
+Expect child 0 tag keyword
+Expect child 0 string Custom
+Expect child 1 tag text
+Expect child 1 string Readiness Green
+Expect json $.parsed.subKind custom
+Expect json $.parsed.customField Readiness
+Expect json $.parsed.customValue Green
+Expect json $.parsed.hasCustomNumeric false
 
 Test 40-50%
 Expect tag percentage-range

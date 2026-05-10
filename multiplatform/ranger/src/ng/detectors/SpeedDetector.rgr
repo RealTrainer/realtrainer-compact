@@ -61,7 +61,8 @@ class SpeedDetector {
         def tv (new TimeValueValue)
         tv.minutes = (left.parseInteger(0 (colonPos - 1)))
         tv.seconds = sec
-        first.setSliceValue((SliceParsedValue.fromTimeValue(tv)))
+        def firstParsed (SliceParsedValue.fromTimeValue(tv))
+        first.setSliceValue(firstParsed)
 
         def second (slice.peek(slashPos).read(1))
         second.tag = "keyword"

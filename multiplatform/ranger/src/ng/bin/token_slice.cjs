@@ -341,6 +341,7 @@ RepeatBlockValue.fromDictionary = function(dict) {
 class SetRepRangeLoadValue  {
   constructor() {
     this.kind = "set-rep-range-load";
+    this.count = 1;
     this.setsMin = 0;
     this.setsMax = 0;
     this.repsMin = 0;
@@ -353,6 +354,7 @@ class SetRepRangeLoadValue  {
     let res = {};
     try {
       res["kind"] = this.kind;
+      res["count"] = this.count;
       res["setsMin"] = this.setsMin;
       res["setsMax"] = this.setsMax;
       res["repsMin"] = this.repsMin;
@@ -373,40 +375,45 @@ SetRepRangeLoadValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = isNaN( parseInt(dict ["setsMin"]) ) ? undefined : parseInt(dict ["setsMin"]) 
+    const v_1 = isNaN( parseInt(dict ["count"]) ) ? undefined : parseInt(dict ["count"]) 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.setsMin = v_1;
+      obj.count = v_1;
     }
-    const v_2 = isNaN( parseInt(dict ["setsMax"]) ) ? undefined : parseInt(dict ["setsMax"]) 
+    const v_2 = isNaN( parseInt(dict ["setsMin"]) ) ? undefined : parseInt(dict ["setsMin"]) 
     ;
     if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.setsMax = v_2;
+      obj.setsMin = v_2;
     }
-    const v_3 = isNaN( parseInt(dict ["repsMin"]) ) ? undefined : parseInt(dict ["repsMin"]) 
+    const v_3 = isNaN( parseInt(dict ["setsMax"]) ) ? undefined : parseInt(dict ["setsMax"]) 
     ;
     if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
-      obj.repsMin = v_3;
+      obj.setsMax = v_3;
     }
-    const v_4 = isNaN( parseInt(dict ["repsMax"]) ) ? undefined : parseInt(dict ["repsMax"]) 
+    const v_4 = isNaN( parseInt(dict ["repsMin"]) ) ? undefined : parseInt(dict ["repsMin"]) 
     ;
     if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
-      obj.repsMax = v_4;
+      obj.repsMin = v_4;
     }
-    const v_5 = (typeof (dict ["mode"]) != "string" ) ? undefined : dict ["mode"] 
+    const v_5 = isNaN( parseInt(dict ["repsMax"]) ) ? undefined : parseInt(dict ["repsMax"]) 
     ;
     if ( (typeof(v_5) !== "undefined" && v_5 != null )  ) {
-      obj.mode = v_5;
+      obj.repsMax = v_5;
     }
-    const v_6 = isNaN( parseInt(dict ["load"]) ) ? undefined : parseInt(dict ["load"]) 
+    const v_6 = (typeof (dict ["mode"]) != "string" ) ? undefined : dict ["mode"] 
     ;
     if ( (typeof(v_6) !== "undefined" && v_6 != null )  ) {
-      obj.load = v_6;
+      obj.mode = v_6;
     }
-    const v_7 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    const v_7 = isNaN( parseInt(dict ["load"]) ) ? undefined : parseInt(dict ["load"]) 
     ;
     if ( (typeof(v_7) !== "undefined" && v_7 != null )  ) {
-      obj.unit = v_7;
+      obj.load = v_7;
+    }
+    const v_8 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_8) !== "undefined" && v_8 != null )  ) {
+      obj.unit = v_8;
     }
   } catch(e) {
   }
@@ -621,13 +628,11 @@ LeftRightValue.fromDictionary = function(dict) {
 class FeelingValue  {
   constructor() {
     this.kind = "feeling";
-    this.kind = "";     /** note: unused */
     this.score = 0;
   }
   toDictionary () {
     let res = {};
     try {
-      res["kind"] = this.kind;
       res["kind"] = this.kind;
       res["score"] = this.score;
     } catch(e) {
@@ -643,15 +648,42 @@ FeelingValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    const v_1 = isNaN( parseInt(dict ["score"]) ) ? undefined : parseInt(dict ["score"]) 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.kind = v_1;
+      obj.score = v_1;
     }
-    const v_2 = isNaN( parseInt(dict ["score"]) ) ? undefined : parseInt(dict ["score"]) 
+  } catch(e) {
+  }
+  return obj;
+};
+class EffortValue  {
+  constructor() {
+    this.kind = "effort";
+    this.score = 0;
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["score"] = this.score;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+EffortValue.fromDictionary = function(dict) {
+  const obj = new EffortValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
     ;
-    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.score = v_2;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["score"]) ) ? undefined : parseInt(dict ["score"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.score = v_1;
     }
   } catch(e) {
   }
@@ -759,15 +791,35 @@ CircuitValue.fromDictionary = function(dict) {
 class ContextEntryValue  {
   constructor() {
     this.kind = "context-entry";
-    this.kind = "";     /** note: unused */
     this.content = "";
+    this.name = "";
+    this.value = "";
+    this.hasNumeric = false;
+    this.numericValue = 0.0;
+    this.unit = "";
+    this.basis = "";
+    this.source = "";
+    this.hasConfidence = false;
+    this.confidence = 0.0;
+    this.hasGoodness = false;
+    this.goodness = 0;
   }
   toDictionary () {
     let res = {};
     try {
       res["kind"] = this.kind;
-      res["kind"] = this.kind;
       res["content"] = this.content;
+      res["name"] = this.name;
+      res["value"] = this.value;
+      res["hasNumeric"] = this.hasNumeric;
+      res["numericValue"] = this.numericValue;
+      res["unit"] = this.unit;
+      res["basis"] = this.basis;
+      res["source"] = this.source;
+      res["hasConfidence"] = this.hasConfidence;
+      res["confidence"] = this.confidence;
+      res["hasGoodness"] = this.hasGoodness;
+      res["goodness"] = this.goodness;
     } catch(e) {
     }
     return res;
@@ -781,15 +833,62 @@ ContextEntryValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    const v_1 = (typeof (dict ["content"]) != "string" ) ? undefined : dict ["content"] 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.kind = v_1;
+      obj.content = v_1;
     }
-    const v_2 = (typeof (dict ["content"]) != "string" ) ? undefined : dict ["content"] 
+    const v_2 = (typeof (dict ["name"]) != "string" ) ? undefined : dict ["name"] 
     ;
     if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.content = v_2;
+      obj.name = v_2;
+    }
+    const v_3 = (typeof (dict ["value"]) != "string" ) ? undefined : dict ["value"] 
+    ;
+    if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
+      obj.value = v_3;
+    }
+    const v_4 = typeof(dict ["hasNumeric"]) === "undefined" ? undefined :(dict ["hasNumeric"]) ;
+    if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
+      obj.hasNumeric = v_4;
+    }
+    const v_5 = isNaN( parseFloat(dict ["numericValue"]) ) ? undefined : parseFloat(dict ["numericValue"]) 
+    ;
+    if ( (typeof(v_5) !== "undefined" && v_5 != null )  ) {
+      obj.numericValue = v_5;
+    }
+    const v_6 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_6) !== "undefined" && v_6 != null )  ) {
+      obj.unit = v_6;
+    }
+    const v_7 = (typeof (dict ["basis"]) != "string" ) ? undefined : dict ["basis"] 
+    ;
+    if ( (typeof(v_7) !== "undefined" && v_7 != null )  ) {
+      obj.basis = v_7;
+    }
+    const v_8 = (typeof (dict ["source"]) != "string" ) ? undefined : dict ["source"] 
+    ;
+    if ( (typeof(v_8) !== "undefined" && v_8 != null )  ) {
+      obj.source = v_8;
+    }
+    const v_9 = typeof(dict ["hasConfidence"]) === "undefined" ? undefined :(dict ["hasConfidence"]) ;
+    if ( (typeof(v_9) !== "undefined" && v_9 != null )  ) {
+      obj.hasConfidence = v_9;
+    }
+    const v_10 = isNaN( parseFloat(dict ["confidence"]) ) ? undefined : parseFloat(dict ["confidence"]) 
+    ;
+    if ( (typeof(v_10) !== "undefined" && v_10 != null )  ) {
+      obj.confidence = v_10;
+    }
+    const v_11 = typeof(dict ["hasGoodness"]) === "undefined" ? undefined :(dict ["hasGoodness"]) ;
+    if ( (typeof(v_11) !== "undefined" && v_11 != null )  ) {
+      obj.hasGoodness = v_11;
+    }
+    const v_12 = isNaN( parseInt(dict ["goodness"]) ) ? undefined : parseInt(dict ["goodness"]) 
+    ;
+    if ( (typeof(v_12) !== "undefined" && v_12 != null )  ) {
+      obj.goodness = v_12;
     }
   } catch(e) {
   }
@@ -943,6 +1042,15 @@ class SliceParsedValue  {
     }
     return new FeelingValue();
   };
+  hasEffort () {
+    return (typeof(this.effort) !== "undefined" && this.effort != null ) ;
+  };
+  getEffort () {
+    if ( (typeof(this.effort) !== "undefined" && this.effort != null )  ) {
+      return this.effort;
+    }
+    return new EffortValue();
+  };
   hasBodyMetric () {
     return (typeof(this.bodyMetric) !== "undefined" && this.bodyMetric != null ) ;
   };
@@ -1070,6 +1178,12 @@ SliceParsedValue.fromFeeling = function(value) {
   const out = new SliceParsedValue();
   out.kind = "feeling";
   out.feeling = value;
+  return out;
+};
+SliceParsedValue.fromEffort = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "effort";
+  out.effort = value;
   return out;
 };
 SliceParsedValue.fromBodyMetric = function(value) {
@@ -1626,6 +1740,36 @@ class TokenSlice  {
     }
     return new FeelingValue();
   };
+  hasEffortValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "effort") && p.hasEffort() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setEffortValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.effort = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "effort";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromEffort(value);
+  };
+  getAsEffortValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "effort") && p.hasEffort() ) {
+        return p.getEffort();
+      }
+    }
+    return new EffortValue();
+  };
   hasBodyMetricValue () {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
       const p = this.parsedValue;
@@ -1937,6 +2081,7 @@ module.exports.RecoveryValue = RecoveryValue;
 module.exports.TimeValueValue = TimeValueValue;
 module.exports.LeftRightValue = LeftRightValue;
 module.exports.FeelingValue = FeelingValue;
+module.exports.EffortValue = EffortValue;
 module.exports.BodyMetricValue = BodyMetricValue;
 module.exports.CircuitValue = CircuitValue;
 module.exports.ContextEntryValue = ContextEntryValue;

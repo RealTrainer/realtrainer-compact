@@ -1,5 +1,17 @@
+Import "JSON.rgr"
+
 class ContextEntryValue @serialize(true) {
     def kind:string "context-entry"
-    def kind:string ""
     def content:string ""
+    def name:string ""
+    def value:string ""
+    def hasNumeric:boolean false
+    def numericValue:double 0.0
+    def unit:string ""
+    def basis:string ""
+    def source:string ""
+    def hasConfidence:boolean false
+    def confidence:double 0.0
+    def hasGoodness:boolean false
+    def goodness:int 0
 }

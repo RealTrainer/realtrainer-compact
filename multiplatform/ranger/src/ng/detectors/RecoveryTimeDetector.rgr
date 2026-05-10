@@ -77,7 +77,8 @@ class RecoveryTimeDetector {
         valueToken.tag = "positive-integer"
         def piv (new PositiveIntegerValue)
         piv.value = (valueToken.parseInteger(0 ((valueToken.length()) - 1)))
-        valueToken.setSliceValue((SliceParsedValue.fromPositiveInteger(piv)))
+            def parsedValue (SliceParsedValue.fromPositiveInteger(piv))
+            valueToken.setSliceValue(parsedValue)
         out.addChild(valueToken)
 
         def unitToken (slice.peek(i).read(1))

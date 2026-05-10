@@ -1,6 +1,7 @@
 Import "detectors/TokenDetector.rgr"
 Import "Parser.rgr"
 Import "StandardDetectors.rgr"
+Import "detectors/RepeatBlockDetector.rgr"
 Import "values/DetailsLevelValue.rgr"
 Import "values/SliceParsedValue.rgr"
 
@@ -44,12 +45,49 @@ class DetailsDataDetector {
         return false
     }
 
+    fn isWhitespace:boolean (ch:int) {
+        if (ch == 32) {
+            return true
+        }
+        if (ch == 9) {
+            return true
+        }
+        return false
+    }
+
     fn addChildrenFromParser:void (out:TokenSlice payload:TokenSlice) {
         def p (new Parser((payload.toString()) (this.createChildDetectors())))
         p.start()
         def ch (p.getResults())
         for ch item:TokenSlice i {
             out.addChild(item)
+        }
+    }
+
+    fn addKeywordTailChildren:void (out:TokenSlice payload:TokenSlice) {
+        def rbDetector (RepeatBlockDetector.create())
+        def rb (rbDetector.detect(payload))
+        if (!(rb.tag == "repeat-block")) {
+            this.addChildrenFromParser(out payload)
+            return
+        }
+
+        out.addChild(rb)
+
+        def restStart@(mutable):int (rb.length())
+        def len (payload.length())
+        while (restStart < len) {
+            def ch (payload.charCodeAt(restStart))
+            if (this.isWhitespace(ch)) {
+                restStart = restStart + 1
+            } {
+                break
+            }
+        }
+
+        if (restStart < len) {
+            def rest (payload.peek(restStart).read(len - restStart))
+            this.addChildrenFromParser(out rest)
         }
     }
 
@@ -93,7 +131,7 @@ class DetailsDataDetector {
 
             if (tailStart < len) {
                 def tail (payload.peek(tailStart).read(len - tailStart))
-                this.addChildrenFromParser(out tail)
+                this.addKeywordTailChildren(out tail)
             }
             return
         }

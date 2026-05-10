@@ -1,5 +1,6 @@
 class SetRepRangeLoadValue @serialize(true) {
     def kind:string "set-rep-range-load"
+    def count:int 1
     def setsMin:int 0
     def setsMax:int 0
     def repsMin:int 0

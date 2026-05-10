@@ -1,0 +1,85 @@
+Import "detectors/TokenDetector.rgr"
+Import "detectors/PositiveIntegerDetector.rgr"
+Import "Parser.rgr"
+Import "values/EffortValue.rgr"
+Import "values/SliceParsedValue.rgr"
+
+class EffortDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "effort"
+    }
+
+    sfn create:EffortDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new EffortDetector(s))
+    }
+
+    fn prefixLength:int (slice:TokenSlice) {
+        if (slice.hasToken("RPE ")) {
+            return 4
+        }
+        return 7
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        if (slice.hasToken("Effort ")) {
+        } {
+            if (slice.hasToken("RPE ")) {
+            } {
+                return (this.noMatch())
+            }
+        }
+
+        def keyLen (this.prefixLength(slice))
+        def len (slice.length())
+        if (keyLen >= len) {
+            return (this.noMatch())
+        }
+
+        def lineEnd@(mutable):int keyLen
+        while (lineEnd < len) {
+            def ch (slice.charCodeAt(lineEnd))
+            if ((ch == 10) || (ch == 13)) {
+                break
+            }
+            lineEnd = lineEnd + 1
+        }
+
+        def valueSlice (slice.peek(keyLen).read(lineEnd - keyLen))
+        def detectors:[TokenDetector]
+        push detectors (PositiveIntegerDetector.create())
+        def p (new Parser((valueSlice.toString()) detectors))
+        p.start()
+        if ((p.getCount()) != 1) {
+            return (this.noMatch())
+        }
+
+        def scoreToken (itemAt (p.getResults()) 0)
+        if (scoreToken.tag == "positive-integer") {
+        } {
+            return (this.noMatch())
+        }
+
+        def out (slice.read(lineEnd))
+        out.tag = detectedTag
+
+        def labelLen@(mutable):int (keyLen - 1)
+        if (labelLen < 1) {
+            labelLen = 1
+        }
+        def label (slice.read(labelLen))
+        label.tag = "keyword"
+        out.addChild(label)
+        out.addChild(scoreToken)
+
+        def ev (new EffortValue)
+        ev.score = (scoreToken.parseInteger(0 ((scoreToken.length()) - 1)))
+        def parsed (SliceParsedValue.fromEffort(ev))
+        out.setSliceValue(parsed)
+        slice.setSliceValue(parsed)
+        return out
+    }
+}

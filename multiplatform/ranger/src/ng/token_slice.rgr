@@ -14,6 +14,7 @@ Import "values/RecoveryValue.rgr"
 Import "values/TimeValueValue.rgr"
 Import "values/LeftRightValue.rgr"
 Import "values/FeelingValue.rgr"
+Import "values/EffortValue.rgr"
 Import "values/BodyMetricValue.rgr"
 Import "values/CircuitValue.rgr"
 Import "values/ContextEntryValue.rgr"
@@ -627,6 +628,39 @@ class TokenSlice {
             }
         }
         return (new FeelingValue)
+    }
+
+    fn hasEffortValue:boolean () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "effort") && (p.hasEffort())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fn setEffortValue:void (value:EffortValue) {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            p.effort = value
+            if ((strlen p.kind) == 0) {
+                p.kind = "effort"
+            }
+            parsedValue = p
+            return
+        }
+        parsedValue = (SliceParsedValue.fromEffort(value))
+    }
+
+    fn getAsEffortValue:EffortValue () {
+        if (!null? parsedValue) {
+            def p (unwrap parsedValue)
+            if ((p.kind == "effort") && (p.hasEffort())) {
+                return (p.getEffort())
+            }
+        }
+        return (new EffortValue)
     }
 
     fn hasBodyMetricValue:boolean () {

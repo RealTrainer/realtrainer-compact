@@ -1,4 +1,5 @@
 Import "detectors/TokenDetector.rgr"
+Import "JSON.rgr"
 Import "detectors/KeywordDetector.rgr"
 Import "detectors/DateTimeDetector.rgr"
 Import "detectors/SpaceDetector.rgr"
@@ -9,6 +10,7 @@ Import "detectors/TimeValueDetector.rgr"
 Import "detectors/RecoveryDetector.rgr"
 Import "detectors/LeftRightDetector.rgr"
 Import "detectors/FeelingDetector.rgr"
+Import "detectors/EffortDetector.rgr"
 Import "detectors/BodyMetricDetector.rgr"
 Import "detectors/CircuitDetector.rgr"
 Import "detectors/ContextEntryDetector.rgr"
@@ -78,6 +80,10 @@ class TokenDetectorModule {
 
     sfn createFeeling:FeelingDetector () {
         return (FeelingDetector.create())
+    }
+
+    sfn createEffort:EffortDetector () {
+        return (EffortDetector.create())
     }
 
     sfn createBodyMetric:BodyMetricDetector () {

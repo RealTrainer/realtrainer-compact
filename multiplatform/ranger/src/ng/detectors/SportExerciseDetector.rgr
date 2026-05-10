@@ -63,6 +63,170 @@ class SportExerciseDetector {
         return false
     }
 
+    fn isUppercaseLetter:boolean (ch:int) {
+        return ((ch >= 65) && (ch <= 90))
+    }
+
+    fn isLetter:boolean (ch:int) {
+        if ((ch >= 65) && (ch <= 90)) {
+            return true
+        }
+        if ((ch >= 97) && (ch <= 122)) {
+            return true
+        }
+        return false
+    }
+
+    fn isReservedGenericName:boolean (name:string) {
+        if (name == "Split") {
+            return true
+        }
+        if (name == "Attempt") {
+            return true
+        }
+        if (name == "Recovery") {
+            return true
+        }
+        if (name == "Left") {
+            return true
+        }
+        if (name == "Right") {
+            return true
+        }
+        if (name == "Feeling") {
+            return true
+        }
+        if (name == "Feelings") {
+            return true
+        }
+        if (name == "Pain") {
+            return true
+        }
+        if (name == "Effort") {
+            return true
+        }
+        if (name == "RPE") {
+            return true
+        }
+        if (name == "Circuit") {
+            return true
+        }
+        if (name == "Food") {
+            return true
+        }
+        if (name == "Drinking") {
+            return true
+        }
+        if (name == "Expense") {
+            return true
+        }
+        if (name == "Reminder") {
+            return true
+        }
+        if (name == "Protein") {
+            return true
+        }
+        if (name == "Weight") {
+            return true
+        }
+        if (name == "BodyFat") {
+            return true
+        }
+        if (name == "Sleep") {
+            return true
+        }
+        if (name == "Health") {
+            return true
+        }
+        if (name == "Vitals") {
+            return true
+        }
+        if (name == "Comment") {
+            return true
+        }
+        if (name == "Custom") {
+            return true
+        }
+        if (name == "Tags") {
+            return true
+        }
+        if (name == "Emojis") {
+            return true
+        }
+        if (name == "Summary") {
+            return true
+        }
+        if (name == "Derived") {
+            return true
+        }
+        if (name == "URL") {
+            return true
+        }
+        if (name == "Waist") {
+            return true
+        }
+        if (name == "Hip") {
+            return true
+        }
+        if (name == "Blorple") {
+            return true
+        }
+        return false
+    }
+
+    fn scanGenericNameEnd:int (slice:TokenSlice) {
+        def len (slice.length())
+        if (len <= 0) {
+            return -1
+        }
+        if (!(this.isUppercaseLetter((slice.charCodeAt(0))))) {
+            return -1
+        }
+
+        def pos@(mutable):int 1
+        while (pos < len) {
+            def ch (slice.charCodeAt(pos))
+            if (this.isLetter(ch)) {
+                pos = pos + 1
+            } {
+                break
+            }
+        }
+
+        def nameEnd@(mutable):int pos
+        while (pos < len) {
+            def gapStart pos
+            while (pos < len) {
+                def gapCh (slice.charCodeAt(pos))
+                if (this.isWhitespace(gapCh)) {
+                    pos = pos + 1
+                } {
+                    break
+                }
+            }
+
+            if (pos >= len) {
+                break
+            }
+            if (!(this.isUppercaseLetter((slice.charCodeAt(pos))))) {
+                break
+            }
+
+            pos = pos + 1
+            while (pos < len) {
+                def ch2 (slice.charCodeAt(pos))
+                if (this.isLetter(ch2)) {
+                    pos = pos + 1
+                } {
+                    break
+                }
+            }
+            nameEnd = pos
+        }
+
+        return nameEnd
+    }
+
     fn isSeparator:boolean (ch:int) {
         if (this.isWhitespace(ch)) {
             return true
@@ -74,32 +238,111 @@ class SportExerciseDetector {
         return false
     }
 
+    fn trimEnd:int (slice:TokenSlice endPos:int) {
+        def out@(mutable):int endPos
+        while (out > 0) {
+            def ch (slice.charCodeAt(out - 1))
+            if (this.isWhitespace(ch)) {
+                out = out - 1
+            } {
+                break
+            }
+        }
+        return out
+    }
+
     fn detect:TokenSlice (slice:TokenSlice) {
         def len (slice.length())
-        if (len < 6) {
+        if (len <= 0) {
             return (this.noMatch())
         }
 
-        def name@(mutable):string ""
-        def nameLen@(mutable):int 0
+        def lineEnd@(mutable):int 0
+        while (lineEnd < len) {
+            def chLine (slice.charCodeAt(lineEnd))
+            if ((chLine == 10) || (chLine == 13)) {
+                break
+            }
+            lineEnd = lineEnd + 1
+        }
+
+        if (lineEnd <= 0) {
+            return (this.noMatch())
+        }
+
+        def startPos@(mutable):int 0
+        while (startPos < lineEnd) {
+            def chStart (slice.charCodeAt(startPos))
+            if (this.isWhitespace(chStart)) {
+                startPos = startPos + 1
+            } {
+                break
+            }
+        }
+
+        if (startPos >= lineEnd) {
+            return (this.noMatch())
+        }
+
+        if ((slice.charCodeAt(startPos)) == 62) {
+            return (this.noMatch())
+        }
+
+        def semicolonPos@(mutable):int -1
+        def p@(mutable):int 0
+        while (p < lineEnd) {
+            if ((slice.charCodeAt(p)) == 59) {
+                semicolonPos = p
+                break
+            }
+            p = p + 1
+        }
+
+        def explicitNameMode:boolean (semicolonPos >= 0)
         def matched@(mutable):boolean false
 
-        for sports sportName:string i {
-            def sportLen (strlen sportName)
-            if (len <= sportLen) {
-                continue
+        if (explicitNameMode) {
+            matched = true
+        } {
+            for sports sportName:string i {
+                def sportLen (strlen sportName)
+                if (lineEnd < sportLen) {
+                    continue
+                }
+
+                if (!(this.startsWithToken(slice sportName))) {
+                    continue
+                }
+
+                if (lineEnd == sportLen) {
+                    matched = true
+                    break
+                }
+
+                def chAfterName (slice.charCodeAt(sportLen))
+                if (this.isSeparator(chAfterName)) {
+                    matched = true
+                    break
+                }
             }
 
-            if (!(this.startsWithToken(slice sportName))) {
-                continue
-            }
+            if (matched == false) {
+                def genericLen (this.scanGenericNameEnd(slice))
+                if (genericLen > 1) {
+                    def genericName ((slice.read(genericLen)).toString())
+                    if (this.isReservedGenericName(genericName)) {
+                        return (this.noMatch())
+                    }
 
-            def chAfterName (slice.charCodeAt(sportLen))
-            if (this.isSeparator(chAfterName)) {
-                name = sportName
-                nameLen = sportLen
-                matched = true
-                break
+                    if (genericLen == lineEnd) {
+                        matched = true
+                    } {
+                        def chAfterGeneric (slice.charCodeAt(genericLen))
+                        if (this.isSeparator(chAfterGeneric)) {
+                            matched = true
+                        }
+                    }
+                }
             }
         }
 
@@ -107,51 +350,44 @@ class SportExerciseDetector {
              return (this.noMatch())
          }
 
-        def restStart@(mutable):int nameLen
-        while (restStart < len) {
-            def chSpace (slice.charCodeAt(restStart))
-            if (this.isSeparator(chSpace)) {
-                restStart = restStart + 1
-            } {
-                break
-            }
+        def nameEnd@(mutable):int lineEnd
+        if (semicolonPos >= 0) {
+            nameEnd = semicolonPos
         }
+        nameEnd = (this.trimEnd(slice nameEnd))
 
-        if (restStart >= len) {
+        if (nameEnd <= 0) {
             return (this.noMatch())
         }
 
-        def lineEnd@(mutable):int restStart
-        while (lineEnd < len) {
-            def ch (slice.charCodeAt(lineEnd))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
-
-        if (lineEnd <= restStart) {
-            return (this.noMatch())
-        }
-
-        def restSlice (slice.peek(restStart).read(lineEnd - restStart))
-        def p (new Parser((restSlice.toString()) (this.createChildDetectors())))
-        p.start()
-
-        if ((p.getCount()) <= 0) {
-            return (this.noMatch())
-        }
-
-        def nameToken (slice.read(nameLen))
+        def nameToken (slice.read(nameEnd))
         nameToken.tag = "exercise-name"
 
         def out (slice.read(lineEnd))
         out.tag = detectedTag
         out.addChild(nameToken)
 
-        def children (p.getResults())
-        for children ch:TokenSlice i {
-            out.addChild(ch)
+        if (semicolonPos >= 0) {
+            def restStart@(mutable):int (semicolonPos + 1)
+            while (restStart < lineEnd) {
+                def chSpace (slice.charCodeAt(restStart))
+                if (this.isSeparator(chSpace)) {
+                    restStart = restStart + 1
+                } {
+                    break
+                }
+            }
+
+            if (restStart < lineEnd) {
+                def restSlice (slice.peek(restStart).read(lineEnd - restStart))
+                def p (new Parser((restSlice.toString()) (this.createChildDetectors())))
+                p.start()
+
+                def children (p.getResults())
+                for children ch:TokenSlice j {
+                    out.addChild(ch)
+                }
+            }
         }
 
         return out

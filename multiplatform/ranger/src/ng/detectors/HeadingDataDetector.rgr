@@ -13,11 +13,143 @@ class HeadingDataDetector {
         return (new HeadingDataDetector(s))
     }
 
+    fn isWhitespace:boolean (ch:int) {
+        if (ch == 32) {
+            return true
+        }
+        if (ch == 9) {
+            return true
+        }
+        return false
+    }
+
+    fn isDigit:boolean (ch:int) {
+        if (ch < 48) {
+            return false
+        }
+        if (ch > 57) {
+            return false
+        }
+        return true
+    }
+
+    fn hasIsoDatePrefix:boolean (slice:TokenSlice start:int) {
+        if (((start + 10) > (slice.length()))) {
+            return false
+        }
+        if (this.isDigit((slice.charCodeAt(start + 0)))) {
+        } {
+            return false
+        }
+        if (this.isDigit((slice.charCodeAt(start + 1)))) {
+        } {
+            return false
+        }
+        if (this.isDigit((slice.charCodeAt(start + 2)))) {
+        } {
+            return false
+        }
+        if (this.isDigit((slice.charCodeAt(start + 3)))) {
+        } {
+            return false
+        }
+        if ((slice.charCodeAt(start + 4)) == 45) {
+        } {
+            return false
+        }
+        if (this.isDigit((slice.charCodeAt(start + 5)))) {
+        } {
+            return false
+        }
+        if (this.isDigit((slice.charCodeAt(start + 6)))) {
+        } {
+            return false
+        }
+        if ((slice.charCodeAt(start + 7)) == 45) {
+        } {
+            return false
+        }
+        if (this.isDigit((slice.charCodeAt(start + 8)))) {
+        } {
+            return false
+        }
+        if (this.isDigit((slice.charCodeAt(start + 9)))) {
+        } {
+            return false
+        }
+        return true
+    }
+
     fn detect:TokenSlice (slice:TokenSlice) {
         def len (slice.length())
         if (len < 2) {
             return (this.noMatch())
         }
+
+        ; Support current-style heading with date prefix:
+        ; [YYYY-MM-DD] ## Title
+        ; [YYYY-MM-DD#id] ## Title
+        if ((slice.charCodeAt(0)) == 91) {
+            def closeIdx@(mutable):int 1
+            while (closeIdx < len) {
+                def chClose (slice.charCodeAt(closeIdx))
+                if ((chClose == 10) || (chClose == 13)) {
+                    break
+                }
+                if (chClose == 93) {
+                    break
+                }
+                closeIdx = closeIdx + 1
+            }
+
+            if ((closeIdx < len) && ((slice.charCodeAt(closeIdx)) == 93)) {
+                if (this.hasIsoDatePrefix(slice 1)) {
+                    def i2@(mutable):int (closeIdx + 1)
+                    while (i2 < len) {
+                        def chSpace (slice.charCodeAt(i2))
+                        if (this.isWhitespace(chSpace)) {
+                            i2 = i2 + 1
+                        } {
+                            break
+                        }
+                    }
+
+                    def hashCount@(mutable):int 0
+                    while (i2 < len) {
+                        if ((slice.charCodeAt(i2)) == 35) {
+                            hashCount = hashCount + 1
+                            i2 = i2 + 1
+                        } {
+                            break
+                        }
+                    }
+
+                    if (hashCount >= 1) {
+                        if ((i2 < len) && ((slice.charCodeAt(i2)) == 32)) {
+                            i2 = i2 + 1
+                            if (i2 < len) {
+                                def j@(mutable):int i2
+                                while (j < len) {
+                                    def chJ (slice.charCodeAt(j))
+                                    if ((chJ == 10) || (chJ == 13)) {
+                                        break
+                                    }
+                                    j = j + 1
+                                }
+                                if (j > i2) {
+                                    def out2 (slice.read(j))
+                                    out2.tag = detectedTag
+                                    return out2
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return (this.noMatch())
+        }
+
         if ((slice.charCodeAt(0)) != 35) {
             return (this.noMatch())
         }

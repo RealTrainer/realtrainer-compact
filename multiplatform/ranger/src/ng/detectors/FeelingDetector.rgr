@@ -17,6 +17,75 @@ class FeelingDetector {
         return (new FeelingDetector(s))
     }
 
+    fn isWhitespace:boolean (ch:int) {
+        if (ch == 32) {
+            return true
+        }
+        if (ch == 9) {
+            return true
+        }
+        return false
+    }
+
+    fn isDigit:boolean (ch:int) {
+        if (ch < 48) {
+            return false
+        }
+        if (ch > 57) {
+            return false
+        }
+        return true
+    }
+
+    fn parseNumericScore:int (slice:TokenSlice) {
+        def detectors:[TokenDetector]
+        push detectors (PositiveIntegerDetector.create())
+        def p (new Parser((slice.toString()) detectors))
+        p.start()
+        if ((p.getCount()) != 1) {
+            return -1
+        }
+        def scoreToken (itemAt (p.getResults()) 0)
+        if (scoreToken.tag == "positive-integer") {
+            return (scoreToken.parseInteger(0 ((scoreToken.length()) - 1)))
+        }
+        return -1
+    }
+
+    fn parseSlashTenScore:int (slice:TokenSlice) {
+        if (slice.hasToken("?/10")) {
+            return 0
+        }
+
+        def len (slice.length())
+        def i@(mutable):int 1
+        while ((i + 2) < len) {
+            if ((slice.charCodeAt(i)) == 47) {
+                if (((slice.charCodeAt(i + 1)) == 49) && ((slice.charCodeAt(i + 2)) == 48)) {
+                    def start@(mutable):int i
+                    while (start > 0) {
+                        def chPrev (slice.charCodeAt(start - 1))
+                        if (this.isDigit(chPrev)) {
+                            start = start - 1
+                        } {
+                            break
+                        }
+                    }
+
+                    if (start < i) {
+                        def numSlice (slice.peek(start).read(i - start))
+                        if (numSlice.hasInteger(0 ((numSlice.length()) - 1))) {
+                            return (numSlice.parseInteger(0 ((numSlice.length()) - 1)))
+                        }
+                    }
+                }
+            }
+            i = i + 1
+        }
+
+        return -1
+    }
+
     fn parseKind:string (slice:TokenSlice) {
         if (slice.hasToken("Feeling ")) {
             return "feeling"
@@ -61,17 +130,63 @@ class FeelingDetector {
             lineEnd = lineEnd + 1
         }
 
-        def valueSlice (slice.peek(keyLen).read(lineEnd - keyLen))
-        def detectors:[TokenDetector]
-        push detectors (PositiveIntegerDetector.create())
-        def p (new Parser((valueSlice.toString()) detectors))
-        p.start()
-        if ((p.getCount()) != 1) {
-            return (this.noMatch())
+        def rawSlice (slice.peek(keyLen).read(lineEnd - keyLen))
+
+        def trimStart@(mutable):int 0
+        def rawLen (rawSlice.length())
+        while (trimStart < rawLen) {
+            def chStart (rawSlice.charCodeAt(trimStart))
+            if (this.isWhitespace(chStart)) {
+                trimStart = trimStart + 1
+            } {
+                break
+            }
         }
-        def scoreToken (itemAt (p.getResults()) 0)
-        if (scoreToken.tag == "positive-integer") {
+
+        def trimEnd@(mutable):int rawLen
+        while (trimEnd > trimStart) {
+            def chEnd (rawSlice.charCodeAt(trimEnd - 1))
+            if (this.isWhitespace(chEnd)) {
+                trimEnd = trimEnd - 1
+            } {
+                break
+            }
+        }
+
+        def score@(mutable):int -1
+        if (trimEnd > trimStart) {
+            def valueSlice (rawSlice.peek(trimStart).read(trimEnd - trimStart))
+
+            score = (this.parseNumericScore(valueSlice))
+            if (score < 0) {
+                if ((kind == "feeling") && (valueSlice.hasToken("RPE:"))) {
+                    if ((valueSlice.length()) > 4) {
+                        def rpeSlice (valueSlice.peek(4).read((valueSlice.length()) - 4))
+                        score = (this.parseNumericScore(rpeSlice))
+                    }
+                }
+            }
+
+            if (score < 0) {
+                score = (this.parseSlashTenScore(valueSlice))
+            }
+
+            if (score < 0) {
+                if ((valueSlice.charCodeAt(0)) == 124) {
+                    score = 0
+                }
+            }
+
+            if (score < 0) {
+                if ((kind == "pain") && (valueSlice.hasToken("-|"))) {
+                    score = 0
+                }
+            }
         } {
+            score = 0
+        }
+
+        if (score < 0) {
             return (this.noMatch())
         }
 
@@ -85,11 +200,14 @@ class FeelingDetector {
         def label (slice.read(labelLen))
         label.tag = "keyword"
         out.addChild(label)
+
+        def scoreToken (TokenSlice.fromText(("" + score)))
+        scoreToken.tag = "positive-integer"
         out.addChild(scoreToken)
 
         def fv (new FeelingValue)
         fv.kind = kind
-        fv.score = (scoreToken.parseInteger(0 ((scoreToken.length()) - 1)))
+        fv.score = score
         def parsed (SliceParsedValue.fromFeeling(fv))
         out.setSliceValue(parsed)
         slice.setSliceValue(parsed)

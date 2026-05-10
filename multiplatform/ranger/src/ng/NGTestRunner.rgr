@@ -412,6 +412,25 @@ class NGTestRunner {
         return ((substring text 0 pLen) == prefix)
     }
 
+    fn endsWithText:boolean (text:string suffix:string) {
+        def tLen (strlen text)
+        def sLen (strlen suffix)
+        if (sLen > tLen) {
+            return false
+        }
+        return ((substring text (tLen - sLen) tLen) == suffix)
+    }
+
+    ; Swift JSONSerialization may emit integral numbers as x.0.
+    ; Normalize both expected and actual values for target-agnostic json asserts.
+    fn normalizeJsonNumericText:string (text:string) {
+        def out@(mutable):string (this.trim(text))
+        while (this.endsWithText(out ".0")) {
+            out = (substring out 0 ((strlen out) - 2))
+        }
+        return out
+    }
+
     fn createDetectors:[TokenDetector] () {
         return (StandardDetectors.create())
     }
@@ -549,6 +568,9 @@ class NGTestRunner {
         }
         if (kind == "feeling") {
             return (to_string((token.getAsFeelingValue().toDictionary())))
+        }
+        if (kind == "effort") {
+            return (to_string((token.getAsEffortValue().toDictionary())))
         }
         if (kind == "body-metric") {
             return (to_string((token.getAsBodyMetricValue().toDictionary())))
@@ -851,6 +873,9 @@ class NGTestRunner {
 
             if (kind == "set-rep-range-load") {
                 def sr (token.getAsSetRepRangeLoadValue())
+                if (tail == "count") {
+                    return ("" + sr.count)
+                }
                 if (tail == "setsMin") {
                     return ("" + sr.setsMin)
                 }
@@ -876,11 +901,21 @@ class NGTestRunner {
 
             if (kind == "feeling") {
                 def fv (token.getAsFeelingValue())
-                if (tail == "type") {
+                if ((tail == "type") || (tail == "subKind")) {
                     return fv.kind
                 }
                 if (tail == "score") {
                     return ("" + fv.score)
+                }
+            }
+
+            if (kind == "effort") {
+                def ev (token.getAsEffortValue())
+                if ((tail == "type") || (tail == "subKind")) {
+                    return ev.kind
+                }
+                if (tail == "score") {
+                    return ("" + ev.score)
                 }
             }
 
@@ -932,11 +967,95 @@ class NGTestRunner {
 
             if (kind == "context-entry") {
                 def ce (token.getAsContextEntryValue())
-                if (tail == "type") {
+                if ((tail == "type") || (tail == "subKind")) {
                     return ce.kind
                 }
                 if (tail == "content") {
                     return ce.content
+                }
+                if (tail == "name") {
+                    return ce.name
+                }
+                if (tail == "value") {
+                    return ce.value
+                }
+                if (tail == "hasNumeric") {
+                    if (ce.hasNumeric) {
+                        return "true"
+                    }
+                    return "false"
+                }
+                if (tail == "numericValue") {
+                    return ("" + ce.numericValue)
+                }
+                if (tail == "customField") {
+                    return ce.name
+                }
+                if (tail == "customValue") {
+                    return ce.value
+                }
+                if (tail == "hasCustomNumeric") {
+                    if (ce.hasNumeric) {
+                        return "true"
+                    }
+                    return "false"
+                }
+                if (tail == "customNumericValue") {
+                    return ("" + ce.numericValue)
+                }
+                if (tail == "unit") {
+                    return ce.unit
+                }
+                if (tail == "basis") {
+                    return ce.basis
+                }
+                if (tail == "source") {
+                    return ce.source
+                }
+                if (tail == "hasConfidence") {
+                    if (ce.hasConfidence) {
+                        return "true"
+                    }
+                    return "false"
+                }
+                if (tail == "confidence") {
+                    return ("" + ce.confidence)
+                }
+                if (tail == "hasGoodness") {
+                    if (ce.hasGoodness) {
+                        return "true"
+                    }
+                    return "false"
+                }
+                if (tail == "goodness") {
+                    return ("" + ce.goodness)
+                }
+                if (tail == "derivedUnit") {
+                    return ce.unit
+                }
+                if (tail == "derivedBasis") {
+                    return ce.basis
+                }
+                if (tail == "derivedSource") {
+                    return ce.source
+                }
+                if (tail == "hasDerivedConfidence") {
+                    if (ce.hasConfidence) {
+                        return "true"
+                    }
+                    return "false"
+                }
+                if (tail == "derivedConfidence") {
+                    return ("" + ce.confidence)
+                }
+                if (tail == "hasDerivedGoodness") {
+                    if (ce.hasGoodness) {
+                        return "true"
+                    }
+                    return "false"
+                }
+                if (tail == "derivedGoodness") {
+                    return ("" + ce.goodness)
                 }
             }
 
@@ -945,6 +1064,13 @@ class NGTestRunner {
                 if (tail == "value") {
                     return ("" + piv.value)
                 }
+            }
+
+            ; Keep expect syntax consistent: parsed.type and parsed.subKind always exist.
+            ; For specialized kinds (feeling/effort/context-entry), earlier branches
+            ; return a subtype-specific value. For all others type/subKind == kind.
+            if ((tail == "type") || (tail == "subKind")) {
+                return kind
             }
             return ""
         }
@@ -1043,7 +1169,9 @@ class NGTestRunner {
                         push out (((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' was not found")
                         continue
                     }
-                    def jsonMatches (gotJson == ex.value)
+                    def gotNorm (this.normalizeJsonNumericText(gotJson))
+                    def expNorm (this.normalizeJsonNumericText(ex.value))
+                    def jsonMatches ((gotJson == ex.value) || (gotNorm == expNorm))
                     if (ex.negated) {
                         if (jsonMatches) {
                             def msgNotJson (((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' not to be '")

@@ -14,6 +14,7 @@ Import "values/RecoveryValue.rgr"
 Import "values/TimeValueValue.rgr"
 Import "values/LeftRightValue.rgr"
 Import "values/FeelingValue.rgr"
+Import "values/EffortValue.rgr"
 Import "values/BodyMetricValue.rgr"
 Import "values/CircuitValue.rgr"
 Import "values/ContextEntryValue.rgr"
@@ -39,6 +40,7 @@ class SliceParsedValue {
     def timeValue@(optional):TimeValueValue
     def leftRight@(optional):LeftRightValue
     def feeling@(optional):FeelingValue
+    def effort@(optional):EffortValue
     def bodyMetric@(optional):BodyMetricValue
     def circuit@(optional):CircuitValue
     def contextEntry@(optional):ContextEntryValue
@@ -158,6 +160,13 @@ class SliceParsedValue {
         def out (new SliceParsedValue)
         out.kind = "feeling"
         out.feeling = value
+        return out
+    }
+
+    sfn fromEffort:SliceParsedValue (value:EffortValue) {
+        def out (new SliceParsedValue)
+        out.kind = "effort"
+        out.effort = value
         return out
     }
 
@@ -356,6 +365,17 @@ class SliceParsedValue {
             return (unwrap feeling)
         }
         return (new FeelingValue)
+    }
+
+    fn hasEffort:boolean () {
+        return (!null? effort)
+    }
+
+    fn getEffort:EffortValue () {
+        if (!null? effort) {
+            return (unwrap effort)
+        }
+        return (new EffortValue)
     }
 
     fn hasBodyMetric:boolean () {

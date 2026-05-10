@@ -51,99 +51,200 @@ class SetRepRangeLoadDetector {
         if (setsLeftEnd <= 0) {
             return (this.noMatch())
         }
-        if ((i >= len) || ((slice.charCodeAt(i)) != 45)) {
-            return (this.noMatch())
-        }
-
-        i = i + 1
-        def setsRightStart i
-        while (i < len) {
-            if (this.isDigit((slice.charCodeAt(i)))) {
-                i = i + 1
-            } {
-                break
-            }
-        }
-        def setsRightEnd i
-        if (setsRightEnd <= setsRightStart) {
-            return (this.noMatch())
-        }
-
-        if ((i >= len) || ((slice.charCodeAt(i)) != 120)) {
-            return (this.noMatch())
-        }
-        i = i + 1
-
-        def repsLeftStart i
-        while (i < len) {
-            if (this.isDigit((slice.charCodeAt(i)))) {
-                i = i + 1
-            } {
-                break
-            }
-        }
-        def repsLeftEnd i
-        if (repsLeftEnd <= repsLeftStart) {
-            return (this.noMatch())
-        }
-
-        if ((i >= len) || ((slice.charCodeAt(i)) != 45)) {
-            return (this.noMatch())
-        }
-        i = i + 1
-
-        def repsRightStart i
-        while (i < len) {
-            if (this.isDigit((slice.charCodeAt(i)))) {
-                i = i + 1
-            } {
-                break
-            }
-        }
-        def repsRightEnd i
-        if (repsRightEnd <= repsRightStart) {
-            return (this.noMatch())
-        }
 
         def setsLeft (slice.read(setsLeftEnd))
-        def setsRight (slice.peek(setsRightStart).read(setsRightEnd - setsRightStart))
-        def repsLeft (slice.peek(repsLeftStart).read(repsLeftEnd - repsLeftStart))
-        def repsRight (slice.peek(repsRightStart).read(repsRightEnd - repsRightStart))
-
-        if (setsLeft.hasInteger(0 ((setsLeft.length()) - 1))) {
-        } {
+        if (!(setsLeft.hasInteger(0 ((setsLeft.length()) - 1)))) {
             return (this.noMatch())
         }
-        if (setsRight.hasInteger(0 ((setsRight.length()) - 1))) {
-        } {
-            return (this.noMatch())
-        }
-        if (repsLeft.hasInteger(0 ((repsLeft.length()) - 1))) {
-        } {
-            return (this.noMatch())
-        }
-        if (repsRight.hasInteger(0 ((repsRight.length()) - 1))) {
-        } {
+        def setsSingleVal (setsLeft.parseInteger(0 ((setsLeft.length()) - 1)))
+        if (setsSingleVal <= 0) {
             return (this.noMatch())
         }
 
-        if ((setsLeft.parseInteger(0 ((setsLeft.length()) - 1))) <= 0) {
-            return (this.noMatch())
-        }
-        if ((setsRight.parseInteger(0 ((setsRight.length()) - 1))) <= 0) {
-            return (this.noMatch())
-        }
-        if ((repsLeft.parseInteger(0 ((repsLeft.length()) - 1))) <= 0) {
-            return (this.noMatch())
-        }
-        if ((repsRight.parseInteger(0 ((repsRight.length()) - 1))) <= 0) {
+        if (i >= len) {
             return (this.noMatch())
         }
 
-        def setsMinVal (setsLeft.parseInteger(0 ((setsLeft.length()) - 1)))
-        def setsMaxVal (setsRight.parseInteger(0 ((setsRight.length()) - 1)))
-        def repsMinVal (repsLeft.parseInteger(0 ((repsLeft.length()) - 1)))
-        def repsMaxVal (repsRight.parseInteger(0 ((repsRight.length()) - 1)))
+        def setsMinVal@(mutable):int 0
+        def setsMaxVal@(mutable):int 0
+        def repsMinVal@(mutable):int 0
+        def repsMaxVal@(mutable):int 0
+        def countVal@(mutable):int 1
+
+        ; Supported forms:
+        ; 1) 2-3x15-20x50kg  (sets range + reps range)
+        ; 2) 4x3-8x60kg      (exact sets + reps range)
+        ; 3) 3x5x10x50kg     (count prefix + exact sets + exact reps)
+        def firstSep (slice.charCodeAt(i))
+        if (firstSep == 45) {
+            i = i + 1
+            def setsRightStart i
+            while (i < len) {
+                if (this.isDigit((slice.charCodeAt(i)))) {
+                    i = i + 1
+                } {
+                    break
+                }
+            }
+            def setsRightEnd i
+            if (setsRightEnd <= setsRightStart) {
+                return (this.noMatch())
+            }
+
+            if ((i >= len) || ((slice.charCodeAt(i)) != 120)) {
+                return (this.noMatch())
+            }
+            i = i + 1
+
+            def repsLeftStart i
+            while (i < len) {
+                if (this.isDigit((slice.charCodeAt(i)))) {
+                    i = i + 1
+                } {
+                    break
+                }
+            }
+            def repsLeftEnd i
+            if (repsLeftEnd <= repsLeftStart) {
+                return (this.noMatch())
+            }
+
+            if ((i >= len) || ((slice.charCodeAt(i)) != 45)) {
+                return (this.noMatch())
+            }
+            i = i + 1
+
+            def repsRightStart i
+            while (i < len) {
+                if (this.isDigit((slice.charCodeAt(i)))) {
+                    i = i + 1
+                } {
+                    break
+                }
+            }
+            def repsRightEnd i
+            if (repsRightEnd <= repsRightStart) {
+                return (this.noMatch())
+            }
+
+            def setsRight (slice.peek(setsRightStart).read(setsRightEnd - setsRightStart))
+            def repsLeft (slice.peek(repsLeftStart).read(repsLeftEnd - repsLeftStart))
+            def repsRight (slice.peek(repsRightStart).read(repsRightEnd - repsRightStart))
+            if (!(setsRight.hasInteger(0 ((setsRight.length()) - 1)))) {
+                return (this.noMatch())
+            }
+            if (!(repsLeft.hasInteger(0 ((repsLeft.length()) - 1)))) {
+                return (this.noMatch())
+            }
+            if (!(repsRight.hasInteger(0 ((repsRight.length()) - 1)))) {
+                return (this.noMatch())
+            }
+
+            setsMinVal = setsSingleVal
+            setsMaxVal = (setsRight.parseInteger(0 ((setsRight.length()) - 1)))
+            repsMinVal = (repsLeft.parseInteger(0 ((repsLeft.length()) - 1)))
+            repsMaxVal = (repsRight.parseInteger(0 ((repsRight.length()) - 1)))
+        } {
+            if (firstSep == 120) {
+                i = i + 1
+
+                def repsLeftStart2 i
+                while (i < len) {
+                    if (this.isDigit((slice.charCodeAt(i)))) {
+                        i = i + 1
+                    } {
+                        break
+                    }
+                }
+                def repsLeftEnd2 i
+                if (repsLeftEnd2 <= repsLeftStart2) {
+                    return (this.noMatch())
+                }
+
+                if ((i < len) && ((slice.charCodeAt(i)) == 45)) {
+                    i = i + 1
+
+                    def repsRightStart3 i
+                    while (i < len) {
+                        if (this.isDigit((slice.charCodeAt(i)))) {
+                            i = i + 1
+                        } {
+                            break
+                        }
+                    }
+                    def repsRightEnd3 i
+                    if (repsRightEnd3 <= repsRightStart3) {
+                        return (this.noMatch())
+                    }
+
+                    if ((i >= len) || ((slice.charCodeAt(i)) != 120)) {
+                        return (this.noMatch())
+                    }
+
+                    def repsLeftRange (slice.peek(repsLeftStart2).read(repsLeftEnd2 - repsLeftStart2))
+                    def repsRightRange (slice.peek(repsRightStart3).read(repsRightEnd3 - repsRightStart3))
+                    if (!(repsLeftRange.hasInteger(0 ((repsLeftRange.length()) - 1)))) {
+                        return (this.noMatch())
+                    }
+                    if (!(repsRightRange.hasInteger(0 ((repsRightRange.length()) - 1)))) {
+                        return (this.noMatch())
+                    }
+
+                    setsMinVal = setsSingleVal
+                    setsMaxVal = setsSingleVal
+                    repsMinVal = (repsLeftRange.parseInteger(0 ((repsLeftRange.length()) - 1)))
+                    repsMaxVal = (repsRightRange.parseInteger(0 ((repsRightRange.length()) - 1)))
+                } {
+                    if ((i >= len) || ((slice.charCodeAt(i)) != 120)) {
+                        return (this.noMatch())
+                    }
+                    i = i + 1
+
+                    def repsRightStart2 i
+                    while (i < len) {
+                        if (this.isDigit((slice.charCodeAt(i)))) {
+                            i = i + 1
+                        } {
+                            break
+                        }
+                    }
+                    def repsRightEnd2 i
+                    if (repsRightEnd2 <= repsRightStart2) {
+                        return (this.noMatch())
+                    }
+
+                    def setsMid (slice.peek(repsLeftStart2).read(repsLeftEnd2 - repsLeftStart2))
+                    def repsExact (slice.peek(repsRightStart2).read(repsRightEnd2 - repsRightStart2))
+                    if (!(setsMid.hasInteger(0 ((setsMid.length()) - 1)))) {
+                        return (this.noMatch())
+                    }
+                    if (!(repsExact.hasInteger(0 ((repsExact.length()) - 1)))) {
+                        return (this.noMatch())
+                    }
+
+                    setsMinVal = (setsMid.parseInteger(0 ((setsMid.length()) - 1)))
+                    setsMaxVal = setsMinVal
+                    repsMinVal = (repsExact.parseInteger(0 ((repsExact.length()) - 1)))
+                    repsMaxVal = repsMinVal
+                    countVal = setsSingleVal
+                }
+            } {
+                return (this.noMatch())
+            }
+        }
+
+        if (setsMinVal <= 0) {
+            return (this.noMatch())
+        }
+        if (setsMaxVal <= 0) {
+            return (this.noMatch())
+        }
+        if (repsMinVal <= 0) {
+            return (this.noMatch())
+        }
+        if (repsMaxVal <= 0) {
+            return (this.noMatch())
+        }
 
         if (i >= len) {
             return (this.noMatch())
@@ -218,6 +319,7 @@ class SetRepRangeLoadDetector {
         def out (slice.read(i))
         out.tag = detectedTag
         def sv (new SetRepRangeLoadValue)
+        sv.count = countVal
         sv.setsMin = setsMinVal
         sv.setsMax = setsMaxVal
         sv.repsMin = repsMinVal

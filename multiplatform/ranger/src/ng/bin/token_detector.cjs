@@ -341,6 +341,7 @@ RepeatBlockValue.fromDictionary = function(dict) {
 class SetRepRangeLoadValue  {
   constructor() {
     this.kind = "set-rep-range-load";
+    this.count = 1;
     this.setsMin = 0;
     this.setsMax = 0;
     this.repsMin = 0;
@@ -353,6 +354,7 @@ class SetRepRangeLoadValue  {
     let res = {};
     try {
       res["kind"] = this.kind;
+      res["count"] = this.count;
       res["setsMin"] = this.setsMin;
       res["setsMax"] = this.setsMax;
       res["repsMin"] = this.repsMin;
@@ -373,40 +375,45 @@ SetRepRangeLoadValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = isNaN( parseInt(dict ["setsMin"]) ) ? undefined : parseInt(dict ["setsMin"]) 
+    const v_1 = isNaN( parseInt(dict ["count"]) ) ? undefined : parseInt(dict ["count"]) 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.setsMin = v_1;
+      obj.count = v_1;
     }
-    const v_2 = isNaN( parseInt(dict ["setsMax"]) ) ? undefined : parseInt(dict ["setsMax"]) 
+    const v_2 = isNaN( parseInt(dict ["setsMin"]) ) ? undefined : parseInt(dict ["setsMin"]) 
     ;
     if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.setsMax = v_2;
+      obj.setsMin = v_2;
     }
-    const v_3 = isNaN( parseInt(dict ["repsMin"]) ) ? undefined : parseInt(dict ["repsMin"]) 
+    const v_3 = isNaN( parseInt(dict ["setsMax"]) ) ? undefined : parseInt(dict ["setsMax"]) 
     ;
     if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
-      obj.repsMin = v_3;
+      obj.setsMax = v_3;
     }
-    const v_4 = isNaN( parseInt(dict ["repsMax"]) ) ? undefined : parseInt(dict ["repsMax"]) 
+    const v_4 = isNaN( parseInt(dict ["repsMin"]) ) ? undefined : parseInt(dict ["repsMin"]) 
     ;
     if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
-      obj.repsMax = v_4;
+      obj.repsMin = v_4;
     }
-    const v_5 = (typeof (dict ["mode"]) != "string" ) ? undefined : dict ["mode"] 
+    const v_5 = isNaN( parseInt(dict ["repsMax"]) ) ? undefined : parseInt(dict ["repsMax"]) 
     ;
     if ( (typeof(v_5) !== "undefined" && v_5 != null )  ) {
-      obj.mode = v_5;
+      obj.repsMax = v_5;
     }
-    const v_6 = isNaN( parseInt(dict ["load"]) ) ? undefined : parseInt(dict ["load"]) 
+    const v_6 = (typeof (dict ["mode"]) != "string" ) ? undefined : dict ["mode"] 
     ;
     if ( (typeof(v_6) !== "undefined" && v_6 != null )  ) {
-      obj.load = v_6;
+      obj.mode = v_6;
     }
-    const v_7 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    const v_7 = isNaN( parseInt(dict ["load"]) ) ? undefined : parseInt(dict ["load"]) 
     ;
     if ( (typeof(v_7) !== "undefined" && v_7 != null )  ) {
-      obj.unit = v_7;
+      obj.load = v_7;
+    }
+    const v_8 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_8) !== "undefined" && v_8 != null )  ) {
+      obj.unit = v_8;
     }
   } catch(e) {
   }
@@ -621,13 +628,11 @@ LeftRightValue.fromDictionary = function(dict) {
 class FeelingValue  {
   constructor() {
     this.kind = "feeling";
-    this.kind = "";     /** note: unused */
     this.score = 0;
   }
   toDictionary () {
     let res = {};
     try {
-      res["kind"] = this.kind;
       res["kind"] = this.kind;
       res["score"] = this.score;
     } catch(e) {
@@ -643,15 +648,42 @@ FeelingValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    const v_1 = isNaN( parseInt(dict ["score"]) ) ? undefined : parseInt(dict ["score"]) 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.kind = v_1;
+      obj.score = v_1;
     }
-    const v_2 = isNaN( parseInt(dict ["score"]) ) ? undefined : parseInt(dict ["score"]) 
+  } catch(e) {
+  }
+  return obj;
+};
+class EffortValue  {
+  constructor() {
+    this.kind = "effort";
+    this.score = 0;
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["score"] = this.score;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+EffortValue.fromDictionary = function(dict) {
+  const obj = new EffortValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
     ;
-    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.score = v_2;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["score"]) ) ? undefined : parseInt(dict ["score"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.score = v_1;
     }
   } catch(e) {
   }
@@ -759,15 +791,35 @@ CircuitValue.fromDictionary = function(dict) {
 class ContextEntryValue  {
   constructor() {
     this.kind = "context-entry";
-    this.kind = "";     /** note: unused */
     this.content = "";
+    this.name = "";
+    this.value = "";
+    this.hasNumeric = false;
+    this.numericValue = 0.0;
+    this.unit = "";
+    this.basis = "";
+    this.source = "";
+    this.hasConfidence = false;
+    this.confidence = 0.0;
+    this.hasGoodness = false;
+    this.goodness = 0;
   }
   toDictionary () {
     let res = {};
     try {
       res["kind"] = this.kind;
-      res["kind"] = this.kind;
       res["content"] = this.content;
+      res["name"] = this.name;
+      res["value"] = this.value;
+      res["hasNumeric"] = this.hasNumeric;
+      res["numericValue"] = this.numericValue;
+      res["unit"] = this.unit;
+      res["basis"] = this.basis;
+      res["source"] = this.source;
+      res["hasConfidence"] = this.hasConfidence;
+      res["confidence"] = this.confidence;
+      res["hasGoodness"] = this.hasGoodness;
+      res["goodness"] = this.goodness;
     } catch(e) {
     }
     return res;
@@ -781,15 +833,62 @@ ContextEntryValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    const v_1 = (typeof (dict ["content"]) != "string" ) ? undefined : dict ["content"] 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.kind = v_1;
+      obj.content = v_1;
     }
-    const v_2 = (typeof (dict ["content"]) != "string" ) ? undefined : dict ["content"] 
+    const v_2 = (typeof (dict ["name"]) != "string" ) ? undefined : dict ["name"] 
     ;
     if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.content = v_2;
+      obj.name = v_2;
+    }
+    const v_3 = (typeof (dict ["value"]) != "string" ) ? undefined : dict ["value"] 
+    ;
+    if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
+      obj.value = v_3;
+    }
+    const v_4 = typeof(dict ["hasNumeric"]) === "undefined" ? undefined :(dict ["hasNumeric"]) ;
+    if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
+      obj.hasNumeric = v_4;
+    }
+    const v_5 = isNaN( parseFloat(dict ["numericValue"]) ) ? undefined : parseFloat(dict ["numericValue"]) 
+    ;
+    if ( (typeof(v_5) !== "undefined" && v_5 != null )  ) {
+      obj.numericValue = v_5;
+    }
+    const v_6 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_6) !== "undefined" && v_6 != null )  ) {
+      obj.unit = v_6;
+    }
+    const v_7 = (typeof (dict ["basis"]) != "string" ) ? undefined : dict ["basis"] 
+    ;
+    if ( (typeof(v_7) !== "undefined" && v_7 != null )  ) {
+      obj.basis = v_7;
+    }
+    const v_8 = (typeof (dict ["source"]) != "string" ) ? undefined : dict ["source"] 
+    ;
+    if ( (typeof(v_8) !== "undefined" && v_8 != null )  ) {
+      obj.source = v_8;
+    }
+    const v_9 = typeof(dict ["hasConfidence"]) === "undefined" ? undefined :(dict ["hasConfidence"]) ;
+    if ( (typeof(v_9) !== "undefined" && v_9 != null )  ) {
+      obj.hasConfidence = v_9;
+    }
+    const v_10 = isNaN( parseFloat(dict ["confidence"]) ) ? undefined : parseFloat(dict ["confidence"]) 
+    ;
+    if ( (typeof(v_10) !== "undefined" && v_10 != null )  ) {
+      obj.confidence = v_10;
+    }
+    const v_11 = typeof(dict ["hasGoodness"]) === "undefined" ? undefined :(dict ["hasGoodness"]) ;
+    if ( (typeof(v_11) !== "undefined" && v_11 != null )  ) {
+      obj.hasGoodness = v_11;
+    }
+    const v_12 = isNaN( parseInt(dict ["goodness"]) ) ? undefined : parseInt(dict ["goodness"]) 
+    ;
+    if ( (typeof(v_12) !== "undefined" && v_12 != null )  ) {
+      obj.goodness = v_12;
     }
   } catch(e) {
   }
@@ -943,6 +1042,15 @@ class SliceParsedValue  {
     }
     return new FeelingValue();
   };
+  hasEffort () {
+    return (typeof(this.effort) !== "undefined" && this.effort != null ) ;
+  };
+  getEffort () {
+    if ( (typeof(this.effort) !== "undefined" && this.effort != null )  ) {
+      return this.effort;
+    }
+    return new EffortValue();
+  };
   hasBodyMetric () {
     return (typeof(this.bodyMetric) !== "undefined" && this.bodyMetric != null ) ;
   };
@@ -1070,6 +1178,12 @@ SliceParsedValue.fromFeeling = function(value) {
   const out = new SliceParsedValue();
   out.kind = "feeling";
   out.feeling = value;
+  return out;
+};
+SliceParsedValue.fromEffort = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "effort";
+  out.effort = value;
   return out;
 };
 SliceParsedValue.fromBodyMetric = function(value) {
@@ -1625,6 +1739,36 @@ class TokenSlice  {
       }
     }
     return new FeelingValue();
+  };
+  hasEffortValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "effort") && p.hasEffort() ) {
+        return true;
+      }
+    }
+    return false;
+  };
+  setEffortValue (value) {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      p.effort = value;
+      if ( (p.kind.length) == 0 ) {
+        p.kind = "effort";
+      }
+      this.parsedValue = p;
+      return;
+    }
+    this.parsedValue = SliceParsedValue.fromEffort(value);
+  };
+  getAsEffortValue () {
+    if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
+      const p = this.parsedValue;
+      if ( (p.kind == "effort") && p.hasEffort() ) {
+        return p.getEffort();
+      }
+    }
+    return new EffortValue();
   };
   hasBodyMetricValue () {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
@@ -2538,7 +2682,8 @@ class RecoveryTimeDetector  extends TokenDetector {
     valueToken.tag = "positive-integer";
     const piv = new PositiveIntegerValue();
     piv.value = valueToken.parseInteger(0, ((valueToken).length() - 1));
-    valueToken.setSliceValue(SliceParsedValue.fromPositiveInteger(piv));
+    const parsedValue = SliceParsedValue.fromPositiveInteger(piv);
+    valueToken.setSliceValue(parsedValue);
     out.addChild(valueToken);
     const unitToken = (slice.peek(i)).read(1);
     unitToken.tag = "keyword";
@@ -3005,90 +3150,176 @@ class SetRepRangeLoadDetector  extends TokenDetector {
     if ( setsLeftEnd <= 0 ) {
       return this.noMatch();
     }
-    if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
-      return this.noMatch();
-    }
-    i = i + 1;
-    const setsRightStart = i;
-    while (i < __len) {
-      if ( this.isDigit(slice.charCodeAt(i)) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    const setsRightEnd = i;
-    if ( setsRightEnd <= setsRightStart ) {
-      return this.noMatch();
-    }
-    if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
-      return this.noMatch();
-    }
-    i = i + 1;
-    const repsLeftStart = i;
-    while (i < __len) {
-      if ( this.isDigit(slice.charCodeAt(i)) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    const repsLeftEnd = i;
-    if ( repsLeftEnd <= repsLeftStart ) {
-      return this.noMatch();
-    }
-    if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
-      return this.noMatch();
-    }
-    i = i + 1;
-    const repsRightStart = i;
-    while (i < __len) {
-      if ( this.isDigit(slice.charCodeAt(i)) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    const repsRightEnd = i;
-    if ( repsRightEnd <= repsRightStart ) {
-      return this.noMatch();
-    }
     const setsLeft = slice.read(setsLeftEnd);
-    const setsRight = (slice.peek(setsRightStart)).read((setsRightEnd - setsRightStart));
-    const repsLeft = (slice.peek(repsLeftStart)).read((repsLeftEnd - repsLeftStart));
-    const repsRight = (slice.peek(repsRightStart)).read((repsRightEnd - repsRightStart));
-    if ( setsLeft.hasInteger(0, ((setsLeft).length() - 1)) ) {
+    if ( false == setsLeft.hasInteger(0, ((setsLeft).length() - 1)) ) {
+      return this.noMatch();
+    }
+    const setsSingleVal = setsLeft.parseInteger(0, ((setsLeft).length() - 1));
+    if ( setsSingleVal <= 0 ) {
+      return this.noMatch();
+    }
+    if ( i >= __len ) {
+      return this.noMatch();
+    }
+    let setsMinVal = 0;
+    let setsMaxVal = 0;
+    let repsMinVal = 0;
+    let repsMaxVal = 0;
+    let countVal = 1;
+    const firstSep = slice.charCodeAt(i);
+    if ( firstSep == 45 ) {
+      i = i + 1;
+      const setsRightStart = i;
+      while (i < __len) {
+        if ( this.isDigit(slice.charCodeAt(i)) ) {
+          i = i + 1;
+        } else {
+          break;
+        }
+      };
+      const setsRightEnd = i;
+      if ( setsRightEnd <= setsRightStart ) {
+        return this.noMatch();
+      }
+      if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
+        return this.noMatch();
+      }
+      i = i + 1;
+      const repsLeftStart = i;
+      while (i < __len) {
+        if ( this.isDigit(slice.charCodeAt(i)) ) {
+          i = i + 1;
+        } else {
+          break;
+        }
+      };
+      const repsLeftEnd = i;
+      if ( repsLeftEnd <= repsLeftStart ) {
+        return this.noMatch();
+      }
+      if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
+        return this.noMatch();
+      }
+      i = i + 1;
+      const repsRightStart = i;
+      while (i < __len) {
+        if ( this.isDigit(slice.charCodeAt(i)) ) {
+          i = i + 1;
+        } else {
+          break;
+        }
+      };
+      const repsRightEnd = i;
+      if ( repsRightEnd <= repsRightStart ) {
+        return this.noMatch();
+      }
+      const setsRight = (slice.peek(setsRightStart)).read((setsRightEnd - setsRightStart));
+      const repsLeft = (slice.peek(repsLeftStart)).read((repsLeftEnd - repsLeftStart));
+      const repsRight = (slice.peek(repsRightStart)).read((repsRightEnd - repsRightStart));
+      if ( false == setsRight.hasInteger(0, ((setsRight).length() - 1)) ) {
+        return this.noMatch();
+      }
+      if ( false == repsLeft.hasInteger(0, ((repsLeft).length() - 1)) ) {
+        return this.noMatch();
+      }
+      if ( false == repsRight.hasInteger(0, ((repsRight).length() - 1)) ) {
+        return this.noMatch();
+      }
+      setsMinVal = setsSingleVal;
+      setsMaxVal = setsRight.parseInteger(0, ((setsRight).length() - 1));
+      repsMinVal = repsLeft.parseInteger(0, ((repsLeft).length() - 1));
+      repsMaxVal = repsRight.parseInteger(0, ((repsRight).length() - 1));
     } else {
+      if ( firstSep == 120 ) {
+        i = i + 1;
+        const repsLeftStart2 = i;
+        while (i < __len) {
+          if ( this.isDigit(slice.charCodeAt(i)) ) {
+            i = i + 1;
+          } else {
+            break;
+          }
+        };
+        const repsLeftEnd2 = i;
+        if ( repsLeftEnd2 <= repsLeftStart2 ) {
+          return this.noMatch();
+        }
+        if ( (i < __len) && (slice.charCodeAt(i) == 45) ) {
+          i = i + 1;
+          const repsRightStart3 = i;
+          while (i < __len) {
+            if ( this.isDigit(slice.charCodeAt(i)) ) {
+              i = i + 1;
+            } else {
+              break;
+            }
+          };
+          const repsRightEnd3 = i;
+          if ( repsRightEnd3 <= repsRightStart3 ) {
+            return this.noMatch();
+          }
+          if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
+            return this.noMatch();
+          }
+          const repsLeftRange = (slice.peek(repsLeftStart2)).read((repsLeftEnd2 - repsLeftStart2));
+          const repsRightRange = (slice.peek(repsRightStart3)).read((repsRightEnd3 - repsRightStart3));
+          if ( false == repsLeftRange.hasInteger(0, ((repsLeftRange).length() - 1)) ) {
+            return this.noMatch();
+          }
+          if ( false == repsRightRange.hasInteger(0, ((repsRightRange).length() - 1)) ) {
+            return this.noMatch();
+          }
+          setsMinVal = setsSingleVal;
+          setsMaxVal = setsSingleVal;
+          repsMinVal = repsLeftRange.parseInteger(0, ((repsLeftRange).length() - 1));
+          repsMaxVal = repsRightRange.parseInteger(0, ((repsRightRange).length() - 1));
+        } else {
+          if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
+            return this.noMatch();
+          }
+          i = i + 1;
+          const repsRightStart2 = i;
+          while (i < __len) {
+            if ( this.isDigit(slice.charCodeAt(i)) ) {
+              i = i + 1;
+            } else {
+              break;
+            }
+          };
+          const repsRightEnd2 = i;
+          if ( repsRightEnd2 <= repsRightStart2 ) {
+            return this.noMatch();
+          }
+          const setsMid = (slice.peek(repsLeftStart2)).read((repsLeftEnd2 - repsLeftStart2));
+          const repsExact = (slice.peek(repsRightStart2)).read((repsRightEnd2 - repsRightStart2));
+          if ( false == setsMid.hasInteger(0, ((setsMid).length() - 1)) ) {
+            return this.noMatch();
+          }
+          if ( false == repsExact.hasInteger(0, ((repsExact).length() - 1)) ) {
+            return this.noMatch();
+          }
+          setsMinVal = setsMid.parseInteger(0, ((setsMid).length() - 1));
+          setsMaxVal = setsMinVal;
+          repsMinVal = repsExact.parseInteger(0, ((repsExact).length() - 1));
+          repsMaxVal = repsMinVal;
+          countVal = setsSingleVal;
+        }
+      } else {
+        return this.noMatch();
+      }
+    }
+    if ( setsMinVal <= 0 ) {
       return this.noMatch();
     }
-    if ( setsRight.hasInteger(0, ((setsRight).length() - 1)) ) {
-    } else {
+    if ( setsMaxVal <= 0 ) {
       return this.noMatch();
     }
-    if ( repsLeft.hasInteger(0, ((repsLeft).length() - 1)) ) {
-    } else {
+    if ( repsMinVal <= 0 ) {
       return this.noMatch();
     }
-    if ( repsRight.hasInteger(0, ((repsRight).length() - 1)) ) {
-    } else {
+    if ( repsMaxVal <= 0 ) {
       return this.noMatch();
     }
-    if ( setsLeft.parseInteger(0, ((setsLeft).length() - 1)) <= 0 ) {
-      return this.noMatch();
-    }
-    if ( setsRight.parseInteger(0, ((setsRight).length() - 1)) <= 0 ) {
-      return this.noMatch();
-    }
-    if ( repsLeft.parseInteger(0, ((repsLeft).length() - 1)) <= 0 ) {
-      return this.noMatch();
-    }
-    if ( repsRight.parseInteger(0, ((repsRight).length() - 1)) <= 0 ) {
-      return this.noMatch();
-    }
-    const setsMinVal = setsLeft.parseInteger(0, ((setsLeft).length() - 1));
-    const setsMaxVal = setsRight.parseInteger(0, ((setsRight).length() - 1));
-    const repsMinVal = repsLeft.parseInteger(0, ((repsLeft).length() - 1));
-    const repsMaxVal = repsRight.parseInteger(0, ((repsRight).length() - 1));
     if ( i >= __len ) {
       return this.noMatch();
     }
@@ -3157,6 +3388,7 @@ class SetRepRangeLoadDetector  extends TokenDetector {
     const out = slice.read(i);
     out.tag = this.detectedTag;
     const sv = new SetRepRangeLoadValue();
+    sv.count = countVal;
     sv.setsMin = setsMinVal;
     sv.setsMax = setsMaxVal;
     sv.repsMin = repsMinVal;
@@ -3220,7 +3452,8 @@ class SpeedDetector  extends TokenDetector {
     const tv = new TimeValueValue();
     tv.minutes = left.parseInteger(0, (colonPos - 1));
     tv.seconds = sec;
-    first.setSliceValue(SliceParsedValue.fromTimeValue(tv));
+    const firstParsed = SliceParsedValue.fromTimeValue(tv);
+    first.setSliceValue(firstParsed);
     const second = (slice.peek(slashPos)).read(1);
     second.tag = "keyword";
     const third = dist;
@@ -3411,6 +3644,68 @@ class FeelingDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "feeling";
   }
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  isDigit (ch) {
+    if ( ch < 48 ) {
+      return false;
+    }
+    if ( ch > 57 ) {
+      return false;
+    }
+    return true;
+  };
+  parseNumericScore (slice) {
+    let detectors = [];
+    detectors.push(PositiveIntegerDetector.create());
+    const p = new Parser((slice).toString(), detectors);
+    (p).start();
+    if ( p.getCount() != 1 ) {
+      return -1;
+    }
+    const scoreToken = p.getResults()[0];
+    if ( scoreToken.tag == "positive-integer" ) {
+      return scoreToken.parseInteger(0, ((scoreToken).length() - 1));
+    }
+    return -1;
+  };
+  parseSlashTenScore (slice) {
+    if ( slice.hasToken("?/10") ) {
+      return 0;
+    }
+    const __len = (slice).length();
+    let i = 1;
+    while ((i + 2) < __len) {
+      if ( slice.charCodeAt(i) == 47 ) {
+        if ( (slice.charCodeAt((i + 1)) == 49) && (slice.charCodeAt((i + 2)) == 48) ) {
+          let start = i;
+          while (start > 0) {
+            const chPrev = slice.charCodeAt((start - 1));
+            if ( this.isDigit(chPrev) ) {
+              start = start - 1;
+            } else {
+              break;
+            }
+          };
+          if ( start < i ) {
+            const numSlice = (slice.peek(start)).read((i - start));
+            if ( numSlice.hasInteger(0, ((numSlice).length() - 1)) ) {
+              return numSlice.parseInteger(0, ((numSlice).length() - 1));
+            }
+          }
+        }
+      }
+      i = i + 1;
+    };
+    return -1;
+  };
   parseKind (slice) {
     if ( slice.hasToken("Feeling ") ) {
       return "feeling";
@@ -3450,6 +3745,115 @@ class FeelingDetector  extends TokenDetector {
       }
       lineEnd = lineEnd + 1;
     };
+    const rawSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
+    let trimStart = 0;
+    const rawLen = (rawSlice).length();
+    while (trimStart < rawLen) {
+      const chStart = rawSlice.charCodeAt(trimStart);
+      if ( this.isWhitespace(chStart) ) {
+        trimStart = trimStart + 1;
+      } else {
+        break;
+      }
+    };
+    let trimEnd = rawLen;
+    while (trimEnd > trimStart) {
+      const chEnd = rawSlice.charCodeAt((trimEnd - 1));
+      if ( this.isWhitespace(chEnd) ) {
+        trimEnd = trimEnd - 1;
+      } else {
+        break;
+      }
+    };
+    let score = -1;
+    if ( trimEnd > trimStart ) {
+      const valueSlice = (rawSlice.peek(trimStart)).read((trimEnd - trimStart));
+      score = this.parseNumericScore(valueSlice);
+      if ( score < 0 ) {
+        if ( (kind == "feeling") && valueSlice.hasToken("RPE:") ) {
+          if ( (valueSlice).length() > 4 ) {
+            const rpeSlice = (valueSlice.peek(4)).read(((valueSlice).length() - 4));
+            score = this.parseNumericScore(rpeSlice);
+          }
+        }
+      }
+      if ( score < 0 ) {
+        score = this.parseSlashTenScore(valueSlice);
+      }
+      if ( score < 0 ) {
+        if ( valueSlice.charCodeAt(0) == 124 ) {
+          score = 0;
+        }
+      }
+      if ( score < 0 ) {
+        if ( (kind == "pain") && valueSlice.hasToken("-|") ) {
+          score = 0;
+        }
+      }
+    } else {
+      score = 0;
+    }
+    if ( score < 0 ) {
+      return this.noMatch();
+    }
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    let labelLen = keyLen - 1;
+    if ( labelLen < 1 ) {
+      labelLen = 1;
+    }
+    const label = slice.read(labelLen);
+    label.tag = "keyword";
+    out.addChild(label);
+    const scoreToken = TokenSlice.fromText(("" + score));
+    scoreToken.tag = "positive-integer";
+    out.addChild(scoreToken);
+    const fv = new FeelingValue();
+    fv.kind = kind;
+    fv.score = score;
+    const parsed = SliceParsedValue.fromFeeling(fv);
+    out.setSliceValue(parsed);
+    slice.setSliceValue(parsed);
+    return out;
+  };
+}
+FeelingDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new FeelingDetector(s);
+};
+class EffortDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "effort";
+  }
+  prefixLength (slice) {
+    if ( slice.hasToken("RPE ") ) {
+      return 4;
+    }
+    return 7;
+  };
+  detect (slice) {
+    if ( slice.hasToken("Effort ") ) {
+    } else {
+      if ( slice.hasToken("RPE ") ) {
+      } else {
+        return this.noMatch();
+      }
+    }
+    const keyLen = this.prefixLength(slice);
+    const __len = (slice).length();
+    if ( keyLen >= __len ) {
+      return this.noMatch();
+    }
+    let lineEnd = keyLen;
+    while (lineEnd < __len) {
+      const ch = slice.charCodeAt(lineEnd);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
     const valueSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
     let detectors = [];
     detectors.push(PositiveIntegerDetector.create());
@@ -3473,18 +3877,17 @@ class FeelingDetector  extends TokenDetector {
     label.tag = "keyword";
     out.addChild(label);
     out.addChild(scoreToken);
-    const fv = new FeelingValue();
-    fv.kind = kind;
-    fv.score = scoreToken.parseInteger(0, ((scoreToken).length() - 1));
-    const parsed = SliceParsedValue.fromFeeling(fv);
+    const ev = new EffortValue();
+    ev.score = scoreToken.parseInteger(0, ((scoreToken).length() - 1));
+    const parsed = SliceParsedValue.fromEffort(ev);
     out.setSliceValue(parsed);
     slice.setSliceValue(parsed);
     return out;
   };
 }
-FeelingDetector.create = function() {
+EffortDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
-  return new FeelingDetector(s);
+  return new EffortDetector(s);
 };
 class BodyMetricDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -3688,6 +4091,126 @@ class BodyMetricDetector  extends TokenDetector {
     this.setCommon(out, slice, mv);
     return out;
   };
+  detectVitalsWeight (slice) {
+    const prefix = "Vitals weight:";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(13);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value <= 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "weight";
+    mv.primaryValue = value;
+    mv.unit = "kg";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detectVitalsSleep (slice) {
+    const prefix = "Vitals sleep:";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(12);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value <= 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "sleep";
+    mv.primaryValue = value;
+    mv.unit = "h";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detectVitalsRhr (slice) {
+    const prefix = "Vitals rhr:";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(10);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value <= 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "resting-hr";
+    mv.primaryValue = value;
+    mv.unit = "bpm";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detectWaist (slice) {
+    const prefix = "Waist ";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(5);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value <= 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "waist";
+    mv.primaryValue = value;
+    mv.unit = "cm";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
+  detectHip (slice) {
+    const prefix = "Hip ";
+    if ( slice.hasToken(prefix) ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(3);
+    label.tag = "keyword";
+    out.addChild(label);
+    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const value = this.parseDoublePrefix(metric);
+    if ( value <= 0.0 ) {
+      return this.noMatch();
+    }
+    const mv = new BodyMetricValue();
+    mv.metric = "hip";
+    mv.primaryValue = value;
+    mv.unit = "cm";
+    this.setCommon(out, slice, mv);
+    return out;
+  };
   detect (slice) {
     const w = this.detectWeight(slice);
     if ( w.isEmpty() ) {
@@ -3708,6 +4231,31 @@ class BodyMetricDetector  extends TokenDetector {
     if ( hr.isEmpty() ) {
     } else {
       return hr;
+    }
+    const vw = this.detectVitalsWeight(slice);
+    if ( vw.isEmpty() ) {
+    } else {
+      return vw;
+    }
+    const vs = this.detectVitalsSleep(slice);
+    if ( vs.isEmpty() ) {
+    } else {
+      return vs;
+    }
+    const vr = this.detectVitalsRhr(slice);
+    if ( vr.isEmpty() ) {
+    } else {
+      return vr;
+    }
+    const waist = this.detectWaist(slice);
+    if ( waist.isEmpty() ) {
+    } else {
+      return waist;
+    }
+    const hip = this.detectHip(slice);
+    if ( hip.isEmpty() ) {
+    } else {
+      return hip;
     }
     return this.detectBp(slice);
   };
@@ -3837,6 +4385,27 @@ class ContextEntryDetector  extends TokenDetector {
     if ( kind == "protein" ) {
       return "protein";
     }
+    if ( kind == "comment" ) {
+      return "comment";
+    }
+    if ( kind == "custom" ) {
+      return "custom";
+    }
+    if ( kind == "tags" ) {
+      return "tags";
+    }
+    if ( kind == "emojis" ) {
+      return "emojis";
+    }
+    if ( kind == "summary" ) {
+      return "summary";
+    }
+    if ( kind == "derived" ) {
+      return "derived";
+    }
+    if ( kind == "url" ) {
+      return "url";
+    }
     return this.detectedTag;
   };
   detectKind (slice) {
@@ -3855,9 +4424,239 @@ class ContextEntryDetector  extends TokenDetector {
     if ( slice.hasToken("Protein ") ) {
       return "protein";
     }
+    if ( slice.hasToken("Comment ") ) {
+      return "comment";
+    }
+    if ( slice.hasToken("Custom ") ) {
+      return "custom";
+    }
+    if ( slice.hasToken("Tags ") ) {
+      return "tags";
+    }
+    if ( slice.hasToken("Emojis ") ) {
+      return "emojis";
+    }
+    if ( slice.hasToken("Summary ") ) {
+      return "summary";
+    }
+    if ( slice.hasToken("Derived ") ) {
+      return "derived";
+    }
+    if ( slice.hasToken("URL ") ) {
+      return "url";
+    }
     return "";
   };
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  findLineEnd (slice, start) {
+    const __len = (slice).length();
+    let lineEnd = start;
+    while (lineEnd < __len) {
+      const ch = slice.charCodeAt(lineEnd);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      lineEnd = lineEnd + 1;
+    };
+    return lineEnd;
+  };
+  parseDerivedFields (cv, valueSlice) {
+    const __len = (valueSlice).length();
+    if ( __len <= 0 ) {
+      return;
+    }
+    let i = 0;
+    while (i < __len) {
+      const chStart = valueSlice.charCodeAt(i);
+      if ( this.isWhitespace(chStart) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    if ( i >= __len ) {
+      return;
+    }
+    const metricStart = i;
+    while (i < __len) {
+      const chMetric = valueSlice.charCodeAt(i);
+      if ( this.isWhitespace(chMetric) ) {
+        break;
+      }
+      i = i + 1;
+    };
+    const metricEnd = i;
+    if ( metricEnd > metricStart ) {
+      cv.name = ((valueSlice.peek(metricStart)).read((metricEnd - metricStart))).toString();
+    }
+    while (i < __len) {
+      const chAfterMetric = valueSlice.charCodeAt(i);
+      if ( this.isWhitespace(chAfterMetric) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    if ( i >= __len ) {
+      return;
+    }
+    const valueStart = i;
+    while (i < __len) {
+      const chNum = valueSlice.charCodeAt(i);
+      if ( ((chNum == 124) || (chNum == 59)) || this.isWhitespace(chNum) ) {
+        break;
+      }
+      i = i + 1;
+    };
+    const valueEnd = i;
+    if ( valueEnd > valueStart ) {
+      const valueToken = (valueSlice.peek(valueStart)).read((valueEnd - valueStart));
+      cv.value = (valueToken).toString();
+      if ( valueToken.hasDouble(0, ((valueToken).length() - 1)) ) {
+        cv.numericValue = valueToken.parseDouble(0, ((valueToken).length() - 1));
+        cv.hasNumeric = true;
+      }
+    }
+    if ( i < __len ) {
+      const sep = valueSlice.charCodeAt(i);
+      if ( (sep == 124) || (sep == 59) ) {
+        i = i + 1;
+        while (i < __len) {
+          const chUnitStart = valueSlice.charCodeAt(i);
+          if ( this.isWhitespace(chUnitStart) ) {
+            i = i + 1;
+          } else {
+            break;
+          }
+        };
+        const unitStart = i;
+        while (i < __len) {
+          const chUnit = valueSlice.charCodeAt(i);
+          if ( this.isWhitespace(chUnit) ) {
+            break;
+          }
+          i = i + 1;
+        };
+        const unitEnd = i;
+        if ( unitEnd > unitStart ) {
+          cv.unit = ((valueSlice.peek(unitStart)).read((unitEnd - unitStart))).toString();
+        }
+        while (i < __len) {
+          const chBeforeToken = valueSlice.charCodeAt(i);
+          if ( this.isWhitespace(chBeforeToken) ) {
+            i = i + 1;
+          } else {
+            break;
+          }
+        };
+        while (i < __len) {
+          const tokenStart = i;
+          while (i < __len) {
+            const chToken = valueSlice.charCodeAt(i);
+            if ( this.isWhitespace(chToken) ) {
+              break;
+            }
+            i = i + 1;
+          };
+          const tokenEnd = i;
+          if ( tokenEnd > tokenStart ) {
+            const tokenSlice = (valueSlice.peek(tokenStart)).read((tokenEnd - tokenStart));
+            const tokenLen = (tokenSlice).length();
+            let colonAt = -1;
+            let j = 0;
+            while (j < tokenLen) {
+              if ( tokenSlice.charCodeAt(j) == 58 ) {
+                colonAt = j;
+                break;
+              }
+              j = j + 1;
+            };
+            if ( (colonAt > 0) && (colonAt < (tokenLen - 1)) ) {
+              const key = ((tokenSlice.peek(0)).read(colonAt)).toString();
+              const valSlice = (tokenSlice.peek((colonAt + 1))).read((tokenLen - (colonAt + 1)));
+              const valLen = (valSlice).length();
+              if ( key == "basis" ) {
+                cv.basis = (valSlice).toString();
+              }
+              if ( key == "source" ) {
+                cv.source = (valSlice).toString();
+              }
+              if ( key == "confidence" ) {
+                if ( valLen > 0 ) {
+                  const lastCh = valSlice.charCodeAt((valLen - 1));
+                  if ( lastCh == 37 ) {
+                    if ( valLen > 1 ) {
+                      const numSlice = (valSlice.peek(0)).read((valLen - 1));
+                      if ( numSlice.hasDouble(0, ((numSlice).length() - 1)) ) {
+                        cv.confidence = numSlice.parseDouble(0, ((numSlice).length() - 1));
+                        cv.hasConfidence = true;
+                      }
+                    }
+                  } else {
+                    if ( valSlice.hasDouble(0, ((valSlice).length() - 1)) ) {
+                      cv.confidence = valSlice.parseDouble(0, ((valSlice).length() - 1));
+                      cv.hasConfidence = true;
+                    }
+                  }
+                }
+              }
+              if ( key == "goodness" ) {
+                if ( valSlice.hasInteger(0, ((valSlice).length() - 1)) ) {
+                  cv.goodness = valSlice.parseInteger(0, ((valSlice).length() - 1));
+                  cv.hasGoodness = true;
+                }
+              }
+            }
+          }
+          while (i < __len) {
+            const chGap = valueSlice.charCodeAt(i);
+            if ( this.isWhitespace(chGap) ) {
+              i = i + 1;
+            } else {
+              break;
+            }
+          };
+        };
+      }
+    }
+  };
   detect (slice) {
+    const __len = (slice).length();
+    if ( __len > 1 ) {
+      const quote = slice.charCodeAt(0);
+      if ( (quote == 34) || (quote == 39) ) {
+        const lineEndQuoted = this.findLineEnd(slice, 1);
+        const contentStart = 1;
+        let contentEnd = lineEndQuoted;
+        if ( (lineEndQuoted > 1) && (slice.charCodeAt((lineEndQuoted - 1)) == quote) ) {
+          contentEnd = lineEndQuoted - 1;
+        }
+        if ( contentEnd <= contentStart ) {
+          return this.noMatch();
+        }
+        const outQuoted = slice.read(lineEndQuoted);
+        outQuoted.tag = "comment";
+        const contentSlice = (slice.peek(contentStart)).read((contentEnd - contentStart));
+        const textToken = contentSlice.read((contentEnd - contentStart));
+        textToken.tag = "text";
+        outQuoted.addChild(textToken);
+        const quotedValue = new ContextEntryValue();
+        quotedValue.kind = "comment";
+        quotedValue.content = (contentSlice).toString();
+        const quotedParsed = SliceParsedValue.fromContextEntry(quotedValue);
+        outQuoted.setSliceValue(quotedParsed);
+        slice.setSliceValue(quotedParsed);
+        return outQuoted;
+      }
+    }
     const kind = this.detectKind(slice);
     if ( (kind.length) == 0 ) {
       return this.noMatch();
@@ -3878,21 +4677,34 @@ class ContextEntryDetector  extends TokenDetector {
     if ( kind == "protein" ) {
       keyLen = 8;
     }
+    if ( kind == "comment" ) {
+      keyLen = 8;
+    }
+    if ( kind == "custom" ) {
+      keyLen = 7;
+    }
+    if ( kind == "tags" ) {
+      keyLen = 5;
+    }
+    if ( kind == "emojis" ) {
+      keyLen = 7;
+    }
+    if ( kind == "summary" ) {
+      keyLen = 8;
+    }
+    if ( kind == "derived" ) {
+      keyLen = 8;
+    }
+    if ( kind == "url" ) {
+      keyLen = 4;
+    }
     if ( keyLen <= 0 ) {
       return this.noMatch();
     }
-    const __len = (slice).length();
     if ( keyLen >= __len ) {
       return this.noMatch();
     }
-    let lineEnd = keyLen;
-    while (lineEnd < __len) {
-      const ch = slice.charCodeAt(lineEnd);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
+    const lineEnd = this.findLineEnd(slice, keyLen);
     const out = slice.read(lineEnd);
     out.tag = this.toTag(kind);
     const labelLen = keyLen - 1;
@@ -3900,18 +4712,65 @@ class ContextEntryDetector  extends TokenDetector {
     label.tag = "keyword";
     out.addChild(label);
     if ( keyLen < lineEnd ) {
-      const contentSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
-      const content = (contentSlice).toString();
+      const contentSlice_1 = (slice.peek(keyLen)).read((lineEnd - keyLen));
+      const content = (contentSlice_1).toString();
       if ( (content.length) > 0 ) {
-        const textToken = contentSlice.read((content.length));
-        textToken.tag = "text";
-        out.addChild(textToken);
+        const textToken_1 = contentSlice_1.read((content.length));
+        textToken_1.tag = "text";
+        out.addChild(textToken_1);
       }
     }
     const cv = new ContextEntryValue();
     cv.kind = kind;
     if ( keyLen < lineEnd ) {
       cv.content = ((slice.peek(keyLen)).read((lineEnd - keyLen))).toString();
+    }
+    if ( kind == "derived" ) {
+      if ( keyLen < lineEnd ) {
+        const derivedSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
+        this.parseDerivedFields(cv, derivedSlice);
+      }
+    }
+    if ( kind == "custom" ) {
+      const customSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
+      const customLen = (customSlice).length();
+      let fieldStart = 0;
+      while (fieldStart < customLen) {
+        const chStart = customSlice.charCodeAt(fieldStart);
+        if ( this.isWhitespace(chStart) ) {
+          fieldStart = fieldStart + 1;
+        } else {
+          break;
+        }
+      };
+      let fieldEnd = fieldStart;
+      while (fieldEnd < customLen) {
+        const chField = customSlice.charCodeAt(fieldEnd);
+        if ( this.isWhitespace(chField) ) {
+          break;
+        }
+        fieldEnd = fieldEnd + 1;
+      };
+      if ( fieldEnd > fieldStart ) {
+        cv.name = ((customSlice.peek(fieldStart)).read((fieldEnd - fieldStart))).toString();
+        let valueStart = fieldEnd;
+        while (valueStart < customLen) {
+          const chValueStart = customSlice.charCodeAt(valueStart);
+          if ( this.isWhitespace(chValueStart) ) {
+            valueStart = valueStart + 1;
+          } else {
+            break;
+          }
+        };
+        if ( valueStart < customLen ) {
+          const valueSlice = (customSlice.peek(valueStart)).read((customLen - valueStart));
+          cv.value = (valueSlice).toString();
+          if ( valueSlice.hasDouble(0, ((valueSlice).length() - 1)) ) {
+            cv.numericValue = valueSlice.parseDouble(0, ((valueSlice).length() - 1));
+            cv.hasNumeric = true;
+          }
+        }
+      }
     }
     const parsed = SliceParsedValue.fromContextEntry(cv);
     out.setSliceValue(parsed);
@@ -4329,15 +5188,223 @@ RomanZoneDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RomanZoneDetector(s);
 };
+class PhaseDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "phase";
+  }
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  findLineEnd (slice, from) {
+    const __len = (slice).length();
+    let i = from;
+    while (i < __len) {
+      const ch = slice.charCodeAt(i);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      i = i + 1;
+    };
+    return i;
+  };
+  detect (slice) {
+    if ( slice.hasToken("Phase") ) {
+    } else {
+      return this.noMatch();
+    }
+    const lineEnd = this.findLineEnd(slice, 0);
+    if ( lineEnd <= 5 ) {
+      return this.noMatch();
+    }
+    let keyEnd = 0;
+    while (keyEnd < lineEnd) {
+      const ch = slice.charCodeAt(keyEnd);
+      if ( this.isWhitespace(ch) ) {
+        break;
+      }
+      if ( ch == 124 ) {
+        break;
+      }
+      keyEnd = keyEnd + 1;
+    };
+    if ( keyEnd <= 0 ) {
+      return this.noMatch();
+    }
+    const keyText = (slice.read(keyEnd)).toString();
+    if ( (keyText.substring(0, 5 )) == "Phase" ) {
+    } else {
+      return this.noMatch();
+    }
+    let contentStart = keyEnd;
+    if ( contentStart < lineEnd ) {
+      const chSep = slice.charCodeAt(contentStart);
+      if ( (chSep == 124) || this.isWhitespace(chSep) ) {
+        contentStart = contentStart + 1;
+      }
+    }
+    while (contentStart < lineEnd) {
+      const chSpace = slice.charCodeAt(contentStart);
+      if ( this.isWhitespace(chSpace) ) {
+        contentStart = contentStart + 1;
+      } else {
+        break;
+      }
+    };
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const label = slice.read(keyEnd);
+    label.tag = "keyword";
+    out.addChild(label);
+    if ( contentStart < lineEnd ) {
+      const contentSlice = (slice.peek(contentStart)).read((lineEnd - contentStart));
+      const textToken = contentSlice.read((lineEnd - contentStart));
+      textToken.tag = "text";
+      out.addChild(textToken);
+    }
+    return out;
+  };
+}
+PhaseDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new PhaseDetector(s);
+};
 class HeadingDataDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "heading-data";
   }
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  isDigit (ch) {
+    if ( ch < 48 ) {
+      return false;
+    }
+    if ( ch > 57 ) {
+      return false;
+    }
+    return true;
+  };
+  hasIsoDatePrefix (slice, start) {
+    if ( (start + 10) > (slice).length() ) {
+      return false;
+    }
+    if ( this.isDigit(slice.charCodeAt((start + 0))) ) {
+    } else {
+      return false;
+    }
+    if ( this.isDigit(slice.charCodeAt((start + 1))) ) {
+    } else {
+      return false;
+    }
+    if ( this.isDigit(slice.charCodeAt((start + 2))) ) {
+    } else {
+      return false;
+    }
+    if ( this.isDigit(slice.charCodeAt((start + 3))) ) {
+    } else {
+      return false;
+    }
+    if ( slice.charCodeAt((start + 4)) == 45 ) {
+    } else {
+      return false;
+    }
+    if ( this.isDigit(slice.charCodeAt((start + 5))) ) {
+    } else {
+      return false;
+    }
+    if ( this.isDigit(slice.charCodeAt((start + 6))) ) {
+    } else {
+      return false;
+    }
+    if ( slice.charCodeAt((start + 7)) == 45 ) {
+    } else {
+      return false;
+    }
+    if ( this.isDigit(slice.charCodeAt((start + 8))) ) {
+    } else {
+      return false;
+    }
+    if ( this.isDigit(slice.charCodeAt((start + 9))) ) {
+    } else {
+      return false;
+    }
+    return true;
+  };
   detect (slice) {
     const __len = (slice).length();
     if ( __len < 2 ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt(0) == 91 ) {
+      let closeIdx = 1;
+      while (closeIdx < __len) {
+        const chClose = slice.charCodeAt(closeIdx);
+        if ( (chClose == 10) || (chClose == 13) ) {
+          break;
+        }
+        if ( chClose == 93 ) {
+          break;
+        }
+        closeIdx = closeIdx + 1;
+      };
+      if ( (closeIdx < __len) && (slice.charCodeAt(closeIdx) == 93) ) {
+        if ( this.hasIsoDatePrefix(slice, 1) ) {
+          let i2 = closeIdx + 1;
+          while (i2 < __len) {
+            const chSpace = slice.charCodeAt(i2);
+            if ( this.isWhitespace(chSpace) ) {
+              i2 = i2 + 1;
+            } else {
+              break;
+            }
+          };
+          let hashCount = 0;
+          while (i2 < __len) {
+            if ( slice.charCodeAt(i2) == 35 ) {
+              hashCount = hashCount + 1;
+              i2 = i2 + 1;
+            } else {
+              break;
+            }
+          };
+          if ( hashCount >= 1 ) {
+            if ( (i2 < __len) && (slice.charCodeAt(i2) == 32) ) {
+              i2 = i2 + 1;
+              if ( i2 < __len ) {
+                let j = i2;
+                while (j < __len) {
+                  const chJ = slice.charCodeAt(j);
+                  if ( (chJ == 10) || (chJ == 13) ) {
+                    break;
+                  }
+                  j = j + 1;
+                };
+                if ( j > i2 ) {
+                  const out2 = slice.read(j);
+                  out2.tag = this.detectedTag;
+                  return out2;
+                }
+              }
+            }
+          }
+        }
+      }
       return this.noMatch();
     }
     if ( slice.charCodeAt(0) != 35 ) {
@@ -4393,8 +5460,10 @@ StandardDetectors.create = function() {
   ds.push(RecoveryDetector.create());
   ds.push(LeftRightDetector.create());
   ds.push(FeelingDetector.create());
+  ds.push(EffortDetector.create());
   ds.push(BodyMetricDetector.create());
   ds.push(CircuitDetector.create());
+  ds.push(PhaseDetector.create());
   ds.push(ContextEntryDetector.create());
   ds.push(SportExerciseDetector.create());
   ds.push(DecimalNumberDetector.create());
@@ -4435,6 +5504,15 @@ class DetailsDataDetector  extends TokenDetector {
     }
     return false;
   };
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
   addChildrenFromParser (out, payload) {
     const p = new Parser((payload).toString(), this.createChildDetectors());
     (p).start();
@@ -4443,6 +5521,29 @@ class DetailsDataDetector  extends TokenDetector {
       var item = ch[i];
       out.addChild(item);
     };
+  };
+  addKeywordTailChildren (out, payload) {
+    const rbDetector = RepeatBlockDetector.create();
+    const rb = rbDetector.detect(payload);
+    if ( false == (rb.tag == "repeat-block") ) {
+      this.addChildrenFromParser(out, payload);
+      return;
+    }
+    out.addChild(rb);
+    let restStart = (rb).length();
+    const __len = (payload).length();
+    while (restStart < __len) {
+      const ch = payload.charCodeAt(restStart);
+      if ( this.isWhitespace(ch) ) {
+        restStart = restStart + 1;
+      } else {
+        break;
+      }
+    };
+    if ( restStart < __len ) {
+      const rest = (payload.peek(restStart)).read((__len - restStart));
+      this.addChildrenFromParser(out, rest);
+    }
   };
   addParsedChildren (out, payload) {
     const p = new Parser((payload).toString(), this.createChildDetectors());
@@ -4480,7 +5581,7 @@ class DetailsDataDetector  extends TokenDetector {
       };
       if ( tailStart < __len ) {
         const tail = (payload.peek(tailStart)).read((__len - tailStart));
-        this.addChildrenFromParser(out, tail);
+        this.addKeywordTailChildren(out, tail);
       }
       return;
     }
@@ -4580,11 +5681,15 @@ class NGSharedDetectorFactory  {
     ds.push(RecoveryDetector.create());
     ds.push(LeftRightDetector.create());
     ds.push(FeelingDetector.create());
+    ds.push(EffortDetector.create());
     ds.push(BodyMetricDetector.create());
     ds.push(CircuitDetector.create());
+    ds.push(PhaseDetector.create());
     ds.push(ContextEntryDetector.create());
     ds.push(DecimalNumberDetector.create());
     ds.push(PositiveIntegerDetector.create());
+    ds.push(KeywordDetector.create("min"));
+    ds.push(KeywordDetector.create("h"));
     ds.push(RepeatBlockDetector.create());
     ds.push(AMTimeValueDetector.create());
     ds.push(DetailsDataDetector.create());
@@ -4637,6 +5742,161 @@ class SportExerciseDetector  extends TokenDetector {
     }
     return false;
   };
+  isUppercaseLetter (ch) {
+    return (ch >= 65) && (ch <= 90);
+  };
+  isLetter (ch) {
+    if ( (ch >= 65) && (ch <= 90) ) {
+      return true;
+    }
+    if ( (ch >= 97) && (ch <= 122) ) {
+      return true;
+    }
+    return false;
+  };
+  isReservedGenericName (name) {
+    if ( name == "Split" ) {
+      return true;
+    }
+    if ( name == "Attempt" ) {
+      return true;
+    }
+    if ( name == "Recovery" ) {
+      return true;
+    }
+    if ( name == "Left" ) {
+      return true;
+    }
+    if ( name == "Right" ) {
+      return true;
+    }
+    if ( name == "Feeling" ) {
+      return true;
+    }
+    if ( name == "Feelings" ) {
+      return true;
+    }
+    if ( name == "Pain" ) {
+      return true;
+    }
+    if ( name == "Effort" ) {
+      return true;
+    }
+    if ( name == "RPE" ) {
+      return true;
+    }
+    if ( name == "Circuit" ) {
+      return true;
+    }
+    if ( name == "Food" ) {
+      return true;
+    }
+    if ( name == "Drinking" ) {
+      return true;
+    }
+    if ( name == "Expense" ) {
+      return true;
+    }
+    if ( name == "Reminder" ) {
+      return true;
+    }
+    if ( name == "Protein" ) {
+      return true;
+    }
+    if ( name == "Weight" ) {
+      return true;
+    }
+    if ( name == "BodyFat" ) {
+      return true;
+    }
+    if ( name == "Sleep" ) {
+      return true;
+    }
+    if ( name == "Health" ) {
+      return true;
+    }
+    if ( name == "Vitals" ) {
+      return true;
+    }
+    if ( name == "Comment" ) {
+      return true;
+    }
+    if ( name == "Custom" ) {
+      return true;
+    }
+    if ( name == "Tags" ) {
+      return true;
+    }
+    if ( name == "Emojis" ) {
+      return true;
+    }
+    if ( name == "Summary" ) {
+      return true;
+    }
+    if ( name == "Derived" ) {
+      return true;
+    }
+    if ( name == "URL" ) {
+      return true;
+    }
+    if ( name == "Waist" ) {
+      return true;
+    }
+    if ( name == "Hip" ) {
+      return true;
+    }
+    if ( name == "Blorple" ) {
+      return true;
+    }
+    return false;
+  };
+  scanGenericNameEnd (slice) {
+    const __len = (slice).length();
+    if ( __len <= 0 ) {
+      return -1;
+    }
+    if ( false == this.isUppercaseLetter(slice.charCodeAt(0)) ) {
+      return -1;
+    }
+    let pos = 1;
+    while (pos < __len) {
+      const ch = slice.charCodeAt(pos);
+      if ( this.isLetter(ch) ) {
+        pos = pos + 1;
+      } else {
+        break;
+      }
+    };
+    let nameEnd = pos;
+    while (pos < __len) {
+      const gapStart = pos;
+      while (pos < __len) {
+        const gapCh = slice.charCodeAt(pos);
+        if ( this.isWhitespace(gapCh) ) {
+          pos = pos + 1;
+        } else {
+          break;
+        }
+      };
+      if ( pos >= __len ) {
+        break;
+      }
+      if ( false == this.isUppercaseLetter(slice.charCodeAt(pos)) ) {
+        break;
+      }
+      pos = pos + 1;
+      while (pos < __len) {
+        const ch2 = slice.charCodeAt(pos);
+        if ( this.isLetter(ch2) ) {
+          pos = pos + 1;
+        } else {
+          break;
+        }
+      };
+      nameEnd = pos;
+    };
+    return nameEnd;
+  };
   isSeparator (ch) {
     if ( this.isWhitespace(ch) ) {
       return true;
@@ -4646,73 +5906,137 @@ class SportExerciseDetector  extends TokenDetector {
     }
     return false;
   };
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 6 ) {
-      return this.noMatch();
-    }
-    let name = "";
-    let nameLen = 0;
-    let matched = false;
-    for ( let i = 0; i < this.sports.length; i++) {
-      var sportName = this.sports[i];
-      const sportLen = sportName.length;
-      if ( __len <= sportLen ) {
-        continue;
-      }
-      if ( false == this.startsWithToken(slice, sportName) ) {
-        continue;
-      }
-      const chAfterName = slice.charCodeAt(sportLen);
-      if ( this.isSeparator(chAfterName) ) {
-        name = sportName;
-        nameLen = sportLen;
-        matched = true;
-        break;
-      }
-    };
-    if ( matched == false ) {
-      return this.noMatch();
-    }
-    let restStart = nameLen;
-    while (restStart < __len) {
-      const chSpace = slice.charCodeAt(restStart);
-      if ( this.isSeparator(chSpace) ) {
-        restStart = restStart + 1;
+  trimEnd (slice, endPos) {
+    let out = endPos;
+    while (out > 0) {
+      const ch = slice.charCodeAt((out - 1));
+      if ( this.isWhitespace(ch) ) {
+        out = out - 1;
       } else {
         break;
       }
     };
-    if ( restStart >= __len ) {
+    return out;
+  };
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len <= 0 ) {
       return this.noMatch();
     }
-    let lineEnd = restStart;
+    let lineEnd = 0;
     while (lineEnd < __len) {
-      const ch = slice.charCodeAt(lineEnd);
-      if ( (ch == 10) || (ch == 13) ) {
+      const chLine = slice.charCodeAt(lineEnd);
+      if ( (chLine == 10) || (chLine == 13) ) {
         break;
       }
       lineEnd = lineEnd + 1;
     };
-    if ( lineEnd <= restStart ) {
+    if ( lineEnd <= 0 ) {
       return this.noMatch();
     }
-    const restSlice = (slice.peek(restStart)).read((lineEnd - restStart));
-    const p = new Parser((restSlice).toString(), this.createChildDetectors());
-    (p).start();
-    if ( p.getCount() <= 0 ) {
+    let startPos = 0;
+    while (startPos < lineEnd) {
+      const chStart = slice.charCodeAt(startPos);
+      if ( this.isWhitespace(chStart) ) {
+        startPos = startPos + 1;
+      } else {
+        break;
+      }
+    };
+    if ( startPos >= lineEnd ) {
       return this.noMatch();
     }
-    const nameToken = slice.read(nameLen);
+    if ( slice.charCodeAt(startPos) == 62 ) {
+      return this.noMatch();
+    }
+    let semicolonPos = -1;
+    let p = 0;
+    while (p < lineEnd) {
+      if ( slice.charCodeAt(p) == 59 ) {
+        semicolonPos = p;
+        break;
+      }
+      p = p + 1;
+    };
+    const explicitNameMode = semicolonPos >= 0;
+    let matched = false;
+    if ( explicitNameMode ) {
+      matched = true;
+    } else {
+      for ( let i = 0; i < this.sports.length; i++) {
+        var sportName = this.sports[i];
+        const sportLen = sportName.length;
+        if ( lineEnd < sportLen ) {
+          continue;
+        }
+        if ( false == this.startsWithToken(slice, sportName) ) {
+          continue;
+        }
+        if ( lineEnd == sportLen ) {
+          matched = true;
+          break;
+        }
+        const chAfterName = slice.charCodeAt(sportLen);
+        if ( this.isSeparator(chAfterName) ) {
+          matched = true;
+          break;
+        }
+      };
+      if ( matched == false ) {
+        const genericLen = this.scanGenericNameEnd(slice);
+        if ( genericLen > 1 ) {
+          const genericName = (slice.read(genericLen)).toString();
+          if ( this.isReservedGenericName(genericName) ) {
+            return this.noMatch();
+          }
+          if ( genericLen == lineEnd ) {
+            matched = true;
+          } else {
+            const chAfterGeneric = slice.charCodeAt(genericLen);
+            if ( this.isSeparator(chAfterGeneric) ) {
+              matched = true;
+            }
+          }
+        }
+      }
+    }
+    if ( matched == false ) {
+      return this.noMatch();
+    }
+    let nameEnd = lineEnd;
+    if ( semicolonPos >= 0 ) {
+      nameEnd = semicolonPos;
+    }
+    nameEnd = this.trimEnd(slice, nameEnd);
+    if ( nameEnd <= 0 ) {
+      return this.noMatch();
+    }
+    const nameToken = slice.read(nameEnd);
     nameToken.tag = "exercise-name";
     const out = slice.read(lineEnd);
     out.tag = this.detectedTag;
     out.addChild(nameToken);
-    const children = p.getResults();
-    for ( let i_1 = 0; i_1 < children.length; i_1++) {
-      var ch_1 = children[i_1];
-      out.addChild(ch_1);
-    };
+    if ( semicolonPos >= 0 ) {
+      let restStart = semicolonPos + 1;
+      while (restStart < lineEnd) {
+        const chSpace = slice.charCodeAt(restStart);
+        if ( this.isSeparator(chSpace) ) {
+          restStart = restStart + 1;
+        } else {
+          break;
+        }
+      };
+      if ( restStart < lineEnd ) {
+        const restSlice = (slice.peek(restStart)).read((lineEnd - restStart));
+        const p_2 = new Parser((restSlice).toString(), this.createChildDetectors());
+        (p_2).start();
+        const children = p_2.getResults();
+        for ( let j = 0; j < children.length; j++) {
+          var ch = children[j];
+          out.addChild(ch);
+        };
+      }
+    }
     return out;
   };
 }
@@ -5093,6 +6417,21 @@ class NGTestRunner  {
     }
     return (text.substring(0, pLen )) == prefix;
   };
+  endsWithText (text, suffix) {
+    const tLen = text.length;
+    const sLen = suffix.length;
+    if ( sLen > tLen ) {
+      return false;
+    }
+    return (text.substring((tLen - sLen), tLen )) == suffix;
+  };
+  normalizeJsonNumericText (text) {
+    let out = (this).trim(text);
+    while (this.endsWithText(out, ".0")) {
+      out = out.substring(0, ((out.length) - 2) );
+    };
+    return out;
+  };
   createDetectors () {
     return StandardDetectors.create();
   };
@@ -5220,6 +6559,9 @@ class NGTestRunner  {
     }
     if ( kind == "feeling" ) {
       return JSON.stringify((token.getAsFeelingValue()).toDictionary());
+    }
+    if ( kind == "effort" ) {
+      return JSON.stringify((token.getAsEffortValue()).toDictionary());
     }
     if ( kind == "body-metric" ) {
       return JSON.stringify((token.getAsBodyMetricValue()).toDictionary());
@@ -5486,6 +6828,9 @@ class NGTestRunner  {
       }
       if ( kind == "set-rep-range-load" ) {
         const sr = token.getAsSetRepRangeLoadValue();
+        if ( tail == "count" ) {
+          return "" + sr.count;
+        }
         if ( tail == "setsMin" ) {
           return "" + sr.setsMin;
         }
@@ -5510,11 +6855,20 @@ class NGTestRunner  {
       }
       if ( kind == "feeling" ) {
         const fv = token.getAsFeelingValue();
-        if ( tail == "type" ) {
+        if ( (tail == "type") || (tail == "subKind") ) {
           return fv.kind;
         }
         if ( tail == "score" ) {
           return "" + fv.score;
+        }
+      }
+      if ( kind == "effort" ) {
+        const ev = token.getAsEffortValue();
+        if ( (tail == "type") || (tail == "subKind") ) {
+          return ev.kind;
+        }
+        if ( tail == "score" ) {
+          return "" + ev.score;
         }
       }
       if ( kind == "body-metric" ) {
@@ -5561,11 +6915,95 @@ class NGTestRunner  {
       }
       if ( kind == "context-entry" ) {
         const ce = token.getAsContextEntryValue();
-        if ( tail == "type" ) {
+        if ( (tail == "type") || (tail == "subKind") ) {
           return ce.kind;
         }
         if ( tail == "content" ) {
           return ce.content;
+        }
+        if ( tail == "name" ) {
+          return ce.name;
+        }
+        if ( tail == "value" ) {
+          return ce.value;
+        }
+        if ( tail == "hasNumeric" ) {
+          if ( ce.hasNumeric ) {
+            return "true";
+          }
+          return "false";
+        }
+        if ( tail == "numericValue" ) {
+          return "" + ce.numericValue;
+        }
+        if ( tail == "customField" ) {
+          return ce.name;
+        }
+        if ( tail == "customValue" ) {
+          return ce.value;
+        }
+        if ( tail == "hasCustomNumeric" ) {
+          if ( ce.hasNumeric ) {
+            return "true";
+          }
+          return "false";
+        }
+        if ( tail == "customNumericValue" ) {
+          return "" + ce.numericValue;
+        }
+        if ( tail == "unit" ) {
+          return ce.unit;
+        }
+        if ( tail == "basis" ) {
+          return ce.basis;
+        }
+        if ( tail == "source" ) {
+          return ce.source;
+        }
+        if ( tail == "hasConfidence" ) {
+          if ( ce.hasConfidence ) {
+            return "true";
+          }
+          return "false";
+        }
+        if ( tail == "confidence" ) {
+          return "" + ce.confidence;
+        }
+        if ( tail == "hasGoodness" ) {
+          if ( ce.hasGoodness ) {
+            return "true";
+          }
+          return "false";
+        }
+        if ( tail == "goodness" ) {
+          return "" + ce.goodness;
+        }
+        if ( tail == "derivedUnit" ) {
+          return ce.unit;
+        }
+        if ( tail == "derivedBasis" ) {
+          return ce.basis;
+        }
+        if ( tail == "derivedSource" ) {
+          return ce.source;
+        }
+        if ( tail == "hasDerivedConfidence" ) {
+          if ( ce.hasConfidence ) {
+            return "true";
+          }
+          return "false";
+        }
+        if ( tail == "derivedConfidence" ) {
+          return "" + ce.confidence;
+        }
+        if ( tail == "hasDerivedGoodness" ) {
+          if ( ce.hasGoodness ) {
+            return "true";
+          }
+          return "false";
+        }
+        if ( tail == "derivedGoodness" ) {
+          return "" + ce.goodness;
         }
       }
       if ( kind == "positive-integer" ) {
@@ -5573,6 +7011,9 @@ class NGTestRunner  {
         if ( tail == "value" ) {
           return "" + piv.value;
         }
+      }
+      if ( (tail == "type") || (tail == "subKind") ) {
+        return kind;
       }
       return "";
     }
@@ -5662,7 +7103,9 @@ class NGTestRunner  {
             out.push(((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' was not found");
             continue;
           }
-          const jsonMatches = gotJson == ex.value;
+          const gotNorm = this.normalizeJsonNumericText(gotJson);
+          const expNorm = this.normalizeJsonNumericText(ex.value);
+          const jsonMatches = (gotJson == ex.value) || (gotNorm == expNorm);
           if ( ex.negated ) {
             if ( jsonMatches ) {
               const msgNotJson = ((("Test " + ("#" + ("" + (i + 1)))) + " expect json path '") + ex.field) + "' not to be '";
@@ -5776,6 +7219,9 @@ TokenDetectorModule.createLeftRight = function() {
 TokenDetectorModule.createFeeling = function() {
   return FeelingDetector.create();
 };
+TokenDetectorModule.createEffort = function() {
+  return EffortDetector.create();
+};
 TokenDetectorModule.createBodyMetric = function() {
   return BodyMetricDetector.create();
 };
@@ -5868,6 +7314,7 @@ module.exports.RecoveryValue = RecoveryValue;
 module.exports.TimeValueValue = TimeValueValue;
 module.exports.LeftRightValue = LeftRightValue;
 module.exports.FeelingValue = FeelingValue;
+module.exports.EffortValue = EffortValue;
 module.exports.BodyMetricValue = BodyMetricValue;
 module.exports.CircuitValue = CircuitValue;
 module.exports.ContextEntryValue = ContextEntryValue;
@@ -5895,6 +7342,7 @@ module.exports.SpeedDetector = SpeedDetector;
 module.exports.ZoneDetector = ZoneDetector;
 module.exports.LeftRightDetector = LeftRightDetector;
 module.exports.FeelingDetector = FeelingDetector;
+module.exports.EffortDetector = EffortDetector;
 module.exports.BodyMetricDetector = BodyMetricDetector;
 module.exports.CircuitDetector = CircuitDetector;
 module.exports.ContextEntryDetector = ContextEntryDetector;
@@ -5906,6 +7354,7 @@ module.exports.BPMDetector = BPMDetector;
 module.exports.PercentageRangeDetector = PercentageRangeDetector;
 module.exports.RMDetector = RMDetector;
 module.exports.RomanZoneDetector = RomanZoneDetector;
+module.exports.PhaseDetector = PhaseDetector;
 module.exports.HeadingDataDetector = HeadingDataDetector;
 module.exports.StandardDetectors = StandardDetectors;
 module.exports.DetailsDataDetector = DetailsDataDetector;

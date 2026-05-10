@@ -7,6 +7,68 @@ private fun expect(condition: Boolean, message: String) {
     if (!condition) fail(message)
 }
 
+private fun prettyJson(json: String): String {
+    val trimmed = json.trim()
+    if (trimmed.isEmpty()) return "\n"
+
+    val out = StringBuilder()
+    var indent = 0
+    var inString = false
+    var escaped = false
+
+    fun pad(level: Int) {
+        repeat(level) { out.append("  ") }
+    }
+
+    for (ch in trimmed) {
+        if (inString) {
+            out.append(ch)
+            if (escaped) {
+                escaped = false
+            } else if (ch == '\\') {
+                escaped = true
+            } else if (ch == '"') {
+                inString = false
+            }
+            continue
+        }
+
+        when (ch) {
+            '"' -> {
+                inString = true
+                out.append(ch)
+            }
+            '{', '[' -> {
+                out.append(ch)
+                out.append('\n')
+                indent += 1
+                pad(indent)
+            }
+            '}', ']' -> {
+                out.append('\n')
+                indent -= 1
+                pad(indent)
+                out.append(ch)
+            }
+            ',' -> {
+                out.append(ch)
+                out.append('\n')
+                pad(indent)
+            }
+            ':' -> {
+                out.append(": ")
+            }
+            ' ', '\n', '\r', '\t' -> {
+                // Ignore source whitespace outside strings.
+            }
+            else -> out.append(ch)
+        }
+    }
+
+    out.append('\n')
+    return out.toString()
+}
+
 fun main() {
     val cwd = java.io.File(".").canonicalFile
     val specPath = java.io.File(cwd, "multiplatform/ranger/test/ng_common_harness.ngtest")
@@ -22,7 +84,7 @@ fun main() {
     for (row in jsonRows) {
         val parts = row.split("\t", limit = 2)
         if (parts.size == 2) {
-            java.io.File(outDir, parts[0]).writeText(parts[1], Charsets.UTF_8)
+            java.io.File(outDir, parts[0]).writeText(prettyJson(parts[1]), Charsets.UTF_8)
         }
     }
 
