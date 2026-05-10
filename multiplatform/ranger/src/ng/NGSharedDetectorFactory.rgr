@@ -32,7 +32,13 @@ Import "detectors/DetailsDataDetector.rgr"
 Import "detectors/HeadingDataDetector.rgr"
 
 class NGSharedDetectorFactory@(singleton) {
+    def sportExerciseChildDetectors:[TokenDetector]
+
     fn createSportExerciseChildDetectors:[TokenDetector] () {
+        if ((array_length sportExerciseChildDetectors) > 0) {
+            return sportExerciseChildDetectors
+        }
+
         def ds:[TokenDetector]
         push ds (SpaceDetector.create())
         push ds (SemicolonSeparatorDetector.create())
@@ -65,6 +71,7 @@ class NGSharedDetectorFactory@(singleton) {
         push ds (AMTimeValueDetector.create())
         push ds (DetailsDataDetector.create())
         push ds (HeadingDataDetector.create())
-        return ds
+        sportExerciseChildDetectors = ds
+        return sportExerciseChildDetectors
     }
 }

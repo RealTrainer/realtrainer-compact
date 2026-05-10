@@ -4551,8 +4551,12 @@ DetailsDataDetector.create = function() {
 };
 class NGSharedDetectorFactory  {
   constructor() {
+    this.sportExerciseChildDetectors = [];
   }
   createSportExerciseChildDetectors () {
+    if ( (this.sportExerciseChildDetectors.length) > 0 ) {
+      return this.sportExerciseChildDetectors;
+    }
     let ds = [];
     ds.push(SpaceDetector.create());
     ds.push(SemicolonSeparatorDetector.create());
@@ -4585,7 +4589,8 @@ class NGSharedDetectorFactory  {
     ds.push(AMTimeValueDetector.create());
     ds.push(DetailsDataDetector.create());
     ds.push(HeadingDataDetector.create());
-    return ds;
+    this.sportExerciseChildDetectors = ds;
+    return this.sportExerciseChildDetectors;
   };
 }
 NGSharedDetectorFactory.__singleton_instance = null;
@@ -4596,16 +4601,32 @@ NGSharedDetectorFactory.__singleton = function() {
   return NGSharedDetectorFactory.__singleton_instance;
 };
 class SportExerciseDetector  extends TokenDetector {
-  constructor(noMatchSlice, sportNames) {
+  constructor(noMatchSlice, sportNames, ds) {
     super()
     this.sports = [];
+    this.childDetectors = [];
     this.cachedNoMatch = noMatchSlice;
     this.sports = sportNames;
+    this.childDetectors = ds;
     this.detectedTag = "exercise";
   }
   createChildDetectors () {
-    const shared = NGSharedDetectorFactory.__singleton();
-    return shared.createSportExerciseChildDetectors();
+    return this.childDetectors;
+  };
+  startsWithToken (slice, token) {
+    const tLen = token.length;
+    if ( tLen > (slice).length() ) {
+      return false;
+    }
+    let i = 0;
+    while (i < tLen) {
+      if ( slice.charCodeAt(i) == (token.charCodeAt(i )) ) {
+      } else {
+        return false;
+      }
+      i = i + 1;
+    };
+    return true;
   };
   isWhitespace (ch) {
     if ( ch == 32 ) {
@@ -4639,8 +4660,7 @@ class SportExerciseDetector  extends TokenDetector {
       if ( __len <= sportLen ) {
         continue;
       }
-      const head = slice.read(sportLen);
-      if ( false == head.strEquals(sportName) ) {
+      if ( false == this.startsWithToken(slice, sportName) ) {
         continue;
       }
       const chAfterName = slice.charCodeAt(sportLen);
@@ -4698,13 +4718,17 @@ class SportExerciseDetector  extends TokenDetector {
 }
 SportExerciseDetector.create = function() {
   const shared = NGSharedLists.__singleton();
+  const factory = NGSharedDetectorFactory.__singleton();
   const sportNames = shared.defaultSportNames();
+  const ds = factory.createSportExerciseChildDetectors();
   const s = TokenDetector.createNoMatchSlice();
-  return new SportExerciseDetector(s, sportNames);
+  return new SportExerciseDetector(s, sportNames, ds);
 };
 SportExerciseDetector.createWithSports = function(sportNames) {
+  const factory = NGSharedDetectorFactory.__singleton();
+  const ds = factory.createSportExerciseChildDetectors();
   const s = TokenDetector.createNoMatchSlice();
-  return new SportExerciseDetector(s, sportNames);
+  return new SportExerciseDetector(s, sportNames, ds);
 };
 class NGExpectRule  {
   constructor() {

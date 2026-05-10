@@ -7,28 +7,50 @@ class SportExerciseDetector {
     Extends(TokenDetector)
 
     def sports:[string]
+    def childDetectors:[TokenDetector]
 
-    Constructor (noMatchSlice:TokenSlice sportNames:[string]) {
+    Constructor (noMatchSlice:TokenSlice sportNames:[string] ds:[TokenDetector]) {
         cachedNoMatch = noMatchSlice
         sports = sportNames
+        childDetectors = ds
         detectedTag = "exercise"
     }
 
     sfn create:SportExerciseDetector () {
         def shared (new NGSharedLists())
+        def factory (new NGSharedDetectorFactory())
         def sportNames (shared.defaultSportNames())
+        def ds (factory.createSportExerciseChildDetectors())
         def s (TokenDetector.createNoMatchSlice())
-        return (new SportExerciseDetector(s sportNames))
+        return (new SportExerciseDetector(s sportNames ds))
     }
 
     sfn createWithSports:SportExerciseDetector (sportNames:[string]) {
+        def factory (new NGSharedDetectorFactory())
+        def ds (factory.createSportExerciseChildDetectors())
         def s (TokenDetector.createNoMatchSlice())
-        return (new SportExerciseDetector(s sportNames))
+        return (new SportExerciseDetector(s sportNames ds))
     }
 
     fn createChildDetectors:[TokenDetector] () {
-        def shared (new NGSharedDetectorFactory())
-        return (shared.createSportExerciseChildDetectors())
+        return childDetectors
+    }
+
+    fn startsWithToken:boolean (slice:TokenSlice token:string) {
+        def tLen (strlen token)
+        if (tLen > (slice.length())) {
+            return false
+        }
+
+        def i@(mutable):int 0
+        while (i < tLen) {
+            if ((slice.charCodeAt(i)) == (charAt token i)) {
+            } {
+                return false
+            }
+            i = i + 1
+        }
+        return true
     }
 
     fn isWhitespace:boolean (ch:int) {
@@ -68,8 +90,7 @@ class SportExerciseDetector {
                 continue
             }
 
-            def head (slice.read(sportLen))
-            if (!(head.strEquals(sportName))) {
+            if (!(this.startsWithToken(slice sportName))) {
                 continue
             }
 
