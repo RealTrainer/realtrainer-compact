@@ -49,6 +49,30 @@ Run Kotlin smoke test (requires `kotlinc`):
 npm run ranger:test:kotlin
 ```
 
+## Version-controlled parser modules (JS/Swift/Kotlin)
+
+If you want generated parser targets in a git-visible folder (for review or reuse in another repo), export module snapshots to:
+
+- `multiplatform/ranger/modules/js`
+- `multiplatform/ranger/modules/swift`
+- `multiplatform/ranger/modules/kotlin`
+
+Current policy: only the `ng` parser variant is kept active in `modules/*`.
+
+Build and export all targets:
+
+```bash
+npm run ranger:modules:build
+```
+
+Only export from existing build artifacts:
+
+```bash
+npm run ranger:modules:export
+```
+
+The export writes `multiplatform/ranger/modules/BUILD_INFO.json` with copied files and sizes.
+
 ## COMPACT -> JSON transform
 
 ```bash

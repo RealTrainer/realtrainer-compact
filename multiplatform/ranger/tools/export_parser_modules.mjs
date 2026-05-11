@@ -1,0 +1,152 @@
+import { mkdirSync, copyFileSync, existsSync, statSync, writeFileSync, rmSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const root = resolve(__dirname, '../../..');
+const modulesRoot = resolve(root, 'multiplatform/ranger/modules');
+
+function copyRequired(relSrc, relDst) {
+  const src = resolve(root, relSrc);
+  const dst = resolve(root, relDst);
+  if (!existsSync(src)) {
+    throw new Error(`Missing required build artifact: ${relSrc}`);
+  }
+  mkdirSync(dirname(dst), { recursive: true });
+  copyFileSync(src, dst);
+  return {
+    source: relSrc,
+    target: relDst,
+    bytes: statSync(dst).size,
+  };
+}
+
+function writeGenerated(relDst, content) {
+  const dst = resolve(root, relDst);
+  mkdirSync(dirname(dst), { recursive: true });
+  writeFileSync(dst, content, 'utf8');
+  return {
+    source: '(generated)',
+    target: relDst,
+    bytes: statSync(dst).size,
+  };
+}
+
+const copied = [];
+
+// Remove legacy compact module folders so NG stays the only active variant.
+rmSync(resolve(root, 'multiplatform/ranger/modules/js/compact'), { recursive: true, force: true });
+rmSync(resolve(root, 'multiplatform/ranger/modules/swift/compact'), { recursive: true, force: true });
+rmSync(resolve(root, 'multiplatform/ranger/modules/kotlin/compact'), { recursive: true, force: true });
+rmSync(resolve(root, 'multiplatform/ranger/modules/ts/compact'), { recursive: true, force: true });
+
+// JavaScript modules (NG only)
+copied.push(copyRequired('multiplatform/ranger/src/ng/bin/token_slice.cjs', 'multiplatform/ranger/modules/js/ng/token_slice.cjs'));
+copied.push(copyRequired('multiplatform/ranger/src/ng/bin/token_detector.cjs', 'multiplatform/ranger/modules/js/ng/token_detector.cjs'));
+copied.push(copyRequired('multiplatform/ranger/src/ng/bin/parser.cjs', 'multiplatform/ranger/modules/js/ng/parser.cjs'));
+
+// Swift modules (NG only)
+copied.push(copyRequired('multiplatform/ranger/dist/ng-swift/token_detector_ng.swift', 'multiplatform/ranger/modules/swift/ng/token_detector_ng.swift'));
+copied.push(copyRequired('multiplatform/ranger/test/ranger_swift_shims.swift', 'multiplatform/ranger/modules/swift/common/ranger_swift_shims.swift'));
+
+// Kotlin modules (NG only)
+copied.push(copyRequired('multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt', 'multiplatform/ranger/modules/kotlin/ng/token_detector_ng.kt'));
+copied.push(copyRequired('multiplatform/ranger/test/org_json_shims.kt', 'multiplatform/ranger/modules/kotlin/common/org_json_shims.kt'));
+
+// TypeScript modules (NG only): native Ranger TypeScript output
+copied.push(copyRequired('multiplatform/ranger/dist/ng-ts/token_detector_ng.ts', 'multiplatform/ranger/modules/ts/ng/token_detector_ng.ts'));
+
+// TypeScript stable facade: typed and practical module surface over JS runtime.
+const tsIndex = `import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const ng = require('../../js/ng/token_detector.cjs');
+
+export const Parser = ng.Parser;
+export const StandardDetectors = ng.StandardDetectors;
+export const TokenSlice = ng.TokenSlice;
+
+export function parseTokens(input: string) {
+  const parser = new Parser(input, StandardDetectors.create());
+  parser.start();
+  return parser.getResults();
+}
+`;
+
+const tsDts = `export interface TimeValueValue {
+  minutes: number;
+  seconds: number;
+}
+
+export interface DistanceValue {
+  value: number;
+  unit: string;
+}
+
+export interface RepeatBlockValue {
+  count: number;
+}
+
+export interface RecoveryTimeValue {
+  value: number;
+  unit: string;
+}
+
+export interface RecoveryValue {
+  label: string;
+}
+
+export interface DetailsLevelValue {
+  level: number;
+  marker: string;
+}
+
+export declare class TokenSlice {
+  tag: string;
+  children: TokenSlice[];
+  childCount(): number;
+  getChild(index: number): TokenSlice;
+  hasSliceValue(): boolean;
+  getSliceValueKind(): string;
+  hasRepeatBlockValue(): boolean;
+  getAsRepeatBlockValue(): RepeatBlockValue;
+  hasTimeValueValue(): boolean;
+  getAsTimeValueValue(): TimeValueValue;
+  hasDistanceValue(): boolean;
+  getAsDistanceValue(): DistanceValue;
+  hasRecoveryTimeValue(): boolean;
+  getAsRecoveryTimeValue(): RecoveryTimeValue;
+  hasRecoveryValue(): boolean;
+  getAsRecoveryValue(): RecoveryValue;
+  hasDetailsLevelValue(): boolean;
+  getAsDetailsLevelValue(): DetailsLevelValue;
+  toString(): string;
+}
+
+export declare class Parser {
+  constructor(source: string, detectors: unknown[]);
+  start(): void;
+  getResults(): TokenSlice[];
+  getCount(): number;
+}
+
+export declare class StandardDetectors {
+  static create(): unknown[];
+}
+
+export declare function parseTokens(input: string): TokenSlice[];
+`;
+
+copied.push(writeGenerated('multiplatform/ranger/modules/ts/ng/index.ts', tsIndex));
+copied.push(writeGenerated('multiplatform/ranger/modules/ts/ng/index.d.ts', tsDts));
+
+const info = {
+  generatedAt: new Date().toISOString(),
+  note: 'Autogenerated by multiplatform/ranger/tools/export_parser_modules.mjs',
+  files: copied,
+};
+
+mkdirSync(modulesRoot, { recursive: true });
+writeFileSync(resolve(modulesRoot, 'BUILD_INFO.json'), JSON.stringify(info, null, 2) + '\n', 'utf8');
+
+console.log(`Exported ${copied.length} files to multiplatform/ranger/modules`);
