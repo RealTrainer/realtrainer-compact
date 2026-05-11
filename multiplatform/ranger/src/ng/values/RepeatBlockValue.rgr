@@ -1,4 +1,7 @@
+Import "values/RepeatPartValue.rgr"
+
 class RepeatBlockValue @serialize(true) {
     def kind:string "repeat-block"
-    def count:int 0
+    def parts:[RepeatPartValue]
+    def loadMode:string ""
 }

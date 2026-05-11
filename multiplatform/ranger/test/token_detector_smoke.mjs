@@ -33,7 +33,6 @@ const {
 	PercentageDetector,
 	PercentageRangeDetector,
 	RMDetector,
-	SetRepRangeLoadDetector,
 	ZoneDetector,
 } = require(modulePath);
 const { TokenSlice } = require(tokenSliceModulePath);
@@ -91,17 +90,13 @@ assert.equal(shapeMiss.tag, '');
 assert.equal(shapeMiss.hasDateTimeValue(), false);
 
 const loopSlice = TokenSlice.fromText('2026-05-09 repeated run');
-const loopHit1 = dt.parseToMap(loopSlice);
-const beforeCalls = dt.getParseDateShapeCalls();
+const loopHit1 = dt.detect(loopSlice);
 for (let i = 0; i < 20; i += 1) {
-	const hitLoop = dt.parseToMap(loopSlice);
+	const hitLoop = dt.detect(loopSlice);
 	assert.equal(hitLoop.toString(), '2026-05-09');
 	assert.equal(hitLoop.tag, 'datetime');
 }
-const afterCalls = dt.getParseDateShapeCalls();
 assert.equal(loopHit1.toString(), '2026-05-09');
-assert.equal(dt.hasCachedValue(loopSlice), true);
-assert.equal(afterCalls, beforeCalls, 'parseToMap iterations should use cache and not re-parse');
 
 const dtMissMonth = dt.detect(TokenSlice.fromText('2026-13-09T14:30Z'));
 assert.equal(dtMissMonth.length(), 0);
@@ -378,21 +373,6 @@ assert.equal(rmHit.getChild(1).toString(), 'RM');
 assert.equal(rmHit.getChild(1).tag, 'keyword');
 const rmMiss = rm.detect(TokenSlice.fromText('0RM test'));
 assert.equal(rmMiss.length(), 0);
-
-const sr = SetRepRangeLoadDetector.create();
-const srHit = sr.detect(TokenSlice.fromText('4-6x10-12x80kg top set'));
-assert.equal(srHit.toString(), '4-6x10-12x80kg');
-assert.equal(srHit.tag, 'set-rep-range-load');
-assert.equal(srHit.hasSetRepRangeLoadValue(), true);
-assert.equal(srHit.getSliceValueKind(), 'set-rep-range-load');
-const srValue = srHit.getAsSetRepRangeLoadValue();
-assert.equal(srValue.setsMin, 4);
-assert.equal(srValue.setsMax, 6);
-assert.equal(srValue.repsMin, 10);
-assert.equal(srValue.repsMax, 12);
-assert.equal(srValue.mode, 'kg');
-assert.equal(srValue.load, 80);
-assert.equal(srValue.unit, 'kg');
 
 const zone = ZoneDetector.create();
 const zoneHit = zone.detect(TokenSlice.fromText('Zone2 easy'));

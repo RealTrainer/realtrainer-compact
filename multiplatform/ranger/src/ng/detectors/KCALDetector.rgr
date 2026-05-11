@@ -2,6 +2,7 @@ Import "detectors/TokenDetector.rgr"
 Import "Parser.rgr"
 Import "detectors/PositiveIntegerDetector.rgr"
 Import "detectors/KeywordDetector.rgr"
+Import "NGSubParserDetectors.rgr"
 
 class KCALDetector {
     Extends(TokenDetector)
@@ -23,11 +24,10 @@ class KCALDetector {
         }
 
         ; Parse as strict pair: <positive integer> + "kcal" from slice start.
-        def detectors:[TokenDetector]
-        push detectors (PositiveIntegerDetector.create())
-        push detectors (KeywordDetector.create("kcal"))
+        def subReg (new NGSubParserDetectors())
+        def detectors (subReg.getKcalChildDetectors())
 
-        def p (new Parser((slice.toString()) detectors))
+        def p (Parser.fromSlice(slice detectors))
         p.start()
 
         if ((p.getCount()) != 2) {

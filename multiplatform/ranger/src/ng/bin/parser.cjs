@@ -192,7 +192,7 @@ RecoveryTimeValue.fromDictionary = function(dict) {
 class WeightValue  {
   constructor() {
     this.kind = "weight";
-    this.value = 0;
+    this.value = 0.0;
     this.unit = "kg";
   }
   toDictionary () {
@@ -214,7 +214,7 @@ WeightValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    const v_1 = isNaN( parseFloat(dict ["value"]) ) ? undefined : parseFloat(dict ["value"]) 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
       obj.value = v_1;
@@ -306,16 +306,223 @@ PercentageRangeValue.fromDictionary = function(dict) {
   }
   return obj;
 };
-class RepeatBlockValue  {
+class PositiveIntegerValue  {
   constructor() {
-    this.kind = "repeat-block";
-    this.count = 0;
+    this.kind = "positive-integer";
+    this.value = 0;
   }
   toDictionary () {
     let res = {};
     try {
       res["kind"] = this.kind;
-      res["count"] = this.count;
+      res["value"] = this.value;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+PositiveIntegerValue.fromDictionary = function(dict) {
+  const obj = new PositiveIntegerValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class DurationValue  {
+  constructor() {
+    this.kind = "duration";
+    this.value = 0;
+    this.unit = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["value"] = this.value;
+      res["unit"] = this.unit;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+DurationValue.fromDictionary = function(dict) {
+  const obj = new DurationValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+    const v_2 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.unit = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class TimeValueValue  {
+  constructor() {
+    this.kind = "time-value";
+    this.minutes = 0;
+    this.seconds = 0;
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["minutes"] = this.minutes;
+      res["seconds"] = this.seconds;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+TimeValueValue.fromDictionary = function(dict) {
+  const obj = new TimeValueValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["minutes"]) ) ? undefined : parseInt(dict ["minutes"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.minutes = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["seconds"]) ) ? undefined : parseInt(dict ["seconds"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.seconds = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class RepeatPartValue  {
+  constructor() {
+    this.kind = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      if ( (typeof(this.positiveInteger) !== "undefined" && this.positiveInteger != null )  ) {
+        res["positiveInteger"] = ((this.positiveInteger)).toDictionary();
+      }
+      if ( (typeof(this.numRange) !== "undefined" && this.numRange != null )  ) {
+        res["numRange"] = ((this.numRange)).toDictionary();
+      }
+      if ( (typeof(this.distance) !== "undefined" && this.distance != null )  ) {
+        res["distance"] = ((this.distance)).toDictionary();
+      }
+      if ( (typeof(this.weight) !== "undefined" && this.weight != null )  ) {
+        res["weight"] = ((this.weight)).toDictionary();
+      }
+      if ( (typeof(this.duration) !== "undefined" && this.duration != null )  ) {
+        res["duration"] = ((this.duration)).toDictionary();
+      }
+      if ( (typeof(this.timeValue) !== "undefined" && this.timeValue != null )  ) {
+        res["timeValue"] = ((this.timeValue)).toDictionary();
+      }
+      if ( (typeof(this.percentage) !== "undefined" && this.percentage != null )  ) {
+        res["percentage"] = ((this.percentage)).toDictionary();
+      }
+      if ( (typeof(this.percentageRange) !== "undefined" && this.percentageRange != null )  ) {
+        res["percentageRange"] = ((this.percentageRange)).toDictionary();
+      }
+    } catch(e) {
+    }
+    return res;
+  };
+}
+RepeatPartValue.fromDictionary = function(dict) {
+  const obj = new RepeatPartValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const theValue = (dict["positiveInteger"] instanceof Object ) ? dict ["positiveInteger"] : undefined ;
+    if ( (typeof(theValue) !== "undefined" && theValue != null )  ) {
+      const newObj = PositiveIntegerValue.fromDictionary((theValue));
+      obj.positiveInteger = newObj;
+    }
+    const theValue_1 = (dict["numRange"] instanceof Object ) ? dict ["numRange"] : undefined ;
+    if ( (typeof(theValue_1) !== "undefined" && theValue_1 != null )  ) {
+      const newObj_1 = NumRangeValue.fromDictionary((theValue_1));
+      obj.numRange = newObj_1;
+    }
+    const theValue_2 = (dict["distance"] instanceof Object ) ? dict ["distance"] : undefined ;
+    if ( (typeof(theValue_2) !== "undefined" && theValue_2 != null )  ) {
+      const newObj_2 = DistanceValue.fromDictionary((theValue_2));
+      obj.distance = newObj_2;
+    }
+    const theValue_3 = (dict["weight"] instanceof Object ) ? dict ["weight"] : undefined ;
+    if ( (typeof(theValue_3) !== "undefined" && theValue_3 != null )  ) {
+      const newObj_3 = WeightValue.fromDictionary((theValue_3));
+      obj.weight = newObj_3;
+    }
+    const theValue_4 = (dict["duration"] instanceof Object ) ? dict ["duration"] : undefined ;
+    if ( (typeof(theValue_4) !== "undefined" && theValue_4 != null )  ) {
+      const newObj_4 = DurationValue.fromDictionary((theValue_4));
+      obj.duration = newObj_4;
+    }
+    const theValue_5 = (dict["timeValue"] instanceof Object ) ? dict ["timeValue"] : undefined ;
+    if ( (typeof(theValue_5) !== "undefined" && theValue_5 != null )  ) {
+      const newObj_5 = TimeValueValue.fromDictionary((theValue_5));
+      obj.timeValue = newObj_5;
+    }
+    const theValue_6 = (dict["percentage"] instanceof Object ) ? dict ["percentage"] : undefined ;
+    if ( (typeof(theValue_6) !== "undefined" && theValue_6 != null )  ) {
+      const newObj_6 = PercentageValue.fromDictionary((theValue_6));
+      obj.percentage = newObj_6;
+    }
+    const theValue_7 = (dict["percentageRange"] instanceof Object ) ? dict ["percentageRange"] : undefined ;
+    if ( (typeof(theValue_7) !== "undefined" && theValue_7 != null )  ) {
+      const newObj_7 = PercentageRangeValue.fromDictionary((theValue_7));
+      obj.percentageRange = newObj_7;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class RepeatBlockValue  {
+  constructor() {
+    this.kind = "repeat-block";
+    this.parts = [];
+    this.loadMode = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      let values = [];
+      for ( let i = 0; i < this.parts.length; i++) {
+        var item = this.parts[i];
+        const obj = item.toDictionary();
+        values.push(obj);
+      };
+      res["parts"] = values;
+      res["loadMode"] = this.loadMode;
     } catch(e) {
     }
     return res;
@@ -329,91 +536,21 @@ RepeatBlockValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = isNaN( parseInt(dict ["count"]) ) ? undefined : parseInt(dict ["count"]) 
+    const values = (dict["parts"] instanceof Array ) ? dict ["parts"] : undefined ;
+    if ( (typeof(values) !== "undefined" && values != null )  ) {
+      const arr = values;
+      operatorsOfJSONArrayObject.forEach_2(arr, ((item, index) => { 
+        if( item instanceof Object ) /* union case */ {
+          var oo = item;
+          const newObj = RepeatPartValue.fromDictionary(oo);
+          obj.parts.push(newObj);
+        };
+      }));
+    }
+    const v_1 = (typeof (dict ["loadMode"]) != "string" ) ? undefined : dict ["loadMode"] 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.count = v_1;
-    }
-  } catch(e) {
-  }
-  return obj;
-};
-class SetRepRangeLoadValue  {
-  constructor() {
-    this.kind = "set-rep-range-load";
-    this.count = 1;
-    this.setsMin = 0;
-    this.setsMax = 0;
-    this.repsMin = 0;
-    this.repsMax = 0;
-    this.mode = "";
-    this.load = 0;
-    this.unit = "";
-  }
-  toDictionary () {
-    let res = {};
-    try {
-      res["kind"] = this.kind;
-      res["count"] = this.count;
-      res["setsMin"] = this.setsMin;
-      res["setsMax"] = this.setsMax;
-      res["repsMin"] = this.repsMin;
-      res["repsMax"] = this.repsMax;
-      res["mode"] = this.mode;
-      res["load"] = this.load;
-      res["unit"] = this.unit;
-    } catch(e) {
-    }
-    return res;
-  };
-}
-SetRepRangeLoadValue.fromDictionary = function(dict) {
-  const obj = new SetRepRangeLoadValue();
-  try {
-    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
-    ;
-    if ( (typeof(v) !== "undefined" && v != null )  ) {
-      obj.kind = v;
-    }
-    const v_1 = isNaN( parseInt(dict ["count"]) ) ? undefined : parseInt(dict ["count"]) 
-    ;
-    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.count = v_1;
-    }
-    const v_2 = isNaN( parseInt(dict ["setsMin"]) ) ? undefined : parseInt(dict ["setsMin"]) 
-    ;
-    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.setsMin = v_2;
-    }
-    const v_3 = isNaN( parseInt(dict ["setsMax"]) ) ? undefined : parseInt(dict ["setsMax"]) 
-    ;
-    if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
-      obj.setsMax = v_3;
-    }
-    const v_4 = isNaN( parseInt(dict ["repsMin"]) ) ? undefined : parseInt(dict ["repsMin"]) 
-    ;
-    if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
-      obj.repsMin = v_4;
-    }
-    const v_5 = isNaN( parseInt(dict ["repsMax"]) ) ? undefined : parseInt(dict ["repsMax"]) 
-    ;
-    if ( (typeof(v_5) !== "undefined" && v_5 != null )  ) {
-      obj.repsMax = v_5;
-    }
-    const v_6 = (typeof (dict ["mode"]) != "string" ) ? undefined : dict ["mode"] 
-    ;
-    if ( (typeof(v_6) !== "undefined" && v_6 != null )  ) {
-      obj.mode = v_6;
-    }
-    const v_7 = isNaN( parseInt(dict ["load"]) ) ? undefined : parseInt(dict ["load"]) 
-    ;
-    if ( (typeof(v_7) !== "undefined" && v_7 != null )  ) {
-      obj.load = v_7;
-    }
-    const v_8 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
-    ;
-    if ( (typeof(v_8) !== "undefined" && v_8 != null )  ) {
-      obj.unit = v_8;
+      obj.loadMode = v_1;
     }
   } catch(e) {
   }
@@ -446,38 +583,6 @@ ZoneValue.fromDictionary = function(dict) {
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
       obj.zone = v_1;
-    }
-  } catch(e) {
-  }
-  return obj;
-};
-class PositiveIntegerValue  {
-  constructor() {
-    this.kind = "positive-integer";
-    this.value = 0;
-  }
-  toDictionary () {
-    let res = {};
-    try {
-      res["kind"] = this.kind;
-      res["value"] = this.value;
-    } catch(e) {
-    }
-    return res;
-  };
-}
-PositiveIntegerValue.fromDictionary = function(dict) {
-  const obj = new PositiveIntegerValue();
-  try {
-    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
-    ;
-    if ( (typeof(v) !== "undefined" && v != null )  ) {
-      obj.kind = v;
-    }
-    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
-    ;
-    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.value = v_1;
     }
   } catch(e) {
   }
@@ -549,45 +654,6 @@ RecoveryValue.fromDictionary = function(dict) {
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
       obj.label = v_1;
-    }
-  } catch(e) {
-  }
-  return obj;
-};
-class TimeValueValue  {
-  constructor() {
-    this.kind = "time-value";
-    this.minutes = 0;
-    this.seconds = 0;
-  }
-  toDictionary () {
-    let res = {};
-    try {
-      res["kind"] = this.kind;
-      res["minutes"] = this.minutes;
-      res["seconds"] = this.seconds;
-    } catch(e) {
-    }
-    return res;
-  };
-}
-TimeValueValue.fromDictionary = function(dict) {
-  const obj = new TimeValueValue();
-  try {
-    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
-    ;
-    if ( (typeof(v) !== "undefined" && v != null )  ) {
-      obj.kind = v;
-    }
-    const v_1 = isNaN( parseInt(dict ["minutes"]) ) ? undefined : parseInt(dict ["minutes"]) 
-    ;
-    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.minutes = v_1;
-    }
-    const v_2 = isNaN( parseInt(dict ["seconds"]) ) ? undefined : parseInt(dict ["seconds"]) 
-    ;
-    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.seconds = v_2;
     }
   } catch(e) {
   }
@@ -970,15 +1036,6 @@ class SliceParsedValue  {
     }
     return new RepeatBlockValue();
   };
-  hasSetRepRangeLoad () {
-    return (typeof(this.setRepRangeLoad) !== "undefined" && this.setRepRangeLoad != null ) ;
-  };
-  getSetRepRangeLoad () {
-    if ( (typeof(this.setRepRangeLoad) !== "undefined" && this.setRepRangeLoad != null )  ) {
-      return this.setRepRangeLoad;
-    }
-    return new SetRepRangeLoadValue();
-  };
   hasZone () {
     return (typeof(this.zone) !== "undefined" && this.zone != null ) ;
   };
@@ -1078,6 +1135,15 @@ class SliceParsedValue  {
     }
     return new ContextEntryValue();
   };
+  hasDuration () {
+    return (typeof(this.duration) !== "undefined" && this.duration != null ) ;
+  };
+  getDuration () {
+    if ( (typeof(this.duration) !== "undefined" && this.duration != null )  ) {
+      return this.duration;
+    }
+    return new DurationValue();
+  };
 }
 SliceParsedValue.create = function(kind) {
   const out = new SliceParsedValue();
@@ -1130,12 +1196,6 @@ SliceParsedValue.fromRepeatBlock = function(value) {
   const out = new SliceParsedValue();
   out.kind = "repeat-block";
   out.repeatBlock = value;
-  return out;
-};
-SliceParsedValue.fromSetRepRangeLoad = function(value) {
-  const out = new SliceParsedValue();
-  out.kind = "set-rep-range-load";
-  out.setRepRangeLoad = value;
   return out;
 };
 SliceParsedValue.fromZone = function(value) {
@@ -1204,6 +1264,12 @@ SliceParsedValue.fromContextEntry = function(value) {
   out.contextEntry = value;
   return out;
 };
+SliceParsedValue.fromDuration = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "duration";
+  out.duration = value;
+  return out;
+};
 class TokenSlice  {
   constructor(text, from, length) {
     this.source = "";
@@ -1212,23 +1278,8 @@ class TokenSlice  {
     this.tag = "";
     this.children = [];
     this.source = text;
-    const textLen = text.length;
-    let safeStart = from;
-    if ( safeStart < 0 ) {
-      safeStart = 0;
-    }
-    if ( safeStart > textLen ) {
-      safeStart = textLen;
-    }
-    let safeLength = length;
-    if ( safeLength < 0 ) {
-      safeLength = 0;
-    }
-    if ( (safeStart + safeLength) > textLen ) {
-      safeLength = textLen - safeStart;
-    }
-    this.start = safeStart;
-    this.size = safeLength;
+    this.start = from;
+    this.size = length;
   }
   length () {
     return this.size;
@@ -1500,35 +1551,35 @@ class TokenSlice  {
     }
     return new RepeatBlockValue();
   };
-  hasSetRepRangeLoadValue () {
+  hasDurationValue () {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
       const p = this.parsedValue;
-      if ( (p.kind == "set-rep-range-load") && p.hasSetRepRangeLoad() ) {
+      if ( (p.kind == "duration") && p.hasDuration() ) {
         return true;
       }
     }
     return false;
   };
-  setSetRepRangeLoadValue (value) {
+  setDurationValue (value) {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
       const p = this.parsedValue;
-      p.setRepRangeLoad = value;
+      p.duration = value;
       if ( (p.kind.length) == 0 ) {
-        p.kind = "set-rep-range-load";
+        p.kind = "duration";
       }
       this.parsedValue = p;
       return;
     }
-    this.parsedValue = SliceParsedValue.fromSetRepRangeLoad(value);
+    this.parsedValue = SliceParsedValue.fromDuration(value);
   };
-  getAsSetRepRangeLoadValue () {
+  getAsDurationValue () {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
       const p = this.parsedValue;
-      if ( (p.kind == "set-rep-range-load") && p.hasSetRepRangeLoad() ) {
-        return p.getSetRepRangeLoad();
+      if ( (p.kind == "duration") && p.hasDuration() ) {
+        return p.getDuration();
       }
     }
-    return new SetRepRangeLoadValue();
+    return new DurationValue();
   };
   hasZoneValue () {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
@@ -1887,6 +1938,103 @@ class TokenSlice  {
     }
     return this.source.charCodeAt((this.start + index) );
   };
+  isDigitAt (index) {
+    const ch = this.charCodeAt(index);
+    return (ch >= 48) && (ch <= 57);
+  };
+  digitAt (index) {
+    const ch = this.charCodeAt(index);
+    if ( (ch >= 48) && (ch <= 57) ) {
+      return ch - 48;
+    }
+    return -1;
+  };
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  isWhitespaceAt (index) {
+    const ch = this.charCodeAt(index);
+    return this.isWhitespace(ch);
+  };
+  isAlphaNum (ch) {
+    if ( (ch >= 48) && (ch <= 57) ) {
+      return true;
+    }
+    if ( (ch >= 65) && (ch <= 90) ) {
+      return true;
+    }
+    if ( (ch >= 97) && (ch <= 122) ) {
+      return true;
+    }
+    if ( ch >= 128 ) {
+      return true;
+    }
+    return false;
+  };
+  isAlphaNumAt (index) {
+    const ch = this.charCodeAt(index);
+    return this.isAlphaNum(ch);
+  };
+  findLineEnd (from) {
+    let safeFrom = from;
+    if ( safeFrom < 0 ) {
+      safeFrom = 0;
+    }
+    if ( safeFrom >= this.size ) {
+      return this.size;
+    }
+    let i = safeFrom;
+    while (i < this.size) {
+      const ch = this.charCodeAt(i);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      i = i + 1;
+    };
+    return i;
+  };
+  findNumberEnd (from) {
+    let safeFrom = from;
+    if ( safeFrom < 0 ) {
+      safeFrom = 0;
+    }
+    if ( safeFrom >= this.size ) {
+      return this.size;
+    }
+    let i = safeFrom;
+    while (i < this.size) {
+      if ( this.isDigitAt(i) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    return i;
+  };
+  findWhitespaceEnd (from) {
+    let safeFrom = from;
+    if ( safeFrom < 0 ) {
+      safeFrom = 0;
+    }
+    if ( safeFrom >= this.size ) {
+      return this.size;
+    }
+    let i = safeFrom;
+    while (i < this.size) {
+      if ( this.isWhitespaceAt(i) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    return i;
+  };
   hasInteger (from, to) {
     if ( from < 0 ) {
       return false;
@@ -1911,14 +2059,22 @@ class TokenSlice  {
     return true;
   };
   parseInteger (from, to) {
-    if ( this.hasInteger(from, to) ) {
-    } else {
+    if ( from < 0 ) {
+      return -1;
+    }
+    if ( to < from ) {
+      return -1;
+    }
+    if ( to >= this.size ) {
       return -1;
     }
     let value = 0;
     let i = from;
     while (i <= to) {
       const ch = this.charCodeAt(i);
+      if ( (ch < 48) || (ch > 57) ) {
+        return -1;
+      }
       value = (value * 10) + (ch - 48);
       i = i + 1;
     };
@@ -2012,8 +2168,21 @@ class TokenSlice  {
     if ( tLen > this.size ) {
       return false;
     }
-    const me = (this.read(tLen)).toString();
-    return me == token;
+    if ( (this.source.charCodeAt(this.start )) != (token.charCodeAt(0 )) ) {
+      return false;
+    }
+    if ( tLen == 1 ) {
+      return true;
+    }
+    let i = 1;
+    while (i < tLen) {
+      if ( (this.source.charCodeAt((this.start + i) )) == (token.charCodeAt(i )) ) {
+      } else {
+        return false;
+      }
+      i = i + 1;
+    };
+    return true;
   };
   endsWith (token) {
     const tLen = token.length;
@@ -2077,6 +2246,24 @@ class TokenDetector  {
   noMatch () {
     return this.getNoMatchSlice();
   };
+  isInRange (value, minValue, maxValue) {
+    if ( value < minValue ) {
+      return false;
+    }
+    if ( value > maxValue ) {
+      return false;
+    }
+    return true;
+  };
+  isHour24 (value) {
+    return this.isInRange(value, 0, 23);
+  };
+  isMinuteSecond (value) {
+    return this.isInRange(value, 0, 59);
+  };
+  isHour12 (value) {
+    return this.isInRange(value, 1, 12);
+  };
   detect (slice) {
     return this.noMatch();
   };
@@ -2093,35 +2280,12 @@ TokenDetector.create = function() {
 class DateTimeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
-    this.sliceMap = {};
-    this.sliceHitMap = {};
     this.parseDateShapeCalls = 0;
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "datetime";
   }
-  parseToMap (slice) {
-    if ( ( typeof(this.sliceMap[slice] ) != "undefined" && this.sliceMap.hasOwnProperty(slice) ) ) {
-      const cachedHit = ( this.sliceHitMap.hasOwnProperty(slice) ? this.sliceHitMap[slice] : undefined );
-      if ( (typeof(cachedHit) !== "undefined" && cachedHit != null )  ) {
-        const hit = cachedHit;
-        const cachedVal = ( this.sliceMap.hasOwnProperty(slice) ? this.sliceMap[slice] : undefined );
-        if ( (typeof(cachedVal) !== "undefined" && cachedVal != null )  ) {
-          const payload = SliceParsedValue.fromDateTime((cachedVal));
-          hit.setSliceValue(payload);
-          slice.setSliceValue(payload);
-        }
-        return hit;
-      }
-      return this.noMatch();
-    }
-    const newSlice = this.parseDateShape(slice);
-    return newSlice;
-  };
   getParseDateShapeCalls () {
     return this.parseDateShapeCalls;
-  };
-  hasCachedValue (slice) {
-    return ( typeof(this.sliceMap[slice] ) != "undefined" && this.sliceMap.hasOwnProperty(slice) );
   };
   parseDateShape (slice) {
     this.parseDateShapeCalls = this.parseDateShapeCalls + 1;
@@ -2175,25 +2339,16 @@ class DateTimeDetector  extends TokenDetector {
       } else {
         return this.noMatch();
       }
-      if ( out.hour < 0 ) {
+      if ( false == this.isHour24(out.hour) ) {
         return this.noMatch();
       }
-      if ( out.hour > 23 ) {
-        return this.noMatch();
-      }
-      if ( out.minute < 0 ) {
-        return this.noMatch();
-      }
-      if ( out.minute > 59 ) {
+      if ( false == this.isMinuteSecond(out.minute) ) {
         return this.noMatch();
       }
       let idx = 16;
       if ( ((slice).length() >= 19) && (slice.charCodeAt(16) == 58) ) {
         out.second = slice.parseInteger(17, 18);
-        if ( out.second < 0 ) {
-          return this.noMatch();
-        }
-        if ( out.second > 59 ) {
+        if ( false == this.isMinuteSecond(out.second) ) {
           return this.noMatch();
         }
         idx = 19;
@@ -2219,16 +2374,10 @@ class DateTimeDetector  extends TokenDetector {
             }
             const tzHour = slice.parseInteger((idx + 1), (idx + 2));
             const tzMin = slice.parseInteger((idx + 4), (idx + 5));
-            if ( tzHour < 0 ) {
+            if ( false == this.isHour24(tzHour) ) {
               return this.noMatch();
             }
-            if ( tzHour > 23 ) {
-              return this.noMatch();
-            }
-            if ( tzMin < 0 ) {
-              return this.noMatch();
-            }
-            if ( tzMin > 59 ) {
+            if ( false == this.isMinuteSecond(tzMin) ) {
               return this.noMatch();
             }
             const tzSlice = slice.read((idx + 6));
@@ -2244,14 +2393,10 @@ class DateTimeDetector  extends TokenDetector {
     const payload2 = SliceParsedValue.fromDateTime(out);
     newSlice.setSliceValue(payload2);
     slice.setSliceValue(payload2);
-    this.sliceMap[newSlice] = out;
-    this.sliceMap[slice] = out;
-    this.sliceHitMap[newSlice] = newSlice;
-    this.sliceHitMap[slice] = newSlice;
     return newSlice;
   };
   detect (slice) {
-    return this.parseToMap(slice);
+    return this.parseDateShape(slice);
   };
 }
 DateTimeDetector.create = function() {
@@ -2261,6 +2406,7 @@ DateTimeDetector.create = function() {
 class Parser  {
   constructor(source, detectors) {
     this.source = "";
+    this.slice = new TokenSlice("", 0, 0);
     this.detectors = [];
     this.parserdResults = [];
     this.source = source;
@@ -2269,7 +2415,8 @@ class Parser  {
     this.parserdResults.length = 0;
   }
   start () {
-    let activeSlice = new TokenSlice(this.source, 0, this.source.length);
+    let activeSlice = new TokenSlice("", 0, 0);
+    activeSlice = this.slice;
     while ((activeSlice).length() > 0) {
       let advance = 0;
       let i = 0;
@@ -2304,6 +2451,25 @@ class Parser  {
     return this.parserdResults.length;
   };
 }
+Parser.fromSlice = function(s, detectors) {
+  const p = new Parser("", detectors);
+  p.slice = s;
+  return p;
+};
+class operatorsOfJSONArrayObject  {
+  constructor() {
+  }
+}
+operatorsOfJSONArrayObject.forEach_2 = function(__self, cb) {
+  let cnt = __self.length;
+  let i = 0;
+  while (cnt > 0) {
+    const value = __self[i];
+    cb(value, i);
+    cnt = cnt - 1;
+    i = i + 1;
+  };
+};
 module.exports.DateTimeValue = DateTimeValue;
 module.exports.DistanceValue = DistanceValue;
 module.exports.PercentageValue = PercentageValue;
@@ -2311,13 +2477,14 @@ module.exports.RecoveryTimeValue = RecoveryTimeValue;
 module.exports.WeightValue = WeightValue;
 module.exports.NumRangeValue = NumRangeValue;
 module.exports.PercentageRangeValue = PercentageRangeValue;
-module.exports.RepeatBlockValue = RepeatBlockValue;
-module.exports.SetRepRangeLoadValue = SetRepRangeLoadValue;
-module.exports.ZoneValue = ZoneValue;
 module.exports.PositiveIntegerValue = PositiveIntegerValue;
+module.exports.DurationValue = DurationValue;
+module.exports.TimeValueValue = TimeValueValue;
+module.exports.RepeatPartValue = RepeatPartValue;
+module.exports.RepeatBlockValue = RepeatBlockValue;
+module.exports.ZoneValue = ZoneValue;
 module.exports.DetailsLevelValue = DetailsLevelValue;
 module.exports.RecoveryValue = RecoveryValue;
-module.exports.TimeValueValue = TimeValueValue;
 module.exports.LeftRightValue = LeftRightValue;
 module.exports.FeelingValue = FeelingValue;
 module.exports.EffortValue = EffortValue;

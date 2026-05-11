@@ -1,4 +1,5 @@
 Import "detectors/TokenDetector.rgr"
+Import "NGSharedLists.rgr"
 Import "values/ContextEntryValue.rgr"
 Import "values/SliceParsedValue.rgr"
 
@@ -16,106 +17,30 @@ class ContextEntryDetector {
     }
 
     fn toTag:string (kind:string) {
-        if (kind == "food") {
-            return "food"
-        }
-        if (kind == "drinking") {
-            return "drinking"
-        }
-        if (kind == "expense") {
-            return "expense"
-        }
-        if (kind == "reminder") {
-            return "reminder"
-        }
-        if (kind == "protein") {
-            return "protein"
-        }
-        if (kind == "comment") {
-            return "comment"
-        }
-        if (kind == "custom") {
-            return "custom"
-        }
-        if (kind == "tags") {
-            return "tags"
-        }
-        if (kind == "emojis") {
-            return "emojis"
-        }
-        if (kind == "summary") {
-            return "summary"
-        }
-        if (kind == "derived") {
-            return "derived"
-        }
-        if (kind == "url") {
-            return "url"
+        def shared (new NGSharedLists())
+        if (shared.isContextEntryKind(kind)) {
+            return kind
         }
         return detectedTag
     }
 
     fn detectKind:string (slice:TokenSlice) {
-        if (slice.hasToken("Food ")) {
-            return "food"
-        }
-        if (slice.hasToken("Drinking ")) {
-            return "drinking"
-        }
-        if (slice.hasToken("Expense ")) {
-            return "expense"
-        }
-        if (slice.hasToken("Reminder ")) {
-            return "reminder"
-        }
-        if (slice.hasToken("Protein ")) {
-            return "protein"
-        }
-        if (slice.hasToken("Comment ")) {
-            return "comment"
-        }
-        if (slice.hasToken("Custom ")) {
-            return "custom"
-        }
-        if (slice.hasToken("Tags ")) {
-            return "tags"
-        }
-        if (slice.hasToken("Emojis ")) {
-            return "emojis"
-        }
-        if (slice.hasToken("Summary ")) {
-            return "summary"
-        }
-        if (slice.hasToken("Derived ")) {
-            return "derived"
-        }
-        if (slice.hasToken("URL ")) {
-            return "url"
+        def shared (new NGSharedLists())
+        def kinds (shared.defaultContextEntryKinds())
+        def prefixes (shared.defaultContextEntryPrefixTokens())
+        def cnt (array_length kinds)
+        def i@(mutable):int 0
+        while (i < cnt) {
+            if (slice.hasToken((itemAt prefixes i))) {
+                return (itemAt kinds i)
+            }
+            i = i + 1
         }
         return ""
     }
 
-    fn isWhitespace:boolean (ch:int) {
-        if (ch == 32) {
-            return true
-        }
-        if (ch == 9) {
-            return true
-        }
-        return false
-    }
-
     fn findLineEnd:int (slice:TokenSlice start:int) {
-        def len (slice.length())
-        def lineEnd@(mutable):int start
-        while (lineEnd < len) {
-            def ch (slice.charCodeAt(lineEnd))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
-        return lineEnd
+        return (slice.findLineEnd(start))
     }
 
     fn parseDerivedFields:void (cv:ContextEntryValue valueSlice:TokenSlice) {
@@ -127,7 +52,7 @@ class ContextEntryDetector {
         def i@(mutable):int 0
         while (i < len) {
             def chStart (valueSlice.charCodeAt(i))
-            if (this.isWhitespace(chStart)) {
+            if (valueSlice.isWhitespace(chStart)) {
                 i = i + 1
             } {
                 break
@@ -141,7 +66,7 @@ class ContextEntryDetector {
         def metricStart i
         while (i < len) {
             def chMetric (valueSlice.charCodeAt(i))
-            if (this.isWhitespace(chMetric)) {
+            if (valueSlice.isWhitespace(chMetric)) {
                 break
             }
             i = i + 1
@@ -153,7 +78,7 @@ class ContextEntryDetector {
 
         while (i < len) {
             def chAfterMetric (valueSlice.charCodeAt(i))
-            if (this.isWhitespace(chAfterMetric)) {
+            if (valueSlice.isWhitespace(chAfterMetric)) {
                 i = i + 1
             } {
                 break
@@ -168,7 +93,7 @@ class ContextEntryDetector {
         while (i < len) {
             def chNum (valueSlice.charCodeAt(i))
             ; '|' or ';' ends the numeric part before unit token
-            if ((chNum == 124) || (chNum == 59) || (this.isWhitespace(chNum))) {
+            if ((chNum == 124) || (chNum == 59) || (valueSlice.isWhitespace(chNum))) {
                 break
             }
             i = i + 1
@@ -189,7 +114,7 @@ class ContextEntryDetector {
                 i = i + 1
                 while (i < len) {
                     def chUnitStart (valueSlice.charCodeAt(i))
-                    if (this.isWhitespace(chUnitStart)) {
+                    if (valueSlice.isWhitespace(chUnitStart)) {
                         i = i + 1
                     } {
                         break
@@ -199,7 +124,7 @@ class ContextEntryDetector {
                 def unitStart i
                 while (i < len) {
                     def chUnit (valueSlice.charCodeAt(i))
-                    if (this.isWhitespace(chUnit)) {
+                    if (valueSlice.isWhitespace(chUnit)) {
                         break
                     }
                     i = i + 1
@@ -211,7 +136,7 @@ class ContextEntryDetector {
 
                 while (i < len) {
                     def chBeforeToken (valueSlice.charCodeAt(i))
-                    if (this.isWhitespace(chBeforeToken)) {
+                    if (valueSlice.isWhitespace(chBeforeToken)) {
                         i = i + 1
                     } {
                         break
@@ -222,7 +147,7 @@ class ContextEntryDetector {
                     def tokenStart i
                     while (i < len) {
                         def chToken (valueSlice.charCodeAt(i))
-                        if (this.isWhitespace(chToken)) {
+                        if (valueSlice.isWhitespace(chToken)) {
                             break
                         }
                         i = i + 1
@@ -283,7 +208,7 @@ class ContextEntryDetector {
 
                     while (i < len) {
                         def chGap (valueSlice.charCodeAt(i))
-                        if (this.isWhitespace(chGap)) {
+                        if (valueSlice.isWhitespace(chGap)) {
                             i = i + 1
                         } {
                             break
@@ -329,50 +254,12 @@ class ContextEntryDetector {
         }
 
         def kind (this.detectKind(slice))
-        if ((strlen kind) == 0) {
+        def kindLen (strlen kind)
+        if (kindLen == 0) {
             return (this.noMatch())
         }
 
-        def keyLen@(mutable):int 0
-        if (kind == "food") {
-            keyLen = 5
-        }
-        if (kind == "drinking") {
-            keyLen = 9
-        }
-        if (kind == "expense") {
-            keyLen = 8
-        }
-        if (kind == "reminder") {
-            keyLen = 9
-        }
-        if (kind == "protein") {
-            keyLen = 8
-        }
-        if (kind == "comment") {
-            keyLen = 8
-        }
-        if (kind == "custom") {
-            keyLen = 7
-        }
-        if (kind == "tags") {
-            keyLen = 5
-        }
-        if (kind == "emojis") {
-            keyLen = 7
-        }
-        if (kind == "summary") {
-            keyLen = 8
-        }
-        if (kind == "derived") {
-            keyLen = 8
-        }
-        if (kind == "url") {
-            keyLen = 4
-        }
-        if (keyLen <= 0) {
-            return (this.noMatch())
-        }
+        def keyLen (kindLen + 1)
 
         if (keyLen >= len) {
             return (this.noMatch())
@@ -418,7 +305,7 @@ class ContextEntryDetector {
             def fieldStart@(mutable):int 0
             while (fieldStart < customLen) {
                 def chStart (customSlice.charCodeAt(fieldStart))
-                if (this.isWhitespace(chStart)) {
+                if (customSlice.isWhitespace(chStart)) {
                     fieldStart = fieldStart + 1
                 } {
                     break
@@ -428,7 +315,7 @@ class ContextEntryDetector {
             def fieldEnd@(mutable):int fieldStart
             while (fieldEnd < customLen) {
                 def chField (customSlice.charCodeAt(fieldEnd))
-                if (this.isWhitespace(chField)) {
+                if (customSlice.isWhitespace(chField)) {
                     break
                 }
                 fieldEnd = fieldEnd + 1
@@ -440,7 +327,7 @@ class ContextEntryDetector {
                 def valueStart@(mutable):int fieldEnd
                 while (valueStart < customLen) {
                     def chValueStart (customSlice.charCodeAt(valueStart))
-                    if (this.isWhitespace(chValueStart)) {
+                    if (customSlice.isWhitespace(chValueStart)) {
                         valueStart = valueStart + 1
                     } {
                         break

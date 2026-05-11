@@ -192,7 +192,7 @@ RecoveryTimeValue.fromDictionary = function(dict) {
 class WeightValue  {
   constructor() {
     this.kind = "weight";
-    this.value = 0;
+    this.value = 0.0;
     this.unit = "kg";
   }
   toDictionary () {
@@ -214,7 +214,7 @@ WeightValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    const v_1 = isNaN( parseFloat(dict ["value"]) ) ? undefined : parseFloat(dict ["value"]) 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
       obj.value = v_1;
@@ -306,16 +306,223 @@ PercentageRangeValue.fromDictionary = function(dict) {
   }
   return obj;
 };
-class RepeatBlockValue  {
+class PositiveIntegerValue  {
   constructor() {
-    this.kind = "repeat-block";
-    this.count = 0;
+    this.kind = "positive-integer";
+    this.value = 0;
   }
   toDictionary () {
     let res = {};
     try {
       res["kind"] = this.kind;
-      res["count"] = this.count;
+      res["value"] = this.value;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+PositiveIntegerValue.fromDictionary = function(dict) {
+  const obj = new PositiveIntegerValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class DurationValue  {
+  constructor() {
+    this.kind = "duration";
+    this.value = 0;
+    this.unit = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["value"] = this.value;
+      res["unit"] = this.unit;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+DurationValue.fromDictionary = function(dict) {
+  const obj = new DurationValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.value = v_1;
+    }
+    const v_2 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.unit = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class TimeValueValue  {
+  constructor() {
+    this.kind = "time-value";
+    this.minutes = 0;
+    this.seconds = 0;
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      res["minutes"] = this.minutes;
+      res["seconds"] = this.seconds;
+    } catch(e) {
+    }
+    return res;
+  };
+}
+TimeValueValue.fromDictionary = function(dict) {
+  const obj = new TimeValueValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const v_1 = isNaN( parseInt(dict ["minutes"]) ) ? undefined : parseInt(dict ["minutes"]) 
+    ;
+    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
+      obj.minutes = v_1;
+    }
+    const v_2 = isNaN( parseInt(dict ["seconds"]) ) ? undefined : parseInt(dict ["seconds"]) 
+    ;
+    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
+      obj.seconds = v_2;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class RepeatPartValue  {
+  constructor() {
+    this.kind = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      if ( (typeof(this.positiveInteger) !== "undefined" && this.positiveInteger != null )  ) {
+        res["positiveInteger"] = ((this.positiveInteger)).toDictionary();
+      }
+      if ( (typeof(this.numRange) !== "undefined" && this.numRange != null )  ) {
+        res["numRange"] = ((this.numRange)).toDictionary();
+      }
+      if ( (typeof(this.distance) !== "undefined" && this.distance != null )  ) {
+        res["distance"] = ((this.distance)).toDictionary();
+      }
+      if ( (typeof(this.weight) !== "undefined" && this.weight != null )  ) {
+        res["weight"] = ((this.weight)).toDictionary();
+      }
+      if ( (typeof(this.duration) !== "undefined" && this.duration != null )  ) {
+        res["duration"] = ((this.duration)).toDictionary();
+      }
+      if ( (typeof(this.timeValue) !== "undefined" && this.timeValue != null )  ) {
+        res["timeValue"] = ((this.timeValue)).toDictionary();
+      }
+      if ( (typeof(this.percentage) !== "undefined" && this.percentage != null )  ) {
+        res["percentage"] = ((this.percentage)).toDictionary();
+      }
+      if ( (typeof(this.percentageRange) !== "undefined" && this.percentageRange != null )  ) {
+        res["percentageRange"] = ((this.percentageRange)).toDictionary();
+      }
+    } catch(e) {
+    }
+    return res;
+  };
+}
+RepeatPartValue.fromDictionary = function(dict) {
+  const obj = new RepeatPartValue();
+  try {
+    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
+    ;
+    if ( (typeof(v) !== "undefined" && v != null )  ) {
+      obj.kind = v;
+    }
+    const theValue = (dict["positiveInteger"] instanceof Object ) ? dict ["positiveInteger"] : undefined ;
+    if ( (typeof(theValue) !== "undefined" && theValue != null )  ) {
+      const newObj = PositiveIntegerValue.fromDictionary((theValue));
+      obj.positiveInteger = newObj;
+    }
+    const theValue_1 = (dict["numRange"] instanceof Object ) ? dict ["numRange"] : undefined ;
+    if ( (typeof(theValue_1) !== "undefined" && theValue_1 != null )  ) {
+      const newObj_1 = NumRangeValue.fromDictionary((theValue_1));
+      obj.numRange = newObj_1;
+    }
+    const theValue_2 = (dict["distance"] instanceof Object ) ? dict ["distance"] : undefined ;
+    if ( (typeof(theValue_2) !== "undefined" && theValue_2 != null )  ) {
+      const newObj_2 = DistanceValue.fromDictionary((theValue_2));
+      obj.distance = newObj_2;
+    }
+    const theValue_3 = (dict["weight"] instanceof Object ) ? dict ["weight"] : undefined ;
+    if ( (typeof(theValue_3) !== "undefined" && theValue_3 != null )  ) {
+      const newObj_3 = WeightValue.fromDictionary((theValue_3));
+      obj.weight = newObj_3;
+    }
+    const theValue_4 = (dict["duration"] instanceof Object ) ? dict ["duration"] : undefined ;
+    if ( (typeof(theValue_4) !== "undefined" && theValue_4 != null )  ) {
+      const newObj_4 = DurationValue.fromDictionary((theValue_4));
+      obj.duration = newObj_4;
+    }
+    const theValue_5 = (dict["timeValue"] instanceof Object ) ? dict ["timeValue"] : undefined ;
+    if ( (typeof(theValue_5) !== "undefined" && theValue_5 != null )  ) {
+      const newObj_5 = TimeValueValue.fromDictionary((theValue_5));
+      obj.timeValue = newObj_5;
+    }
+    const theValue_6 = (dict["percentage"] instanceof Object ) ? dict ["percentage"] : undefined ;
+    if ( (typeof(theValue_6) !== "undefined" && theValue_6 != null )  ) {
+      const newObj_6 = PercentageValue.fromDictionary((theValue_6));
+      obj.percentage = newObj_6;
+    }
+    const theValue_7 = (dict["percentageRange"] instanceof Object ) ? dict ["percentageRange"] : undefined ;
+    if ( (typeof(theValue_7) !== "undefined" && theValue_7 != null )  ) {
+      const newObj_7 = PercentageRangeValue.fromDictionary((theValue_7));
+      obj.percentageRange = newObj_7;
+    }
+  } catch(e) {
+  }
+  return obj;
+};
+class RepeatBlockValue  {
+  constructor() {
+    this.kind = "repeat-block";
+    this.parts = [];
+    this.loadMode = "";
+  }
+  toDictionary () {
+    let res = {};
+    try {
+      res["kind"] = this.kind;
+      let values = [];
+      for ( let i = 0; i < this.parts.length; i++) {
+        var item = this.parts[i];
+        const obj = item.toDictionary();
+        values.push(obj);
+      };
+      res["parts"] = values;
+      res["loadMode"] = this.loadMode;
     } catch(e) {
     }
     return res;
@@ -329,91 +536,21 @@ RepeatBlockValue.fromDictionary = function(dict) {
     if ( (typeof(v) !== "undefined" && v != null )  ) {
       obj.kind = v;
     }
-    const v_1 = isNaN( parseInt(dict ["count"]) ) ? undefined : parseInt(dict ["count"]) 
+    const values = (dict["parts"] instanceof Array ) ? dict ["parts"] : undefined ;
+    if ( (typeof(values) !== "undefined" && values != null )  ) {
+      const arr = values;
+      operatorsOfJSONArrayObject.forEach_2(arr, ((item, index) => { 
+        if( item instanceof Object ) /* union case */ {
+          var oo = item;
+          const newObj = RepeatPartValue.fromDictionary(oo);
+          obj.parts.push(newObj);
+        };
+      }));
+    }
+    const v_1 = (typeof (dict ["loadMode"]) != "string" ) ? undefined : dict ["loadMode"] 
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.count = v_1;
-    }
-  } catch(e) {
-  }
-  return obj;
-};
-class SetRepRangeLoadValue  {
-  constructor() {
-    this.kind = "set-rep-range-load";
-    this.count = 1;
-    this.setsMin = 0;
-    this.setsMax = 0;
-    this.repsMin = 0;
-    this.repsMax = 0;
-    this.mode = "";
-    this.load = 0;
-    this.unit = "";
-  }
-  toDictionary () {
-    let res = {};
-    try {
-      res["kind"] = this.kind;
-      res["count"] = this.count;
-      res["setsMin"] = this.setsMin;
-      res["setsMax"] = this.setsMax;
-      res["repsMin"] = this.repsMin;
-      res["repsMax"] = this.repsMax;
-      res["mode"] = this.mode;
-      res["load"] = this.load;
-      res["unit"] = this.unit;
-    } catch(e) {
-    }
-    return res;
-  };
-}
-SetRepRangeLoadValue.fromDictionary = function(dict) {
-  const obj = new SetRepRangeLoadValue();
-  try {
-    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
-    ;
-    if ( (typeof(v) !== "undefined" && v != null )  ) {
-      obj.kind = v;
-    }
-    const v_1 = isNaN( parseInt(dict ["count"]) ) ? undefined : parseInt(dict ["count"]) 
-    ;
-    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.count = v_1;
-    }
-    const v_2 = isNaN( parseInt(dict ["setsMin"]) ) ? undefined : parseInt(dict ["setsMin"]) 
-    ;
-    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.setsMin = v_2;
-    }
-    const v_3 = isNaN( parseInt(dict ["setsMax"]) ) ? undefined : parseInt(dict ["setsMax"]) 
-    ;
-    if ( (typeof(v_3) !== "undefined" && v_3 != null )  ) {
-      obj.setsMax = v_3;
-    }
-    const v_4 = isNaN( parseInt(dict ["repsMin"]) ) ? undefined : parseInt(dict ["repsMin"]) 
-    ;
-    if ( (typeof(v_4) !== "undefined" && v_4 != null )  ) {
-      obj.repsMin = v_4;
-    }
-    const v_5 = isNaN( parseInt(dict ["repsMax"]) ) ? undefined : parseInt(dict ["repsMax"]) 
-    ;
-    if ( (typeof(v_5) !== "undefined" && v_5 != null )  ) {
-      obj.repsMax = v_5;
-    }
-    const v_6 = (typeof (dict ["mode"]) != "string" ) ? undefined : dict ["mode"] 
-    ;
-    if ( (typeof(v_6) !== "undefined" && v_6 != null )  ) {
-      obj.mode = v_6;
-    }
-    const v_7 = isNaN( parseInt(dict ["load"]) ) ? undefined : parseInt(dict ["load"]) 
-    ;
-    if ( (typeof(v_7) !== "undefined" && v_7 != null )  ) {
-      obj.load = v_7;
-    }
-    const v_8 = (typeof (dict ["unit"]) != "string" ) ? undefined : dict ["unit"] 
-    ;
-    if ( (typeof(v_8) !== "undefined" && v_8 != null )  ) {
-      obj.unit = v_8;
+      obj.loadMode = v_1;
     }
   } catch(e) {
   }
@@ -446,38 +583,6 @@ ZoneValue.fromDictionary = function(dict) {
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
       obj.zone = v_1;
-    }
-  } catch(e) {
-  }
-  return obj;
-};
-class PositiveIntegerValue  {
-  constructor() {
-    this.kind = "positive-integer";
-    this.value = 0;
-  }
-  toDictionary () {
-    let res = {};
-    try {
-      res["kind"] = this.kind;
-      res["value"] = this.value;
-    } catch(e) {
-    }
-    return res;
-  };
-}
-PositiveIntegerValue.fromDictionary = function(dict) {
-  const obj = new PositiveIntegerValue();
-  try {
-    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
-    ;
-    if ( (typeof(v) !== "undefined" && v != null )  ) {
-      obj.kind = v;
-    }
-    const v_1 = isNaN( parseInt(dict ["value"]) ) ? undefined : parseInt(dict ["value"]) 
-    ;
-    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.value = v_1;
     }
   } catch(e) {
   }
@@ -549,45 +654,6 @@ RecoveryValue.fromDictionary = function(dict) {
     ;
     if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
       obj.label = v_1;
-    }
-  } catch(e) {
-  }
-  return obj;
-};
-class TimeValueValue  {
-  constructor() {
-    this.kind = "time-value";
-    this.minutes = 0;
-    this.seconds = 0;
-  }
-  toDictionary () {
-    let res = {};
-    try {
-      res["kind"] = this.kind;
-      res["minutes"] = this.minutes;
-      res["seconds"] = this.seconds;
-    } catch(e) {
-    }
-    return res;
-  };
-}
-TimeValueValue.fromDictionary = function(dict) {
-  const obj = new TimeValueValue();
-  try {
-    const v = (typeof (dict ["kind"]) != "string" ) ? undefined : dict ["kind"] 
-    ;
-    if ( (typeof(v) !== "undefined" && v != null )  ) {
-      obj.kind = v;
-    }
-    const v_1 = isNaN( parseInt(dict ["minutes"]) ) ? undefined : parseInt(dict ["minutes"]) 
-    ;
-    if ( (typeof(v_1) !== "undefined" && v_1 != null )  ) {
-      obj.minutes = v_1;
-    }
-    const v_2 = isNaN( parseInt(dict ["seconds"]) ) ? undefined : parseInt(dict ["seconds"]) 
-    ;
-    if ( (typeof(v_2) !== "undefined" && v_2 != null )  ) {
-      obj.seconds = v_2;
     }
   } catch(e) {
   }
@@ -970,15 +1036,6 @@ class SliceParsedValue  {
     }
     return new RepeatBlockValue();
   };
-  hasSetRepRangeLoad () {
-    return (typeof(this.setRepRangeLoad) !== "undefined" && this.setRepRangeLoad != null ) ;
-  };
-  getSetRepRangeLoad () {
-    if ( (typeof(this.setRepRangeLoad) !== "undefined" && this.setRepRangeLoad != null )  ) {
-      return this.setRepRangeLoad;
-    }
-    return new SetRepRangeLoadValue();
-  };
   hasZone () {
     return (typeof(this.zone) !== "undefined" && this.zone != null ) ;
   };
@@ -1078,6 +1135,15 @@ class SliceParsedValue  {
     }
     return new ContextEntryValue();
   };
+  hasDuration () {
+    return (typeof(this.duration) !== "undefined" && this.duration != null ) ;
+  };
+  getDuration () {
+    if ( (typeof(this.duration) !== "undefined" && this.duration != null )  ) {
+      return this.duration;
+    }
+    return new DurationValue();
+  };
 }
 SliceParsedValue.create = function(kind) {
   const out = new SliceParsedValue();
@@ -1130,12 +1196,6 @@ SliceParsedValue.fromRepeatBlock = function(value) {
   const out = new SliceParsedValue();
   out.kind = "repeat-block";
   out.repeatBlock = value;
-  return out;
-};
-SliceParsedValue.fromSetRepRangeLoad = function(value) {
-  const out = new SliceParsedValue();
-  out.kind = "set-rep-range-load";
-  out.setRepRangeLoad = value;
   return out;
 };
 SliceParsedValue.fromZone = function(value) {
@@ -1204,6 +1264,12 @@ SliceParsedValue.fromContextEntry = function(value) {
   out.contextEntry = value;
   return out;
 };
+SliceParsedValue.fromDuration = function(value) {
+  const out = new SliceParsedValue();
+  out.kind = "duration";
+  out.duration = value;
+  return out;
+};
 class TokenSlice  {
   constructor(text, from, length) {
     this.source = "";
@@ -1212,23 +1278,8 @@ class TokenSlice  {
     this.tag = "";
     this.children = [];
     this.source = text;
-    const textLen = text.length;
-    let safeStart = from;
-    if ( safeStart < 0 ) {
-      safeStart = 0;
-    }
-    if ( safeStart > textLen ) {
-      safeStart = textLen;
-    }
-    let safeLength = length;
-    if ( safeLength < 0 ) {
-      safeLength = 0;
-    }
-    if ( (safeStart + safeLength) > textLen ) {
-      safeLength = textLen - safeStart;
-    }
-    this.start = safeStart;
-    this.size = safeLength;
+    this.start = from;
+    this.size = length;
   }
   length () {
     return this.size;
@@ -1500,35 +1551,35 @@ class TokenSlice  {
     }
     return new RepeatBlockValue();
   };
-  hasSetRepRangeLoadValue () {
+  hasDurationValue () {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
       const p = this.parsedValue;
-      if ( (p.kind == "set-rep-range-load") && p.hasSetRepRangeLoad() ) {
+      if ( (p.kind == "duration") && p.hasDuration() ) {
         return true;
       }
     }
     return false;
   };
-  setSetRepRangeLoadValue (value) {
+  setDurationValue (value) {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
       const p = this.parsedValue;
-      p.setRepRangeLoad = value;
+      p.duration = value;
       if ( (p.kind.length) == 0 ) {
-        p.kind = "set-rep-range-load";
+        p.kind = "duration";
       }
       this.parsedValue = p;
       return;
     }
-    this.parsedValue = SliceParsedValue.fromSetRepRangeLoad(value);
+    this.parsedValue = SliceParsedValue.fromDuration(value);
   };
-  getAsSetRepRangeLoadValue () {
+  getAsDurationValue () {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
       const p = this.parsedValue;
-      if ( (p.kind == "set-rep-range-load") && p.hasSetRepRangeLoad() ) {
-        return p.getSetRepRangeLoad();
+      if ( (p.kind == "duration") && p.hasDuration() ) {
+        return p.getDuration();
       }
     }
-    return new SetRepRangeLoadValue();
+    return new DurationValue();
   };
   hasZoneValue () {
     if ( (typeof(this.parsedValue) !== "undefined" && this.parsedValue != null )  ) {
@@ -1887,6 +1938,103 @@ class TokenSlice  {
     }
     return this.source.charCodeAt((this.start + index) );
   };
+  isDigitAt (index) {
+    const ch = this.charCodeAt(index);
+    return (ch >= 48) && (ch <= 57);
+  };
+  digitAt (index) {
+    const ch = this.charCodeAt(index);
+    if ( (ch >= 48) && (ch <= 57) ) {
+      return ch - 48;
+    }
+    return -1;
+  };
+  isWhitespace (ch) {
+    if ( ch == 32 ) {
+      return true;
+    }
+    if ( ch == 9 ) {
+      return true;
+    }
+    return false;
+  };
+  isWhitespaceAt (index) {
+    const ch = this.charCodeAt(index);
+    return this.isWhitespace(ch);
+  };
+  isAlphaNum (ch) {
+    if ( (ch >= 48) && (ch <= 57) ) {
+      return true;
+    }
+    if ( (ch >= 65) && (ch <= 90) ) {
+      return true;
+    }
+    if ( (ch >= 97) && (ch <= 122) ) {
+      return true;
+    }
+    if ( ch >= 128 ) {
+      return true;
+    }
+    return false;
+  };
+  isAlphaNumAt (index) {
+    const ch = this.charCodeAt(index);
+    return this.isAlphaNum(ch);
+  };
+  findLineEnd (from) {
+    let safeFrom = from;
+    if ( safeFrom < 0 ) {
+      safeFrom = 0;
+    }
+    if ( safeFrom >= this.size ) {
+      return this.size;
+    }
+    let i = safeFrom;
+    while (i < this.size) {
+      const ch = this.charCodeAt(i);
+      if ( (ch == 10) || (ch == 13) ) {
+        break;
+      }
+      i = i + 1;
+    };
+    return i;
+  };
+  findNumberEnd (from) {
+    let safeFrom = from;
+    if ( safeFrom < 0 ) {
+      safeFrom = 0;
+    }
+    if ( safeFrom >= this.size ) {
+      return this.size;
+    }
+    let i = safeFrom;
+    while (i < this.size) {
+      if ( this.isDigitAt(i) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    return i;
+  };
+  findWhitespaceEnd (from) {
+    let safeFrom = from;
+    if ( safeFrom < 0 ) {
+      safeFrom = 0;
+    }
+    if ( safeFrom >= this.size ) {
+      return this.size;
+    }
+    let i = safeFrom;
+    while (i < this.size) {
+      if ( this.isWhitespaceAt(i) ) {
+        i = i + 1;
+      } else {
+        break;
+      }
+    };
+    return i;
+  };
   hasInteger (from, to) {
     if ( from < 0 ) {
       return false;
@@ -1911,14 +2059,22 @@ class TokenSlice  {
     return true;
   };
   parseInteger (from, to) {
-    if ( this.hasInteger(from, to) ) {
-    } else {
+    if ( from < 0 ) {
+      return -1;
+    }
+    if ( to < from ) {
+      return -1;
+    }
+    if ( to >= this.size ) {
       return -1;
     }
     let value = 0;
     let i = from;
     while (i <= to) {
       const ch = this.charCodeAt(i);
+      if ( (ch < 48) || (ch > 57) ) {
+        return -1;
+      }
       value = (value * 10) + (ch - 48);
       i = i + 1;
     };
@@ -2012,8 +2168,21 @@ class TokenSlice  {
     if ( tLen > this.size ) {
       return false;
     }
-    const me = (this.read(tLen)).toString();
-    return me == token;
+    if ( (this.source.charCodeAt(this.start )) != (token.charCodeAt(0 )) ) {
+      return false;
+    }
+    if ( tLen == 1 ) {
+      return true;
+    }
+    let i = 1;
+    while (i < tLen) {
+      if ( (this.source.charCodeAt((this.start + i) )) == (token.charCodeAt(i )) ) {
+      } else {
+        return false;
+      }
+      i = i + 1;
+    };
+    return true;
   };
   endsWith (token) {
     const tLen = token.length;
@@ -2077,6 +2246,24 @@ class TokenDetector  {
   noMatch () {
     return this.getNoMatchSlice();
   };
+  isInRange (value, minValue, maxValue) {
+    if ( value < minValue ) {
+      return false;
+    }
+    if ( value > maxValue ) {
+      return false;
+    }
+    return true;
+  };
+  isHour24 (value) {
+    return this.isInRange(value, 0, 23);
+  };
+  isMinuteSecond (value) {
+    return this.isInRange(value, 0, 59);
+  };
+  isHour12 (value) {
+    return this.isInRange(value, 1, 12);
+  };
   detect (slice) {
     return this.noMatch();
   };
@@ -2123,35 +2310,12 @@ KeywordDetector.create = function(token) {
 class DateTimeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
-    this.sliceMap = {};
-    this.sliceHitMap = {};
     this.parseDateShapeCalls = 0;
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "datetime";
   }
-  parseToMap (slice) {
-    if ( ( typeof(this.sliceMap[slice] ) != "undefined" && this.sliceMap.hasOwnProperty(slice) ) ) {
-      const cachedHit = ( this.sliceHitMap.hasOwnProperty(slice) ? this.sliceHitMap[slice] : undefined );
-      if ( (typeof(cachedHit) !== "undefined" && cachedHit != null )  ) {
-        const hit = cachedHit;
-        const cachedVal = ( this.sliceMap.hasOwnProperty(slice) ? this.sliceMap[slice] : undefined );
-        if ( (typeof(cachedVal) !== "undefined" && cachedVal != null )  ) {
-          const payload = SliceParsedValue.fromDateTime((cachedVal));
-          hit.setSliceValue(payload);
-          slice.setSliceValue(payload);
-        }
-        return hit;
-      }
-      return this.noMatch();
-    }
-    const newSlice = this.parseDateShape(slice);
-    return newSlice;
-  };
   getParseDateShapeCalls () {
     return this.parseDateShapeCalls;
-  };
-  hasCachedValue (slice) {
-    return ( typeof(this.sliceMap[slice] ) != "undefined" && this.sliceMap.hasOwnProperty(slice) );
   };
   parseDateShape (slice) {
     this.parseDateShapeCalls = this.parseDateShapeCalls + 1;
@@ -2205,25 +2369,16 @@ class DateTimeDetector  extends TokenDetector {
       } else {
         return this.noMatch();
       }
-      if ( out.hour < 0 ) {
+      if ( false == this.isHour24(out.hour) ) {
         return this.noMatch();
       }
-      if ( out.hour > 23 ) {
-        return this.noMatch();
-      }
-      if ( out.minute < 0 ) {
-        return this.noMatch();
-      }
-      if ( out.minute > 59 ) {
+      if ( false == this.isMinuteSecond(out.minute) ) {
         return this.noMatch();
       }
       let idx = 16;
       if ( ((slice).length() >= 19) && (slice.charCodeAt(16) == 58) ) {
         out.second = slice.parseInteger(17, 18);
-        if ( out.second < 0 ) {
-          return this.noMatch();
-        }
-        if ( out.second > 59 ) {
+        if ( false == this.isMinuteSecond(out.second) ) {
           return this.noMatch();
         }
         idx = 19;
@@ -2249,16 +2404,10 @@ class DateTimeDetector  extends TokenDetector {
             }
             const tzHour = slice.parseInteger((idx + 1), (idx + 2));
             const tzMin = slice.parseInteger((idx + 4), (idx + 5));
-            if ( tzHour < 0 ) {
+            if ( false == this.isHour24(tzHour) ) {
               return this.noMatch();
             }
-            if ( tzHour > 23 ) {
-              return this.noMatch();
-            }
-            if ( tzMin < 0 ) {
-              return this.noMatch();
-            }
-            if ( tzMin > 59 ) {
+            if ( false == this.isMinuteSecond(tzMin) ) {
               return this.noMatch();
             }
             const tzSlice = slice.read((idx + 6));
@@ -2274,14 +2423,10 @@ class DateTimeDetector  extends TokenDetector {
     const payload2 = SliceParsedValue.fromDateTime(out);
     newSlice.setSliceValue(payload2);
     slice.setSliceValue(payload2);
-    this.sliceMap[newSlice] = out;
-    this.sliceMap[slice] = out;
-    this.sliceHitMap[newSlice] = newSlice;
-    this.sliceHitMap[slice] = newSlice;
     return newSlice;
   };
   detect (slice) {
-    return this.parseToMap(slice);
+    return this.parseDateShape(slice);
   };
 }
 DateTimeDetector.create = function() {
@@ -2294,28 +2439,11 @@ class SpaceDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "space";
   }
-  isWhitespace (ch) {
-    if ( ch == 32 ) {
-      return true;
-    }
-    if ( ch == 9 ) {
-      return true;
-    }
-    return false;
-  };
   detect (slice) {
     if ( (slice).length() == 0 ) {
       return this.noMatch();
     }
-    let i = 0;
-    while (i < (slice).length()) {
-      const ch = slice.charCodeAt(i);
-      if ( this.isWhitespace(ch) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
+    const i = slice.findWhitespaceEnd(0);
     if ( i == 0 ) {
       return this.noMatch();
     }
@@ -2374,15 +2502,6 @@ class PositiveIntegerDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "positive-integer";
   }
-  isDigit (ch) {
-    if ( ch < 48 ) {
-      return false;
-    }
-    if ( ch > 57 ) {
-      return false;
-    }
-    return true;
-  };
   detect (slice) {
     if ( (slice).length() == 0 ) {
       return this.noMatch();
@@ -2390,9 +2509,8 @@ class PositiveIntegerDetector  extends TokenDetector {
     let i = 0;
     let hasNonZero = false;
     while (i < (slice).length()) {
-      const ch = slice.charCodeAt(i);
-      if ( this.isDigit(ch) ) {
-        if ( ch != 48 ) {
+      if ( slice.isDigitAt(i) ) {
+        if ( slice.digitAt(i) != 0 ) {
           hasNonZero = true;
         }
         i = i + 1;
@@ -2427,15 +2545,6 @@ class DecimalNumberDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "decimal-number";
   }
-  isDigit (ch) {
-    if ( ch < 48 ) {
-      return false;
-    }
-    if ( ch > 57 ) {
-      return false;
-    }
-    return true;
-  };
   detect (slice) {
     const __len = (slice).length();
     if ( __len == 0 ) {
@@ -2443,8 +2552,7 @@ class DecimalNumberDetector  extends TokenDetector {
     }
     let i = 0;
     while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( this.isDigit(ch) ) {
+      if ( slice.isDigitAt(i) ) {
         i = i + 1;
       } else {
         break;
@@ -2461,8 +2569,7 @@ class DecimalNumberDetector  extends TokenDetector {
     }
     let j = i + 1;
     while (j < __len) {
-      const ch2 = slice.charCodeAt(j);
-      if ( this.isDigit(ch2) ) {
+      if ( slice.isDigitAt(j) ) {
         j = j + 1;
       } else {
         break;
@@ -2503,16 +2610,10 @@ class TimeValueDetector  extends TokenDetector {
     }
     const hour = slice.parseInteger(0, 1);
     const minute = slice.parseInteger(3, 4);
-    if ( hour < 0 ) {
+    if ( false == this.isHour24(hour) ) {
       return this.noMatch();
     }
-    if ( hour > 23 ) {
-      return this.noMatch();
-    }
-    if ( minute < 0 ) {
-      return this.noMatch();
-    }
-    if ( minute > 59 ) {
+    if ( false == this.isMinuteSecond(minute) ) {
       return this.noMatch();
     }
     const out = slice.read(5);
@@ -2530,52 +2631,6 @@ TimeValueDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new TimeValueDetector(s);
 };
-class Parser  {
-  constructor(source, detectors) {
-    this.source = "";
-    this.detectors = [];
-    this.parserdResults = [];
-    this.source = source;
-    this.detectors = detectors;
-    this.slice = new TokenSlice(source, 0, source.length);
-    this.parserdResults.length = 0;
-  }
-  start () {
-    let activeSlice = new TokenSlice(this.source, 0, this.source.length);
-    while ((activeSlice).length() > 0) {
-      let advance = 0;
-      let i = 0;
-      while (i < (this.detectors.length)) {
-        const detector = this.detectors[i];
-        const result = detector.detect(activeSlice);
-        if ( result.isEmpty() ) {
-        } else {
-          if ( result.tag == "space" ) {
-          } else {
-            if ( result.tag == "newline" ) {
-            } else {
-              this.parserdResults.push(result);
-            }
-          }
-          advance = (result).length();
-          break;
-        }
-        i = i + 1;
-      };
-      if ( advance == 0 ) {
-        break;
-      } else {
-        activeSlice = activeSlice.peek(advance);
-      }
-    };
-  };
-  getResults () {
-    return this.parserdResults;
-  };
-  getCount () {
-    return this.parserdResults.length;
-  };
-}
 class DistanceDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -2587,20 +2642,18 @@ class DistanceDetector  extends TokenDetector {
     if ( __len < 2 ) {
       return this.noMatch();
     }
-    let valuePart = slice;
-    valuePart = slice.splitWithToken("m");
-    const valueLen = (valuePart).length();
+    const valueLen = slice.findNumberEnd(0);
     if ( valueLen <= 0 ) {
       return this.noMatch();
     }
     if ( (valueLen + 1) > __len ) {
       return this.noMatch();
     }
-    if ( valuePart.hasInteger(0, (valueLen - 1)) ) {
+    if ( slice.hasInteger(0, (valueLen - 1)) ) {
     } else {
       return this.noMatch();
     }
-    const parsed = valuePart.parseInteger(0, (valueLen - 1));
+    const parsed = slice.parseInteger(0, (valueLen - 1));
     if ( parsed <= 0 ) {
       return this.noMatch();
     }
@@ -2628,15 +2681,6 @@ class RecoveryTimeDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "recovery-time";
   }
-  isDigit (ch) {
-    if ( ch < 48 ) {
-      return false;
-    }
-    if ( ch > 57 ) {
-      return false;
-    }
-    return true;
-  };
   detect (slice) {
     const __len = (slice).length();
     if ( __len < 3 ) {
@@ -2648,9 +2692,8 @@ class RecoveryTimeDetector  extends TokenDetector {
     let i = 1;
     let hasNonZero = false;
     while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( this.isDigit(ch) ) {
-        if ( ch != 48 ) {
+      if ( slice.isDigitAt(i) ) {
+        if ( slice.digitAt(i) != 0 ) {
           hasNonZero = true;
         }
         i = i + 1;
@@ -2716,15 +2759,7 @@ class AMTimeValueDetector  extends TokenDetector {
     if ( __len < 3 ) {
       return this.noMatch();
     }
-    let i = 0;
-    while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( (ch >= 48) && (ch <= 57) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
+    const i = slice.findNumberEnd(0);
     if ( i <= 0 ) {
       return this.noMatch();
     }
@@ -2737,7 +2772,7 @@ class AMTimeValueDetector  extends TokenDetector {
       return this.noMatch();
     }
     const hour = valuePart.parseInteger(0, (i - 1));
-    if ( (hour < 1) || (hour > 12) ) {
+    if ( false == this.isHour12(hour) ) {
       return this.noMatch();
     }
     const c1 = slice.charCodeAt(i);
@@ -2765,19 +2800,18 @@ class PercentageDetector  extends TokenDetector {
     if ( __len < 2 ) {
       return this.noMatch();
     }
-    const valuePart = slice.splitWithToken("%");
-    const vLen = (valuePart).length();
+    const vLen = slice.findNumberEnd(0);
     if ( vLen <= 0 ) {
       return this.noMatch();
     }
     if ( (vLen + 1) > __len ) {
       return this.noMatch();
     }
-    if ( valuePart.hasInteger(0, (vLen - 1)) ) {
+    if ( slice.hasInteger(0, (vLen - 1)) ) {
     } else {
       return this.noMatch();
     }
-    const v = valuePart.parseInteger(0, (vLen - 1));
+    const v = slice.parseInteger(0, (vLen - 1));
     if ( v <= 0 ) {
       return this.noMatch();
     }
@@ -2798,55 +2832,58 @@ PercentageDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new PercentageDetector(s);
 };
-class WeightDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "weight";
+class Parser  {
+  constructor(source, detectors) {
+    this.source = "";
+    this.slice = new TokenSlice("", 0, 0);
+    this.detectors = [];
+    this.parserdResults = [];
+    this.source = source;
+    this.detectors = detectors;
+    this.slice = new TokenSlice(source, 0, source.length);
+    this.parserdResults.length = 0;
   }
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 3 ) {
-      return this.noMatch();
-    }
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    detectors.push(KeywordDetector.create("kg"));
-    const p = new Parser((slice).toString(), detectors);
-    (p).start();
-    if ( p.getCount() != 2 ) {
-      return this.noMatch();
-    }
-    const parts = p.getResults();
-    const first = parts[0];
-    const second = parts[1];
-    if ( false == (first.tag == "positive-integer") ) {
-      return this.noMatch();
-    }
-    if ( false == (second.tag == "keyword") ) {
-      return this.noMatch();
-    }
-    if ( false == second.strEquals("kg") ) {
-      return this.noMatch();
-    }
-    const outLen = (first).length() + (second).length();
-    const out = slice.read(outLen);
-    out.tag = this.detectedTag;
-    out.addChild(first);
-    out.addChild(second);
-    const firstLen = (first).length();
-    const wv = new WeightValue();
-    wv.value = first.parseInteger(0, (firstLen - 1));
-    wv.unit = "kg";
-    const payload = SliceParsedValue.fromWeight(wv);
-    out.setSliceValue(payload);
-    slice.setSliceValue(payload);
-    return out;
+  start () {
+    let activeSlice = new TokenSlice("", 0, 0);
+    activeSlice = this.slice;
+    while ((activeSlice).length() > 0) {
+      let advance = 0;
+      let i = 0;
+      while (i < (this.detectors.length)) {
+        const detector = this.detectors[i];
+        const result = detector.detect(activeSlice);
+        if ( result.isEmpty() ) {
+        } else {
+          if ( result.tag == "space" ) {
+          } else {
+            if ( result.tag == "newline" ) {
+            } else {
+              this.parserdResults.push(result);
+            }
+          }
+          advance = (result).length();
+          break;
+        }
+        i = i + 1;
+      };
+      if ( advance == 0 ) {
+        break;
+      } else {
+        activeSlice = activeSlice.peek(advance);
+      }
+    };
+  };
+  getResults () {
+    return this.parserdResults;
+  };
+  getCount () {
+    return this.parserdResults.length;
   };
 }
-WeightDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new WeightDetector(s);
+Parser.fromSlice = function(s, detectors) {
+  const p = new Parser("", detectors);
+  p.slice = s;
+  return p;
 };
 class NumRangeBlockDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -2854,36 +2891,15 @@ class NumRangeBlockDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "num-range";
   }
-  isWhitespace (ch) {
-    if ( ch == 32 ) {
-      return true;
-    }
-    if ( ch == 9 ) {
-      return true;
-    }
-    return false;
-  };
-  isDigit (ch) {
-    return (ch >= 48) && (ch <= 57);
-  };
   detect (slice) {
     const __len = (slice).length();
     if ( __len < 3 ) {
       return this.noMatch();
     }
-    let i = 0;
-    while (i < __len) {
-      const chSkipLeft = slice.charCodeAt(i);
-      if ( this.isWhitespace(chSkipLeft) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
+    let i = slice.findWhitespaceEnd(0);
     const leftStart = i;
     while (i < __len) {
-      const chLeft = slice.charCodeAt(i);
-      if ( this.isDigit(chLeft) ) {
+      if ( slice.isDigitAt(i) ) {
         i = i + 1;
       } else {
         break;
@@ -2893,30 +2909,15 @@ class NumRangeBlockDetector  extends TokenDetector {
     if ( leftEnd <= leftStart ) {
       return this.noMatch();
     }
-    while (i < __len) {
-      const chBeforeDash = slice.charCodeAt(i);
-      if ( this.isWhitespace(chBeforeDash) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
+    i = slice.findWhitespaceEnd(i);
     if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
       return this.noMatch();
     }
     i = i + 1;
-    while (i < __len) {
-      const chAfterDash = slice.charCodeAt(i);
-      if ( this.isWhitespace(chAfterDash) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
+    i = slice.findWhitespaceEnd(i);
     const rightStart = i;
     while (i < __len) {
-      const chRight = slice.charCodeAt(i);
-      if ( this.isDigit(chRight) ) {
+      if ( slice.isDigitAt(i) ) {
         i = i + 1;
       } else {
         break;
@@ -2957,114 +2958,112 @@ NumRangeBlockDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new NumRangeBlockDetector(s);
 };
-class RecoveryDetector  extends TokenDetector {
+class PercentageRangeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
     this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "recovery";
+    this.detectedTag = "percentage-range";
   }
-  isAlphaNum (ch) {
-    if ( (ch >= 48) && (ch <= 57) ) {
-      return true;
-    }
-    if ( (ch >= 65) && (ch <= 90) ) {
-      return true;
-    }
-    if ( (ch >= 97) && (ch <= 122) ) {
-      return true;
-    }
-    return false;
-  };
-  createChildDetectors () {
-    let ds = [];
-    ds.push(DistanceDetector.create());
-    ds.push(RecoveryTimeDetector.create());
-    ds.push(TimeValueDetector.create());
-    ds.push(AMTimeValueDetector.create());
-    ds.push(PercentageDetector.create());
-    ds.push(WeightDetector.create());
-    ds.push(NumRangeBlockDetector.create());
-    ds.push(PositiveIntegerDetector.create());
-    ds.push(KeywordDetector.create("min"));
-    ds.push(KeywordDetector.create("sec"));
-    ds.push(KeywordDetector.create("s"));
-    ds.push(KeywordDetector.create("m"));
-    return ds;
-  };
   detect (slice) {
-    const key = "Recovery";
-    const keyLen = key.length;
     const __len = (slice).length();
-    if ( __len <= keyLen ) {
+    if ( __len < 4 ) {
       return this.noMatch();
     }
-    const head = slice.read(keyLen);
-    if ( head.strEquals(key) ) {
-    } else {
-      return this.noMatch();
-    }
-    const next = slice.charCodeAt(keyLen);
-    if ( this.isAlphaNum(next) ) {
-      return this.noMatch();
-    }
-    let lineEnd = keyLen;
-    while (lineEnd < __len) {
-      const ch = slice.charCodeAt(lineEnd);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const labelToken = slice.read(keyLen);
-    labelToken.tag = "keyword";
-    out.addChild(labelToken);
-    let restStart = keyLen;
-    while (restStart < lineEnd) {
-      const ch2 = slice.charCodeAt(restStart);
-      if ( (ch2 == 32) || (ch2 == 9) ) {
-        restStart = restStart + 1;
+    let i = 0;
+    while (i < __len) {
+      if ( slice.isDigitAt(i) ) {
+        i = i + 1;
       } else {
         break;
       }
     };
-    if ( restStart < lineEnd ) {
-      const rest = (slice.peek(restStart)).read((lineEnd - restStart));
-      const p = new Parser((rest).toString(), this.createChildDetectors());
-      (p).start();
-      const children = p.getResults();
-      for ( let i = 0; i < children.length; i++) {
-        var ch_1 = children[i];
-        out.addChild(ch_1);
-      };
+    if ( ((i > 0) && (i < __len)) && (slice.charCodeAt(i) == 37) ) {
+      if ( ((i + 1) < __len) && (slice.charCodeAt((i + 1)) == 45) ) {
+        let j = i + 2;
+        while (j < __len) {
+          if ( slice.isDigitAt(j) ) {
+            j = j + 1;
+          } else {
+            break;
+          }
+        };
+        if ( ((j > (i + 2)) && (j < __len)) && (slice.charCodeAt(j) == 37) ) {
+          const leftDigits = slice.read(i);
+          const rightDigits = (slice.peek((i + 2))).read((j - (i + 2)));
+          if ( false == leftDigits.hasInteger(0, ((leftDigits).length() - 1)) ) {
+            return this.noMatch();
+          }
+          if ( false == rightDigits.hasInteger(0, ((rightDigits).length() - 1)) ) {
+            return this.noMatch();
+          }
+          const lval = leftDigits.parseInteger(0, ((leftDigits).length() - 1));
+          const rval = rightDigits.parseInteger(0, ((rightDigits).length() - 1));
+          if ( (lval > 0) && (rval > 0) ) {
+            const out2 = slice.read((j + 1));
+            out2.tag = this.detectedTag;
+            const pv2 = new PercentageRangeValue();
+            pv2.minValue = lval;
+            pv2.maxValue = rval;
+            const payload2 = SliceParsedValue.fromPercentageRange(pv2);
+            out2.setSliceValue(payload2);
+            slice.setSliceValue(payload2);
+            return out2;
+          }
+        }
+      }
     }
-    const rv = new RecoveryValue();
-    rv.label = "Recovery";
-    const payload = SliceParsedValue.fromRecovery(rv);
+    const subReg = NGSubParserDetectors.__singleton();
+    const detectors = subReg.getPercentageRangeChildDetectors();
+    const p = Parser.fromSlice(slice, detectors);
+    (p).start();
+    if ( p.getCount() != 2 ) {
+      return this.noMatch();
+    }
+    const parts = p.getResults();
+    const first = parts[0];
+    const second = parts[1];
+    if ( false == (first.tag == "num-range") ) {
+      return this.noMatch();
+    }
+    if ( false == (second.tag == "keyword") ) {
+      return this.noMatch();
+    }
+    if ( false == second.strEquals("%") ) {
+      return this.noMatch();
+    }
+    const outLen = (first).length() + (second).length();
+    const out = slice.read(outLen);
+    out.tag = this.detectedTag;
+    out.addChild(first);
+    out.addChild(second);
+    const nrv = first.getAsNumRangeValue();
+    const pv = new PercentageRangeValue();
+    pv.minValue = nrv.minValue;
+    pv.maxValue = nrv.maxValue;
+    const payload = SliceParsedValue.fromPercentageRange(pv);
     out.setSliceValue(payload);
     slice.setSliceValue(payload);
     return out;
   };
 }
-RecoveryDetector.create = function() {
+PercentageRangeDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
-  return new RecoveryDetector(s);
+  return new PercentageRangeDetector(s);
 };
-class RepeatBlockDetector  extends TokenDetector {
+class DurationDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
     this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "repeat-block";
+    this.detectedTag = "duration";
   }
-  isDigit (ch) {
-    if ( ch < 48 ) {
-      return false;
+  isAlphaCode (c) {
+    if ( (c >= 65) && (c <= 90) ) {
+      return true;
     }
-    if ( ch > 57 ) {
-      return false;
+    if ( (c >= 97) && (c <= 122) ) {
+      return true;
     }
-    return true;
+    return false;
   };
   detect (slice) {
     const __len = (slice).length();
@@ -3074,9 +3073,8 @@ class RepeatBlockDetector  extends TokenDetector {
     let i = 0;
     let hasNonZero = false;
     while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( this.isDigit(ch) ) {
-        if ( ch != 48 ) {
+      if ( slice.isDigitAt(i) ) {
+        if ( slice.digitAt(i) != 0 ) {
           hasNonZero = true;
         }
         i = i + 1;
@@ -3087,24 +3085,394 @@ class RepeatBlockDetector  extends TokenDetector {
     if ( i == 0 ) {
       return this.noMatch();
     }
-    if ( hasNonZero ) {
-    } else {
+    if ( hasNonZero == false ) {
       return this.noMatch();
     }
     if ( i >= __len ) {
       return this.noMatch();
     }
-    if ( slice.charCodeAt(i) != 120 ) {
+    const numEnd = i;
+    const value = slice.parseInteger(0, (numEnd - 1));
+    let unitLen = 0;
+    let unitText = "";
+    const c0 = slice.charCodeAt(numEnd);
+    if ( (numEnd + 3) <= __len ) {
+      if ( c0 == 109 ) {
+        if ( slice.charCodeAt((numEnd + 1)) == 105 ) {
+          if ( slice.charCodeAt((numEnd + 2)) == 110 ) {
+            unitLen = 3;
+            unitText = "min";
+          }
+        }
+      }
+    }
+    if ( unitLen == 0 ) {
+      if ( c0 == 115 ) {
+        unitLen = 1;
+        unitText = "s";
+      }
+    }
+    if ( unitLen == 0 ) {
+      if ( c0 == 104 ) {
+        unitLen = 1;
+        unitText = "h";
+      }
+    }
+    if ( unitLen == 0 ) {
       return this.noMatch();
     }
-    const out = slice.read((i + 1));
+    const afterUnit = numEnd + unitLen;
+    if ( afterUnit < __len ) {
+      if ( this.isAlphaCode(slice.charCodeAt(afterUnit)) ) {
+        return this.noMatch();
+      }
+    }
+    const out = slice.read(afterUnit);
     out.tag = this.detectedTag;
-    const countSlice = slice.read(i);
-    const rv = new RepeatBlockValue();
-    rv.count = countSlice.parseInteger(0, (i - 1));
-    const payload = SliceParsedValue.fromRepeatBlock(rv);
+    const dv = new DurationValue();
+    dv.value = value;
+    dv.unit = unitText;
+    const payload = SliceParsedValue.fromDuration(dv);
     out.setSliceValue(payload);
     slice.setSliceValue(payload);
+    return out;
+  };
+}
+DurationDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new DurationDetector(s);
+};
+class NGSubParserDetectors  {
+  constructor() {
+    this.kcalChildDetectors = [];
+    this.bpmChildDetectors = [];
+    this.rmChildDetectors = [];
+    this.weightChildDetectors = [];
+    this.positiveIntegerOnlyChildDetectors = [];
+    this.percentageRangeChildDetectors = [];
+    this.repeatBlockChildDetectors = [];
+  }
+  getKcalChildDetectors () {
+    if ( (this.kcalChildDetectors.length) > 0 ) {
+      return this.kcalChildDetectors;
+    }
+    let ds = [];
+    ds.push(PositiveIntegerDetector.create());
+    ds.push(KeywordDetector.create("kcal"));
+    this.kcalChildDetectors = ds;
+    return this.kcalChildDetectors;
+  };
+  getBpmChildDetectors () {
+    if ( (this.bpmChildDetectors.length) > 0 ) {
+      return this.bpmChildDetectors;
+    }
+    let ds = [];
+    ds.push(PositiveIntegerDetector.create());
+    ds.push(KeywordDetector.create("bpm"));
+    this.bpmChildDetectors = ds;
+    return this.bpmChildDetectors;
+  };
+  getRmChildDetectors () {
+    if ( (this.rmChildDetectors.length) > 0 ) {
+      return this.rmChildDetectors;
+    }
+    let ds = [];
+    ds.push(PositiveIntegerDetector.create());
+    ds.push(KeywordDetector.create("RM"));
+    this.rmChildDetectors = ds;
+    return this.rmChildDetectors;
+  };
+  getWeightChildDetectors () {
+    if ( (this.weightChildDetectors.length) > 0 ) {
+      return this.weightChildDetectors;
+    }
+    let ds = [];
+    ds.push(DecimalNumberDetector.create());
+    ds.push(PositiveIntegerDetector.create());
+    ds.push(KeywordDetector.create("kg"));
+    this.weightChildDetectors = ds;
+    return this.weightChildDetectors;
+  };
+  getPositiveIntegerOnlyChildDetectors () {
+    if ( (this.positiveIntegerOnlyChildDetectors.length) > 0 ) {
+      return this.positiveIntegerOnlyChildDetectors;
+    }
+    let ds = [];
+    ds.push(PositiveIntegerDetector.create());
+    this.positiveIntegerOnlyChildDetectors = ds;
+    return this.positiveIntegerOnlyChildDetectors;
+  };
+  getPercentageRangeChildDetectors () {
+    if ( (this.percentageRangeChildDetectors.length) > 0 ) {
+      return this.percentageRangeChildDetectors;
+    }
+    let ds = [];
+    ds.push(SpaceDetector.create());
+    ds.push(NumRangeBlockDetector.create());
+    ds.push(KeywordDetector.create("%"));
+    this.percentageRangeChildDetectors = ds;
+    return this.percentageRangeChildDetectors;
+  };
+  getRepeatBlockChildDetectors () {
+    if ( (this.repeatBlockChildDetectors.length) > 0 ) {
+      return this.repeatBlockChildDetectors;
+    }
+    let ds = [];
+    ds.push(PercentageRangeDetector.create());
+    ds.push(PercentageDetector.create());
+    ds.push(DistanceDetector.create());
+    ds.push(WeightDetector.create());
+    ds.push(DurationDetector.create());
+    ds.push(NumRangeBlockDetector.create());
+    ds.push(PositiveIntegerDetector.create());
+    ds.push(KeywordDetector.create("@bw"));
+    ds.push(KeywordDetector.create("x"));
+    this.repeatBlockChildDetectors = ds;
+    return this.repeatBlockChildDetectors;
+  };
+}
+NGSubParserDetectors.__singleton_instance = null;
+NGSubParserDetectors.__singleton = function() {
+  if (NGSubParserDetectors.__singleton_instance == null) {
+    NGSubParserDetectors.__singleton_instance = new NGSubParserDetectors();
+  }
+  return NGSubParserDetectors.__singleton_instance;
+};
+class WeightDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "weight";
+  }
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 3 ) {
+      return this.noMatch();
+    }
+    const subReg = NGSubParserDetectors.__singleton();
+    const detectors = subReg.getWeightChildDetectors();
+    const p = Parser.fromSlice(slice, detectors);
+    (p).start();
+    if ( p.getCount() != 2 ) {
+      return this.noMatch();
+    }
+    const parts = p.getResults();
+    const first = parts[0];
+    const second = parts[1];
+    const isInt = first.tag == "positive-integer";
+    const isDec = first.tag == "decimal-number";
+    if ( (isInt == false) && (isDec == false) ) {
+      return this.noMatch();
+    }
+    if ( false == (second.tag == "keyword") ) {
+      return this.noMatch();
+    }
+    if ( false == second.strEquals("kg") ) {
+      return this.noMatch();
+    }
+    const outLen = (first).length() + (second).length();
+    const out = slice.read(outLen);
+    out.tag = this.detectedTag;
+    out.addChild(first);
+    out.addChild(second);
+    const firstLen = (first).length();
+    const wv = new WeightValue();
+    wv.value = first.parseDouble(0, (firstLen - 1));
+    wv.unit = "kg";
+    const payload = SliceParsedValue.fromWeight(wv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
+    return out;
+  };
+}
+WeightDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new WeightDetector(s);
+};
+class RepeatBlockDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "repeat-block";
+  }
+  isAlphaCode (c) {
+    if ( (c >= 65) && (c <= 90) ) {
+      return true;
+    }
+    if ( (c >= 97) && (c <= 122) ) {
+      return true;
+    }
+    return false;
+  };
+  buildPart (tok) {
+    const part = new RepeatPartValue();
+    const t = tok.tag;
+    if ( t == "positive-integer" ) {
+      part.kind = "positive-integer";
+      part.positiveInteger = tok.getAsPositiveIntegerValue();
+      return part;
+    }
+    if ( t == "num-range" ) {
+      part.kind = "num-range";
+      part.numRange = tok.getAsNumRangeValue();
+      return part;
+    }
+    if ( t == "distance" ) {
+      part.kind = "distance";
+      part.distance = tok.getAsDistanceValue();
+      return part;
+    }
+    if ( t == "weight" ) {
+      part.kind = "weight";
+      part.weight = tok.getAsWeightValue();
+      return part;
+    }
+    if ( t == "duration" ) {
+      part.kind = "duration";
+      part.duration = tok.getAsDurationValue();
+      return part;
+    }
+    if ( t == "time-value" ) {
+      part.kind = "time-value";
+      part.timeValue = tok.getAsTimeValueValue();
+      return part;
+    }
+    if ( t == "percentage" ) {
+      part.kind = "percentage";
+      part.percentage = tok.getAsPercentageValue();
+      return part;
+    }
+    if ( t == "percentage-range" ) {
+      part.kind = "percentage-range";
+      part.percentageRange = tok.getAsPercentageRangeValue();
+      return part;
+    }
+    part.kind = "";
+    return part;
+  };
+  detect (slice) {
+    const __len = (slice).length();
+    if ( __len < 2 ) {
+      return this.noMatch();
+    }
+    const subReg = NGSubParserDetectors.__singleton();
+    const detectors = subReg.getRepeatBlockChildDetectors();
+    const p = Parser.fromSlice(slice, detectors);
+    (p).start();
+    const n = p.getCount();
+    if ( n == 0 ) {
+      return this.noMatch();
+    }
+    const results = p.getResults();
+    const rv = new RepeatBlockValue();
+    let consumed = 0;
+    let hasX = false;
+    let expectPart = true;
+    let stop = false;
+    let lastPartLen = 0;
+    let lastWasNonInteger = false;
+    let i = 0;
+    while ((i < n) && (stop == false)) {
+      const tok = results[i];
+      const ttag = tok.tag;
+      const ttext = (tok).toString();
+      const tlen = (tok).length();
+      if ( expectPart ) {
+        const part = this.buildPart(tok);
+        if ( (part.kind.length) > 0 ) {
+          rv.parts.push(part);
+          consumed = consumed + tlen;
+          expectPart = false;
+          lastPartLen = tlen;
+          if ( part.kind == "positive-integer" ) {
+            lastWasNonInteger = false;
+          } else {
+            lastWasNonInteger = true;
+          }
+        } else {
+          stop = true;
+        }
+      } else {
+        if ( (ttag == "keyword") && (ttext == "x") ) {
+          hasX = true;
+          consumed = consumed + tlen;
+          expectPart = true;
+        } else {
+          if ( (ttag == "keyword") && (ttext == "@bw") ) {
+            rv.loadMode = "bw";
+            consumed = consumed + tlen;
+            stop = true;
+          } else {
+            stop = true;
+          }
+        }
+      }
+      i = i + 1;
+    };
+    if ( ((expectPart == false) && (hasX == true)) && (consumed < __len) ) {
+      if ( lastWasNonInteger == false ) {
+        const nc = slice.charCodeAt(consumed);
+        if ( this.isAlphaCode(nc) ) {
+          const last = rv.parts.length;
+          if ( last >= 1 ) {
+            let newParts = [];
+            let j = 0;
+            while (j < (last - 1)) {
+              newParts.push(rv.parts[j]);
+              j = j + 1;
+            };
+            rv.parts = newParts;
+            consumed = consumed - lastPartLen;
+          }
+        }
+      }
+    }
+    const partCount = rv.parts.length;
+    if ( partCount == 0 ) {
+      return this.noMatch();
+    }
+    if ( hasX == false ) {
+      if ( partCount == 1 ) {
+        const only = rv.parts[0];
+        if ( only.kind == "positive-integer" ) {
+          return this.noMatch();
+        }
+        if ( only.kind == "num-range" ) {
+          return this.noMatch();
+        }
+      }
+    }
+    if ( consumed < __len ) {
+      const lineEnd = slice.findLineEnd(0);
+      let k = consumed;
+      while (k < lineEnd) {
+        if ( slice.isWhitespaceAt(k) ) {
+          k = k + 1;
+        } else {
+          break;
+        }
+      };
+      if ( (k > consumed) && (k < lineEnd) ) {
+        if ( this.isAlphaCode(slice.charCodeAt(k)) ) {
+          let m = k;
+          let hasSemi = false;
+          while (m < lineEnd) {
+            if ( slice.charCodeAt(m) == 59 ) {
+              hasSemi = true;
+              break;
+            }
+            m = m + 1;
+          };
+          if ( hasSemi ) {
+            return this.noMatch();
+          }
+        }
+      }
+    }
+    const out = slice.read(consumed);
+    out.tag = this.detectedTag;
+    const payload = SliceParsedValue.fromRepeatBlock(rv);
+    out.setSliceValue(payload);
     return out;
   };
 }
@@ -3112,323 +3480,33 @@ RepeatBlockDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new RepeatBlockDetector(s);
 };
-class SetRepRangeLoadDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "set-rep-range-load";
-  }
-  isDigit (ch) {
-    return (ch >= 48) && (ch <= 57);
-  };
-  isAlphaNum (ch) {
-    if ( (ch >= 48) && (ch <= 57) ) {
-      return true;
-    }
-    if ( (ch >= 65) && (ch <= 90) ) {
-      return true;
-    }
-    if ( (ch >= 97) && (ch <= 122) ) {
-      return true;
-    }
-    return false;
-  };
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 9 ) {
-      return this.noMatch();
-    }
-    let i = 0;
-    while (i < __len) {
-      if ( this.isDigit(slice.charCodeAt(i)) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    const setsLeftEnd = i;
-    if ( setsLeftEnd <= 0 ) {
-      return this.noMatch();
-    }
-    const setsLeft = slice.read(setsLeftEnd);
-    if ( false == setsLeft.hasInteger(0, ((setsLeft).length() - 1)) ) {
-      return this.noMatch();
-    }
-    const setsSingleVal = setsLeft.parseInteger(0, ((setsLeft).length() - 1));
-    if ( setsSingleVal <= 0 ) {
-      return this.noMatch();
-    }
-    if ( i >= __len ) {
-      return this.noMatch();
-    }
-    let setsMinVal = 0;
-    let setsMaxVal = 0;
-    let repsMinVal = 0;
-    let repsMaxVal = 0;
-    let countVal = 1;
-    const firstSep = slice.charCodeAt(i);
-    if ( firstSep == 45 ) {
-      i = i + 1;
-      const setsRightStart = i;
-      while (i < __len) {
-        if ( this.isDigit(slice.charCodeAt(i)) ) {
-          i = i + 1;
-        } else {
-          break;
-        }
-      };
-      const setsRightEnd = i;
-      if ( setsRightEnd <= setsRightStart ) {
-        return this.noMatch();
-      }
-      if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
-        return this.noMatch();
-      }
-      i = i + 1;
-      const repsLeftStart = i;
-      while (i < __len) {
-        if ( this.isDigit(slice.charCodeAt(i)) ) {
-          i = i + 1;
-        } else {
-          break;
-        }
-      };
-      const repsLeftEnd = i;
-      if ( repsLeftEnd <= repsLeftStart ) {
-        return this.noMatch();
-      }
-      if ( (i >= __len) || (slice.charCodeAt(i) != 45) ) {
-        return this.noMatch();
-      }
-      i = i + 1;
-      const repsRightStart = i;
-      while (i < __len) {
-        if ( this.isDigit(slice.charCodeAt(i)) ) {
-          i = i + 1;
-        } else {
-          break;
-        }
-      };
-      const repsRightEnd = i;
-      if ( repsRightEnd <= repsRightStart ) {
-        return this.noMatch();
-      }
-      const setsRight = (slice.peek(setsRightStart)).read((setsRightEnd - setsRightStart));
-      const repsLeft = (slice.peek(repsLeftStart)).read((repsLeftEnd - repsLeftStart));
-      const repsRight = (slice.peek(repsRightStart)).read((repsRightEnd - repsRightStart));
-      if ( false == setsRight.hasInteger(0, ((setsRight).length() - 1)) ) {
-        return this.noMatch();
-      }
-      if ( false == repsLeft.hasInteger(0, ((repsLeft).length() - 1)) ) {
-        return this.noMatch();
-      }
-      if ( false == repsRight.hasInteger(0, ((repsRight).length() - 1)) ) {
-        return this.noMatch();
-      }
-      setsMinVal = setsSingleVal;
-      setsMaxVal = setsRight.parseInteger(0, ((setsRight).length() - 1));
-      repsMinVal = repsLeft.parseInteger(0, ((repsLeft).length() - 1));
-      repsMaxVal = repsRight.parseInteger(0, ((repsRight).length() - 1));
-    } else {
-      if ( firstSep == 120 ) {
-        i = i + 1;
-        const repsLeftStart2 = i;
-        while (i < __len) {
-          if ( this.isDigit(slice.charCodeAt(i)) ) {
-            i = i + 1;
-          } else {
-            break;
-          }
-        };
-        const repsLeftEnd2 = i;
-        if ( repsLeftEnd2 <= repsLeftStart2 ) {
-          return this.noMatch();
-        }
-        if ( (i < __len) && (slice.charCodeAt(i) == 45) ) {
-          i = i + 1;
-          const repsRightStart3 = i;
-          while (i < __len) {
-            if ( this.isDigit(slice.charCodeAt(i)) ) {
-              i = i + 1;
-            } else {
-              break;
-            }
-          };
-          const repsRightEnd3 = i;
-          if ( repsRightEnd3 <= repsRightStart3 ) {
-            return this.noMatch();
-          }
-          if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
-            return this.noMatch();
-          }
-          const repsLeftRange = (slice.peek(repsLeftStart2)).read((repsLeftEnd2 - repsLeftStart2));
-          const repsRightRange = (slice.peek(repsRightStart3)).read((repsRightEnd3 - repsRightStart3));
-          if ( false == repsLeftRange.hasInteger(0, ((repsLeftRange).length() - 1)) ) {
-            return this.noMatch();
-          }
-          if ( false == repsRightRange.hasInteger(0, ((repsRightRange).length() - 1)) ) {
-            return this.noMatch();
-          }
-          setsMinVal = setsSingleVal;
-          setsMaxVal = setsSingleVal;
-          repsMinVal = repsLeftRange.parseInteger(0, ((repsLeftRange).length() - 1));
-          repsMaxVal = repsRightRange.parseInteger(0, ((repsRightRange).length() - 1));
-        } else {
-          if ( (i >= __len) || (slice.charCodeAt(i) != 120) ) {
-            return this.noMatch();
-          }
-          i = i + 1;
-          const repsRightStart2 = i;
-          while (i < __len) {
-            if ( this.isDigit(slice.charCodeAt(i)) ) {
-              i = i + 1;
-            } else {
-              break;
-            }
-          };
-          const repsRightEnd2 = i;
-          if ( repsRightEnd2 <= repsRightStart2 ) {
-            return this.noMatch();
-          }
-          const setsMid = (slice.peek(repsLeftStart2)).read((repsLeftEnd2 - repsLeftStart2));
-          const repsExact = (slice.peek(repsRightStart2)).read((repsRightEnd2 - repsRightStart2));
-          if ( false == setsMid.hasInteger(0, ((setsMid).length() - 1)) ) {
-            return this.noMatch();
-          }
-          if ( false == repsExact.hasInteger(0, ((repsExact).length() - 1)) ) {
-            return this.noMatch();
-          }
-          setsMinVal = setsMid.parseInteger(0, ((setsMid).length() - 1));
-          setsMaxVal = setsMinVal;
-          repsMinVal = repsExact.parseInteger(0, ((repsExact).length() - 1));
-          repsMaxVal = repsMinVal;
-          countVal = setsSingleVal;
-        }
-      } else {
-        return this.noMatch();
-      }
-    }
-    if ( setsMinVal <= 0 ) {
-      return this.noMatch();
-    }
-    if ( setsMaxVal <= 0 ) {
-      return this.noMatch();
-    }
-    if ( repsMinVal <= 0 ) {
-      return this.noMatch();
-    }
-    if ( repsMaxVal <= 0 ) {
-      return this.noMatch();
-    }
-    if ( i >= __len ) {
-      return this.noMatch();
-    }
-    const mode = slice.charCodeAt(i);
-    let modeText = "";
-    let loadVal = 0;
-    let unitText = "";
-    if ( mode == 64 ) {
-      modeText = "bw";
-      unitText = "bw";
-      i = i + 1;
-      if ( (i + 1) >= __len ) {
-        return this.noMatch();
-      }
-      if ( slice.charCodeAt(i) != 98 ) {
-        return this.noMatch();
-      }
-      if ( slice.charCodeAt((i + 1)) != 119 ) {
-        return this.noMatch();
-      }
-      i = i + 2;
-    } else {
-      if ( mode == 120 ) {
-        modeText = "kg";
-        i = i + 1;
-        const loadStart = i;
-        while (i < __len) {
-          if ( this.isDigit(slice.charCodeAt(i)) ) {
-            i = i + 1;
-          } else {
-            break;
-          }
-        };
-        if ( i <= loadStart ) {
-          return this.noMatch();
-        }
-        const loadDigits = (slice.peek(loadStart)).read((i - loadStart));
-        if ( loadDigits.hasInteger(0, ((loadDigits).length() - 1)) ) {
-        } else {
-          return this.noMatch();
-        }
-        loadVal = loadDigits.parseInteger(0, ((loadDigits).length() - 1));
-        if ( loadVal <= 0 ) {
-          return this.noMatch();
-        }
-        if ( (i + 1) >= __len ) {
-          return this.noMatch();
-        }
-        if ( slice.charCodeAt(i) != 107 ) {
-          return this.noMatch();
-        }
-        if ( slice.charCodeAt((i + 1)) != 103 ) {
-          return this.noMatch();
-        }
-        unitText = "kg";
-        i = i + 2;
-      } else {
-        return this.noMatch();
-      }
-    }
-    if ( i < __len ) {
-      if ( this.isAlphaNum(slice.charCodeAt(i)) ) {
-        return this.noMatch();
-      }
-    }
-    const out = slice.read(i);
-    out.tag = this.detectedTag;
-    const sv = new SetRepRangeLoadValue();
-    sv.count = countVal;
-    sv.setsMin = setsMinVal;
-    sv.setsMax = setsMaxVal;
-    sv.repsMin = repsMinVal;
-    sv.repsMax = repsMaxVal;
-    sv.mode = modeText;
-    sv.load = loadVal;
-    sv.unit = unitText;
-    const payload = SliceParsedValue.fromSetRepRangeLoad(sv);
-    out.setSliceValue(payload);
-    slice.setSliceValue(payload);
-    return out;
-  };
-}
-SetRepRangeLoadDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new SetRepRangeLoadDetector(s);
-};
 class SpeedDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "speed";
+    this.distanceDetector = DistanceDetector.create();
   }
   detect (slice) {
     const __len = (slice).length();
     if ( __len < 7 ) {
       return this.noMatch();
     }
-    const slashPos = slice.findTokenPos("/");
-    if ( slashPos <= 0 ) {
-      return this.noMatch();
-    }
-    const left = slice.read(slashPos);
-    const colonPos = left.findTokenPos(":");
+    const colonPos = slice.findNumberEnd(0);
     if ( colonPos <= 0 ) {
       return this.noMatch();
     }
-    if ( (colonPos + 3) != (left).length() ) {
+    if ( (colonPos + 4) > __len ) {
       return this.noMatch();
     }
+    if ( slice.charCodeAt(colonPos) != 58 ) {
+      return this.noMatch();
+    }
+    const slashPos = colonPos + 3;
+    if ( slice.charCodeAt(slashPos) != 47 ) {
+      return this.noMatch();
+    }
+    const left = slice.read(slashPos);
     if ( false == left.hasInteger(0, (colonPos - 1)) ) {
       return this.noMatch();
     }
@@ -3436,11 +3514,11 @@ class SpeedDetector  extends TokenDetector {
       return this.noMatch();
     }
     const sec = left.parseInteger((colonPos + 1), (colonPos + 2));
-    if ( (sec < 0) || (sec > 59) ) {
+    if ( false == this.isMinuteSecond(sec) ) {
       return this.noMatch();
     }
     const rightStart = slice.peek((slashPos + 1));
-    const dist = (DistanceDetector.create()).detect(rightStart);
+    const dist = this.distanceDetector.detect(rightStart);
     if ( dist.isEmpty() ) {
       return this.noMatch();
     }
@@ -3485,21 +3563,6 @@ class ZoneDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "zone";
   }
-  isDigit (ch) {
-    return (ch >= 48) && (ch <= 57);
-  };
-  isAlphaNum (ch) {
-    if ( (ch >= 48) && (ch <= 57) ) {
-      return true;
-    }
-    if ( (ch >= 65) && (ch <= 90) ) {
-      return true;
-    }
-    if ( (ch >= 97) && (ch <= 122) ) {
-      return true;
-    }
-    return false;
-  };
   detect (slice) {
     if ( slice.hasToken("Zone") ) {
     } else {
@@ -3518,8 +3581,7 @@ class ZoneDetector  extends TokenDetector {
     }
     const startDigits = i;
     while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( this.isDigit(ch) ) {
+      if ( slice.isDigitAt(i) ) {
         i = i + 1;
       } else {
         break;
@@ -3538,8 +3600,7 @@ class ZoneDetector  extends TokenDetector {
       return this.noMatch();
     }
     if ( i < __len ) {
-      const next = slice.charCodeAt(i);
-      if ( this.isAlphaNum(next) ) {
+      if ( slice.isAlphaNumAt(i) ) {
         return this.noMatch();
       }
     }
@@ -3557,15 +3618,36 @@ ZoneDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new ZoneDetector(s);
 };
-class LeftRightDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "left-right";
+class NGChildDetectorRegistry  {
+  constructor() {
+    this.recoveryChildDetectors = [];
+    this.leftRightChildDetectors = [];
   }
-  createChildDetectors () {
+  getRecoveryChildDetectors () {
+    if ( (this.recoveryChildDetectors.length) > 0 ) {
+      return this.recoveryChildDetectors;
+    }
     let ds = [];
-    ds.push(SetRepRangeLoadDetector.create());
+    ds.push(DistanceDetector.create());
+    ds.push(RecoveryTimeDetector.create());
+    ds.push(TimeValueDetector.create());
+    ds.push(AMTimeValueDetector.create());
+    ds.push(PercentageDetector.create());
+    ds.push(WeightDetector.create());
+    ds.push(NumRangeBlockDetector.create());
+    ds.push(PositiveIntegerDetector.create());
+    ds.push(KeywordDetector.create("min"));
+    ds.push(KeywordDetector.create("sec"));
+    ds.push(KeywordDetector.create("s"));
+    ds.push(KeywordDetector.create("m"));
+    this.recoveryChildDetectors = ds;
+    return this.recoveryChildDetectors;
+  };
+  getLeftRightChildDetectors () {
+    if ( (this.leftRightChildDetectors.length) > 0 ) {
+      return this.leftRightChildDetectors;
+    }
+    let ds = [];
     ds.push(RepeatBlockDetector.create());
     ds.push(WeightDetector.create());
     ds.push(DistanceDetector.create());
@@ -3573,7 +3655,80 @@ class LeftRightDetector  extends TokenDetector {
     ds.push(ZoneDetector.create());
     ds.push(DecimalNumberDetector.create());
     ds.push(PositiveIntegerDetector.create());
-    return ds;
+    this.leftRightChildDetectors = ds;
+    return this.leftRightChildDetectors;
+  };
+}
+NGChildDetectorRegistry.__singleton_instance = null;
+NGChildDetectorRegistry.__singleton = function() {
+  if (NGChildDetectorRegistry.__singleton_instance == null) {
+    NGChildDetectorRegistry.__singleton_instance = new NGChildDetectorRegistry();
+  }
+  return NGChildDetectorRegistry.__singleton_instance;
+};
+class RecoveryDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "recovery";
+  }
+  createChildDetectors () {
+    const reg = NGChildDetectorRegistry.__singleton();
+    return reg.getRecoveryChildDetectors();
+  };
+  detect (slice) {
+    const key = "Recovery";
+    const keyLen = key.length;
+    const __len = (slice).length();
+    if ( __len <= keyLen ) {
+      return this.noMatch();
+    }
+    const head = slice.read(keyLen);
+    if ( head.strEquals(key) ) {
+    } else {
+      return this.noMatch();
+    }
+    if ( slice.isAlphaNumAt(keyLen) ) {
+      return this.noMatch();
+    }
+    const lineEnd = slice.findLineEnd(keyLen);
+    const out = slice.read(lineEnd);
+    out.tag = this.detectedTag;
+    const labelToken = slice.read(keyLen);
+    labelToken.tag = "keyword";
+    out.addChild(labelToken);
+    const restStart = slice.findWhitespaceEnd(keyLen);
+    if ( restStart < lineEnd ) {
+      const rest = (slice.peek(restStart)).read((lineEnd - restStart));
+      const p = Parser.fromSlice(rest, this.createChildDetectors());
+      (p).start();
+      const children = p.getResults();
+      for ( let i = 0; i < children.length; i++) {
+        var ch = children[i];
+        out.addChild(ch);
+      };
+    }
+    const rv = new RecoveryValue();
+    rv.label = "Recovery";
+    const payload = SliceParsedValue.fromRecovery(rv);
+    out.setSliceValue(payload);
+    slice.setSliceValue(payload);
+    return out;
+  };
+}
+RecoveryDetector.create = function() {
+  const s = TokenDetector.createNoMatchSlice();
+  return new RecoveryDetector(s);
+};
+class LeftRightDetector  extends TokenDetector {
+  constructor(noMatchSlice) {
+    super()
+    this.cachedNoMatch = noMatchSlice;
+    this.detectedTag = "left-right";
+  }
+  createChildDetectors () {
+    const reg = NGChildDetectorRegistry.__singleton();
+    return reg.getLeftRightChildDetectors();
   };
   detectWithSide (slice, side) {
     const key = side + " ";
@@ -3586,31 +3741,16 @@ class LeftRightDetector  extends TokenDetector {
     if ( keyLen >= __len ) {
       return this.noMatch();
     }
-    let lineEnd = keyLen;
-    while (lineEnd < __len) {
-      const ch = slice.charCodeAt(lineEnd);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
+    const lineEnd = slice.findLineEnd(keyLen);
     const out = slice.read(lineEnd);
     out.tag = this.detectedTag;
     const sideToken = slice.read((side.length));
     sideToken.tag = "keyword";
     out.addChild(sideToken);
-    let restStart = keyLen;
-    while (restStart < lineEnd) {
-      const ch2 = slice.charCodeAt(restStart);
-      if ( (ch2 == 32) || (ch2 == 9) ) {
-        restStart = restStart + 1;
-      } else {
-        break;
-      }
-    };
+    const restStart = slice.findWhitespaceEnd(keyLen);
     if ( restStart < lineEnd ) {
       const payload = (slice.peek(restStart)).read((lineEnd - restStart));
-      const p = new Parser((payload).toString(), this.createChildDetectors());
+      const p = Parser.fromSlice(payload, this.createChildDetectors());
       (p).start();
       const children = p.getResults();
       for ( let i = 0; i < children.length; i++) {
@@ -3644,28 +3784,10 @@ class FeelingDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "feeling";
   }
-  isWhitespace (ch) {
-    if ( ch == 32 ) {
-      return true;
-    }
-    if ( ch == 9 ) {
-      return true;
-    }
-    return false;
-  };
-  isDigit (ch) {
-    if ( ch < 48 ) {
-      return false;
-    }
-    if ( ch > 57 ) {
-      return false;
-    }
-    return true;
-  };
   parseNumericScore (slice) {
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    const p = new Parser((slice).toString(), detectors);
+    const subReg = NGSubParserDetectors.__singleton();
+    const detectors = subReg.getPositiveIntegerOnlyChildDetectors();
+    const p = Parser.fromSlice(slice, detectors);
     (p).start();
     if ( p.getCount() != 1 ) {
       return -1;
@@ -3687,8 +3809,7 @@ class FeelingDetector  extends TokenDetector {
         if ( (slice.charCodeAt((i + 1)) == 49) && (slice.charCodeAt((i + 2)) == 48) ) {
           let start = i;
           while (start > 0) {
-            const chPrev = slice.charCodeAt((start - 1));
-            if ( this.isDigit(chPrev) ) {
+            if ( slice.isDigitAt((start - 1)) ) {
               start = start - 1;
             } else {
               break;
@@ -3737,20 +3858,13 @@ class FeelingDetector  extends TokenDetector {
     if ( keyLen >= __len ) {
       return this.noMatch();
     }
-    let lineEnd = keyLen;
-    while (lineEnd < __len) {
-      const ch = slice.charCodeAt(lineEnd);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
+    const lineEnd = slice.findLineEnd(keyLen);
     const rawSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
     let trimStart = 0;
     const rawLen = (rawSlice).length();
     while (trimStart < rawLen) {
       const chStart = rawSlice.charCodeAt(trimStart);
-      if ( this.isWhitespace(chStart) ) {
+      if ( rawSlice.isWhitespace(chStart) ) {
         trimStart = trimStart + 1;
       } else {
         break;
@@ -3759,7 +3873,7 @@ class FeelingDetector  extends TokenDetector {
     let trimEnd = rawLen;
     while (trimEnd > trimStart) {
       const chEnd = rawSlice.charCodeAt((trimEnd - 1));
-      if ( this.isWhitespace(chEnd) ) {
+      if ( rawSlice.isWhitespace(chEnd) ) {
         trimEnd = trimEnd - 1;
       } else {
         break;
@@ -3846,18 +3960,11 @@ class EffortDetector  extends TokenDetector {
     if ( keyLen >= __len ) {
       return this.noMatch();
     }
-    let lineEnd = keyLen;
-    while (lineEnd < __len) {
-      const ch = slice.charCodeAt(lineEnd);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
+    const lineEnd = slice.findLineEnd(keyLen);
     const valueSlice = (slice.peek(keyLen)).read((lineEnd - keyLen));
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    const p = new Parser((valueSlice).toString(), detectors);
+    const subReg = NGSubParserDetectors.__singleton();
+    const detectors = subReg.getPositiveIntegerOnlyChildDetectors();
+    const p = Parser.fromSlice(valueSlice, detectors);
     (p).start();
     if ( p.getCount() != 1 ) {
       return this.noMatch();
@@ -3896,16 +4003,7 @@ class BodyMetricDetector  extends TokenDetector {
     this.detectedTag = "body-metric";
   }
   findLineEnd (slice, from) {
-    const __len = (slice).length();
-    let i = from;
-    while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      i = i + 1;
-    };
-    return i;
+    return slice.findLineEnd(from);
   };
   createMetricSlice (slice, offset, lineEnd) {
     if ( offset >= lineEnd ) {
@@ -3937,16 +4035,7 @@ class BodyMetricDetector  extends TokenDetector {
     return -1.0;
   };
   parseIntegerPrefix (metricSlice) {
-    const __len = (metricSlice).length();
-    let i = 0;
-    while (i < __len) {
-      const ch = metricSlice.charCodeAt(i);
-      if ( (ch >= 48) && (ch <= 57) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
+    const i = metricSlice.findNumberEnd(0);
     if ( i == 0 ) {
       return -1;
     }
@@ -3960,101 +4049,47 @@ class BodyMetricDetector  extends TokenDetector {
     out.setSliceValue(parsed);
     source.setSliceValue(parsed);
   };
-  detectWeight (slice) {
-    const prefix = "Weight ";
+  detectSimpleDoubleMetric (slice, prefix, labelLen, metricName, unit, allowZero) {
     if ( slice.hasToken(prefix) ) {
     } else {
       return this.noMatch();
     }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
+    const prefixLen = prefix.length;
+    const lineEnd = this.findLineEnd(slice, prefixLen);
     const out = slice.read(lineEnd);
     out.tag = this.detectedTag;
-    const label = slice.read(6);
+    const label = slice.read(labelLen);
     label.tag = "keyword";
     out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
+    const metric = this.createMetricSlice(slice, prefixLen, lineEnd);
     const value = this.parseDoublePrefix(metric);
-    if ( value <= 0.0 ) {
-      return this.noMatch();
+    if ( allowZero ) {
+      if ( value < 0.0 ) {
+        return this.noMatch();
+      }
+    } else {
+      if ( value <= 0.0 ) {
+        return this.noMatch();
+      }
     }
     const mv = new BodyMetricValue();
-    mv.metric = "weight";
+    mv.metric = metricName;
     mv.primaryValue = value;
-    mv.unit = "kg";
+    mv.unit = unit;
     this.setCommon(out, slice, mv);
     return out;
+  };
+  detectWeight (slice) {
+    return this.detectSimpleDoubleMetric(slice, "Weight ", 6, "weight", "kg", false);
   };
   detectBodyFat (slice) {
-    const prefix = "BodyFat ";
-    if ( slice.hasToken(prefix) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const label = slice.read(7);
-    label.tag = "keyword";
-    out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
-    const value = this.parseDoublePrefix(metric);
-    if ( value < 0.0 ) {
-      return this.noMatch();
-    }
-    const mv = new BodyMetricValue();
-    mv.metric = "body-fat";
-    mv.primaryValue = value;
-    mv.unit = "%";
-    this.setCommon(out, slice, mv);
-    return out;
+    return this.detectSimpleDoubleMetric(slice, "BodyFat ", 7, "body-fat", "%", true);
   };
   detectSleep (slice) {
-    const prefix = "Sleep ";
-    if ( slice.hasToken(prefix) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const label = slice.read(5);
-    label.tag = "keyword";
-    out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
-    const value = this.parseDoublePrefix(metric);
-    if ( value <= 0.0 ) {
-      return this.noMatch();
-    }
-    const mv = new BodyMetricValue();
-    mv.metric = "sleep";
-    mv.primaryValue = value;
-    mv.unit = "h";
-    this.setCommon(out, slice, mv);
-    return out;
+    return this.detectSimpleDoubleMetric(slice, "Sleep ", 5, "sleep", "h", false);
   };
   detectRestingHr (slice) {
-    const prefix = "Health resting_hr ";
-    if ( slice.hasToken(prefix) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const label = slice.read(17);
-    label.tag = "keyword";
-    out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
-    const value = this.parseDoublePrefix(metric);
-    if ( value <= 0.0 ) {
-      return this.noMatch();
-    }
-    const mv = new BodyMetricValue();
-    mv.metric = "resting-hr";
-    mv.primaryValue = value;
-    mv.unit = "bpm";
-    this.setCommon(out, slice, mv);
-    return out;
+    return this.detectSimpleDoubleMetric(slice, "Health resting_hr ", 17, "resting-hr", "bpm", false);
   };
   detectBp (slice) {
     const prefix = "Vitals bp ";
@@ -4092,124 +4127,19 @@ class BodyMetricDetector  extends TokenDetector {
     return out;
   };
   detectVitalsWeight (slice) {
-    const prefix = "Vitals weight:";
-    if ( slice.hasToken(prefix) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const label = slice.read(13);
-    label.tag = "keyword";
-    out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
-    const value = this.parseDoublePrefix(metric);
-    if ( value <= 0.0 ) {
-      return this.noMatch();
-    }
-    const mv = new BodyMetricValue();
-    mv.metric = "weight";
-    mv.primaryValue = value;
-    mv.unit = "kg";
-    this.setCommon(out, slice, mv);
-    return out;
+    return this.detectSimpleDoubleMetric(slice, "Vitals weight:", 13, "weight", "kg", false);
   };
   detectVitalsSleep (slice) {
-    const prefix = "Vitals sleep:";
-    if ( slice.hasToken(prefix) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const label = slice.read(12);
-    label.tag = "keyword";
-    out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
-    const value = this.parseDoublePrefix(metric);
-    if ( value <= 0.0 ) {
-      return this.noMatch();
-    }
-    const mv = new BodyMetricValue();
-    mv.metric = "sleep";
-    mv.primaryValue = value;
-    mv.unit = "h";
-    this.setCommon(out, slice, mv);
-    return out;
+    return this.detectSimpleDoubleMetric(slice, "Vitals sleep:", 12, "sleep", "h", false);
   };
   detectVitalsRhr (slice) {
-    const prefix = "Vitals rhr:";
-    if ( slice.hasToken(prefix) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const label = slice.read(10);
-    label.tag = "keyword";
-    out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
-    const value = this.parseDoublePrefix(metric);
-    if ( value <= 0.0 ) {
-      return this.noMatch();
-    }
-    const mv = new BodyMetricValue();
-    mv.metric = "resting-hr";
-    mv.primaryValue = value;
-    mv.unit = "bpm";
-    this.setCommon(out, slice, mv);
-    return out;
+    return this.detectSimpleDoubleMetric(slice, "Vitals rhr:", 10, "resting-hr", "bpm", false);
   };
   detectWaist (slice) {
-    const prefix = "Waist ";
-    if ( slice.hasToken(prefix) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const label = slice.read(5);
-    label.tag = "keyword";
-    out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
-    const value = this.parseDoublePrefix(metric);
-    if ( value <= 0.0 ) {
-      return this.noMatch();
-    }
-    const mv = new BodyMetricValue();
-    mv.metric = "waist";
-    mv.primaryValue = value;
-    mv.unit = "cm";
-    this.setCommon(out, slice, mv);
-    return out;
+    return this.detectSimpleDoubleMetric(slice, "Waist ", 5, "waist", "cm", false);
   };
   detectHip (slice) {
-    const prefix = "Hip ";
-    if ( slice.hasToken(prefix) ) {
-    } else {
-      return this.noMatch();
-    }
-    const lineEnd = this.findLineEnd(slice, (prefix.length));
-    const out = slice.read(lineEnd);
-    out.tag = this.detectedTag;
-    const label = slice.read(3);
-    label.tag = "keyword";
-    out.addChild(label);
-    const metric = this.createMetricSlice(slice, (prefix.length), lineEnd);
-    const value = this.parseDoublePrefix(metric);
-    if ( value <= 0.0 ) {
-      return this.noMatch();
-    }
-    const mv = new BodyMetricValue();
-    mv.metric = "hip";
-    mv.primaryValue = value;
-    mv.unit = "cm";
-    this.setCommon(out, slice, mv);
-    return out;
+    return this.detectSimpleDoubleMetric(slice, "Hip ", 3, "hip", "cm", false);
   };
   detect (slice) {
     const w = this.detectWeight(slice);
@@ -4278,15 +4208,7 @@ class CircuitDetector  extends TokenDetector {
     }
     const __len = (slice).length();
     const roundsStart = prefix.length;
-    let roundsEnd = roundsStart;
-    while (roundsEnd < __len) {
-      const ch = slice.charCodeAt(roundsEnd);
-      if ( (ch >= 48) && (ch <= 57) ) {
-        roundsEnd = roundsEnd + 1;
-      } else {
-        break;
-      }
-    };
+    const roundsEnd = slice.findNumberEnd(roundsStart);
     if ( roundsEnd <= roundsStart ) {
       return this.noMatch();
     }
@@ -4295,14 +4217,7 @@ class CircuitDetector  extends TokenDetector {
     } else {
       return this.noMatch();
     }
-    let lineEnd = roundsEnd;
-    while (lineEnd < __len) {
-      const ch2 = slice.charCodeAt(lineEnd);
-      if ( (ch2 == 10) || (ch2 == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
+    const lineEnd = slice.findLineEnd(roundsEnd);
     const out = slice.read(lineEnd);
     out.tag = this.detectedTag;
     const circuitToken = slice.read(7);
@@ -4314,15 +4229,7 @@ class CircuitDetector  extends TokenDetector {
     const cv = new CircuitValue();
     cv.rounds = roundsSlice.parseInteger(0, ((roundsSlice).length() - 1));
     if ( (roundsEnd < lineEnd) && (slice.charCodeAt(roundsEnd) == 47) ) {
-      let i = roundsEnd + 1;
-      while (i < lineEnd) {
-        const ch3 = slice.charCodeAt(i);
-        if ( (ch3 >= 48) && (ch3 <= 57) ) {
-          i = i + 1;
-        } else {
-          break;
-        }
-      };
+      const i = slice.findNumberEnd((roundsEnd + 1));
       if ( i > (roundsEnd + 1) ) {
         let j = i;
         while (j < lineEnd) {
@@ -4363,6 +4270,102 @@ CircuitDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new CircuitDetector(s);
 };
+class NGSharedLists  {
+  constructor() {
+    this.sportNames = [];
+    this.contextEntryKinds = [];
+    this.contextEntryPrefixTokens = [];
+    this.romanZonePrefixTokens = [];
+    this.contextEntryKindMap = {};
+    this.reservedGenericExerciseNameMap = {};
+    this.sportNames.push("Swim");
+    this.sportNames.push("Run");
+    this.sportNames.push("Bike");
+    this.sportNames.push("Ski");
+    this.sportNames.push("Row");
+    this.addContextEntryKind("food", "Food ");
+    this.addContextEntryKind("drinking", "Drinking ");
+    this.addContextEntryKind("expense", "Expense ");
+    this.addContextEntryKind("reminder", "Reminder ");
+    this.addContextEntryKind("protein", "Protein ");
+    this.addContextEntryKind("comment", "Comment ");
+    this.addContextEntryKind("custom", "Custom ");
+    this.addContextEntryKind("tags", "Tags ");
+    this.addContextEntryKind("emojis", "Emojis ");
+    this.addContextEntryKind("summary", "Summary ");
+    this.addContextEntryKind("derived", "Derived ");
+    this.addContextEntryKind("url", "URL ");
+    this.romanZonePrefixTokens.push("III");
+    this.romanZonePrefixTokens.push("II");
+    this.romanZonePrefixTokens.push("IV");
+    this.romanZonePrefixTokens.push("V");
+    this.romanZonePrefixTokens.push("I");
+    this.addReservedGenericExerciseName("Split");
+    this.addReservedGenericExerciseName("Attempt");
+    this.addReservedGenericExerciseName("Recovery");
+    this.addReservedGenericExerciseName("Left");
+    this.addReservedGenericExerciseName("Right");
+    this.addReservedGenericExerciseName("Feeling");
+    this.addReservedGenericExerciseName("Feelings");
+    this.addReservedGenericExerciseName("Pain");
+    this.addReservedGenericExerciseName("Effort");
+    this.addReservedGenericExerciseName("RPE");
+    this.addReservedGenericExerciseName("Circuit");
+    this.addReservedGenericExerciseName("Food");
+    this.addReservedGenericExerciseName("Drinking");
+    this.addReservedGenericExerciseName("Expense");
+    this.addReservedGenericExerciseName("Reminder");
+    this.addReservedGenericExerciseName("Protein");
+    this.addReservedGenericExerciseName("Weight");
+    this.addReservedGenericExerciseName("BodyFat");
+    this.addReservedGenericExerciseName("Sleep");
+    this.addReservedGenericExerciseName("Health");
+    this.addReservedGenericExerciseName("Vitals");
+    this.addReservedGenericExerciseName("Comment");
+    this.addReservedGenericExerciseName("Custom");
+    this.addReservedGenericExerciseName("Tags");
+    this.addReservedGenericExerciseName("Emojis");
+    this.addReservedGenericExerciseName("Summary");
+    this.addReservedGenericExerciseName("Derived");
+    this.addReservedGenericExerciseName("URL");
+    this.addReservedGenericExerciseName("Waist");
+    this.addReservedGenericExerciseName("Hip");
+    this.addReservedGenericExerciseName("Blorple");
+  }
+  addContextEntryKind (kind, prefix) {
+    this.contextEntryKinds.push(kind);
+    this.contextEntryPrefixTokens.push(prefix);
+    this.contextEntryKindMap[kind] = true;
+  };
+  addReservedGenericExerciseName (name) {
+    this.reservedGenericExerciseNameMap[name] = true;
+  };
+  defaultSportNames () {
+    return this.sportNames;
+  };
+  defaultContextEntryKinds () {
+    return this.contextEntryKinds;
+  };
+  defaultContextEntryPrefixTokens () {
+    return this.contextEntryPrefixTokens;
+  };
+  defaultRomanZonePrefixTokens () {
+    return this.romanZonePrefixTokens;
+  };
+  isContextEntryKind (kind) {
+    return ( typeof(this.contextEntryKindMap[kind] ) != "undefined" && this.contextEntryKindMap.hasOwnProperty(kind) );
+  };
+  isReservedGenericExerciseName (name) {
+    return ( typeof(this.reservedGenericExerciseNameMap[name] ) != "undefined" && this.reservedGenericExerciseNameMap.hasOwnProperty(name) );
+  };
+}
+NGSharedLists.__singleton_instance = null;
+NGSharedLists.__singleton = function() {
+  if (NGSharedLists.__singleton_instance == null) {
+    NGSharedLists.__singleton_instance = new NGSharedLists();
+  }
+  return NGSharedLists.__singleton_instance;
+};
 class ContextEntryDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -4370,103 +4373,28 @@ class ContextEntryDetector  extends TokenDetector {
     this.detectedTag = "context-entry";
   }
   toTag (kind) {
-    if ( kind == "food" ) {
-      return "food";
-    }
-    if ( kind == "drinking" ) {
-      return "drinking";
-    }
-    if ( kind == "expense" ) {
-      return "expense";
-    }
-    if ( kind == "reminder" ) {
-      return "reminder";
-    }
-    if ( kind == "protein" ) {
-      return "protein";
-    }
-    if ( kind == "comment" ) {
-      return "comment";
-    }
-    if ( kind == "custom" ) {
-      return "custom";
-    }
-    if ( kind == "tags" ) {
-      return "tags";
-    }
-    if ( kind == "emojis" ) {
-      return "emojis";
-    }
-    if ( kind == "summary" ) {
-      return "summary";
-    }
-    if ( kind == "derived" ) {
-      return "derived";
-    }
-    if ( kind == "url" ) {
-      return "url";
+    const shared = NGSharedLists.__singleton();
+    if ( shared.isContextEntryKind(kind) ) {
+      return kind;
     }
     return this.detectedTag;
   };
   detectKind (slice) {
-    if ( slice.hasToken("Food ") ) {
-      return "food";
-    }
-    if ( slice.hasToken("Drinking ") ) {
-      return "drinking";
-    }
-    if ( slice.hasToken("Expense ") ) {
-      return "expense";
-    }
-    if ( slice.hasToken("Reminder ") ) {
-      return "reminder";
-    }
-    if ( slice.hasToken("Protein ") ) {
-      return "protein";
-    }
-    if ( slice.hasToken("Comment ") ) {
-      return "comment";
-    }
-    if ( slice.hasToken("Custom ") ) {
-      return "custom";
-    }
-    if ( slice.hasToken("Tags ") ) {
-      return "tags";
-    }
-    if ( slice.hasToken("Emojis ") ) {
-      return "emojis";
-    }
-    if ( slice.hasToken("Summary ") ) {
-      return "summary";
-    }
-    if ( slice.hasToken("Derived ") ) {
-      return "derived";
-    }
-    if ( slice.hasToken("URL ") ) {
-      return "url";
-    }
+    const shared = NGSharedLists.__singleton();
+    const kinds = shared.defaultContextEntryKinds();
+    const prefixes = shared.defaultContextEntryPrefixTokens();
+    const cnt = kinds.length;
+    let i = 0;
+    while (i < cnt) {
+      if ( slice.hasToken((prefixes[i])) ) {
+        return kinds[i];
+      }
+      i = i + 1;
+    };
     return "";
   };
-  isWhitespace (ch) {
-    if ( ch == 32 ) {
-      return true;
-    }
-    if ( ch == 9 ) {
-      return true;
-    }
-    return false;
-  };
   findLineEnd (slice, start) {
-    const __len = (slice).length();
-    let lineEnd = start;
-    while (lineEnd < __len) {
-      const ch = slice.charCodeAt(lineEnd);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
-    return lineEnd;
+    return slice.findLineEnd(start);
   };
   parseDerivedFields (cv, valueSlice) {
     const __len = (valueSlice).length();
@@ -4476,7 +4404,7 @@ class ContextEntryDetector  extends TokenDetector {
     let i = 0;
     while (i < __len) {
       const chStart = valueSlice.charCodeAt(i);
-      if ( this.isWhitespace(chStart) ) {
+      if ( valueSlice.isWhitespace(chStart) ) {
         i = i + 1;
       } else {
         break;
@@ -4488,7 +4416,7 @@ class ContextEntryDetector  extends TokenDetector {
     const metricStart = i;
     while (i < __len) {
       const chMetric = valueSlice.charCodeAt(i);
-      if ( this.isWhitespace(chMetric) ) {
+      if ( valueSlice.isWhitespace(chMetric) ) {
         break;
       }
       i = i + 1;
@@ -4499,7 +4427,7 @@ class ContextEntryDetector  extends TokenDetector {
     }
     while (i < __len) {
       const chAfterMetric = valueSlice.charCodeAt(i);
-      if ( this.isWhitespace(chAfterMetric) ) {
+      if ( valueSlice.isWhitespace(chAfterMetric) ) {
         i = i + 1;
       } else {
         break;
@@ -4511,7 +4439,7 @@ class ContextEntryDetector  extends TokenDetector {
     const valueStart = i;
     while (i < __len) {
       const chNum = valueSlice.charCodeAt(i);
-      if ( ((chNum == 124) || (chNum == 59)) || this.isWhitespace(chNum) ) {
+      if ( ((chNum == 124) || (chNum == 59)) || valueSlice.isWhitespace(chNum) ) {
         break;
       }
       i = i + 1;
@@ -4531,7 +4459,7 @@ class ContextEntryDetector  extends TokenDetector {
         i = i + 1;
         while (i < __len) {
           const chUnitStart = valueSlice.charCodeAt(i);
-          if ( this.isWhitespace(chUnitStart) ) {
+          if ( valueSlice.isWhitespace(chUnitStart) ) {
             i = i + 1;
           } else {
             break;
@@ -4540,7 +4468,7 @@ class ContextEntryDetector  extends TokenDetector {
         const unitStart = i;
         while (i < __len) {
           const chUnit = valueSlice.charCodeAt(i);
-          if ( this.isWhitespace(chUnit) ) {
+          if ( valueSlice.isWhitespace(chUnit) ) {
             break;
           }
           i = i + 1;
@@ -4551,7 +4479,7 @@ class ContextEntryDetector  extends TokenDetector {
         }
         while (i < __len) {
           const chBeforeToken = valueSlice.charCodeAt(i);
-          if ( this.isWhitespace(chBeforeToken) ) {
+          if ( valueSlice.isWhitespace(chBeforeToken) ) {
             i = i + 1;
           } else {
             break;
@@ -4561,7 +4489,7 @@ class ContextEntryDetector  extends TokenDetector {
           const tokenStart = i;
           while (i < __len) {
             const chToken = valueSlice.charCodeAt(i);
-            if ( this.isWhitespace(chToken) ) {
+            if ( valueSlice.isWhitespace(chToken) ) {
               break;
             }
             i = i + 1;
@@ -4618,7 +4546,7 @@ class ContextEntryDetector  extends TokenDetector {
           }
           while (i < __len) {
             const chGap = valueSlice.charCodeAt(i);
-            if ( this.isWhitespace(chGap) ) {
+            if ( valueSlice.isWhitespace(chGap) ) {
               i = i + 1;
             } else {
               break;
@@ -4658,49 +4586,11 @@ class ContextEntryDetector  extends TokenDetector {
       }
     }
     const kind = this.detectKind(slice);
-    if ( (kind.length) == 0 ) {
+    const kindLen = kind.length;
+    if ( kindLen == 0 ) {
       return this.noMatch();
     }
-    let keyLen = 0;
-    if ( kind == "food" ) {
-      keyLen = 5;
-    }
-    if ( kind == "drinking" ) {
-      keyLen = 9;
-    }
-    if ( kind == "expense" ) {
-      keyLen = 8;
-    }
-    if ( kind == "reminder" ) {
-      keyLen = 9;
-    }
-    if ( kind == "protein" ) {
-      keyLen = 8;
-    }
-    if ( kind == "comment" ) {
-      keyLen = 8;
-    }
-    if ( kind == "custom" ) {
-      keyLen = 7;
-    }
-    if ( kind == "tags" ) {
-      keyLen = 5;
-    }
-    if ( kind == "emojis" ) {
-      keyLen = 7;
-    }
-    if ( kind == "summary" ) {
-      keyLen = 8;
-    }
-    if ( kind == "derived" ) {
-      keyLen = 8;
-    }
-    if ( kind == "url" ) {
-      keyLen = 4;
-    }
-    if ( keyLen <= 0 ) {
-      return this.noMatch();
-    }
+    const keyLen = kindLen + 1;
     if ( keyLen >= __len ) {
       return this.noMatch();
     }
@@ -4737,7 +4627,7 @@ class ContextEntryDetector  extends TokenDetector {
       let fieldStart = 0;
       while (fieldStart < customLen) {
         const chStart = customSlice.charCodeAt(fieldStart);
-        if ( this.isWhitespace(chStart) ) {
+        if ( customSlice.isWhitespace(chStart) ) {
           fieldStart = fieldStart + 1;
         } else {
           break;
@@ -4746,7 +4636,7 @@ class ContextEntryDetector  extends TokenDetector {
       let fieldEnd = fieldStart;
       while (fieldEnd < customLen) {
         const chField = customSlice.charCodeAt(fieldEnd);
-        if ( this.isWhitespace(chField) ) {
+        if ( customSlice.isWhitespace(chField) ) {
           break;
         }
         fieldEnd = fieldEnd + 1;
@@ -4756,7 +4646,7 @@ class ContextEntryDetector  extends TokenDetector {
         let valueStart = fieldEnd;
         while (valueStart < customLen) {
           const chValueStart = customSlice.charCodeAt(valueStart);
-          if ( this.isWhitespace(chValueStart) ) {
+          if ( customSlice.isWhitespace(chValueStart) ) {
             valueStart = valueStart + 1;
           } else {
             break;
@@ -4793,38 +4683,53 @@ class DistanceRangeBlockDetector  extends TokenDetector {
     if ( __len < 5 ) {
       return this.noMatch();
     }
-    const dashPos = slice.findTokenPos("-");
-    if ( dashPos <= 0 ) {
+    const lLen = slice.findNumberEnd(0);
+    if ( lLen <= 0 ) {
       return this.noMatch();
     }
-    const leftA = slice.read(dashPos);
-    if ( leftA.hasInteger(0, ((leftA).length() - 1)) ) {
-      const rightA = slice.peek((dashPos + 1));
-      const rightPartA = rightA.splitWithToken("m");
-      const rLenA = (rightPartA).length();
-      if ( rLenA > 0 ) {
-        if ( rightPartA.hasInteger(0, (rLenA - 1)) ) {
-          if ( (rLenA + 1) <= (rightA).length() ) {
-            if ( rightA.charCodeAt(rLenA) == 109 ) {
-              const lvalA = leftA.parseInteger(0, ((leftA).length() - 1));
-              const rvalA = rightPartA.parseInteger(0, (rLenA - 1));
-              if ( (lvalA > 0) && (rvalA > 0) ) {
-                const outA = slice.read((((dashPos + 1) + rLenA) + 1));
-                outA.tag = this.detectedTag;
-                return outA;
-              }
-            }
-          }
-        }
+    if ( false == slice.hasInteger(0, (lLen - 1)) ) {
+      return this.noMatch();
+    }
+    if ( lLen >= __len ) {
+      return this.noMatch();
+    }
+    const sep = slice.charCodeAt(lLen);
+    if ( sep == 45 ) {
+      const rightAStart = lLen + 1;
+      if ( rightAStart >= __len ) {
+        return this.noMatch();
       }
+      const rightA = slice.peek(rightAStart);
+      const rLenA = rightA.findNumberEnd(0);
+      if ( rLenA <= 0 ) {
+        return this.noMatch();
+      }
+      if ( false == rightA.hasInteger(0, (rLenA - 1)) ) {
+        return this.noMatch();
+      }
+      if ( (rLenA + 1) > (rightA).length() ) {
+        return this.noMatch();
+      }
+      if ( rightA.charCodeAt(rLenA) != 109 ) {
+        return this.noMatch();
+      }
+      const lvalA = slice.parseInteger(0, (lLen - 1));
+      const rvalA = rightA.parseInteger(0, (rLenA - 1));
+      if ( (lvalA <= 0) || (rvalA <= 0) ) {
+        return this.noMatch();
+      }
+      const outA = slice.read(((rightAStart + rLenA) + 1));
+      outA.tag = this.detectedTag;
+      return outA;
     }
-    const leftPartB = slice.splitWithToken("m-");
-    const lLenB = (leftPartB).length();
-    if ( lLenB <= 0 ) {
+    if ( sep != 109 ) {
       return this.noMatch();
     }
-    if ( leftPartB.hasInteger(0, (lLenB - 1)) ) {
-    } else {
+    const lLenB = lLen;
+    if ( (lLenB + 2) > __len ) {
+      return this.noMatch();
+    }
+    if ( slice.charCodeAt((lLenB + 1)) != 45 ) {
       return this.noMatch();
     }
     const rightBStart = lLenB + 2;
@@ -4832,12 +4737,11 @@ class DistanceRangeBlockDetector  extends TokenDetector {
       return this.noMatch();
     }
     const rightB = slice.peek(rightBStart);
-    const rightPartB = rightB.splitWithToken("m");
-    const rLenB = (rightPartB).length();
+    const rLenB = rightB.findNumberEnd(0);
     if ( rLenB <= 0 ) {
       return this.noMatch();
     }
-    if ( rightPartB.hasInteger(0, (rLenB - 1)) ) {
+    if ( rightB.hasInteger(0, (rLenB - 1)) ) {
     } else {
       return this.noMatch();
     }
@@ -4847,8 +4751,8 @@ class DistanceRangeBlockDetector  extends TokenDetector {
     if ( rightB.charCodeAt(rLenB) != 109 ) {
       return this.noMatch();
     }
-    const lvalB = leftPartB.parseInteger(0, (lLenB - 1));
-    const rvalB = rightPartB.parseInteger(0, (rLenB - 1));
+    const lvalB = slice.parseInteger(0, (lLenB - 1));
+    const rvalB = rightB.parseInteger(0, (rLenB - 1));
     if ( (lvalB <= 0) || (rvalB <= 0) ) {
       return this.noMatch();
     }
@@ -4860,26 +4764,6 @@ class DistanceRangeBlockDetector  extends TokenDetector {
 DistanceRangeBlockDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new DistanceRangeBlockDetector(s);
-};
-class NGSharedLists  {
-  constructor() {
-    this.sportNames = [];
-    this.sportNames.push("Swim");
-    this.sportNames.push("Run");
-    this.sportNames.push("Bike");
-    this.sportNames.push("Ski");
-    this.sportNames.push("Row");
-  }
-  defaultSportNames () {
-    return this.sportNames;
-  };
-}
-NGSharedLists.__singleton_instance = null;
-NGSharedLists.__singleton = function() {
-  if (NGSharedLists.__singleton_instance == null) {
-    NGSharedLists.__singleton_instance = new NGSharedLists();
-  }
-  return NGSharedLists.__singleton_instance;
 };
 class SemicolonSeparatorDetector  extends TokenDetector {
   constructor(noMatchSlice) {
@@ -4914,10 +4798,9 @@ class KCALDetector  extends TokenDetector {
     if ( __len < 5 ) {
       return this.noMatch();
     }
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    detectors.push(KeywordDetector.create("kcal"));
-    const p = new Parser((slice).toString(), detectors);
+    const subReg = NGSubParserDetectors.__singleton();
+    const detectors = subReg.getKcalChildDetectors();
+    const p = Parser.fromSlice(slice, detectors);
     (p).start();
     if ( p.getCount() != 2 ) {
       return this.noMatch();
@@ -4957,10 +4840,9 @@ class BPMDetector  extends TokenDetector {
     if ( __len < 4 ) {
       return this.noMatch();
     }
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    detectors.push(KeywordDetector.create("bpm"));
-    const p = new Parser((slice).toString(), detectors);
+    const subReg = NGSubParserDetectors.__singleton();
+    const detectors = subReg.getBpmChildDetectors();
+    const p = Parser.fromSlice(slice, detectors);
     (p).start();
     if ( p.getCount() != 2 ) {
       return this.noMatch();
@@ -4989,105 +4871,6 @@ BPMDetector.create = function() {
   const s = TokenDetector.createNoMatchSlice();
   return new BPMDetector(s);
 };
-class PercentageRangeDetector  extends TokenDetector {
-  constructor(noMatchSlice) {
-    super()
-    this.cachedNoMatch = noMatchSlice;
-    this.detectedTag = "percentage-range";
-  }
-  isDigit (ch) {
-    return (ch >= 48) && (ch <= 57);
-  };
-  detect (slice) {
-    const __len = (slice).length();
-    if ( __len < 4 ) {
-      return this.noMatch();
-    }
-    let i = 0;
-    while (i < __len) {
-      const chL = slice.charCodeAt(i);
-      if ( this.isDigit(chL) ) {
-        i = i + 1;
-      } else {
-        break;
-      }
-    };
-    if ( ((i > 0) && (i < __len)) && (slice.charCodeAt(i) == 37) ) {
-      if ( ((i + 1) < __len) && (slice.charCodeAt((i + 1)) == 45) ) {
-        let j = i + 2;
-        while (j < __len) {
-          const chR = slice.charCodeAt(j);
-          if ( this.isDigit(chR) ) {
-            j = j + 1;
-          } else {
-            break;
-          }
-        };
-        if ( ((j > (i + 2)) && (j < __len)) && (slice.charCodeAt(j) == 37) ) {
-          const leftDigits = slice.read(i);
-          const rightDigits = (slice.peek((i + 2))).read((j - (i + 2)));
-          if ( false == leftDigits.hasInteger(0, ((leftDigits).length() - 1)) ) {
-            return this.noMatch();
-          }
-          if ( false == rightDigits.hasInteger(0, ((rightDigits).length() - 1)) ) {
-            return this.noMatch();
-          }
-          const lval = leftDigits.parseInteger(0, ((leftDigits).length() - 1));
-          const rval = rightDigits.parseInteger(0, ((rightDigits).length() - 1));
-          if ( (lval > 0) && (rval > 0) ) {
-            const out2 = slice.read((j + 1));
-            out2.tag = this.detectedTag;
-            const pv2 = new PercentageRangeValue();
-            pv2.minValue = lval;
-            pv2.maxValue = rval;
-            const payload2 = SliceParsedValue.fromPercentageRange(pv2);
-            out2.setSliceValue(payload2);
-            slice.setSliceValue(payload2);
-            return out2;
-          }
-        }
-      }
-    }
-    let detectors = [];
-    detectors.push(SpaceDetector.create());
-    detectors.push(NumRangeBlockDetector.create());
-    detectors.push(KeywordDetector.create("%"));
-    const p = new Parser((slice).toString(), detectors);
-    (p).start();
-    if ( p.getCount() != 2 ) {
-      return this.noMatch();
-    }
-    const parts = p.getResults();
-    const first = parts[0];
-    const second = parts[1];
-    if ( false == (first.tag == "num-range") ) {
-      return this.noMatch();
-    }
-    if ( false == (second.tag == "keyword") ) {
-      return this.noMatch();
-    }
-    if ( false == second.strEquals("%") ) {
-      return this.noMatch();
-    }
-    const outLen = (first).length() + (second).length();
-    const out = slice.read(outLen);
-    out.tag = this.detectedTag;
-    out.addChild(first);
-    out.addChild(second);
-    const nrv = first.getAsNumRangeValue();
-    const pv = new PercentageRangeValue();
-    pv.minValue = nrv.minValue;
-    pv.maxValue = nrv.maxValue;
-    const payload = SliceParsedValue.fromPercentageRange(pv);
-    out.setSliceValue(payload);
-    slice.setSliceValue(payload);
-    return out;
-  };
-}
-PercentageRangeDetector.create = function() {
-  const s = TokenDetector.createNoMatchSlice();
-  return new PercentageRangeDetector(s);
-};
 class RMDetector  extends TokenDetector {
   constructor(noMatchSlice) {
     super()
@@ -5099,10 +4882,9 @@ class RMDetector  extends TokenDetector {
     if ( __len < 3 ) {
       return this.noMatch();
     }
-    let detectors = [];
-    detectors.push(PositiveIntegerDetector.create());
-    detectors.push(KeywordDetector.create("RM"));
-    const p = new Parser((slice).toString(), detectors);
+    const subReg = NGSubParserDetectors.__singleton();
+    const detectors = subReg.getRmChildDetectors();
+    const p = Parser.fromSlice(slice, detectors);
     (p).start();
     if ( p.getCount() != 2 ) {
       return this.noMatch();
@@ -5137,45 +4919,28 @@ class RomanZoneDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "zone-roman";
   }
-  isAlphaNum (ch) {
-    if ( (ch >= 48) && (ch <= 57) ) {
-      return true;
-    }
-    if ( (ch >= 65) && (ch <= 90) ) {
-      return true;
-    }
-    if ( (ch >= 97) && (ch <= 122) ) {
-      return true;
-    }
-    return false;
+  romanPrefixLen (slice) {
+    const shared = NGSharedLists.__singleton();
+    const candidates = shared.defaultRomanZonePrefixTokens();
+    let i = 0;
+    const cnt = candidates.length;
+    while (i < cnt) {
+      const token = candidates[i];
+      if ( slice.hasToken(token) ) {
+        return token.length;
+      }
+      i = i + 1;
+    };
+    return 0;
   };
   detect (slice) {
-    let tokenLen = 0;
-    if ( slice.hasToken("III") ) {
-      tokenLen = 3;
-    } else {
-      if ( slice.hasToken("II") ) {
-        tokenLen = 2;
-      } else {
-        if ( slice.hasToken("IV") ) {
-          tokenLen = 2;
-        } else {
-          if ( slice.hasToken("V") ) {
-            tokenLen = 1;
-          } else {
-            if ( slice.hasToken("I") ) {
-              tokenLen = 1;
-            } else {
-              return this.noMatch();
-            }
-          }
-        }
-      }
+    const tokenLen = this.romanPrefixLen(slice);
+    if ( tokenLen == 0 ) {
+      return this.noMatch();
     }
     const __len = (slice).length();
     if ( __len > tokenLen ) {
-      const next = slice.charCodeAt(tokenLen);
-      if ( this.isAlphaNum(next) ) {
+      if ( slice.isAlphaNumAt(tokenLen) ) {
         return this.noMatch();
       }
     }
@@ -5194,26 +4959,8 @@ class PhaseDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "phase";
   }
-  isWhitespace (ch) {
-    if ( ch == 32 ) {
-      return true;
-    }
-    if ( ch == 9 ) {
-      return true;
-    }
-    return false;
-  };
   findLineEnd (slice, from) {
-    const __len = (slice).length();
-    let i = from;
-    while (i < __len) {
-      const ch = slice.charCodeAt(i);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      i = i + 1;
-    };
-    return i;
+    return slice.findLineEnd(from);
   };
   detect (slice) {
     if ( slice.hasToken("Phase") ) {
@@ -5227,7 +4974,7 @@ class PhaseDetector  extends TokenDetector {
     let keyEnd = 0;
     while (keyEnd < lineEnd) {
       const ch = slice.charCodeAt(keyEnd);
-      if ( this.isWhitespace(ch) ) {
+      if ( slice.isWhitespace(ch) ) {
         break;
       }
       if ( ch == 124 ) {
@@ -5246,13 +4993,13 @@ class PhaseDetector  extends TokenDetector {
     let contentStart = keyEnd;
     if ( contentStart < lineEnd ) {
       const chSep = slice.charCodeAt(contentStart);
-      if ( (chSep == 124) || this.isWhitespace(chSep) ) {
+      if ( (chSep == 124) || slice.isWhitespace(chSep) ) {
         contentStart = contentStart + 1;
       }
     }
     while (contentStart < lineEnd) {
       const chSpace = slice.charCodeAt(contentStart);
-      if ( this.isWhitespace(chSpace) ) {
+      if ( slice.isWhitespace(chSpace) ) {
         contentStart = contentStart + 1;
       } else {
         break;
@@ -5282,41 +5029,23 @@ class HeadingDataDetector  extends TokenDetector {
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "heading-data";
   }
-  isWhitespace (ch) {
-    if ( ch == 32 ) {
-      return true;
-    }
-    if ( ch == 9 ) {
-      return true;
-    }
-    return false;
-  };
-  isDigit (ch) {
-    if ( ch < 48 ) {
-      return false;
-    }
-    if ( ch > 57 ) {
-      return false;
-    }
-    return true;
-  };
   hasIsoDatePrefix (slice, start) {
     if ( (start + 10) > (slice).length() ) {
       return false;
     }
-    if ( this.isDigit(slice.charCodeAt((start + 0))) ) {
+    if ( slice.isDigitAt((start + 0)) ) {
     } else {
       return false;
     }
-    if ( this.isDigit(slice.charCodeAt((start + 1))) ) {
+    if ( slice.isDigitAt((start + 1)) ) {
     } else {
       return false;
     }
-    if ( this.isDigit(slice.charCodeAt((start + 2))) ) {
+    if ( slice.isDigitAt((start + 2)) ) {
     } else {
       return false;
     }
-    if ( this.isDigit(slice.charCodeAt((start + 3))) ) {
+    if ( slice.isDigitAt((start + 3)) ) {
     } else {
       return false;
     }
@@ -5324,11 +5053,11 @@ class HeadingDataDetector  extends TokenDetector {
     } else {
       return false;
     }
-    if ( this.isDigit(slice.charCodeAt((start + 5))) ) {
+    if ( slice.isDigitAt((start + 5)) ) {
     } else {
       return false;
     }
-    if ( this.isDigit(slice.charCodeAt((start + 6))) ) {
+    if ( slice.isDigitAt((start + 6)) ) {
     } else {
       return false;
     }
@@ -5336,11 +5065,11 @@ class HeadingDataDetector  extends TokenDetector {
     } else {
       return false;
     }
-    if ( this.isDigit(slice.charCodeAt((start + 8))) ) {
+    if ( slice.isDigitAt((start + 8)) ) {
     } else {
       return false;
     }
-    if ( this.isDigit(slice.charCodeAt((start + 9))) ) {
+    if ( slice.isDigitAt((start + 9)) ) {
     } else {
       return false;
     }
@@ -5368,7 +5097,7 @@ class HeadingDataDetector  extends TokenDetector {
           let i2 = closeIdx + 1;
           while (i2 < __len) {
             const chSpace = slice.charCodeAt(i2);
-            if ( this.isWhitespace(chSpace) ) {
+            if ( slice.isWhitespace(chSpace) ) {
               i2 = i2 + 1;
             } else {
               break;
@@ -5445,13 +5174,9 @@ StandardDetectors.create = function() {
   ds.push(SpeedDetector.create());
   ds.push(KCALDetector.create());
   ds.push(BPMDetector.create());
-  ds.push(WeightDetector.create());
   ds.push(DistanceRangeBlockDetector.create());
-  ds.push(PercentageRangeDetector.create());
-  ds.push(SetRepRangeLoadDetector.create());
+  ds.push(RepeatBlockDetector.create());
   ds.push(NumRangeBlockDetector.create());
-  ds.push(DistanceDetector.create());
-  ds.push(PercentageDetector.create());
   ds.push(RMDetector.create());
   ds.push(ZoneDetector.create());
   ds.push(RomanZoneDetector.create());
@@ -5468,7 +5193,6 @@ StandardDetectors.create = function() {
   ds.push(SportExerciseDetector.create());
   ds.push(DecimalNumberDetector.create());
   ds.push(PositiveIntegerDetector.create());
-  ds.push(RepeatBlockDetector.create());
   ds.push(AMTimeValueDetector.create());
   ds.push(DetailsDataDetector.create());
   ds.push(HeadingDataDetector.create());
@@ -5504,15 +5228,6 @@ class DetailsDataDetector  extends TokenDetector {
     }
     return false;
   };
-  isWhitespace (ch) {
-    if ( ch == 32 ) {
-      return true;
-    }
-    if ( ch == 9 ) {
-      return true;
-    }
-    return false;
-  };
   addChildrenFromParser (out, payload) {
     const p = new Parser((payload).toString(), this.createChildDetectors());
     (p).start();
@@ -5534,7 +5249,7 @@ class DetailsDataDetector  extends TokenDetector {
     const __len = (payload).length();
     while (restStart < __len) {
       const ch = payload.charCodeAt(restStart);
-      if ( this.isWhitespace(ch) ) {
+      if ( payload.isWhitespace(ch) ) {
         restStart = restStart + 1;
       } else {
         break;
@@ -5573,7 +5288,7 @@ class DetailsDataDetector  extends TokenDetector {
       let tailStart = wordEnd;
       while (tailStart < __len) {
         const cht = payload.charCodeAt(tailStart);
-        if ( (cht == 32) || (cht == 9) ) {
+        if ( payload.isWhitespace(cht) ) {
           tailStart = tailStart + 1;
         } else {
           break;
@@ -5611,14 +5326,7 @@ class DetailsDataDetector  extends TokenDetector {
     if ( markerEnd == 0 ) {
       return this.noMatch();
     }
-    let lineEnd = markerEnd;
-    while (lineEnd < __len) {
-      const ch = slice.charCodeAt(lineEnd);
-      if ( (ch == 10) || (ch == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
+    const lineEnd = slice.findLineEnd(markerEnd);
     const out = slice.read(lineEnd);
     out.tag = this.detectedTag;
     const levelToken = slice.read(markerEnd);
@@ -5666,13 +5374,9 @@ class NGSharedDetectorFactory  {
     ds.push(SpeedDetector.create());
     ds.push(KCALDetector.create());
     ds.push(BPMDetector.create());
-    ds.push(WeightDetector.create());
     ds.push(DistanceRangeBlockDetector.create());
-    ds.push(PercentageRangeDetector.create());
-    ds.push(SetRepRangeLoadDetector.create());
+    ds.push(RepeatBlockDetector.create());
     ds.push(NumRangeBlockDetector.create());
-    ds.push(DistanceDetector.create());
-    ds.push(PercentageDetector.create());
     ds.push(RMDetector.create());
     ds.push(ZoneDetector.create());
     ds.push(RomanZoneDetector.create());
@@ -5690,7 +5394,6 @@ class NGSharedDetectorFactory  {
     ds.push(PositiveIntegerDetector.create());
     ds.push(KeywordDetector.create("min"));
     ds.push(KeywordDetector.create("h"));
-    ds.push(RepeatBlockDetector.create());
     ds.push(AMTimeValueDetector.create());
     ds.push(DetailsDataDetector.create());
     ds.push(HeadingDataDetector.create());
@@ -5733,15 +5436,6 @@ class SportExerciseDetector  extends TokenDetector {
     };
     return true;
   };
-  isWhitespace (ch) {
-    if ( ch == 32 ) {
-      return true;
-    }
-    if ( ch == 9 ) {
-      return true;
-    }
-    return false;
-  };
   isUppercaseLetter (ch) {
     return (ch >= 65) && (ch <= 90);
   };
@@ -5755,100 +5449,8 @@ class SportExerciseDetector  extends TokenDetector {
     return false;
   };
   isReservedGenericName (name) {
-    if ( name == "Split" ) {
-      return true;
-    }
-    if ( name == "Attempt" ) {
-      return true;
-    }
-    if ( name == "Recovery" ) {
-      return true;
-    }
-    if ( name == "Left" ) {
-      return true;
-    }
-    if ( name == "Right" ) {
-      return true;
-    }
-    if ( name == "Feeling" ) {
-      return true;
-    }
-    if ( name == "Feelings" ) {
-      return true;
-    }
-    if ( name == "Pain" ) {
-      return true;
-    }
-    if ( name == "Effort" ) {
-      return true;
-    }
-    if ( name == "RPE" ) {
-      return true;
-    }
-    if ( name == "Circuit" ) {
-      return true;
-    }
-    if ( name == "Food" ) {
-      return true;
-    }
-    if ( name == "Drinking" ) {
-      return true;
-    }
-    if ( name == "Expense" ) {
-      return true;
-    }
-    if ( name == "Reminder" ) {
-      return true;
-    }
-    if ( name == "Protein" ) {
-      return true;
-    }
-    if ( name == "Weight" ) {
-      return true;
-    }
-    if ( name == "BodyFat" ) {
-      return true;
-    }
-    if ( name == "Sleep" ) {
-      return true;
-    }
-    if ( name == "Health" ) {
-      return true;
-    }
-    if ( name == "Vitals" ) {
-      return true;
-    }
-    if ( name == "Comment" ) {
-      return true;
-    }
-    if ( name == "Custom" ) {
-      return true;
-    }
-    if ( name == "Tags" ) {
-      return true;
-    }
-    if ( name == "Emojis" ) {
-      return true;
-    }
-    if ( name == "Summary" ) {
-      return true;
-    }
-    if ( name == "Derived" ) {
-      return true;
-    }
-    if ( name == "URL" ) {
-      return true;
-    }
-    if ( name == "Waist" ) {
-      return true;
-    }
-    if ( name == "Hip" ) {
-      return true;
-    }
-    if ( name == "Blorple" ) {
-      return true;
-    }
-    return false;
+    const shared = NGSharedLists.__singleton();
+    return shared.isReservedGenericExerciseName(name);
   };
   scanGenericNameEnd (slice) {
     const __len = (slice).length();
@@ -5872,7 +5474,7 @@ class SportExerciseDetector  extends TokenDetector {
       const gapStart = pos;
       while (pos < __len) {
         const gapCh = slice.charCodeAt(pos);
-        if ( this.isWhitespace(gapCh) ) {
+        if ( slice.isWhitespace(gapCh) ) {
           pos = pos + 1;
         } else {
           break;
@@ -5897,11 +5499,11 @@ class SportExerciseDetector  extends TokenDetector {
     };
     return nameEnd;
   };
-  isSeparator (ch) {
-    if ( this.isWhitespace(ch) ) {
+  isSeparator (slice, index) {
+    if ( slice.isWhitespaceAt(index) ) {
       return true;
     }
-    if ( ch == 59 ) {
+    if ( slice.charCodeAt(index) == 59 ) {
       return true;
     }
     return false;
@@ -5910,7 +5512,7 @@ class SportExerciseDetector  extends TokenDetector {
     let out = endPos;
     while (out > 0) {
       const ch = slice.charCodeAt((out - 1));
-      if ( this.isWhitespace(ch) ) {
+      if ( slice.isWhitespace(ch) ) {
         out = out - 1;
       } else {
         break;
@@ -5923,21 +5525,14 @@ class SportExerciseDetector  extends TokenDetector {
     if ( __len <= 0 ) {
       return this.noMatch();
     }
-    let lineEnd = 0;
-    while (lineEnd < __len) {
-      const chLine = slice.charCodeAt(lineEnd);
-      if ( (chLine == 10) || (chLine == 13) ) {
-        break;
-      }
-      lineEnd = lineEnd + 1;
-    };
+    const lineEnd = slice.findLineEnd(0);
     if ( lineEnd <= 0 ) {
       return this.noMatch();
     }
     let startPos = 0;
     while (startPos < lineEnd) {
       const chStart = slice.charCodeAt(startPos);
-      if ( this.isWhitespace(chStart) ) {
+      if ( slice.isWhitespace(chStart) ) {
         startPos = startPos + 1;
       } else {
         break;
@@ -5976,8 +5571,7 @@ class SportExerciseDetector  extends TokenDetector {
           matched = true;
           break;
         }
-        const chAfterName = slice.charCodeAt(sportLen);
-        if ( this.isSeparator(chAfterName) ) {
+        if ( this.isSeparator(slice, sportLen) ) {
           matched = true;
           break;
         }
@@ -5992,8 +5586,7 @@ class SportExerciseDetector  extends TokenDetector {
           if ( genericLen == lineEnd ) {
             matched = true;
           } else {
-            const chAfterGeneric = slice.charCodeAt(genericLen);
-            if ( this.isSeparator(chAfterGeneric) ) {
+            if ( this.isSeparator(slice, genericLen) ) {
               matched = true;
             }
           }
@@ -6019,8 +5612,7 @@ class SportExerciseDetector  extends TokenDetector {
     if ( semicolonPos >= 0 ) {
       let restStart = semicolonPos + 1;
       while (restStart < lineEnd) {
-        const chSpace = slice.charCodeAt(restStart);
-        if ( this.isSeparator(chSpace) ) {
+        if ( this.isSeparator(slice, restStart) ) {
           restStart = restStart + 1;
         } else {
           break;
@@ -6028,7 +5620,7 @@ class SportExerciseDetector  extends TokenDetector {
       };
       if ( restStart < lineEnd ) {
         const restSlice = (slice.peek(restStart)).read((lineEnd - restStart));
-        const p_2 = new Parser((restSlice).toString(), this.createChildDetectors());
+        const p_2 = Parser.fromSlice(restSlice, this.createChildDetectors());
         (p_2).start();
         const children = p_2.getResults();
         for ( let j = 0; j < children.length; j++) {
@@ -6539,9 +6131,6 @@ class NGTestRunner  {
     if ( kind == "repeat-block" ) {
       return JSON.stringify((token.getAsRepeatBlockValue()).toDictionary());
     }
-    if ( kind == "set-rep-range-load" ) {
-      return JSON.stringify((token.getAsSetRepRangeLoadValue()).toDictionary());
-    }
     if ( kind == "zone" ) {
       return JSON.stringify((token.getAsZoneValue()).toDictionary());
     }
@@ -6816,41 +6405,119 @@ class NGTestRunner  {
       }
       if ( kind == "repeat-block" ) {
         const rb = token.getAsRepeatBlockValue();
-        if ( tail == "count" ) {
-          return "" + rb.count;
+        if ( tail == "loadMode" ) {
+          return rb.loadMode;
+        }
+        if ( tail == "partCount" ) {
+          return "" + (rb.parts.length);
+        }
+        if ( (this).startsWith(tail, "parts.") ) {
+          const rest1 = tail.substring(6, (tail.length) );
+          const dotPos3 = this.findDot(rest1);
+          let idxText_1 = rest1;
+          let fieldName = "";
+          if ( dotPos3 >= 0 ) {
+            idxText_1 = rest1.substring(0, dotPos3 );
+            fieldName = rest1.substring((dotPos3 + 1), (rest1.length) );
+          }
+          const idxSlice2 = TokenSlice.fromText(idxText_1);
+          if ( (idxSlice2).length() == 0 ) {
+            return "";
+          }
+          if ( idxSlice2.hasInteger(0, ((idxSlice2).length() - 1)) ) {
+          } else {
+            return "";
+          }
+          const partIdx = idxSlice2.parseInteger(0, ((idxSlice2).length() - 1));
+          if ( (partIdx < 0) || (partIdx >= (rb.parts.length)) ) {
+            return "";
+          }
+          const part = rb.parts[partIdx];
+          if ( (fieldName.length) == 0 ) {
+            return part.kind;
+          }
+          if ( fieldName == "kind" ) {
+            return part.kind;
+          }
+          if ( fieldName == "value" ) {
+            if ( part.kind == "positive-integer" ) {
+              if ( (typeof(part.positiveInteger) !== "undefined" && part.positiveInteger != null )  ) {
+                return "" + ((part.positiveInteger)).value;
+              }
+            }
+            if ( part.kind == "distance" ) {
+              if ( (typeof(part.distance) !== "undefined" && part.distance != null )  ) {
+                return "" + ((part.distance)).value;
+              }
+            }
+            if ( part.kind == "weight" ) {
+              if ( (typeof(part.weight) !== "undefined" && part.weight != null )  ) {
+                return "" + ((part.weight)).value;
+              }
+            }
+            if ( part.kind == "duration" ) {
+              if ( (typeof(part.duration) !== "undefined" && part.duration != null )  ) {
+                return "" + ((part.duration)).value;
+              }
+            }
+            if ( part.kind == "percentage" ) {
+              if ( (typeof(part.percentage) !== "undefined" && part.percentage != null )  ) {
+                return "" + ((part.percentage)).value;
+              }
+            }
+            return "";
+          }
+          if ( fieldName == "min" ) {
+            if ( part.kind == "num-range" ) {
+              if ( (typeof(part.numRange) !== "undefined" && part.numRange != null )  ) {
+                return "" + ((part.numRange)).minValue;
+              }
+            }
+            if ( part.kind == "percentage-range" ) {
+              if ( (typeof(part.percentageRange) !== "undefined" && part.percentageRange != null )  ) {
+                return "" + ((part.percentageRange)).minValue;
+              }
+            }
+            return "";
+          }
+          if ( fieldName == "max" ) {
+            if ( part.kind == "num-range" ) {
+              if ( (typeof(part.numRange) !== "undefined" && part.numRange != null )  ) {
+                return "" + ((part.numRange)).maxValue;
+              }
+            }
+            if ( part.kind == "percentage-range" ) {
+              if ( (typeof(part.percentageRange) !== "undefined" && part.percentageRange != null )  ) {
+                return "" + ((part.percentageRange)).maxValue;
+              }
+            }
+            return "";
+          }
+          if ( fieldName == "unit" ) {
+            if ( part.kind == "distance" ) {
+              if ( (typeof(part.distance) !== "undefined" && part.distance != null )  ) {
+                return ((part.distance)).unit;
+              }
+            }
+            if ( part.kind == "weight" ) {
+              if ( (typeof(part.weight) !== "undefined" && part.weight != null )  ) {
+                return ((part.weight)).unit;
+              }
+            }
+            if ( part.kind == "duration" ) {
+              if ( (typeof(part.duration) !== "undefined" && part.duration != null )  ) {
+                return ((part.duration)).unit;
+              }
+            }
+            return "";
+          }
+          return "";
         }
       }
       if ( kind == "left-right" ) {
         const lr = token.getAsLeftRightValue();
         if ( tail == "side" ) {
           return lr.side;
-        }
-      }
-      if ( kind == "set-rep-range-load" ) {
-        const sr = token.getAsSetRepRangeLoadValue();
-        if ( tail == "count" ) {
-          return "" + sr.count;
-        }
-        if ( tail == "setsMin" ) {
-          return "" + sr.setsMin;
-        }
-        if ( tail == "setsMax" ) {
-          return "" + sr.setsMax;
-        }
-        if ( tail == "repsMin" ) {
-          return "" + sr.repsMin;
-        }
-        if ( tail == "repsMax" ) {
-          return "" + sr.repsMax;
-        }
-        if ( tail == "mode" ) {
-          return sr.mode;
-        }
-        if ( tail == "load" ) {
-          return "" + sr.load;
-        }
-        if ( tail == "unit" ) {
-          return sr.unit;
         }
       }
       if ( kind == "feeling" ) {
@@ -7280,9 +6947,6 @@ TokenDetectorModule.createPercentageRange = function() {
 TokenDetectorModule.createRM = function() {
   return RMDetector.create();
 };
-TokenDetectorModule.createSetRepRangeLoad = function() {
-  return SetRepRangeLoadDetector.create();
-};
 TokenDetectorModule.createZone = function() {
   return ZoneDetector.create();
 };
@@ -7298,6 +6962,20 @@ TokenDetectorModule.createNGTestRunner = function() {
 TokenDetectorModule.createNGTestSpecParser = function() {
   return NGTestSpecParser.create();
 };
+class operatorsOfJSONArrayObject  {
+  constructor() {
+  }
+}
+operatorsOfJSONArrayObject.forEach_2 = function(__self, cb) {
+  let cnt = __self.length;
+  let i = 0;
+  while (cnt > 0) {
+    const value = __self[i];
+    cb(value, i);
+    cnt = cnt - 1;
+    i = i + 1;
+  };
+};
 module.exports.DateTimeValue = DateTimeValue;
 module.exports.DistanceValue = DistanceValue;
 module.exports.PercentageValue = PercentageValue;
@@ -7305,13 +6983,14 @@ module.exports.RecoveryTimeValue = RecoveryTimeValue;
 module.exports.WeightValue = WeightValue;
 module.exports.NumRangeValue = NumRangeValue;
 module.exports.PercentageRangeValue = PercentageRangeValue;
-module.exports.RepeatBlockValue = RepeatBlockValue;
-module.exports.SetRepRangeLoadValue = SetRepRangeLoadValue;
-module.exports.ZoneValue = ZoneValue;
 module.exports.PositiveIntegerValue = PositiveIntegerValue;
+module.exports.DurationValue = DurationValue;
+module.exports.TimeValueValue = TimeValueValue;
+module.exports.RepeatPartValue = RepeatPartValue;
+module.exports.RepeatBlockValue = RepeatBlockValue;
+module.exports.ZoneValue = ZoneValue;
 module.exports.DetailsLevelValue = DetailsLevelValue;
 module.exports.RecoveryValue = RecoveryValue;
-module.exports.TimeValueValue = TimeValueValue;
 module.exports.LeftRightValue = LeftRightValue;
 module.exports.FeelingValue = FeelingValue;
 module.exports.EffortValue = EffortValue;
@@ -7328,30 +7007,32 @@ module.exports.NewlineDetector = NewlineDetector;
 module.exports.PositiveIntegerDetector = PositiveIntegerDetector;
 module.exports.DecimalNumberDetector = DecimalNumberDetector;
 module.exports.TimeValueDetector = TimeValueDetector;
-module.exports.Parser = Parser;
 module.exports.DistanceDetector = DistanceDetector;
 module.exports.RecoveryTimeDetector = RecoveryTimeDetector;
 module.exports.AMTimeValueDetector = AMTimeValueDetector;
 module.exports.PercentageDetector = PercentageDetector;
-module.exports.WeightDetector = WeightDetector;
+module.exports.Parser = Parser;
 module.exports.NumRangeBlockDetector = NumRangeBlockDetector;
-module.exports.RecoveryDetector = RecoveryDetector;
+module.exports.PercentageRangeDetector = PercentageRangeDetector;
+module.exports.DurationDetector = DurationDetector;
+module.exports.NGSubParserDetectors = NGSubParserDetectors;
+module.exports.WeightDetector = WeightDetector;
 module.exports.RepeatBlockDetector = RepeatBlockDetector;
-module.exports.SetRepRangeLoadDetector = SetRepRangeLoadDetector;
 module.exports.SpeedDetector = SpeedDetector;
 module.exports.ZoneDetector = ZoneDetector;
+module.exports.NGChildDetectorRegistry = NGChildDetectorRegistry;
+module.exports.RecoveryDetector = RecoveryDetector;
 module.exports.LeftRightDetector = LeftRightDetector;
 module.exports.FeelingDetector = FeelingDetector;
 module.exports.EffortDetector = EffortDetector;
 module.exports.BodyMetricDetector = BodyMetricDetector;
 module.exports.CircuitDetector = CircuitDetector;
+module.exports.NGSharedLists = NGSharedLists;
 module.exports.ContextEntryDetector = ContextEntryDetector;
 module.exports.DistanceRangeBlockDetector = DistanceRangeBlockDetector;
-module.exports.NGSharedLists = NGSharedLists;
 module.exports.SemicolonSeparatorDetector = SemicolonSeparatorDetector;
 module.exports.KCALDetector = KCALDetector;
 module.exports.BPMDetector = BPMDetector;
-module.exports.PercentageRangeDetector = PercentageRangeDetector;
 module.exports.RMDetector = RMDetector;
 module.exports.RomanZoneDetector = RomanZoneDetector;
 module.exports.PhaseDetector = PhaseDetector;

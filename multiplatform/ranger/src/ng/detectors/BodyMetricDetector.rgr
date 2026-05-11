@@ -16,16 +16,7 @@ class BodyMetricDetector {
     }
 
     fn findLineEnd:int (slice:TokenSlice from:int) {
-        def len (slice.length())
-        def i@(mutable):int from
-        while (i < len) {
-            def ch (slice.charCodeAt(i))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            i = i + 1
-        }
-        return i
+        return (slice.findLineEnd(from))
     }
 
     fn createMetricSlice:TokenSlice (slice:TokenSlice offset:int lineEnd:int) {
@@ -60,16 +51,7 @@ class BodyMetricDetector {
     }
 
     fn parseIntegerPrefix:int (metricSlice:TokenSlice) {
-        def len (metricSlice.length())
-        def i@(mutable):int 0
-        while (i < len) {
-            def ch (metricSlice.charCodeAt(i))
-            if ((ch >= 48) && (ch <= 57)) {
-                i = i + 1
-            } {
-                break
-            }
-        }
+        def i (metricSlice.findNumberEnd(0))
         if (i == 0) {
             return -1
         }
@@ -85,116 +67,62 @@ class BodyMetricDetector {
         source.setSliceValue(parsed)
     }
 
-    fn detectWeight:TokenSlice (slice:TokenSlice) {
-        def prefix:string "Weight "
+    fn detectSimpleDoubleMetric:TokenSlice (
+        slice:TokenSlice
+        prefix:string
+        labelLen:int
+        metricName:string
+        unit:string
+        allowZero:boolean
+    ) {
         if (slice.hasToken(prefix)) {
         } {
             return (this.noMatch())
         }
 
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
+        def prefixLen (strlen prefix)
+        def lineEnd (this.findLineEnd(slice prefixLen))
         def out (slice.read(lineEnd))
         out.tag = detectedTag
-        def label (slice.read(6))
+
+        def label (slice.read(labelLen))
         label.tag = "keyword"
         out.addChild(label)
 
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
+        def metric (this.createMetricSlice(slice prefixLen lineEnd))
         def value (this.parseDoublePrefix(metric))
-        if (value <= 0.0) {
-            return (this.noMatch())
+        if (allowZero) {
+            if (value < 0.0) {
+                return (this.noMatch())
+            }
+        } {
+            if (value <= 0.0) {
+                return (this.noMatch())
+            }
         }
 
         def mv (new BodyMetricValue)
-        mv.metric = "weight"
+        mv.metric = metricName
         mv.primaryValue = value
-        mv.unit = "kg"
+        mv.unit = unit
         this.setCommon(out slice mv)
         return out
+    }
+
+    fn detectWeight:TokenSlice (slice:TokenSlice) {
+        return (this.detectSimpleDoubleMetric(slice "Weight " 6 "weight" "kg" false))
     }
 
     fn detectBodyFat:TokenSlice (slice:TokenSlice) {
-        def prefix:string "BodyFat "
-        if (slice.hasToken(prefix)) {
-        } {
-            return (this.noMatch())
-        }
-
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
-        def out (slice.read(lineEnd))
-        out.tag = detectedTag
-        def label (slice.read(7))
-        label.tag = "keyword"
-        out.addChild(label)
-
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
-        def value (this.parseDoublePrefix(metric))
-        if (value < 0.0) {
-            return (this.noMatch())
-        }
-
-        def mv (new BodyMetricValue)
-        mv.metric = "body-fat"
-        mv.primaryValue = value
-        mv.unit = "%"
-        this.setCommon(out slice mv)
-        return out
+        return (this.detectSimpleDoubleMetric(slice "BodyFat " 7 "body-fat" "%" true))
     }
 
     fn detectSleep:TokenSlice (slice:TokenSlice) {
-        def prefix:string "Sleep "
-        if (slice.hasToken(prefix)) {
-        } {
-            return (this.noMatch())
-        }
-
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
-        def out (slice.read(lineEnd))
-        out.tag = detectedTag
-        def label (slice.read(5))
-        label.tag = "keyword"
-        out.addChild(label)
-
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
-        def value (this.parseDoublePrefix(metric))
-        if (value <= 0.0) {
-            return (this.noMatch())
-        }
-
-        def mv (new BodyMetricValue)
-        mv.metric = "sleep"
-        mv.primaryValue = value
-        mv.unit = "h"
-        this.setCommon(out slice mv)
-        return out
+        return (this.detectSimpleDoubleMetric(slice "Sleep " 5 "sleep" "h" false))
     }
 
     fn detectRestingHr:TokenSlice (slice:TokenSlice) {
-        def prefix:string "Health resting_hr "
-        if (slice.hasToken(prefix)) {
-        } {
-            return (this.noMatch())
-        }
-
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
-        def out (slice.read(lineEnd))
-        out.tag = detectedTag
-        def label (slice.read(17))
-        label.tag = "keyword"
-        out.addChild(label)
-
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
-        def value (this.parseDoublePrefix(metric))
-        if (value <= 0.0) {
-            return (this.noMatch())
-        }
-
-        def mv (new BodyMetricValue)
-        mv.metric = "resting-hr"
-        mv.primaryValue = value
-        mv.unit = "bpm"
-        this.setCommon(out slice mv)
-        return out
+        return (this.detectSimpleDoubleMetric(slice "Health resting_hr " 17 "resting-hr" "bpm" false))
     }
 
     fn detectBp:TokenSlice (slice:TokenSlice) {
@@ -238,143 +166,23 @@ class BodyMetricDetector {
     }
 
     fn detectVitalsWeight:TokenSlice (slice:TokenSlice) {
-        def prefix:string "Vitals weight:"
-        if (slice.hasToken(prefix)) {
-        } {
-            return (this.noMatch())
-        }
-
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
-        def out (slice.read(lineEnd))
-        out.tag = detectedTag
-        def label (slice.read(13))
-        label.tag = "keyword"
-        out.addChild(label)
-
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
-        def value (this.parseDoublePrefix(metric))
-        if (value <= 0.0) {
-            return (this.noMatch())
-        }
-
-        def mv (new BodyMetricValue)
-        mv.metric = "weight"
-        mv.primaryValue = value
-        mv.unit = "kg"
-        this.setCommon(out slice mv)
-        return out
+        return (this.detectSimpleDoubleMetric(slice "Vitals weight:" 13 "weight" "kg" false))
     }
 
     fn detectVitalsSleep:TokenSlice (slice:TokenSlice) {
-        def prefix:string "Vitals sleep:"
-        if (slice.hasToken(prefix)) {
-        } {
-            return (this.noMatch())
-        }
-
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
-        def out (slice.read(lineEnd))
-        out.tag = detectedTag
-        def label (slice.read(12))
-        label.tag = "keyword"
-        out.addChild(label)
-
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
-        def value (this.parseDoublePrefix(metric))
-        if (value <= 0.0) {
-            return (this.noMatch())
-        }
-
-        def mv (new BodyMetricValue)
-        mv.metric = "sleep"
-        mv.primaryValue = value
-        mv.unit = "h"
-        this.setCommon(out slice mv)
-        return out
+        return (this.detectSimpleDoubleMetric(slice "Vitals sleep:" 12 "sleep" "h" false))
     }
 
     fn detectVitalsRhr:TokenSlice (slice:TokenSlice) {
-        def prefix:string "Vitals rhr:"
-        if (slice.hasToken(prefix)) {
-        } {
-            return (this.noMatch())
-        }
-
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
-        def out (slice.read(lineEnd))
-        out.tag = detectedTag
-        def label (slice.read(10))
-        label.tag = "keyword"
-        out.addChild(label)
-
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
-        def value (this.parseDoublePrefix(metric))
-        if (value <= 0.0) {
-            return (this.noMatch())
-        }
-
-        def mv (new BodyMetricValue)
-        mv.metric = "resting-hr"
-        mv.primaryValue = value
-        mv.unit = "bpm"
-        this.setCommon(out slice mv)
-        return out
+        return (this.detectSimpleDoubleMetric(slice "Vitals rhr:" 10 "resting-hr" "bpm" false))
     }
 
     fn detectWaist:TokenSlice (slice:TokenSlice) {
-        def prefix:string "Waist "
-        if (slice.hasToken(prefix)) {
-        } {
-            return (this.noMatch())
-        }
-
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
-        def out (slice.read(lineEnd))
-        out.tag = detectedTag
-        def label (slice.read(5))
-        label.tag = "keyword"
-        out.addChild(label)
-
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
-        def value (this.parseDoublePrefix(metric))
-        if (value <= 0.0) {
-            return (this.noMatch())
-        }
-
-        def mv (new BodyMetricValue)
-        mv.metric = "waist"
-        mv.primaryValue = value
-        mv.unit = "cm"
-        this.setCommon(out slice mv)
-        return out
+        return (this.detectSimpleDoubleMetric(slice "Waist " 5 "waist" "cm" false))
     }
 
     fn detectHip:TokenSlice (slice:TokenSlice) {
-        def prefix:string "Hip "
-        if (slice.hasToken(prefix)) {
-        } {
-            return (this.noMatch())
-        }
-
-        def lineEnd (this.findLineEnd(slice (strlen prefix)))
-        def out (slice.read(lineEnd))
-        out.tag = detectedTag
-        def label (slice.read(3))
-        label.tag = "keyword"
-        out.addChild(label)
-
-        def metric (this.createMetricSlice(slice (strlen prefix) lineEnd))
-        def value (this.parseDoublePrefix(metric))
-        if (value <= 0.0) {
-            return (this.noMatch())
-        }
-
-        def mv (new BodyMetricValue)
-        mv.metric = "hip"
-        mv.primaryValue = value
-        mv.unit = "cm"
-        this.setCommon(out slice mv)
-        return out
+        return (this.detectSimpleDoubleMetric(slice "Hip " 3 "hip" "cm" false))
     }
 
     fn detect:TokenSlice (slice:TokenSlice) {

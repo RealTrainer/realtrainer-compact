@@ -1,0 +1,117 @@
+Import "detectors/TokenDetector.rgr"
+Import "detectors/PositiveIntegerDetector.rgr"
+Import "detectors/DecimalNumberDetector.rgr"
+Import "detectors/KeywordDetector.rgr"
+Import "detectors/NumRangeBlockDetector.rgr"
+Import "detectors/SpaceDetector.rgr"
+Import "detectors/DistanceDetector.rgr"
+Import "detectors/WeightDetector.rgr"
+Import "detectors/PercentageDetector.rgr"
+Import "detectors/PercentageRangeDetector.rgr"
+Import "detectors/DurationDetector.rgr"
+Import "detectors/TimeValueDetector.rgr"
+
+; Lazy-cached detector lists used by detectors that delegate to a sub-Parser.
+; Avoids re-allocating identical detector arrays on every detect() call.
+; Lists must NOT be mutated by callers — they are shared singletons.
+class NGSubParserDetectors@(singleton) {
+    def kcalChildDetectors:[TokenDetector]
+    def bpmChildDetectors:[TokenDetector]
+    def rmChildDetectors:[TokenDetector]
+    def weightChildDetectors:[TokenDetector]
+    def positiveIntegerOnlyChildDetectors:[TokenDetector]
+    def percentageRangeChildDetectors:[TokenDetector]
+    def repeatBlockChildDetectors:[TokenDetector]
+
+    fn getKcalChildDetectors:[TokenDetector] () {
+        if ((array_length kcalChildDetectors) > 0) {
+            return kcalChildDetectors
+        }
+        def ds:[TokenDetector]
+        push ds (PositiveIntegerDetector.create())
+        push ds (KeywordDetector.create("kcal"))
+        kcalChildDetectors = ds
+        return kcalChildDetectors
+    }
+
+    fn getBpmChildDetectors:[TokenDetector] () {
+        if ((array_length bpmChildDetectors) > 0) {
+            return bpmChildDetectors
+        }
+        def ds:[TokenDetector]
+        push ds (PositiveIntegerDetector.create())
+        push ds (KeywordDetector.create("bpm"))
+        bpmChildDetectors = ds
+        return bpmChildDetectors
+    }
+
+    fn getRmChildDetectors:[TokenDetector] () {
+        if ((array_length rmChildDetectors) > 0) {
+            return rmChildDetectors
+        }
+        def ds:[TokenDetector]
+        push ds (PositiveIntegerDetector.create())
+        push ds (KeywordDetector.create("RM"))
+        rmChildDetectors = ds
+        return rmChildDetectors
+    }
+
+    fn getWeightChildDetectors:[TokenDetector] () {
+        if ((array_length weightChildDetectors) > 0) {
+            return weightChildDetectors
+        }
+        def ds:[TokenDetector]
+        push ds (DecimalNumberDetector.create())
+        push ds (PositiveIntegerDetector.create())
+        push ds (KeywordDetector.create("kg"))
+        weightChildDetectors = ds
+        return weightChildDetectors
+    }
+
+    fn getPositiveIntegerOnlyChildDetectors:[TokenDetector] () {
+        if ((array_length positiveIntegerOnlyChildDetectors) > 0) {
+            return positiveIntegerOnlyChildDetectors
+        }
+        def ds:[TokenDetector]
+        push ds (PositiveIntegerDetector.create())
+        positiveIntegerOnlyChildDetectors = ds
+        return positiveIntegerOnlyChildDetectors
+    }
+
+    fn getPercentageRangeChildDetectors:[TokenDetector] () {
+        if ((array_length percentageRangeChildDetectors) > 0) {
+            return percentageRangeChildDetectors
+        }
+        def ds:[TokenDetector]
+        push ds (SpaceDetector.create())
+        push ds (NumRangeBlockDetector.create())
+        push ds (KeywordDetector.create("%"))
+        percentageRangeChildDetectors = ds
+        return percentageRangeChildDetectors
+    }
+
+    ; Detectors used inside RepeatBlockDetector to parse each "part" of a
+    ; repeat sequence (e.g. parts in "4x3-8x60kg" or "30s" or "100m").
+    ; Order is critical:
+    ;   - PercentageRange before Percentage (longer prefix wins)
+    ;   - Distance/Weight/Duration consume their own units
+    ;   - NumRangeBlock before PositiveInteger so "2-3" wins over "2"
+    ;   - Keyword("x") for repeat separator, Keyword("@bw") for load mode marker
+    fn getRepeatBlockChildDetectors:[TokenDetector] () {
+        if ((array_length repeatBlockChildDetectors) > 0) {
+            return repeatBlockChildDetectors
+        }
+        def ds:[TokenDetector]
+        push ds (PercentageRangeDetector.create())
+        push ds (PercentageDetector.create())
+        push ds (DistanceDetector.create())
+        push ds (WeightDetector.create())
+        push ds (DurationDetector.create())
+        push ds (NumRangeBlockDetector.create())
+        push ds (PositiveIntegerDetector.create())
+        push ds (KeywordDetector.create("@bw"))
+        push ds (KeywordDetector.create("x"))
+        repeatBlockChildDetectors = ds
+        return repeatBlockChildDetectors
+    }
+}

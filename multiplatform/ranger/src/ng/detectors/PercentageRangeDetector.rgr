@@ -5,6 +5,7 @@ Import "detectors/KeywordDetector.rgr"
 Import "detectors/SpaceDetector.rgr"
 Import "values/PercentageRangeValue.rgr"
 Import "values/SliceParsedValue.rgr"
+Import "NGSubParserDetectors.rgr"
 
 class PercentageRangeDetector {
     Extends(TokenDetector)
@@ -19,10 +20,6 @@ class PercentageRangeDetector {
         return (new PercentageRangeDetector(s))
     }
 
-    fn isDigit:boolean (ch:int) {
-        return ((ch >= 48) && (ch <= 57))
-    }
-
     fn detect:TokenSlice (slice:TokenSlice) {
         def len (slice.length())
         if (len < 4) {
@@ -31,8 +28,7 @@ class PercentageRangeDetector {
 
         def i@(mutable):int 0
         while (i < len) {
-            def chL (slice.charCodeAt(i))
-            if (this.isDigit(chL)) {
+            if (slice.isDigitAt(i)) {
                 i = i + 1
             } {
                 break
@@ -42,8 +38,7 @@ class PercentageRangeDetector {
             if (((i + 1) < len) && ((slice.charCodeAt(i + 1)) == 45)) {
                 def j@(mutable):int (i + 2)
                 while (j < len) {
-                    def chR (slice.charCodeAt(j))
-                    if (this.isDigit(chR)) {
+                    if (slice.isDigitAt(j)) {
                         j = j + 1
                     } {
                         break
@@ -75,12 +70,10 @@ class PercentageRangeDetector {
             }
         }
 
-        def detectors:[TokenDetector]
-        push detectors (SpaceDetector.create())
-        push detectors (NumRangeBlockDetector.create())
-        push detectors (KeywordDetector.create("%"))
+        def subReg (new NGSubParserDetectors())
+        def detectors (subReg.getPercentageRangeChildDetectors())
 
-        def p (new Parser((slice.toString()) detectors))
+        def p (Parser.fromSlice(slice detectors))
         p.start()
         if ((p.getCount()) != 2) {
             return (this.noMatch())

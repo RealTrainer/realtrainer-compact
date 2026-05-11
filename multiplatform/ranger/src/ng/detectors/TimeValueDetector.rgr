@@ -35,16 +35,10 @@ class TimeValueDetector {
         def hour (slice.parseInteger(0 1))
         def minute (slice.parseInteger(3 4))
 
-        if (hour < 0) {
+        if (!(this.isHour24(hour))) {
             return (this.noMatch())
         }
-        if (hour > 23) {
-            return (this.noMatch())
-        }
-        if (minute < 0) {
-            return (this.noMatch())
-        }
-        if (minute > 59) {
+        if (!(this.isMinuteSecond(minute))) {
             return (this.noMatch())
         }
 

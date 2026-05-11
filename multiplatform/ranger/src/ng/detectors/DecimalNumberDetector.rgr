@@ -13,16 +13,6 @@ class DecimalNumberDetector {
         return (new DecimalNumberDetector(s))
     }
 
-    fn isDigit:boolean (ch:int) {
-        if (ch < 48) {
-            return false
-        }
-        if (ch > 57) {
-            return false
-        }
-        return true
-    }
-
     fn detect:TokenSlice (slice:TokenSlice) {
         def len (slice.length())
         if (len == 0) {
@@ -31,8 +21,7 @@ class DecimalNumberDetector {
 
         def i@(mutable):int 0
         while (i < len) {
-            def ch (slice.charCodeAt(i))
-            if (this.isDigit(ch)) {
+            if (slice.isDigitAt(i)) {
                 i = i + 1
             } {
                 break
@@ -50,8 +39,7 @@ class DecimalNumberDetector {
 
         def j@(mutable):int (i + 1)
         while (j < len) {
-            def ch2 (slice.charCodeAt(j))
-            if (this.isDigit(ch2)) {
+            if (slice.isDigitAt(j)) {
                 j = j + 1
             } {
                 break

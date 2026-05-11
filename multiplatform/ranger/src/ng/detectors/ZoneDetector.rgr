@@ -15,23 +15,6 @@ class ZoneDetector {
         return (new ZoneDetector(s))
     }
 
-    fn isDigit:boolean (ch:int) {
-        return ((ch >= 48) && (ch <= 57))
-    }
-
-    fn isAlphaNum:boolean (ch:int) {
-        if ((ch >= 48) && (ch <= 57)) {
-            return true
-        }
-        if ((ch >= 65) && (ch <= 90)) {
-            return true
-        }
-        if ((ch >= 97) && (ch <= 122)) {
-            return true
-        }
-        return false
-    }
-
     fn detect:TokenSlice (slice:TokenSlice) {
         if (slice.hasToken("Zone")) {
         } {
@@ -53,8 +36,7 @@ class ZoneDetector {
 
         def startDigits i
         while (i < len) {
-            def ch (slice.charCodeAt(i))
-            if (this.isDigit(ch)) {
+            if (slice.isDigitAt(i)) {
                 i = i + 1
             } {
                 break
@@ -77,8 +59,7 @@ class ZoneDetector {
         }
 
         if (i < len) {
-            def next (slice.charCodeAt(i))
-            if (this.isAlphaNum(next)) {
+            if (slice.isAlphaNumAt(i)) {
                 return (this.noMatch())
             }
         }

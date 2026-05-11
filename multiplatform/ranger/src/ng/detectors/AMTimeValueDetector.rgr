@@ -19,15 +19,7 @@ class AMTimeValueDetector {
             return (this.noMatch())
         }
 
-        def i@(mutable):int 0
-        while (i < len) {
-            def ch (slice.charCodeAt(i))
-            if ((ch >= 48) && (ch <= 57)) {
-                i = i + 1
-            } {
-                break
-            }
-        }
+        def i (slice.findNumberEnd(0))
         if (i <= 0) {
             return (this.noMatch())
         }
@@ -41,7 +33,7 @@ class AMTimeValueDetector {
             return (this.noMatch())
         }
         def hour (valuePart.parseInteger(0 (i - 1)))
-        if ((hour < 1) || (hour > 12)) {
+        if (!(this.isHour12(hour))) {
             return (this.noMatch())
         }
 

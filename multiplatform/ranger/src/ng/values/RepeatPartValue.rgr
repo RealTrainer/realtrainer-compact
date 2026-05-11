@@ -1,0 +1,20 @@
+Import "values/PositiveIntegerValue.rgr"
+Import "values/NumRangeValue.rgr"
+Import "values/DistanceValue.rgr"
+Import "values/WeightValue.rgr"
+Import "values/DurationValue.rgr"
+Import "values/TimeValueValue.rgr"
+Import "values/PercentageValue.rgr"
+Import "values/PercentageRangeValue.rgr"
+
+class RepeatPartValue @serialize(true) {
+    def kind:string ""
+    def positiveInteger@(optional):PositiveIntegerValue
+    def numRange@(optional):NumRangeValue
+    def distance@(optional):DistanceValue
+    def weight@(optional):WeightValue
+    def duration@(optional):DurationValue
+    def timeValue@(optional):TimeValueValue
+    def percentage@(optional):PercentageValue
+    def percentageRange@(optional):PercentageRangeValue
+}

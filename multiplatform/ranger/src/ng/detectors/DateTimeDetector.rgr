@@ -5,9 +5,6 @@ Import "values/SliceParsedValue.rgr"
 class DateTimeDetector {
     Extends(TokenDetector)
 
-    ; Cache of previously parsed date time values for slices
-    def sliceMap:[TokenSlice:DateTimeValue]
-    def sliceHitMap:[TokenSlice:TokenSlice]
     def parseDateShapeCalls:int 0
 
     Constructor (noMatchSlice:TokenSlice) {
@@ -20,33 +17,10 @@ class DateTimeDetector {
         return (new DateTimeDetector(s))
     }
 
-    fn parseToMap:TokenSlice (slice:TokenSlice) {
-        if (has sliceMap slice) {
-            def cachedHit@(optional):TokenSlice (get sliceHitMap slice)
-            if (!null? cachedHit) {
-                def hit (unwrap cachedHit)
-                def cachedVal@(optional):DateTimeValue (get sliceMap slice)
-                if (!null? cachedVal) {
-                    def payload (SliceParsedValue.fromDateTime((unwrap cachedVal)))
-                    hit.setSliceValue(payload)
-                    slice.setSliceValue(payload)
-                }
-                return hit
-            }
-            return (this.noMatch())
-        }
-
-        def newSlice ( this.parseDateShape(slice) )
-        return newSlice
-    }
-
     fn getParseDateShapeCalls:int () {
         return parseDateShapeCalls
     }
 
-    fn hasCachedValue:boolean (slice:TokenSlice) {
-        return (has sliceMap slice)
-    }
 
     fn parseDateShape:TokenSlice (slice:TokenSlice) {
         parseDateShapeCalls = parseDateShapeCalls + 1
@@ -116,26 +90,17 @@ class DateTimeDetector {
                 return (this.noMatch())
             }
 
-            if (out.hour < 0) {
+            if (!(this.isHour24(out.hour))) {
                 return (this.noMatch())
             }
-            if (out.hour > 23) {
-                return (this.noMatch())
-            }
-            if (out.minute < 0) {
-                return (this.noMatch())
-            }
-            if (out.minute > 59) {
+            if (!(this.isMinuteSecond(out.minute))) {
                 return (this.noMatch())
             }
 
             def idx@(mutable):int 16
             if (((slice.length()) >= 19) && ((slice.charCodeAt(16)) == 58)) {
                 out.second = (slice.parseInteger(17 18))
-                if (out.second < 0) {
-                    return (this.noMatch())
-                }
-                if (out.second > 59) {
+                if (!(this.isMinuteSecond(out.second))) {
                     return (this.noMatch())
                 }
                 idx = 19
@@ -164,16 +129,10 @@ class DateTimeDetector {
 
                         def tzHour (slice.parseInteger((idx + 1) (idx + 2)))
                         def tzMin (slice.parseInteger((idx + 4) (idx + 5)))
-                        if (tzHour < 0) {
+                        if (!(this.isHour24(tzHour))) {
                             return (this.noMatch())
                         }
-                        if (tzHour > 23) {
-                            return (this.noMatch())
-                        }
-                        if (tzMin < 0) {
-                            return (this.noMatch())
-                        }
-                        if (tzMin > 59) {
+                        if (!(this.isMinuteSecond(tzMin))) {
                             return (this.noMatch())
                         }
 
@@ -193,19 +152,12 @@ class DateTimeDetector {
         def payload2 (SliceParsedValue.fromDateTime(out))
         newSlice.setSliceValue(payload2)
         slice.setSliceValue(payload2)
-
-        ; add both the slice and the new value to the map
-        ; so that we can detect the same slice faster next time
-        set sliceMap newSlice out
-        set sliceMap slice out
-        set sliceHitMap newSlice newSlice
-        set sliceHitMap slice newSlice
         return newSlice
     }
 
 
 
     fn detect:TokenSlice (slice:TokenSlice) {
-        return (this.parseToMap(slice))
+        return (this.parseDateShape(slice))
     }
 }

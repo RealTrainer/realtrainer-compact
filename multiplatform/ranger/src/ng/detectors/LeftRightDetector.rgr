@@ -1,13 +1,6 @@
 Import "detectors/TokenDetector.rgr"
+Import "NGChildDetectorRegistry.rgr"
 Import "Parser.rgr"
-Import "detectors/RepeatBlockDetector.rgr"
-Import "detectors/WeightDetector.rgr"
-Import "detectors/SetRepRangeLoadDetector.rgr"
-Import "detectors/DistanceDetector.rgr"
-Import "detectors/SpeedDetector.rgr"
-Import "detectors/ZoneDetector.rgr"
-Import "detectors/PositiveIntegerDetector.rgr"
-Import "detectors/DecimalNumberDetector.rgr"
 Import "values/LeftRightValue.rgr"
 Import "values/SliceParsedValue.rgr"
 
@@ -25,16 +18,8 @@ class LeftRightDetector {
     }
 
     fn createChildDetectors:[TokenDetector] () {
-        def ds:[TokenDetector]
-        push ds (SetRepRangeLoadDetector.create())
-        push ds (RepeatBlockDetector.create())
-        push ds (WeightDetector.create())
-        push ds (DistanceDetector.create())
-        push ds (SpeedDetector.create())
-        push ds (ZoneDetector.create())
-        push ds (DecimalNumberDetector.create())
-        push ds (PositiveIntegerDetector.create())
-        return ds
+        def reg (new NGChildDetectorRegistry())
+        return (reg.getLeftRightChildDetectors())
     }
 
     fn detectWithSide:TokenSlice (slice:TokenSlice side:string) {
@@ -50,14 +35,7 @@ class LeftRightDetector {
             return (this.noMatch())
         }
 
-        def lineEnd@(mutable):int keyLen
-        while (lineEnd < len) {
-            def ch (slice.charCodeAt(lineEnd))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
+        def lineEnd (slice.findLineEnd(keyLen))
 
         def out (slice.read(lineEnd))
         out.tag = detectedTag
@@ -66,19 +44,11 @@ class LeftRightDetector {
         sideToken.tag = "keyword"
         out.addChild(sideToken)
 
-        def restStart@(mutable):int keyLen
-        while (restStart < lineEnd) {
-            def ch2 (slice.charCodeAt(restStart))
-            if ((ch2 == 32) || (ch2 == 9)) {
-                restStart = restStart + 1
-            } {
-                break
-            }
-        }
+        def restStart (slice.findWhitespaceEnd(keyLen))
 
         if (restStart < lineEnd) {
             def payload (slice.peek(restStart).read(lineEnd - restStart))
-            def p (new Parser((payload.toString()) (this.createChildDetectors())))
+            def p (Parser.fromSlice(payload (this.createChildDetectors())))
             p.start()
             def children (p.getResults())
             for children ch3:TokenSlice i {

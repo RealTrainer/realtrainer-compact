@@ -19,42 +19,62 @@ class DistanceRangeBlockDetector {
             return (this.noMatch())
         }
 
-        def dashPos (slice.findTokenPos("-"))
-        if (dashPos <= 0) {
+        def lLen (slice.findNumberEnd(0))
+        if (lLen <= 0) {
+            return (this.noMatch())
+        }
+        if (!(slice.hasInteger(0 (lLen - 1)))) {
+            return (this.noMatch())
+        }
+        if (lLen >= len) {
             return (this.noMatch())
         }
 
+        def sep (slice.charCodeAt(lLen))
+
         ; variant A: 100-200m
-        def leftA (slice.read(dashPos))
-        if (leftA.hasInteger(0 ((leftA.length()) - 1))) {
-            def rightA (slice.peek(dashPos + 1))
-            def rightPartA (rightA.splitWithToken("m"))
-            def rLenA (rightPartA.length())
-            if (rLenA > 0) {
-                if (rightPartA.hasInteger(0 (rLenA - 1))) {
-                    if ((rLenA + 1) <= (rightA.length())) {
-                        if ((rightA.charCodeAt(rLenA)) == 109) {
-                            def lvalA (leftA.parseInteger(0 ((leftA.length()) - 1)))
-                            def rvalA (rightPartA.parseInteger(0 (rLenA - 1)))
-                            if ((lvalA > 0) && (rvalA > 0)) {
-                                def outA (slice.read(dashPos + 1 + rLenA + 1))
-                                outA.tag = detectedTag
-                                return outA
-                            }
-                        }
-                    }
-                }
+        if (sep == 45) {
+            def rightAStart (lLen + 1)
+            if (rightAStart >= len) {
+                return (this.noMatch())
             }
+
+            def rightA (slice.peek(rightAStart))
+            def rLenA (rightA.findNumberEnd(0))
+            if (rLenA <= 0) {
+                return (this.noMatch())
+            }
+            if (!(rightA.hasInteger(0 (rLenA - 1)))) {
+                return (this.noMatch())
+            }
+            if ((rLenA + 1) > (rightA.length())) {
+                return (this.noMatch())
+            }
+            if ((rightA.charCodeAt(rLenA)) != 109) {
+                return (this.noMatch())
+            }
+
+            def lvalA (slice.parseInteger(0 (lLen - 1)))
+            def rvalA (rightA.parseInteger(0 (rLenA - 1)))
+            if ((lvalA <= 0) || (rvalA <= 0)) {
+                return (this.noMatch())
+            }
+
+            def outA (slice.read(rightAStart + rLenA + 1))
+            outA.tag = detectedTag
+            return outA
+        }
+
+        if (sep != 109) {
+            return (this.noMatch())
         }
 
         ; variant B: 100m-200m
-        def leftPartB (slice.splitWithToken("m-"))
-        def lLenB (leftPartB.length())
-        if (lLenB <= 0) {
+        def lLenB lLen
+        if ((lLenB + 2) > len) {
             return (this.noMatch())
         }
-        if (leftPartB.hasInteger(0 (lLenB - 1))) {
-        } {
+        if ((slice.charCodeAt(lLenB + 1)) != 45) {
             return (this.noMatch())
         }
 
@@ -63,12 +83,11 @@ class DistanceRangeBlockDetector {
             return (this.noMatch())
         }
         def rightB (slice.peek(rightBStart))
-        def rightPartB (rightB.splitWithToken("m"))
-        def rLenB (rightPartB.length())
+        def rLenB (rightB.findNumberEnd(0))
         if (rLenB <= 0) {
             return (this.noMatch())
         }
-        if (rightPartB.hasInteger(0 (rLenB - 1))) {
+        if (rightB.hasInteger(0 (rLenB - 1))) {
         } {
             return (this.noMatch())
         }
@@ -79,8 +98,8 @@ class DistanceRangeBlockDetector {
             return (this.noMatch())
         }
 
-        def lvalB (leftPartB.parseInteger(0 (lLenB - 1)))
-        def rvalB (rightPartB.parseInteger(0 (rLenB - 1)))
+        def lvalB (slice.parseInteger(0 (lLenB - 1)))
+        def rvalB (rightB.parseInteger(0 (rLenB - 1)))
         if ((lvalB <= 0) || (rvalB <= 0)) {
             return (this.noMatch())
         }

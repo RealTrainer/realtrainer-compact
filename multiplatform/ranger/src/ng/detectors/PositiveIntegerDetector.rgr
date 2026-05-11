@@ -15,16 +15,6 @@ class PositiveIntegerDetector {
         return (new PositiveIntegerDetector(s))
     }
 
-    fn isDigit:boolean (ch:int) {
-        if (ch < 48) {
-            return false
-        }
-        if (ch > 57) {
-            return false
-        }
-        return true
-    }
-
     fn detect:TokenSlice (slice:TokenSlice) {
         if ((slice.length()) == 0) {
             return (this.noMatch())
@@ -34,9 +24,8 @@ class PositiveIntegerDetector {
         def hasNonZero@(mutable):boolean false
 
         while (i < (slice.length())) {
-            def ch (slice.charCodeAt(i))
-            if (this.isDigit(ch)) {
-                if (ch != 48) {
+            if (slice.isDigitAt(i)) {
+                if ((slice.digitAt(i)) != 0) {
                     hasNonZero = true
                 }
                 i = i + 1

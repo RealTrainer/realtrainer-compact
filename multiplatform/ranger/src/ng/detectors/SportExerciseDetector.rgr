@@ -53,16 +53,6 @@ class SportExerciseDetector {
         return true
     }
 
-    fn isWhitespace:boolean (ch:int) {
-        if (ch == 32) {
-            return true
-        }
-        if (ch == 9) {
-            return true
-        }
-        return false
-    }
-
     fn isUppercaseLetter:boolean (ch:int) {
         return ((ch >= 65) && (ch <= 90))
     }
@@ -78,100 +68,8 @@ class SportExerciseDetector {
     }
 
     fn isReservedGenericName:boolean (name:string) {
-        if (name == "Split") {
-            return true
-        }
-        if (name == "Attempt") {
-            return true
-        }
-        if (name == "Recovery") {
-            return true
-        }
-        if (name == "Left") {
-            return true
-        }
-        if (name == "Right") {
-            return true
-        }
-        if (name == "Feeling") {
-            return true
-        }
-        if (name == "Feelings") {
-            return true
-        }
-        if (name == "Pain") {
-            return true
-        }
-        if (name == "Effort") {
-            return true
-        }
-        if (name == "RPE") {
-            return true
-        }
-        if (name == "Circuit") {
-            return true
-        }
-        if (name == "Food") {
-            return true
-        }
-        if (name == "Drinking") {
-            return true
-        }
-        if (name == "Expense") {
-            return true
-        }
-        if (name == "Reminder") {
-            return true
-        }
-        if (name == "Protein") {
-            return true
-        }
-        if (name == "Weight") {
-            return true
-        }
-        if (name == "BodyFat") {
-            return true
-        }
-        if (name == "Sleep") {
-            return true
-        }
-        if (name == "Health") {
-            return true
-        }
-        if (name == "Vitals") {
-            return true
-        }
-        if (name == "Comment") {
-            return true
-        }
-        if (name == "Custom") {
-            return true
-        }
-        if (name == "Tags") {
-            return true
-        }
-        if (name == "Emojis") {
-            return true
-        }
-        if (name == "Summary") {
-            return true
-        }
-        if (name == "Derived") {
-            return true
-        }
-        if (name == "URL") {
-            return true
-        }
-        if (name == "Waist") {
-            return true
-        }
-        if (name == "Hip") {
-            return true
-        }
-        if (name == "Blorple") {
-            return true
-        }
-        return false
+        def shared (new NGSharedLists())
+        return (shared.isReservedGenericExerciseName(name))
     }
 
     fn scanGenericNameEnd:int (slice:TokenSlice) {
@@ -198,7 +96,7 @@ class SportExerciseDetector {
             def gapStart pos
             while (pos < len) {
                 def gapCh (slice.charCodeAt(pos))
-                if (this.isWhitespace(gapCh)) {
+                if (slice.isWhitespace(gapCh)) {
                     pos = pos + 1
                 } {
                     break
@@ -227,12 +125,12 @@ class SportExerciseDetector {
         return nameEnd
     }
 
-    fn isSeparator:boolean (ch:int) {
-        if (this.isWhitespace(ch)) {
+    fn isSeparator:boolean (slice:TokenSlice index:int) {
+        if (slice.isWhitespaceAt(index)) {
             return true
         }
         ; ';'
-        if (ch == 59) {
+        if ((slice.charCodeAt(index)) == 59) {
             return true
         }
         return false
@@ -242,7 +140,7 @@ class SportExerciseDetector {
         def out@(mutable):int endPos
         while (out > 0) {
             def ch (slice.charCodeAt(out - 1))
-            if (this.isWhitespace(ch)) {
+            if (slice.isWhitespace(ch)) {
                 out = out - 1
             } {
                 break
@@ -257,14 +155,7 @@ class SportExerciseDetector {
             return (this.noMatch())
         }
 
-        def lineEnd@(mutable):int 0
-        while (lineEnd < len) {
-            def chLine (slice.charCodeAt(lineEnd))
-            if ((chLine == 10) || (chLine == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
+        def lineEnd (slice.findLineEnd(0))
 
         if (lineEnd <= 0) {
             return (this.noMatch())
@@ -273,7 +164,7 @@ class SportExerciseDetector {
         def startPos@(mutable):int 0
         while (startPos < lineEnd) {
             def chStart (slice.charCodeAt(startPos))
-            if (this.isWhitespace(chStart)) {
+            if (slice.isWhitespace(chStart)) {
                 startPos = startPos + 1
             } {
                 break
@@ -319,8 +210,7 @@ class SportExerciseDetector {
                     break
                 }
 
-                def chAfterName (slice.charCodeAt(sportLen))
-                if (this.isSeparator(chAfterName)) {
+                if (this.isSeparator(slice sportLen)) {
                     matched = true
                     break
                 }
@@ -337,8 +227,7 @@ class SportExerciseDetector {
                     if (genericLen == lineEnd) {
                         matched = true
                     } {
-                        def chAfterGeneric (slice.charCodeAt(genericLen))
-                        if (this.isSeparator(chAfterGeneric)) {
+                        if (this.isSeparator(slice genericLen)) {
                             matched = true
                         }
                     }
@@ -370,8 +259,7 @@ class SportExerciseDetector {
         if (semicolonPos >= 0) {
             def restStart@(mutable):int (semicolonPos + 1)
             while (restStart < lineEnd) {
-                def chSpace (slice.charCodeAt(restStart))
-                if (this.isSeparator(chSpace)) {
+                if (this.isSeparator(slice restStart)) {
                     restStart = restStart + 1
                 } {
                     break
@@ -380,7 +268,7 @@ class SportExerciseDetector {
 
             if (restStart < lineEnd) {
                 def restSlice (slice.peek(restStart).read(lineEnd - restStart))
-                def p (new Parser((restSlice.toString()) (this.createChildDetectors())))
+                def p (Parser.fromSlice(restSlice (this.createChildDetectors())))
                 p.start()
 
                 def children (p.getResults())

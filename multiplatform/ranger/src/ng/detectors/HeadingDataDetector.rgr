@@ -13,43 +13,23 @@ class HeadingDataDetector {
         return (new HeadingDataDetector(s))
     }
 
-    fn isWhitespace:boolean (ch:int) {
-        if (ch == 32) {
-            return true
-        }
-        if (ch == 9) {
-            return true
-        }
-        return false
-    }
-
-    fn isDigit:boolean (ch:int) {
-        if (ch < 48) {
-            return false
-        }
-        if (ch > 57) {
-            return false
-        }
-        return true
-    }
-
     fn hasIsoDatePrefix:boolean (slice:TokenSlice start:int) {
         if (((start + 10) > (slice.length()))) {
             return false
         }
-        if (this.isDigit((slice.charCodeAt(start + 0)))) {
+        if (slice.isDigitAt(start + 0)) {
         } {
             return false
         }
-        if (this.isDigit((slice.charCodeAt(start + 1)))) {
+        if (slice.isDigitAt(start + 1)) {
         } {
             return false
         }
-        if (this.isDigit((slice.charCodeAt(start + 2)))) {
+        if (slice.isDigitAt(start + 2)) {
         } {
             return false
         }
-        if (this.isDigit((slice.charCodeAt(start + 3)))) {
+        if (slice.isDigitAt(start + 3)) {
         } {
             return false
         }
@@ -57,11 +37,11 @@ class HeadingDataDetector {
         } {
             return false
         }
-        if (this.isDigit((slice.charCodeAt(start + 5)))) {
+        if (slice.isDigitAt(start + 5)) {
         } {
             return false
         }
-        if (this.isDigit((slice.charCodeAt(start + 6)))) {
+        if (slice.isDigitAt(start + 6)) {
         } {
             return false
         }
@@ -69,11 +49,11 @@ class HeadingDataDetector {
         } {
             return false
         }
-        if (this.isDigit((slice.charCodeAt(start + 8)))) {
+        if (slice.isDigitAt(start + 8)) {
         } {
             return false
         }
-        if (this.isDigit((slice.charCodeAt(start + 9)))) {
+        if (slice.isDigitAt(start + 9)) {
         } {
             return false
         }
@@ -107,7 +87,7 @@ class HeadingDataDetector {
                     def i2@(mutable):int (closeIdx + 1)
                     while (i2 < len) {
                         def chSpace (slice.charCodeAt(i2))
-                        if (this.isWhitespace(chSpace)) {
+                        if (slice.isWhitespace(chSpace)) {
                             i2 = i2 + 1
                         } {
                             break

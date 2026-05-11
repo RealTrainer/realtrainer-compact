@@ -1,14 +1,6 @@
 Import "detectors/TokenDetector.rgr"
+Import "NGChildDetectorRegistry.rgr"
 Import "Parser.rgr"
-Import "detectors/DistanceDetector.rgr"
-Import "detectors/RecoveryTimeDetector.rgr"
-Import "detectors/TimeValueDetector.rgr"
-Import "detectors/AMTimeValueDetector.rgr"
-Import "detectors/PercentageDetector.rgr"
-Import "detectors/WeightDetector.rgr"
-Import "detectors/NumRangeBlockDetector.rgr"
-Import "detectors/PositiveIntegerDetector.rgr"
-Import "detectors/KeywordDetector.rgr"
 Import "values/RecoveryValue.rgr"
 Import "values/SliceParsedValue.rgr"
 
@@ -25,34 +17,9 @@ class RecoveryDetector {
         return (new RecoveryDetector(s))
     }
 
-    fn isAlphaNum:boolean (ch:int) {
-        if ((ch >= 48) && (ch <= 57)) {
-            return true
-        }
-        if ((ch >= 65) && (ch <= 90)) {
-            return true
-        }
-        if ((ch >= 97) && (ch <= 122)) {
-            return true
-        }
-        return false
-    }
-
     fn createChildDetectors:[TokenDetector] () {
-        def ds:[TokenDetector]
-        push ds (DistanceDetector.create())
-        push ds (RecoveryTimeDetector.create())
-        push ds (TimeValueDetector.create())
-        push ds (AMTimeValueDetector.create())
-        push ds (PercentageDetector.create())
-        push ds (WeightDetector.create())
-        push ds (NumRangeBlockDetector.create())
-        push ds (PositiveIntegerDetector.create())
-        push ds (KeywordDetector.create("min"))
-        push ds (KeywordDetector.create("sec"))
-        push ds (KeywordDetector.create("s"))
-        push ds (KeywordDetector.create("m"))
-        return ds
+        def reg (new NGChildDetectorRegistry())
+        return (reg.getRecoveryChildDetectors())
     }
 
     fn detect:TokenSlice (slice:TokenSlice) {
@@ -69,19 +36,11 @@ class RecoveryDetector {
             return (this.noMatch())
         }
 
-        def next (slice.charCodeAt(keyLen))
-        if (this.isAlphaNum(next)) {
+        if (slice.isAlphaNumAt(keyLen)) {
             return (this.noMatch())
         }
 
-        def lineEnd@(mutable):int keyLen
-        while (lineEnd < len) {
-            def ch (slice.charCodeAt(lineEnd))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
+        def lineEnd (slice.findLineEnd(keyLen))
 
         def out (slice.read(lineEnd))
         out.tag = detectedTag
@@ -90,19 +49,11 @@ class RecoveryDetector {
         labelToken.tag = "keyword"
         out.addChild(labelToken)
 
-        def restStart@(mutable):int keyLen
-        while (restStart < lineEnd) {
-            def ch2 (slice.charCodeAt(restStart))
-            if ((ch2 == 32) || (ch2 == 9)) {
-                restStart = restStart + 1
-            } {
-                break
-            }
-        }
+        def restStart (slice.findWhitespaceEnd(keyLen))
 
         if (restStart < lineEnd) {
             def rest (slice.peek(restStart).read(lineEnd - restStart))
-            def p (new Parser((rest.toString()) (this.createChildDetectors())))
+            def p (Parser.fromSlice(rest (this.createChildDetectors())))
             p.start()
             def children (p.getResults())
             for children ch:TokenSlice i {

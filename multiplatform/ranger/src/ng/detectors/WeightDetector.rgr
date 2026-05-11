@@ -2,6 +2,7 @@ Import "detectors/TokenDetector.rgr"
 Import "Parser.rgr"
 Import "detectors/PositiveIntegerDetector.rgr"
 Import "detectors/KeywordDetector.rgr"
+Import "NGSubParserDetectors.rgr"
 Import "values/WeightValue.rgr"
 Import "values/SliceParsedValue.rgr"
 
@@ -24,11 +25,10 @@ class WeightDetector {
             return (this.noMatch())
         }
 
-        def detectors:[TokenDetector]
-        push detectors (PositiveIntegerDetector.create())
-        push detectors (KeywordDetector.create("kg"))
+        def subReg (new NGSubParserDetectors())
+        def detectors (subReg.getWeightChildDetectors())
 
-        def p (new Parser((slice.toString()) detectors))
+        def p (Parser.fromSlice(slice detectors))
         p.start()
         if ((p.getCount()) != 2) {
             return (this.noMatch())
@@ -38,7 +38,9 @@ class WeightDetector {
         def first (itemAt parts 0)
         def second (itemAt parts 1)
 
-        if (!(first.tag == "positive-integer")) {
+        def isInt (first.tag == "positive-integer")
+        def isDec (first.tag == "decimal-number")
+        if ((isInt == false) && (isDec == false)) {
             return (this.noMatch())
         }
         if (!(second.tag == "keyword")) {
@@ -56,7 +58,7 @@ class WeightDetector {
 
         def firstLen (first.length())
         def wv (new WeightValue)
-        wv.value = (first.parseInteger(0 (firstLen - 1)))
+        wv.value = (first.parseDouble(0 (firstLen - 1)))
         wv.unit = "kg"
         def payload (SliceParsedValue.fromWeight(wv))
         out.setSliceValue(payload)

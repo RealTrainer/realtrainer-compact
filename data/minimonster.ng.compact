@@ -5,10 +5,10 @@ Text Single workout with ALL content type variations for UI testing
 Tags juoksu, voimakestävyys, test
 Emojis 🏃💪
 Summary Testataan kaikki renderöitävät muodot
-juoksu
-intervallit
-tekniikka
-joku vapaa tarkenne
+Juoksu
+Intervallit
+Tekniikka
+Joku vapaa tarkenne
 Derived strength.neural_stress 72; score basis:entity confidence:88% source:exercise+load goodness:4
 Derived strength.max_strength_emphasis 45; score basis:entity confidence:75% source:rep-range goodness:3
 Derived strength.power_emphasis 80; score basis:entity confidence:90% source:movement-speed goodness:5
@@ -72,18 +72,18 @@ Interval 4x400m@80-90%/2m
 Interval 5x200m@50%/2min
 Interval 6x3min@Ylämäki/2m palautus
 Interval 6x200m@Z4
-penkki
+Penkki
 > Attempt 10@40kg
 > Attempt 8@50kg
 > Attempt 6@60kg
 > Comment kommentti
-kyykky
+Kyykky
 > Attempt 5@80kg
 > Attempt 5@80kg
 > Attempt 5@80kg
 > Attempt 2@85kg
 > Attempt 2@85kg
-naruhyppely
+Naruhyppely
 > Attempt 10
 > Attempt 20
 > Attempt 30
@@ -128,9 +128,9 @@ Best lankku; 225
 Feeling 8/10
 Feeling RPE:7
 Feeling 9/10
-Feeling
+Feeling ?/10
 Feeling; pelkkä kommentti
-Feeling
+Feeling ?/10
 Pain polvi; 2/10 lievä jäykkyys
 Pain -; palautunut
 Vitals weight:85.2kg
@@ -153,12 +153,12 @@ Expense 100EUR ALV24% 19.35EUR; Konsultointi
 Expense 50EUR ALV10%; Ruoka
 Reminder 2026-01-15; Ilmoittautuminen päättyy
 Reminder 2026-01-01
-Location Tampere, Pirkkahalli
+Location; Tampere, Pirkkahalli
 URL https://example.com
 Weight 85.2kg
 BodyFat 12.5%
-waist 82cm
-hip 95cm
+Waist 82cm
+Hip 95cm
 Sleep 7.5h quality:good hrv:45 rhr:52
 Sleep 8h
 Sleep 6.5h quality:poor

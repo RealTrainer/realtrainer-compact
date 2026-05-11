@@ -6,7 +6,6 @@ Import "values/WeightValue.rgr"
 Import "values/NumRangeValue.rgr"
 Import "values/PercentageRangeValue.rgr"
 Import "values/RepeatBlockValue.rgr"
-Import "values/SetRepRangeLoadValue.rgr"
 Import "values/ZoneValue.rgr"
 Import "values/PositiveIntegerValue.rgr"
 Import "values/DetailsLevelValue.rgr"
@@ -18,6 +17,7 @@ Import "values/EffortValue.rgr"
 Import "values/BodyMetricValue.rgr"
 Import "values/CircuitValue.rgr"
 Import "values/ContextEntryValue.rgr"
+Import "values/DurationValue.rgr"
 Import "values/SliceParsedValue.rgr"
 
 class TokenSlice {
@@ -38,25 +38,8 @@ class TokenSlice {
     Constructor (text:string from:int length:int) {
         source = text
 
-        def textLen (strlen text)
-        def safeStart@(mutable):int from
-        if (safeStart < 0) {
-            safeStart = 0
-        }
-        if (safeStart > textLen) {
-            safeStart = textLen
-        }
-
-        def safeLength@(mutable):int length
-        if (safeLength < 0) {
-            safeLength = 0
-        }
-        if ((safeStart + safeLength) > textLen) {
-            safeLength = (textLen - safeStart)
-        }
-
-        start = safeStart
-        size = safeLength
+        start = from
+        size = length
     }
 
     sfn fromText:TokenSlice (text:string) {
@@ -366,37 +349,37 @@ class TokenSlice {
         return (new RepeatBlockValue)
     }
 
-    fn hasSetRepRangeLoadValue:boolean () {
+    fn hasDurationValue:boolean () {
         if (!null? parsedValue) {
             def p (unwrap parsedValue)
-            if ((p.kind == "set-rep-range-load") && (p.hasSetRepRangeLoad())) {
+            if ((p.kind == "duration") && (p.hasDuration())) {
                 return true
             }
         }
         return false
     }
 
-    fn setSetRepRangeLoadValue:void (value:SetRepRangeLoadValue) {
+    fn setDurationValue:void (value:DurationValue) {
         if (!null? parsedValue) {
             def p (unwrap parsedValue)
-            p.setRepRangeLoad = value
+            p.duration = value
             if ((strlen p.kind) == 0) {
-                p.kind = "set-rep-range-load"
+                p.kind = "duration"
             }
             parsedValue = p
             return
         }
-        parsedValue = (SliceParsedValue.fromSetRepRangeLoad(value))
+        parsedValue = (SliceParsedValue.fromDuration(value))
     }
 
-    fn getAsSetRepRangeLoadValue:SetRepRangeLoadValue () {
+    fn getAsDurationValue:DurationValue () {
         if (!null? parsedValue) {
             def p (unwrap parsedValue)
-            if ((p.kind == "set-rep-range-load") && (p.hasSetRepRangeLoad())) {
-                return (p.getSetRepRangeLoad())
+            if ((p.kind == "duration") && (p.hasDuration())) {
+                return (p.getDuration())
             }
         }
-        return (new SetRepRangeLoadValue)
+        return (new DurationValue)
     }
 
     fn hasZoneValue:boolean () {
@@ -794,6 +777,119 @@ class TokenSlice {
         return (charAt source (start + index))
     }
 
+    fn isDigitAt:boolean (index:int) {
+        def ch (this.charCodeAt(index))
+        return ((ch >= 48) && (ch <= 57))
+    }
+
+    ; Returns 0..9 when index points to a digit, otherwise -1.
+    fn digitAt:int (index:int) {
+        def ch (this.charCodeAt(index))
+        if ((ch >= 48) && (ch <= 57)) {
+            return (ch - 48)
+        }
+        return -1
+    }
+
+    fn isWhitespace:boolean (ch:int) {
+        if (ch == 32) {
+            return true
+        }
+        if (ch == 9) {
+            return true
+        }
+        return false
+    }
+
+    fn isWhitespaceAt:boolean (index:int) {
+        def ch (this.charCodeAt(index))
+        return (this.isWhitespace(ch))
+    }
+
+    fn isAlphaNum:boolean (ch:int) {
+        if ((ch >= 48) && (ch <= 57)) {
+            return true
+        }
+        if ((ch >= 65) && (ch <= 90)) {
+            return true
+        }
+        if ((ch >= 97) && (ch <= 122)) {
+            return true
+        }
+        ; Non-ASCII characters (ä, ö, å, etc.) are treated as word characters
+        if (ch >= 128) {
+            return true
+        }
+        return false
+    }
+
+    fn isAlphaNumAt:boolean (index:int) {
+        def ch (this.charCodeAt(index))
+        return (this.isAlphaNum(ch))
+    }
+
+    fn findLineEnd:int (from:int) {
+        def safeFrom@(mutable):int from
+        if (safeFrom < 0) {
+            safeFrom = 0
+        }
+        if (safeFrom >= size) {
+            return size
+        }
+
+        def i@(mutable):int safeFrom
+        while (i < size) {
+            def ch (this.charCodeAt(i))
+            if ((ch == 10) || (ch == 13)) {
+                break
+            }
+            i = i + 1
+        }
+        return i
+    }
+
+    ; Returns first index at/after from that is not a digit.
+    fn findNumberEnd:int (from:int) {
+        def safeFrom@(mutable):int from
+        if (safeFrom < 0) {
+            safeFrom = 0
+        }
+        if (safeFrom >= size) {
+            return size
+        }
+
+        def i@(mutable):int safeFrom
+        while (i < size) {
+            if (this.isDigitAt(i)) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        return i
+    }
+
+    ; Returns first index at/after from that is not whitespace.
+    fn findWhitespaceEnd:int (from:int) {
+        def safeFrom@(mutable):int from
+        if (safeFrom < 0) {
+            safeFrom = 0
+        }
+        if (safeFrom >= size) {
+            return size
+        }
+
+        def i@(mutable):int safeFrom
+        while (i < size) {
+            if (this.isWhitespaceAt(i)) {
+                i = i + 1
+            } {
+                break
+            }
+        }
+        return i
+    }
+
     ; Range is inclusive: from..to
     fn hasInteger:boolean (from:int to:int) {
         if (from < 0) {
@@ -822,8 +918,13 @@ class TokenSlice {
 
     ; Range is inclusive: from..to, returns -1 on invalid input.
     fn parseInteger:int (from:int to:int) {
-        if (this.hasInteger(from to)) {
-        } {
+        if (from < 0) {
+            return -1
+        }
+        if (to < from) {
+            return -1
+        }
+        if (to >= size) {
             return -1
         }
 
@@ -831,6 +932,9 @@ class TokenSlice {
         def i@(mutable):int from
         while (i <= to) {
             def ch (this.charCodeAt(i))
+            if ((ch < 48) || (ch > 57)) {
+                return -1
+            }
             value = (value * 10) + (ch - 48)
             i = i + 1
         }
@@ -942,8 +1046,24 @@ class TokenSlice {
             return false
         }
 
-        def me (this.read(tLen).toString())
-        return me == token
+        ; Fast first-char check before entering the loop - avoids loop overhead
+        ; in the common "no match" case where first character already differs.
+        if ((charAt source start) != (charAt token 0)) {
+            return false
+        }
+        if (tLen == 1) {
+            return true
+        }
+
+        def i@(mutable):int 1
+        while (i < tLen) {
+            if ((charAt source (start + i)) == (charAt token i)) {
+            } {
+                return false
+            }
+            i = i + 1
+        }
+        return true
     }
 
     fn endsWith:boolean (token:string) {

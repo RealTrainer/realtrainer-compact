@@ -3,7 +3,11 @@ Test 0012
 Expect tag positive-integer
 
 Test 10.4kg
-Expect tag decimal-number
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.parts[0].kind weight
+Expect json $.parsed.parts[0].value 10.4
+Expect json $.parsed.parts[0].unit kg
 
 Test 10:10 start
 Expect tag time-value
@@ -67,26 +71,27 @@ Expect json $.children[2].parsed.value 100
 Expect json $.children[2].parsed.unit m
 
 Test 10x squat
-Expect tag positive-integer
-Expect json $.parsed.kind positive-integer
-Expect json $.parsed.value 10
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.partCount 1
+Expect json $.parsed.parts[0].kind positive-integer
+Expect json $.parsed.parts[0].value 10
 
 Test 100kg bench
-Expect tag weight
-Expect child 0 tag positive-integer
-Expect child 0 string 100
-Expect child 1 tag keyword
-Expect child 1 string kg
-Expect json $.parsed.kind weight
-Expect json $.parsed.value 100
-Expect json $.parsed.unit kg
-Expect json $.children[0].parsed.kind positive-integer
-Expect json $.children[0].parsed.value 100
-JSON weight_value.json
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.partCount 1
+Expect json $.parsed.parts[0].kind weight
+Expect json $.parsed.parts[0].value 100
+Expect json $.parsed.parts[0].unit kg
 
 Test 100m run
-Expect tag distance
-JSON distance_value.json
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.partCount 1
+Expect json $.parsed.parts[0].kind distance
+Expect json $.parsed.parts[0].value 100
+Expect json $.parsed.parts[0].unit m
 
 Test 10-50 reps
 Expect tag num-range
@@ -99,41 +104,44 @@ Expect json $.parsed.minValue 10
 Expect json $.parsed.maxValue 50
 
 Test 2-3x15-20@bw
-Expect tag set-rep-range-load
-Expect json $.parsed.kind set-rep-range-load
-Expect json $.parsed.setsMin 2
-Expect json $.parsed.setsMax 3
-Expect json $.parsed.repsMin 15
-Expect json $.parsed.repsMax 20
-Expect json $.parsed.mode bw
-Expect json $.parsed.load 0
-Expect json $.parsed.unit bw
-JSON set_rep_range_load_bw_value.json
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.partCount 2
+Expect json $.parsed.loadMode bw
+Expect json $.parsed.parts[0].kind num-range
+Expect json $.parsed.parts[0].min 2
+Expect json $.parsed.parts[0].max 3
+Expect json $.parsed.parts[1].kind num-range
+Expect json $.parsed.parts[1].min 15
+Expect json $.parsed.parts[1].max 20
 
 Test 2-3x15-20x50kg
-Expect tag set-rep-range-load
-Expect json $.parsed.kind set-rep-range-load
-Expect json $.parsed.setsMin 2
-Expect json $.parsed.setsMax 3
-Expect json $.parsed.repsMin 15
-Expect json $.parsed.repsMax 20
-Expect json $.parsed.mode kg
-Expect json $.parsed.load 50
-Expect json $.parsed.unit kg
-JSON set_rep_range_load_kg_value.json
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.partCount 3
+Expect json $.parsed.parts[0].kind num-range
+Expect json $.parsed.parts[0].min 2
+Expect json $.parsed.parts[0].max 3
+Expect json $.parsed.parts[1].kind num-range
+Expect json $.parsed.parts[1].min 15
+Expect json $.parsed.parts[1].max 20
+Expect json $.parsed.parts[2].kind weight
+Expect json $.parsed.parts[2].value 50
+Expect json $.parsed.parts[2].unit kg
 
 Test 3x5x10x50kg
-Expect tag set-rep-range-load
-Expect json $.parsed.kind set-rep-range-load
-Expect json $.parsed.count 3
-Expect json $.parsed.setsMin 5
-Expect json $.parsed.setsMax 5
-Expect json $.parsed.repsMin 10
-Expect json $.parsed.repsMax 10
-Expect json $.parsed.mode kg
-Expect json $.parsed.load 50
-Expect json $.parsed.unit kg
-JSON count_set_rep.json
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.partCount 4
+Expect json $.parsed.parts[0].kind positive-integer
+Expect json $.parsed.parts[0].value 3
+Expect json $.parsed.parts[1].kind positive-integer
+Expect json $.parsed.parts[1].value 5
+Expect json $.parsed.parts[2].kind positive-integer
+Expect json $.parsed.parts[2].value 10
+Expect json $.parsed.parts[3].kind weight
+Expect json $.parsed.parts[3].value 50
+Expect json $.parsed.parts[3].unit kg
 
 Test 100-200m target
 Expect tag distance-range
@@ -177,10 +185,11 @@ Expect json $.children[0].parsed.kind positive-integer
 Expect json $.children[0].parsed.value 120
 
 Test 70% load
-Expect tag percentage
-Expect json $.parsed.kind percentage
-Expect json $.parsed.value 70
-JSON percentage_value.json
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.partCount 1
+Expect json $.parsed.parts[0].kind percentage
+Expect json $.parsed.parts[0].value 70
 
 Test Tags juoksu, voimakestävyys, test
 Expect tag tags
@@ -298,21 +307,23 @@ Test Swim; 100m
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string Swim
-Expect child 1 tag distance
+Expect child 1 tag repeat-block
 Expect child 1 string 100m
-Expect json $.children[1].parsed.kind distance
-Expect json $.children[1].parsed.value 100
-Expect json $.children[1].parsed.unit m
+Expect json $.children[1].parsed.kind repeat-block
+Expect json $.children[1].parsed.parts[0].kind distance
+Expect json $.children[1].parsed.parts[0].value 100
+Expect json $.children[1].parsed.parts[0].unit m
 
 Test Swim ; 100m
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string Swim
-Expect child 1 tag distance
+Expect child 1 tag repeat-block
 Expect child 1 string 100m
-Expect json $.children[1].parsed.kind distance
-Expect json $.children[1].parsed.value 100
-Expect json $.children[1].parsed.unit m
+Expect json $.children[1].parsed.kind repeat-block
+Expect json $.children[1].parsed.parts[0].kind distance
+Expect json $.children[1].parsed.parts[0].value 100
+Expect json $.children[1].parsed.parts[0].unit m
 
 Test Swim; 2:50/100m
 Expect tag exercise
@@ -333,7 +344,7 @@ Expect child 0 tag exercise-name
 Expect child 0 string Swim
 Expect child 1 tag speed
 Expect child 1 string 2:50/100m
-Expect child 2 tag distance
+Expect child 2 tag repeat-block
 Expect child 2 string 1000m
 Expect json $.children[1].children[0].parsed.kind time-value
 Expect json $.children[1].children[0].parsed.minutes 2
@@ -341,9 +352,10 @@ Expect json $.children[1].children[0].parsed.seconds 50
 Expect json $.children[1].children[2].parsed.kind distance
 Expect json $.children[1].children[2].parsed.value 100
 Expect json $.children[1].children[2].parsed.unit m
-Expect json $.children[2].parsed.kind distance
-Expect json $.children[2].parsed.value 1000
-Expect json $.children[2].parsed.unit m
+Expect json $.children[2].parsed.kind repeat-block
+Expect json $.children[2].parsed.parts[0].kind distance
+Expect json $.children[2].parsed.parts[0].value 1000
+Expect json $.children[2].parsed.parts[0].unit m
 
 Test Swim; 2:50/100m ; 1000m ; Zone2
 Expect tag exercise
@@ -351,7 +363,7 @@ Expect child 0 tag exercise-name
 Expect child 0 string Swim
 Expect child 1 tag speed
 Expect child 1 string 2:50/100m
-Expect child 2 tag distance
+Expect child 2 tag repeat-block
 Expect child 2 string 1000m
 Expect child 3 tag zone
 Expect child 3 string Zone2
@@ -361,9 +373,10 @@ Expect json $.children[1].children[0].parsed.seconds 50
 Expect json $.children[1].children[2].parsed.kind distance
 Expect json $.children[1].children[2].parsed.value 100
 Expect json $.children[1].children[2].parsed.unit m
-Expect json $.children[2].parsed.kind distance
-Expect json $.children[2].parsed.value 1000
-Expect json $.children[2].parsed.unit m
+Expect json $.children[2].parsed.kind repeat-block
+Expect json $.children[2].parsed.parts[0].kind distance
+Expect json $.children[2].parsed.parts[0].value 1000
+Expect json $.children[2].parsed.parts[0].unit m
 Expect json $.children[3].parsed.kind zone
 Expect json $.children[3].parsed.zone 2
 JSON swim_speed_distance_zone_value.json
@@ -374,7 +387,7 @@ Expect child 0 tag exercise-name
 Expect child 0 string Run
 Expect child 1 tag speed
 Expect child 1 string 4:30/1000m
-Expect child 2 tag distance
+Expect child 2 tag repeat-block
 Expect child 2 string 500m
 Expect child 3 tag zone
 Expect child 3 string Zone3
@@ -386,7 +399,7 @@ Expect child 0 tag exercise-name
 Expect child 0 string Run
 Expect child 1 tag speed
 Expect child 1 string 4:30/1000m
-Expect child 2 tag distance
+Expect child 2 tag repeat-block
 Expect child 2 string 500m
 Expect child 3 tag zone
 Expect child 3 string Zone3
@@ -397,7 +410,7 @@ Expect child 0 tag exercise-name
 Expect child 0 string Run
 Expect child 1 tag speed
 Expect child 1 string 4:30/1000m
-Expect child 2 tag distance
+Expect child 2 tag repeat-block
 Expect child 2 string 500m
 Expect child 3 tag zone
 Expect child 3 string Zone3
@@ -414,11 +427,12 @@ Test 8-pallo; 100m
 Expect tag exercise
 Expect child 0 tag exercise-name
 Expect child 0 string 8-pallo
-Expect child 1 tag distance
+Expect child 1 tag repeat-block
 Expect child 1 string 100m
-Expect json $.children[1].parsed.kind distance
-Expect json $.children[1].parsed.value 100
-Expect json $.children[1].parsed.unit m
+Expect json $.children[1].parsed.kind repeat-block
+Expect json $.children[1].parsed.parts[0].kind distance
+Expect json $.children[1].parsed.parts[0].value 100
+Expect json $.children[1].parsed.parts[0].unit m
 
 Test 4x400m viesti; 130bpm
 Expect tag exercise
@@ -433,14 +447,14 @@ Test > Split 100m 2:45/100m
 Expect 0 tag exercise
 Expect 0 child 0 tag exercise-name
 Expect 0 child 0 string Swim
-Expect 0 child 1 tag distance
+Expect 0 child 1 tag repeat-block
 Expect 0 child 1 string 1000m
 Expect 1 tag details-data
 Expect 1 child 0 tag details-level
 Expect 1 child 0 string >
 Expect 1 child 1 tag keyword
 Expect 1 child 1 string Split
-Expect 1 child 2 tag distance
+Expect 1 child 2 tag repeat-block
 Expect 1 child 2 string 100m
 Expect 1 child 3 tag speed
 Expect 1 child 3 string 2:45/100m
@@ -452,22 +466,22 @@ Test >> Recovery 1min
 Expect 0 tag exercise
 Expect 0 child 0 tag exercise-name
 Expect 0 child 0 string Swim
-Expect 0 child 1 tag distance
+Expect 0 child 1 tag repeat-block
 Expect 0 child 1 string 400m
 Expect 1 tag details-data
 Expect 1 child 0 tag details-level
 Expect 1 child 0 string >
 Expect 1 child 1 tag keyword
 Expect 1 child 1 string Split
-Expect 1 child 2 tag distance
+Expect 1 child 2 tag repeat-block
 Expect 1 child 2 string 100m
 Expect 1 child 3 tag speed
 Expect 1 child 3 string 2:45/100m
-Expect 0 json $.children[1].parsed.value 400
-Expect 0 json $.children[1].parsed.unit m
+Expect 0 json $.children[1].parsed.parts[0].value 400
+Expect 0 json $.children[1].parsed.parts[0].unit m
 Expect 1 json $.children[0].parsed.level 1
-Expect 1 json $.children[2].parsed.value 100
-Expect 1 json $.children[2].parsed.unit m
+Expect 1 json $.children[2].parsed.parts[0].value 100
+Expect 1 json $.children[2].parsed.parts[0].unit m
 Expect 1 json $.children[3].children[0].parsed.minutes 2
 Expect 1 json $.children[3].children[0].parsed.seconds 45
 Expect 1 json $.children[3].children[2].parsed.value 100
@@ -492,21 +506,22 @@ Test >> Comment Grip fading
 Expect 0 tag exercise
 Expect 0 child 0 tag exercise-name
 Expect 0 child 0 string Hyrox
-Expect 0 child 1 tag positive-integer
-Expect 0 child 1 string 1
-Expect 0 child 2 tag keyword
-Expect 0 child 2 string h
-Expect 0 json $.children[1].parsed.kind positive-integer
-Expect 0 json $.children[1].parsed.value 1
+Expect 0 child 1 tag repeat-block
+Expect 0 child 1 string 1h
+Expect 0 json $.children[1].parsed.kind repeat-block
+Expect 0 json $.children[1].parsed.parts[0].kind duration
+Expect 0 json $.children[1].parsed.parts[0].value 1
+Expect 0 json $.children[1].parsed.parts[0].unit h
 Expect 1 tag details-data
 Expect 1 child 0 tag details-level
 Expect 1 child 0 string >
 Expect 1 child 1 tag exercise
 Expect 1 child 1 string Run; 1000m
 Expect 1 json $.children[0].parsed.level 1
-Expect 1 json $.children[1].children[1].parsed.kind distance
-Expect 1 json $.children[1].children[1].parsed.value 1000
-Expect 1 json $.children[1].children[1].parsed.unit m
+Expect 1 json $.children[1].children[1].parsed.kind repeat-block
+Expect 1 json $.children[1].children[1].parsed.parts[0].kind distance
+Expect 1 json $.children[1].children[1].parsed.parts[0].value 1000
+Expect 1 json $.children[1].children[1].parsed.parts[0].unit m
 Expect 2 tag details-data
 Expect 2 child 0 tag details-level
 Expect 2 child 0 string >>
@@ -520,9 +535,10 @@ Expect 3 child 0 tag details-level
 Expect 3 child 0 string >
 Expect 3 child 1 tag exercise
 Expect 3 child 1 string SledPush; 50m
-Expect 3 json $.children[1].children[1].parsed.kind distance
-Expect 3 json $.children[1].children[1].parsed.value 50
-Expect 3 json $.children[1].children[1].parsed.unit m
+Expect 3 json $.children[1].children[1].parsed.kind repeat-block
+Expect 3 json $.children[1].children[1].parsed.parts[0].kind distance
+Expect 3 json $.children[1].children[1].parsed.parts[0].value 50
+Expect 3 json $.children[1].children[1].parsed.parts[0].unit m
 Expect 4 tag details-data
 Expect 4 child 0 tag details-level
 Expect 4 child 0 string >>
@@ -540,10 +556,8 @@ Test > Run; 5000m
 Expect 0 tag exercise
 Expect 0 child 0 tag exercise-name
 Expect 0 child 0 string Trialthon
-Expect 0 child 1 tag positive-integer
-Expect 0 child 1 string 2
-Expect 0 child 2 tag keyword
-Expect 0 child 2 string h
+Expect 0 child 1 tag repeat-block
+Expect 0 child 1 string 2h
 Expect 1 tag details-data
 Expect 1 child 0 tag details-level
 Expect 1 child 0 string >
@@ -568,10 +582,8 @@ Test > Kotiin Walk; 2000m
 Expect 0 tag exercise
 Expect 0 child 0 tag exercise-name
 Expect 0 child 0 string Pubikierros
-Expect 0 child 1 tag positive-integer
-Expect 0 child 1 string 4
-Expect 0 child 2 tag keyword
-Expect 0 child 2 string h
+Expect 0 child 1 tag repeat-block
+Expect 0 child 1 string 4h
 Expect 1 tag details-data
 Expect 1 child 0 tag details-level
 Expect 1 child 0 string >
@@ -598,32 +610,33 @@ Test >> "Bar path stable"
 Expect 0 tag exercise
 Expect 0 child 0 tag exercise-name
 Expect 0 child 0 string Bench Press
-Expect 0 child 1 tag set-rep-range-load
+Expect 0 child 1 tag repeat-block
 Expect 0 child 1 string 4x3-8x60kg
-Expect 0 json $.children[1].parsed.kind set-rep-range-load
-Expect 0 json $.children[1].parsed.setsMin 4
-Expect 0 json $.children[1].parsed.setsMax 4
-Expect 0 json $.children[1].parsed.repsMin 3
-Expect 0 json $.children[1].parsed.repsMax 8
-Expect 0 json $.children[1].parsed.load 60
-Expect 0 json $.children[1].parsed.unit kg
+Expect 0 json $.children[1].parsed.kind repeat-block
+Expect 0 json $.children[1].parsed.parts[0].kind positive-integer
+Expect 0 json $.children[1].parsed.parts[0].value 4
+Expect 0 json $.children[1].parsed.parts[1].kind num-range
+Expect 0 json $.children[1].parsed.parts[1].min 3
+Expect 0 json $.children[1].parsed.parts[1].max 8
+Expect 0 json $.children[1].parsed.parts[2].kind weight
+Expect 0 json $.children[1].parsed.parts[2].value 60
+Expect 0 json $.children[1].parsed.parts[2].unit kg
 Expect 1 tag details-data
 Expect 1 child 0 tag details-level
 Expect 1 child 0 string >
 Expect 1 child 1 tag keyword
 Expect 1 child 1 string Attempt
 Expect 1 child 2 tag repeat-block
-Expect 1 child 2 string 5x
-Expect 1 child 3 tag weight
-Expect 1 child 3 string 60kg
-Expect 1 child 4 tag bpm
-Expect 1 child 4 string 130bpm
+Expect 1 child 2 string 5x60kg
+Expect 1 child 3 tag bpm
+Expect 1 child 3 string 130bpm
 Expect 1 json $.children[0].parsed.level 1
 Expect 1 json $.children[2].parsed.kind repeat-block
-Expect 1 json $.children[2].parsed.count 5
-Expect 1 json $.children[3].parsed.kind weight
-Expect 1 json $.children[3].parsed.value 60
-Expect 1 json $.children[3].parsed.unit kg
+Expect 1 json $.children[2].parsed.parts[0].kind positive-integer
+Expect 1 json $.children[2].parsed.parts[0].value 5
+Expect 1 json $.children[2].parsed.parts[1].kind weight
+Expect 1 json $.children[2].parsed.parts[1].value 60
+Expect 1 json $.children[2].parsed.parts[1].unit kg
 Expect 2 tag details-data
 Expect 2 child 0 tag details-level
 Expect 2 child 0 string >>
@@ -667,44 +680,36 @@ Expect 1 child 0 string >
 Expect 1 child 1 tag keyword
 Expect 1 child 1 string Attempt
 Expect 1 child 2 tag repeat-block
-Expect 1 child 2 string 10x
-Expect 1 child 3 tag weight
-Expect 1 child 3 string 40kg
-Expect 1 json $.children[2].parsed.count 10
-Expect 1 json $.children[3].parsed.value 40
+Expect 1 child 2 string 10x40kg
+Expect 1 json $.children[2].parsed.parts[0].value 10
+Expect 1 json $.children[2].parsed.parts[1].value 40
 Expect 2 tag details-data
 Expect 2 child 0 tag details-level
 Expect 2 child 0 string >
 Expect 2 child 1 tag keyword
 Expect 2 child 1 string Attempt
 Expect 2 child 2 tag repeat-block
-Expect 2 child 2 string 8x
-Expect 2 child 3 tag weight
-Expect 2 child 3 string 50kg
-Expect 2 json $.children[2].parsed.count 8
-Expect 2 json $.children[3].parsed.value 50
+Expect 2 child 2 string 8x50kg
+Expect 2 json $.children[2].parsed.parts[0].value 8
+Expect 2 json $.children[2].parsed.parts[1].value 50
 Expect 3 tag details-data
 Expect 3 child 0 tag details-level
 Expect 3 child 0 string >
 Expect 3 child 1 tag keyword
 Expect 3 child 1 string Attempt
 Expect 3 child 2 tag repeat-block
-Expect 3 child 2 string 6x
-Expect 3 child 3 tag weight
-Expect 3 child 3 string 60kg
-Expect 3 json $.children[2].parsed.count 6
-Expect 3 json $.children[3].parsed.value 60
+Expect 3 child 2 string 6x60kg
+Expect 3 json $.children[2].parsed.parts[0].value 6
+Expect 3 json $.children[2].parsed.parts[1].value 60
 Expect 4 tag details-data
 Expect 4 child 0 tag details-level
 Expect 4 child 0 string >
 Expect 4 child 1 tag keyword
 Expect 4 child 1 string Attempt
 Expect 4 child 2 tag repeat-block
-Expect 4 child 2 string 4x
-Expect 4 child 3 tag weight
-Expect 4 child 3 string 70kg
-Expect 4 json $.children[2].parsed.count 4
-Expect 4 json $.children[3].parsed.value 70
+Expect 4 child 2 string 4x70kg
+Expect 4 json $.children[2].parsed.parts[0].value 4
+Expect 4 json $.children[2].parsed.parts[1].value 70
 
 // Second multi-word strength movement regression
 Test Back Squat; 5x3-5x100kg
@@ -714,26 +719,26 @@ Test >> "Depth solid"
 Expect 0 tag exercise
 Expect 0 child 0 tag exercise-name
 Expect 0 child 0 string Back Squat
-Expect 0 child 1 tag set-rep-range-load
+Expect 0 child 1 tag repeat-block
 Expect 0 child 1 string 5x3-5x100kg
-Expect 0 json $.children[1].parsed.kind set-rep-range-load
-Expect 0 json $.children[1].parsed.setsMin 5
-Expect 0 json $.children[1].parsed.setsMax 5
-Expect 0 json $.children[1].parsed.repsMin 3
-Expect 0 json $.children[1].parsed.repsMax 5
-Expect 0 json $.children[1].parsed.load 100
-Expect 0 json $.children[1].parsed.unit kg
+Expect 0 json $.children[1].parsed.kind repeat-block
+Expect 0 json $.children[1].parsed.parts[0].kind positive-integer
+Expect 0 json $.children[1].parsed.parts[0].value 5
+Expect 0 json $.children[1].parsed.parts[1].kind num-range
+Expect 0 json $.children[1].parsed.parts[1].min 3
+Expect 0 json $.children[1].parsed.parts[1].max 5
+Expect 0 json $.children[1].parsed.parts[2].kind weight
+Expect 0 json $.children[1].parsed.parts[2].value 100
+Expect 0 json $.children[1].parsed.parts[2].unit kg
 Expect 1 tag details-data
 Expect 1 child 0 tag details-level
 Expect 1 child 0 string >
 Expect 1 child 1 tag keyword
 Expect 1 child 1 string Attempt
 Expect 1 child 2 tag repeat-block
-Expect 1 child 2 string 4x
-Expect 1 child 3 tag weight
-Expect 1 child 3 string 100kg
-Expect 1 json $.children[2].parsed.count 4
-Expect 1 json $.children[3].parsed.value 100
+Expect 1 child 2 string 4x100kg
+Expect 1 json $.children[2].parsed.parts[0].value 4
+Expect 1 json $.children[2].parsed.parts[1].value 100
 Expect 2 tag details-data
 Expect 2 child 0 tag details-level
 Expect 2 child 0 string >>
@@ -754,18 +759,15 @@ Expect tag left-right
 Expect child 0 tag keyword
 Expect child 0 string Left
 Expect child 1 tag repeat-block
-Expect child 1 string 10x
-Expect child 2 tag weight
-Expect child 2 string 16kg
+Expect child 1 string 10x16kg
 Expect json $.parsed.kind left-right
 Expect json $.parsed.side Left
 Expect json $.children[1].parsed.kind repeat-block
-Expect json $.children[1].parsed.count 10
-Expect json $.children[2].parsed.kind weight
-Expect json $.children[2].parsed.value 16
-Expect json $.children[2].parsed.unit kg
-Expect json $.children[2].children[0].parsed.kind positive-integer
-Expect json $.children[2].children[0].parsed.value 16
+Expect json $.children[1].parsed.parts[0].kind positive-integer
+Expect json $.children[1].parsed.parts[0].value 10
+Expect json $.children[1].parsed.parts[1].kind weight
+Expect json $.children[1].parsed.parts[1].value 16
+Expect json $.children[1].parsed.parts[1].unit kg
 JSON left_right_value.json
 
 Test Right 8x20kg
@@ -773,18 +775,15 @@ Expect tag left-right
 Expect child 0 tag keyword
 Expect child 0 string Right
 Expect child 1 tag repeat-block
-Expect child 1 string 8x
-Expect child 2 tag weight
-Expect child 2 string 20kg
+Expect child 1 string 8x20kg
 Expect json $.parsed.kind left-right
 Expect json $.parsed.side Right
 Expect json $.children[1].parsed.kind repeat-block
-Expect json $.children[1].parsed.count 8
-Expect json $.children[2].parsed.kind weight
-Expect json $.children[2].parsed.value 20
-Expect json $.children[2].parsed.unit kg
-Expect json $.children[2].children[0].parsed.kind positive-integer
-Expect json $.children[2].children[0].parsed.value 20
+Expect json $.children[1].parsed.parts[0].kind positive-integer
+Expect json $.children[1].parsed.parts[0].value 8
+Expect json $.children[1].parsed.parts[1].kind weight
+Expect json $.children[1].parsed.parts[1].value 20
+Expect json $.children[1].parsed.parts[1].unit kg
 JSON left_right_value.json
 
 Test Feeling 3
@@ -1021,33 +1020,25 @@ Expect json $.parsed.customValue Green
 Expect json $.parsed.hasCustomNumeric false
 
 Test 40-50%
-Expect tag percentage-range
-Expect child 0 tag num-range
-Expect child 0 string 40-50
-Expect child 1 tag keyword
-Expect child 1 string %
-Expect json $.parsed.kind percentage-range
-Expect json $.parsed.minValue 40
-Expect json $.parsed.maxValue 50
-Expect json $.children[0].parsed.kind num-range
-Expect json $.children[0].parsed.minValue 40
-Expect json $.children[0].parsed.maxValue 50
-JSON percentage_range_value.json
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.parts[0].kind percentage-range
+Expect json $.parsed.parts[0].min 40
+Expect json $.parsed.parts[0].max 50
 
 Test 40 - 50 %
-Expect tag percentage-range
-Expect child 0 tag num-range
-Expect child 1 tag keyword
-Expect child 1 string %
-Expect json $.parsed.kind percentage-range
-Expect json $.parsed.minValue 40
-Expect json $.parsed.maxValue 50
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.parts[0].kind percentage-range
+Expect json $.parsed.parts[0].min 40
+Expect json $.parsed.parts[0].max 50
 
 Test 40%-60%
-Expect tag percentage-range
-Expect json $.parsed.kind percentage-range
-Expect json $.parsed.minValue 40
-Expect json $.parsed.maxValue 60
+Expect tag repeat-block
+Expect json $.parsed.kind repeat-block
+Expect json $.parsed.parts[0].kind percentage-range
+Expect json $.parsed.parts[0].min 40
+Expect json $.parsed.parts[0].max 60
 
 Test 1RM test
 Expect tag rm

@@ -15,40 +15,17 @@ class NumRangeBlockDetector {
         return (new NumRangeBlockDetector(s))
     }
 
-    fn isWhitespace:boolean (ch:int) {
-        if (ch == 32) {
-            return true
-        }
-        if (ch == 9) {
-            return true
-        }
-        return false
-    }
-
-    fn isDigit:boolean (ch:int) {
-        return ((ch >= 48) && (ch <= 57))
-    }
-
     fn detect:TokenSlice (slice:TokenSlice) {
         def len (slice.length())
         if (len < 3) {
             return (this.noMatch())
         }
 
-        def i@(mutable):int 0
-        while (i < len) {
-            def chSkipLeft (slice.charCodeAt(i))
-            if (this.isWhitespace(chSkipLeft)) {
-                i = i + 1
-            } {
-                break
-            }
-        }
+        def i@(mutable):int (slice.findWhitespaceEnd(0))
 
         def leftStart i
         while (i < len) {
-            def chLeft (slice.charCodeAt(i))
-            if (this.isDigit(chLeft)) {
+            if (slice.isDigitAt(i)) {
                 i = i + 1
             } {
                 break
@@ -59,33 +36,18 @@ class NumRangeBlockDetector {
             return (this.noMatch())
         }
 
-        while (i < len) {
-            def chBeforeDash (slice.charCodeAt(i))
-            if (this.isWhitespace(chBeforeDash)) {
-                i = i + 1
-            } {
-                break
-            }
-        }
+        i = (slice.findWhitespaceEnd(i))
 
         if ((i >= len) || ((slice.charCodeAt(i)) != 45)) {
             return (this.noMatch())
         }
         i = i + 1
 
-        while (i < len) {
-            def chAfterDash (slice.charCodeAt(i))
-            if (this.isWhitespace(chAfterDash)) {
-                i = i + 1
-            } {
-                break
-            }
-        }
+        i = (slice.findWhitespaceEnd(i))
 
         def rightStart i
         while (i < len) {
-            def chRight (slice.charCodeAt(i))
-            if (this.isDigit(chRight)) {
+            if (slice.isDigitAt(i)) {
                 i = i + 1
             } {
                 break

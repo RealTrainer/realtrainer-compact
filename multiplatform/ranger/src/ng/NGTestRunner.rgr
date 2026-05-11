@@ -548,9 +548,6 @@ class NGTestRunner {
         if (kind == "repeat-block") {
             return (to_string((token.getAsRepeatBlockValue().toDictionary())))
         }
-        if (kind == "set-rep-range-load") {
-            return (to_string((token.getAsSetRepRangeLoadValue().toDictionary())))
-        }
         if (kind == "zone") {
             return (to_string((token.getAsZoneValue().toDictionary())))
         }
@@ -859,8 +856,120 @@ class NGTestRunner {
 
             if (kind == "repeat-block") {
                 def rb (token.getAsRepeatBlockValue())
-                if (tail == "count") {
-                    return ("" + rb.count)
+                if (tail == "loadMode") {
+                    return rb.loadMode
+                }
+                if (tail == "partCount") {
+                    return ("" + (array_length rb.parts))
+                }
+                ; Hierarchical access via real array indexing:
+                ;   $.parsed.parts[0].kind   -> "positive-integer" | "num-range" | ...
+                ;   $.parsed.parts[0].value  -> for positive-integer/distance/weight/duration/percentage
+                ;   $.parsed.parts[0].min    -> for num-range / percentage-range minValue
+                ;   $.parsed.parts[0].max    -> for num-range / percentage-range maxValue
+                ;   $.parsed.parts[0].unit   -> for distance/weight/duration
+                ; normalizeJsonPath rewrites [N] into .N. so tail looks like "parts.0.kind".
+                if (this.startsWith(tail "parts.")) {
+                    def rest1 (substring tail 6 (strlen tail))
+                    def dotPos3 (this.findDot(rest1))
+                    def idxText:string rest1
+                    def fieldName:string ""
+                    if (dotPos3 >= 0) {
+                        idxText = (substring rest1 0 dotPos3)
+                        fieldName = (substring rest1 (dotPos3 + 1) (strlen rest1))
+                    }
+                    def idxSlice2 (TokenSlice.fromText(idxText))
+                    if ((idxSlice2.length()) == 0) {
+                        return ""
+                    }
+                    if (idxSlice2.hasInteger(0 ((idxSlice2.length()) - 1))) {
+                    } {
+                        return ""
+                    }
+                    def partIdx (idxSlice2.parseInteger(0 ((idxSlice2.length()) - 1)))
+                    if ((partIdx < 0) || (partIdx >= (array_length rb.parts))) {
+                        return ""
+                    }
+                    def part (itemAt rb.parts partIdx)
+                    if ((strlen fieldName) == 0) {
+                        return part.kind
+                    }
+                    if (fieldName == "kind") {
+                        return part.kind
+                    }
+                    if (fieldName == "value") {
+                        if (part.kind == "positive-integer") {
+                            if (!null? part.positiveInteger) {
+                                return ("" + ((unwrap part.positiveInteger).value))
+                            }
+                        }
+                        if (part.kind == "distance") {
+                            if (!null? part.distance) {
+                                return ("" + ((unwrap part.distance).value))
+                            }
+                        }
+                        if (part.kind == "weight") {
+                            if (!null? part.weight) {
+                                return ("" + ((unwrap part.weight).value))
+                            }
+                        }
+                        if (part.kind == "duration") {
+                            if (!null? part.duration) {
+                                return ("" + ((unwrap part.duration).value))
+                            }
+                        }
+                        if (part.kind == "percentage") {
+                            if (!null? part.percentage) {
+                                return ("" + ((unwrap part.percentage).value))
+                            }
+                        }
+                        return ""
+                    }
+                    if (fieldName == "min") {
+                        if (part.kind == "num-range") {
+                            if (!null? part.numRange) {
+                                return ("" + ((unwrap part.numRange).minValue))
+                            }
+                        }
+                        if (part.kind == "percentage-range") {
+                            if (!null? part.percentageRange) {
+                                return ("" + ((unwrap part.percentageRange).minValue))
+                            }
+                        }
+                        return ""
+                    }
+                    if (fieldName == "max") {
+                        if (part.kind == "num-range") {
+                            if (!null? part.numRange) {
+                                return ("" + ((unwrap part.numRange).maxValue))
+                            }
+                        }
+                        if (part.kind == "percentage-range") {
+                            if (!null? part.percentageRange) {
+                                return ("" + ((unwrap part.percentageRange).maxValue))
+                            }
+                        }
+                        return ""
+                    }
+                    if (fieldName == "unit") {
+                        if (part.kind == "distance") {
+                            if (!null? part.distance) {
+                                return ((unwrap part.distance).unit)
+                            }
+                        }
+                        if (part.kind == "weight") {
+                            if (!null? part.weight) {
+                                return ((unwrap part.weight).unit)
+                            }
+                        }
+                        if (part.kind == "duration") {
+                            if (!null? part.duration) {
+                                return ((unwrap part.duration).unit)
+                            }
+                        }
+                        return ""
+                    }
+                    return ""
                 }
             }
 
@@ -871,33 +980,6 @@ class NGTestRunner {
                 }
             }
 
-            if (kind == "set-rep-range-load") {
-                def sr (token.getAsSetRepRangeLoadValue())
-                if (tail == "count") {
-                    return ("" + sr.count)
-                }
-                if (tail == "setsMin") {
-                    return ("" + sr.setsMin)
-                }
-                if (tail == "setsMax") {
-                    return ("" + sr.setsMax)
-                }
-                if (tail == "repsMin") {
-                    return ("" + sr.repsMin)
-                }
-                if (tail == "repsMax") {
-                    return ("" + sr.repsMax)
-                }
-                if (tail == "mode") {
-                    return sr.mode
-                }
-                if (tail == "load") {
-                    return ("" + sr.load)
-                }
-                if (tail == "unit") {
-                    return sr.unit
-                }
-            }
 
             if (kind == "feeling") {
                 def fv (token.getAsFeelingValue())

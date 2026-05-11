@@ -366,6 +366,10 @@ class ExerciseAttemptNode  {
     }
     CompactAstJson.addOptionalStringField(fields, "duration", this.duration);
     CompactAstJson.addOptionalStringField(fields, "durationMax", this.durationMax);
+    CompactAstJson.addOptionalStringField(fields, "recovery", this.recovery);
+    if ( (typeof(this.recoveryQuantity) !== "undefined" && this.recoveryQuantity != null )  ) {
+      CompactAstJson.addQuantityField(fields, "recoveryQuantity", this.recoveryQuantity);
+    }
     CompactAstJson.addOptionalDoubleField(fields, "loadValue", this.loadValue);
     CompactAstJson.addOptionalStringField(fields, "loadUnit", this.loadUnit);
     return CompactAstJson.jsonObject(fields);
@@ -1837,6 +1841,21 @@ class CompactAstParser  {
       right = (t.substring((atPos + 1), (t.length) )).trim();
     }
     if ( (left.length) > 0 ) {
+      const slashPos = this.findToken(left, "/");
+      if ( (slashPos > 0) && (slashPos < ((left.length) - 1)) ) {
+        const leftMain = (left.substring(0, slashPos )).trim();
+        const recoveryPart = (left.substring((slashPos + 1), (left.length) )).trim();
+        if ( (recoveryPart.length) > 0 ) {
+          out.recovery = recoveryPart;
+          const recQ = this.parseDurationQuantity(recoveryPart);
+          if ( (recQ.unit.length) > 0 ) {
+            out.recoveryQuantity = recQ;
+          }
+          left = leftMain;
+        }
+      }
+    }
+    if ( (left.length) > 0 ) {
       const leftParts = left.split("x");
       if ( (leftParts.length) > 1 ) {
         const setPart = (leftParts[0]).trim();
@@ -1855,42 +1874,65 @@ class CompactAstParser  {
             out.durationMax = repDuration.max;
           }
         } else {
-          const repRange = this.parseIntOrRange(repPart);
-          if ( repRange.ok ) {
-            out.reps = repRange.min;
-            if ( (typeof(repRange.max) !== "undefined" && repRange.max != null )  ) {
-              out.repsMax = repRange.max;
-            }
+          const repDistance = this.parseDistanceRangeToken(repPart);
+          if ( (repDistance.unit.length) > 0 ) {
+            out.distance = repDistance;
           } else {
-            if ( repPart == "?" ) {
-              out.repeatsUnknown = true;
+            const repRange = this.parseIntOrRange(repPart);
+            if ( repRange.ok ) {
+              out.reps = repRange.min;
+              if ( (typeof(repRange.max) !== "undefined" && repRange.max != null )  ) {
+                out.repsMax = repRange.max;
+              }
             } else {
-              const repLen = repPart.length;
-              let repSplitPos = repLen;
-              let j = 0;
-              while (j < repLen) {
-                const repCh = repPart.charCodeAt(j );
-                let repIsNum = false;
-                if ( (repCh >= (48)) && (repCh <= (57)) ) {
-                  repIsNum = true;
-                }
-                if ( (repCh == (46)) || (repCh == (45)) ) {
-                  repIsNum = true;
-                }
-                if ( repIsNum == false ) {
-                  repSplitPos = j;
-                  j = repLen;
-                } else {
-                  j = j + 1;
-                }
-              };
-              const repValuePart = (repPart.substring(0, repSplitPos )).trim();
-              const repUnitPart = (repPart.substring(repSplitPos, repLen )).trim();
-              if ( ((repValuePart.length) > 0) && ((repUnitPart.length) > 0) ) {
-                const repLoadOpt = isNaN( parseFloat(repValuePart) ) ? undefined : parseFloat(repValuePart);
-                if ( (typeof(repLoadOpt) !== "undefined" && repLoadOpt != null )  ) {
-                  out.loadValue = repLoadOpt;
-                  out.loadUnit = repUnitPart;
+              if ( repPart == "?" ) {
+                out.repeatsUnknown = true;
+              } else {
+                const repLen = repPart.length;
+                let repSplitPos = repLen;
+                let j = 0;
+                while (j < repLen) {
+                  const repCh = repPart.charCodeAt(j );
+                  let repIsNum = false;
+                  if ( (repCh >= (48)) && (repCh <= (57)) ) {
+                    repIsNum = true;
+                  }
+                  if ( (repCh == (46)) || (repCh == (45)) ) {
+                    repIsNum = true;
+                  }
+                  if ( repIsNum == false ) {
+                    repSplitPos = j;
+                    j = repLen;
+                  } else {
+                    j = j + 1;
+                  }
+                };
+                const repValuePart = (repPart.substring(0, repSplitPos )).trim();
+                const repUnitPart = (repPart.substring(repSplitPos, repLen )).trim();
+                if ( ((repValuePart.length) > 0) && ((repUnitPart.length) > 0) ) {
+                  let looksLikeLoad = false;
+                  if ( (this).startsWith(repUnitPart, "kg") ) {
+                    looksLikeLoad = true;
+                  }
+                  if ( (this).startsWith(repUnitPart, "lb") ) {
+                    looksLikeLoad = true;
+                  }
+                  if ( (this).startsWith(repUnitPart, "bw") ) {
+                    looksLikeLoad = true;
+                  }
+                  if ( (this).startsWith(repUnitPart, "bodyweight") ) {
+                    looksLikeLoad = true;
+                  }
+                  if ( (this).startsWith(repUnitPart, "tanko") ) {
+                    looksLikeLoad = true;
+                  }
+                  if ( looksLikeLoad ) {
+                    const repLoadOpt = isNaN( parseFloat(repValuePart) ) ? undefined : parseFloat(repValuePart);
+                    if ( (typeof(repLoadOpt) !== "undefined" && repLoadOpt != null )  ) {
+                      out.loadValue = repLoadOpt;
+                      out.loadUnit = repUnitPart;
+                    }
+                  }
                 }
               }
             }

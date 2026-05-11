@@ -3,6 +3,7 @@ Import "detectors/PositiveIntegerDetector.rgr"
 Import "Parser.rgr"
 Import "values/EffortValue.rgr"
 Import "values/SliceParsedValue.rgr"
+Import "NGSubParserDetectors.rgr"
 
 class EffortDetector {
     Extends(TokenDetector)
@@ -39,19 +40,12 @@ class EffortDetector {
             return (this.noMatch())
         }
 
-        def lineEnd@(mutable):int keyLen
-        while (lineEnd < len) {
-            def ch (slice.charCodeAt(lineEnd))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
+        def lineEnd (slice.findLineEnd(keyLen))
 
         def valueSlice (slice.peek(keyLen).read(lineEnd - keyLen))
-        def detectors:[TokenDetector]
-        push detectors (PositiveIntegerDetector.create())
-        def p (new Parser((valueSlice.toString()) detectors))
+        def subReg (new NGSubParserDetectors())
+        def detectors (subReg.getPositiveIntegerOnlyChildDetectors())
+        def p (Parser.fromSlice(valueSlice detectors))
         p.start()
         if ((p.getCount()) != 1) {
             return (this.noMatch())

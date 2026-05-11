@@ -6,7 +6,6 @@ Import "values/WeightValue.rgr"
 Import "values/NumRangeValue.rgr"
 Import "values/PercentageRangeValue.rgr"
 Import "values/RepeatBlockValue.rgr"
-Import "values/SetRepRangeLoadValue.rgr"
 Import "values/ZoneValue.rgr"
 Import "values/PositiveIntegerValue.rgr"
 Import "values/DetailsLevelValue.rgr"
@@ -18,6 +17,7 @@ Import "values/EffortValue.rgr"
 Import "values/BodyMetricValue.rgr"
 Import "values/CircuitValue.rgr"
 Import "values/ContextEntryValue.rgr"
+Import "values/DurationValue.rgr"
 
 class SliceParsedValue {
     ; Discriminator for the active payload type.
@@ -32,7 +32,6 @@ class SliceParsedValue {
     def numRange@(optional):NumRangeValue
     def percentageRange@(optional):PercentageRangeValue
     def repeatBlock@(optional):RepeatBlockValue
-    def setRepRangeLoad@(optional):SetRepRangeLoadValue
     def zone@(optional):ZoneValue
     def positiveInteger@(optional):PositiveIntegerValue
     def detailsLevel@(optional):DetailsLevelValue
@@ -44,6 +43,7 @@ class SliceParsedValue {
     def bodyMetric@(optional):BodyMetricValue
     def circuit@(optional):CircuitValue
     def contextEntry@(optional):ContextEntryValue
+    def duration@(optional):DurationValue
 
     sfn create:SliceParsedValue (kind:string) {
         def out (new SliceParsedValue)
@@ -104,13 +104,6 @@ class SliceParsedValue {
         def out (new SliceParsedValue)
         out.kind = "repeat-block"
         out.repeatBlock = value
-        return out
-    }
-
-    sfn fromSetRepRangeLoad:SliceParsedValue (value:SetRepRangeLoadValue) {
-        def out (new SliceParsedValue)
-        out.kind = "set-rep-range-load"
-        out.setRepRangeLoad = value
         return out
     }
 
@@ -188,6 +181,13 @@ class SliceParsedValue {
         def out (new SliceParsedValue)
         out.kind = "context-entry"
         out.contextEntry = value
+        return out
+    }
+
+    sfn fromDuration:SliceParsedValue (value:DurationValue) {
+        def out (new SliceParsedValue)
+        out.kind = "duration"
+        out.duration = value
         return out
     }
 
@@ -277,17 +277,6 @@ class SliceParsedValue {
             return (unwrap repeatBlock)
         }
         return (new RepeatBlockValue)
-    }
-
-    fn hasSetRepRangeLoad:boolean () {
-        return (!null? setRepRangeLoad)
-    }
-
-    fn getSetRepRangeLoad:SetRepRangeLoadValue () {
-        if (!null? setRepRangeLoad) {
-            return (unwrap setRepRangeLoad)
-        }
-        return (new SetRepRangeLoadValue)
     }
 
     fn hasZone:boolean () {
@@ -409,5 +398,16 @@ class SliceParsedValue {
             return (unwrap contextEntry)
         }
         return (new ContextEntryValue)
+    }
+
+    fn hasDuration:boolean () {
+        return (!null? duration)
+    }
+
+    fn getDuration:DurationValue () {
+        if (!null? duration) {
+            return (unwrap duration)
+        }
+        return (new DurationValue)
     }
 }

@@ -1,0 +1,107 @@
+Import "detectors/TokenDetector.rgr"
+Import "values/DurationValue.rgr"
+Import "values/SliceParsedValue.rgr"
+
+class DurationDetector {
+    Extends(TokenDetector)
+
+    Constructor (noMatchSlice:TokenSlice) {
+        cachedNoMatch = noMatchSlice
+        detectedTag = "duration"
+    }
+
+    sfn create:DurationDetector () {
+        def s (TokenDetector.createNoMatchSlice())
+        return (new DurationDetector(s))
+    }
+
+    fn isAlphaCode:boolean (c:int) {
+        if ((c >= 65) && (c <= 90)) {
+            return true
+        }
+        if ((c >= 97) && (c <= 122)) {
+            return true
+        }
+        return false
+    }
+
+    fn detect:TokenSlice (slice:TokenSlice) {
+        def len (slice.length())
+        if (len < 2) {
+            return (this.noMatch())
+        }
+        ; --- digits ---
+        def i@(mutable):int 0
+        def hasNonZero@(mutable):boolean false
+        while (i < len) {
+            if (slice.isDigitAt(i)) {
+                if ((slice.digitAt(i)) != 0) {
+                    hasNonZero = true
+                }
+                i = i + 1
+            } {
+                break
+            }
+        }
+        if (i == 0) {
+            return (this.noMatch())
+        }
+        if (hasNonZero == false) {
+            return (this.noMatch())
+        }
+        if (i >= len) {
+            return (this.noMatch())
+        }
+
+        def numEnd i
+        def value (slice.parseInteger(0 (numEnd - 1)))
+
+        ; --- unit: "min" (3) | "s" (1) | "h" (1) ---
+        def unitLen@(mutable):int 0
+        def unitText@(mutable):string ""
+        def c0 (slice.charCodeAt(numEnd))
+        if ((numEnd + 3) <= len) {
+            if (c0 == 109) {
+                if ((slice.charCodeAt(numEnd + 1)) == 105) {
+                    if ((slice.charCodeAt(numEnd + 2)) == 110) {
+                        unitLen = 3
+                        unitText = "min"
+                    }
+                }
+            }
+        }
+        if (unitLen == 0) {
+            if (c0 == 115) {
+                unitLen = 1
+                unitText = "s"
+            }
+        }
+        if (unitLen == 0) {
+            if (c0 == 104) {
+                unitLen = 1
+                unitText = "h"
+            }
+        }
+        if (unitLen == 0) {
+            return (this.noMatch())
+        }
+
+        ; --- boundary: next char must not be alpha (avoids "sec", "hour" etc.) ---
+        def afterUnit (numEnd + unitLen)
+        if (afterUnit < len) {
+            if (this.isAlphaCode((slice.charCodeAt(afterUnit)))) {
+                return (this.noMatch())
+            }
+        }
+
+        def out (slice.read(afterUnit))
+        out.tag = detectedTag
+        def dv (new DurationValue)
+        dv.value = value
+        dv.unit = unitText
+        def payload (SliceParsedValue.fromDuration(dv))
+        out.setSliceValue(payload)
+        slice.setSliceValue(payload)
+        return out
+    }
+}

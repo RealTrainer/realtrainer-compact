@@ -3,6 +3,7 @@ Import "detectors/PositiveIntegerDetector.rgr"
 Import "Parser.rgr"
 Import "values/FeelingValue.rgr"
 Import "values/SliceParsedValue.rgr"
+Import "NGSubParserDetectors.rgr"
 
 class FeelingDetector {
     Extends(TokenDetector)
@@ -17,30 +18,10 @@ class FeelingDetector {
         return (new FeelingDetector(s))
     }
 
-    fn isWhitespace:boolean (ch:int) {
-        if (ch == 32) {
-            return true
-        }
-        if (ch == 9) {
-            return true
-        }
-        return false
-    }
-
-    fn isDigit:boolean (ch:int) {
-        if (ch < 48) {
-            return false
-        }
-        if (ch > 57) {
-            return false
-        }
-        return true
-    }
-
     fn parseNumericScore:int (slice:TokenSlice) {
-        def detectors:[TokenDetector]
-        push detectors (PositiveIntegerDetector.create())
-        def p (new Parser((slice.toString()) detectors))
+        def subReg (new NGSubParserDetectors())
+        def detectors (subReg.getPositiveIntegerOnlyChildDetectors())
+        def p (Parser.fromSlice(slice detectors))
         p.start()
         if ((p.getCount()) != 1) {
             return -1
@@ -64,8 +45,7 @@ class FeelingDetector {
                 if (((slice.charCodeAt(i + 1)) == 49) && ((slice.charCodeAt(i + 2)) == 48)) {
                     def start@(mutable):int i
                     while (start > 0) {
-                        def chPrev (slice.charCodeAt(start - 1))
-                        if (this.isDigit(chPrev)) {
+                        if (slice.isDigitAt(start - 1)) {
                             start = start - 1
                         } {
                             break
@@ -121,14 +101,7 @@ class FeelingDetector {
             return (this.noMatch())
         }
 
-        def lineEnd@(mutable):int keyLen
-        while (lineEnd < len) {
-            def ch (slice.charCodeAt(lineEnd))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
+        def lineEnd (slice.findLineEnd(keyLen))
 
         def rawSlice (slice.peek(keyLen).read(lineEnd - keyLen))
 
@@ -136,7 +109,7 @@ class FeelingDetector {
         def rawLen (rawSlice.length())
         while (trimStart < rawLen) {
             def chStart (rawSlice.charCodeAt(trimStart))
-            if (this.isWhitespace(chStart)) {
+            if (rawSlice.isWhitespace(chStart)) {
                 trimStart = trimStart + 1
             } {
                 break
@@ -146,7 +119,7 @@ class FeelingDetector {
         def trimEnd@(mutable):int rawLen
         while (trimEnd > trimStart) {
             def chEnd (rawSlice.charCodeAt(trimEnd - 1))
-            if (this.isWhitespace(chEnd)) {
+            if (rawSlice.isWhitespace(chEnd)) {
                 trimEnd = trimEnd - 1
             } {
                 break

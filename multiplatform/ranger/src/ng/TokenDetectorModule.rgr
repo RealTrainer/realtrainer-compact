@@ -31,11 +31,12 @@ Import "detectors/KCALDetector.rgr"
 Import "detectors/PercentageDetector.rgr"
 Import "detectors/PercentageRangeDetector.rgr"
 Import "detectors/RMDetector.rgr"
-Import "detectors/SetRepRangeLoadDetector.rgr"
 Import "detectors/ZoneDetector.rgr"
 Import "detectors/RomanZoneDetector.rgr"
 Import "StandardDetectors.rgr"
 Import "NGTestRunner.rgr"
+Import "detectors/DurationDetector.rgr"
+Import "NGSubParserDetectors.rgr"
 
 class TokenDetectorModule {
     sfn createKeyword:KeywordDetector (token:string) {
@@ -161,10 +162,6 @@ class TokenDetectorModule {
 
     sfn createRM:RMDetector () {
         return (RMDetector.create())
-    }
-
-    sfn createSetRepRangeLoad:SetRepRangeLoadDetector () {
-        return (SetRepRangeLoadDetector.create())
     }
 
     sfn createZone:ZoneDetector () {

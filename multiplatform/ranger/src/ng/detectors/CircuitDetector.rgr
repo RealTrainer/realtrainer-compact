@@ -24,15 +24,7 @@ class CircuitDetector {
 
         def len (slice.length())
         def roundsStart (strlen prefix)
-        def roundsEnd@(mutable):int roundsStart
-        while (roundsEnd < len) {
-            def ch (slice.charCodeAt(roundsEnd))
-            if ((ch >= 48) && (ch <= 57)) {
-                roundsEnd = roundsEnd + 1
-            } {
-                break
-            }
-        }
+        def roundsEnd (slice.findNumberEnd(roundsStart))
 
         if (roundsEnd <= roundsStart) {
             return (this.noMatch())
@@ -44,14 +36,7 @@ class CircuitDetector {
             return (this.noMatch())
         }
 
-        def lineEnd@(mutable):int roundsEnd
-        while (lineEnd < len) {
-            def ch2 (slice.charCodeAt(lineEnd))
-            if ((ch2 == 10) || (ch2 == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
+        def lineEnd (slice.findLineEnd(roundsEnd))
 
         def out (slice.read(lineEnd))
         out.tag = detectedTag
@@ -67,15 +52,7 @@ class CircuitDetector {
         cv.rounds = (roundsSlice.parseInteger(0 ((roundsSlice.length()) - 1)))
 
         if ((roundsEnd < lineEnd) && ((slice.charCodeAt(roundsEnd)) == 47)) {
-            def i@(mutable):int (roundsEnd + 1)
-            while (i < lineEnd) {
-                def ch3 (slice.charCodeAt(i))
-                if ((ch3 >= 48) && (ch3 <= 57)) {
-                    i = i + 1
-                } {
-                    break
-                }
-            }
+            def i (slice.findNumberEnd(roundsEnd + 1))
 
             if (i > (roundsEnd + 1)) {
                 def j@(mutable):int i

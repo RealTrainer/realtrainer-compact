@@ -8,7 +8,7 @@ class Parser {
 
     def source:string ""
 
-    def slice:TokenSlice
+    def slice:TokenSlice (new TokenSlice("" 0 0))
 
     def detectors:[TokenDetector]
 
@@ -21,9 +21,19 @@ class Parser {
         clear parserdResults
     }
 
+    ; Zero-copy constructor: takes an existing TokenSlice (window into a parent
+    ; source string) instead of allocating a new string. Use this from sub-parsers
+    ; in detectors to avoid the .toString() copy + duplicate TokenSlice allocation.
+    sfn fromSlice:Parser (s:TokenSlice, detectors:[TokenDetector]) {
+        def p (new Parser("" detectors))
+        p.slice = s
+        return p
+    }
+
     fn start:void () {
 
-        def activeSlice@(mutable):TokenSlice (new TokenSlice(source 0 (strlen source)))
+        def activeSlice@(mutable):TokenSlice (new TokenSlice("" 0 0))
+        activeSlice = slice
 
         while ((activeSlice.length()) > 0) {
             def advance:int 0
@@ -50,7 +60,7 @@ class Parser {
             
             ; TODO: test additional parsers here before deciding fallback move
 
-            ; if no parser matched, move forward by one code unit
+            ; if no parser matched, it is a syntax error - stop parsing
             if (advance == 0) {
                 break
             } {

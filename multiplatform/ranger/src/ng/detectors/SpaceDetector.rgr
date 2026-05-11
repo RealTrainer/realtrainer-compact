@@ -13,30 +13,12 @@ class SpaceDetector {
         return (new SpaceDetector(s))
     }
 
-    fn isWhitespace:boolean (ch:int) {
-        if (ch == 32) {
-            return true
-        }
-        if (ch == 9) {
-            return true
-        }
-        return false
-    }
-
     fn detect:TokenSlice (slice:TokenSlice) {
         if ((slice.length()) == 0) {
             return (this.noMatch())
         }
 
-        def i@(mutable):int 0
-        while (i < (slice.length())) {
-            def ch (slice.charCodeAt(i))
-            if (this.isWhitespace(ch)) {
-                i = i + 1
-            } {
-                break
-            }
-        }
+        def i (slice.findWhitespaceEnd(0))
 
         if (i == 0) {
             return (this.noMatch())

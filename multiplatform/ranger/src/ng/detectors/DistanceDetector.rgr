@@ -21,9 +21,7 @@ class DistanceDetector {
             return (this.noMatch())
         }
 
-        def valuePart@(mutable):TokenSlice (slice)
-        valuePart = (slice.splitWithToken("m"))
-        def valueLen (valuePart.length())
+        def valueLen (slice.findNumberEnd(0))
 
         if (valueLen <= 0) {
             return (this.noMatch())
@@ -31,11 +29,11 @@ class DistanceDetector {
         if ((valueLen + 1) > len) {
             return (this.noMatch())
         }
-        if (valuePart.hasInteger(0 (valueLen - 1))) {
+        if (slice.hasInteger(0 (valueLen - 1))) {
         } {
             return (this.noMatch())
         }
-        def parsed (valuePart.parseInteger(0 (valueLen - 1)))
+        def parsed (slice.parseInteger(0 (valueLen - 1)))
         if (parsed <= 0) {
             return (this.noMatch())
         }

@@ -13,27 +13,8 @@ class PhaseDetector {
         return (new PhaseDetector(s))
     }
 
-    fn isWhitespace:boolean (ch:int) {
-        if (ch == 32) {
-            return true
-        }
-        if (ch == 9) {
-            return true
-        }
-        return false
-    }
-
     fn findLineEnd:int (slice:TokenSlice from:int) {
-        def len (slice.length())
-        def i@(mutable):int from
-        while (i < len) {
-            def ch (slice.charCodeAt(i))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            i = i + 1
-        }
-        return i
+        return (slice.findLineEnd(from))
     }
 
     fn detect:TokenSlice (slice:TokenSlice) {
@@ -50,7 +31,7 @@ class PhaseDetector {
         def keyEnd@(mutable):int 0
         while (keyEnd < lineEnd) {
             def ch (slice.charCodeAt(keyEnd))
-            if (this.isWhitespace(ch)) {
+            if (slice.isWhitespace(ch)) {
                 break
             }
             if (ch == 124) {
@@ -72,13 +53,13 @@ class PhaseDetector {
         def contentStart@(mutable):int keyEnd
         if (contentStart < lineEnd) {
             def chSep (slice.charCodeAt(contentStart))
-            if ((chSep == 124) || (this.isWhitespace(chSep))) {
+            if ((chSep == 124) || (slice.isWhitespace(chSep))) {
                 contentStart = contentStart + 1
             }
         }
         while (contentStart < lineEnd) {
             def chSpace (slice.charCodeAt(contentStart))
-            if (this.isWhitespace(chSpace)) {
+            if (slice.isWhitespace(chSpace)) {
                 contentStart = contentStart + 1
             } {
                 break

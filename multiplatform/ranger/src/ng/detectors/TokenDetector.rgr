@@ -27,6 +27,28 @@ class TokenDetector {
         return (this.getNoMatchSlice())
     }
 
+    fn isInRange:boolean (value:int minValue:int maxValue:int) {
+        if (value < minValue) {
+            return false
+        }
+        if (value > maxValue) {
+            return false
+        }
+        return true
+    }
+
+    fn isHour24:boolean (value:int) {
+        return (this.isInRange(value 0 23))
+    }
+
+    fn isMinuteSecond:boolean (value:int) {
+        return (this.isInRange(value 0 59))
+    }
+
+    fn isHour12:boolean (value:int) {
+        return (this.isInRange(value 1 12))
+    }
+
     fn detect:TokenSlice (slice:TokenSlice) {
         return (this.noMatch())
     }

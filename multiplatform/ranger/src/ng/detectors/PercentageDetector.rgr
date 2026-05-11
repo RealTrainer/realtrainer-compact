@@ -20,19 +20,18 @@ class PercentageDetector {
         if (len < 2) {
             return (this.noMatch())
         }
-        def valuePart (slice.splitWithToken("%"))
-        def vLen (valuePart.length())
+        def vLen (slice.findNumberEnd(0))
         if (vLen <= 0) {
             return (this.noMatch())
         }
         if ((vLen + 1) > len) {
             return (this.noMatch())
         }
-        if (valuePart.hasInteger(0 (vLen - 1))) {
+        if (slice.hasInteger(0 (vLen - 1))) {
         } {
             return (this.noMatch())
         }
-        def v (valuePart.parseInteger(0 (vLen - 1)))
+        def v (slice.parseInteger(0 (vLen - 1)))
         if (v <= 0) {
             return (this.noMatch())
         }

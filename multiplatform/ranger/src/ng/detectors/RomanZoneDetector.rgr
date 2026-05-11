@@ -1,4 +1,5 @@
 Import "detectors/TokenDetector.rgr"
+Import "NGSharedLists.rgr"
 
 class RomanZoneDetector {
     Extends(TokenDetector)
@@ -13,48 +14,32 @@ class RomanZoneDetector {
         return (new RomanZoneDetector(s))
     }
 
-    fn isAlphaNum:boolean (ch:int) {
-        if ((ch >= 48) && (ch <= 57)) {
-            return true
+    fn romanPrefixLen:int (slice:TokenSlice) {
+        def shared (new NGSharedLists())
+        def candidates (shared.defaultRomanZonePrefixTokens())
+
+        def i@(mutable):int 0
+        def cnt (array_length candidates)
+        while (i < cnt) {
+            def token (itemAt candidates i)
+            if (slice.hasToken(token)) {
+                return (strlen token)
+            }
+            i = i + 1
         }
-        if ((ch >= 65) && (ch <= 90)) {
-            return true
-        }
-        if ((ch >= 97) && (ch <= 122)) {
-            return true
-        }
-        return false
+
+        return 0
     }
 
     fn detect:TokenSlice (slice:TokenSlice) {
-        def tokenLen@(mutable):int 0
-
-        if (slice.hasToken("III")) {
-            tokenLen = 3
-        } {
-            if (slice.hasToken("II")) {
-                tokenLen = 2
-            } {
-                if (slice.hasToken("IV")) {
-                    tokenLen = 2
-                } {
-                    if (slice.hasToken("V")) {
-                        tokenLen = 1
-                    } {
-                        if (slice.hasToken("I")) {
-                            tokenLen = 1
-                        } {
-                            return (this.noMatch())
-                        }
-                    }
-                }
-            }
+        def tokenLen (this.romanPrefixLen(slice))
+        if (tokenLen == 0) {
+            return (this.noMatch())
         }
 
         def len (slice.length())
         if (len > tokenLen) {
-            def next (slice.charCodeAt(tokenLen))
-            if (this.isAlphaNum(next)) {
+            if (slice.isAlphaNumAt(tokenLen)) {
                 return (this.noMatch())
             }
         }

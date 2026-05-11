@@ -45,16 +45,6 @@ class DetailsDataDetector {
         return false
     }
 
-    fn isWhitespace:boolean (ch:int) {
-        if (ch == 32) {
-            return true
-        }
-        if (ch == 9) {
-            return true
-        }
-        return false
-    }
-
     fn addChildrenFromParser:void (out:TokenSlice payload:TokenSlice) {
         def p (new Parser((payload.toString()) (this.createChildDetectors())))
         p.start()
@@ -78,7 +68,7 @@ class DetailsDataDetector {
         def len (payload.length())
         while (restStart < len) {
             def ch (payload.charCodeAt(restStart))
-            if (this.isWhitespace(ch)) {
+            if (payload.isWhitespace(ch)) {
                 restStart = restStart + 1
             } {
                 break
@@ -122,7 +112,7 @@ class DetailsDataDetector {
             def tailStart@(mutable):int wordEnd
             while (tailStart < len) {
                 def cht (payload.charCodeAt(tailStart))
-                if ((cht == 32) || (cht == 9)) {
+                if (payload.isWhitespace(cht)) {
                     tailStart = tailStart + 1
                 } {
                     break
@@ -166,14 +156,7 @@ class DetailsDataDetector {
             return (this.noMatch())
         }
 
-        def lineEnd@(mutable):int markerEnd
-        while (lineEnd < len) {
-            def ch (slice.charCodeAt(lineEnd))
-            if ((ch == 10) || (ch == 13)) {
-                break
-            }
-            lineEnd = lineEnd + 1
-        }
+        def lineEnd (slice.findLineEnd(markerEnd))
 
         def out (slice.read(lineEnd))
         out.tag = detectedTag
