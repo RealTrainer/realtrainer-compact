@@ -2279,7 +2279,7 @@ TokenDetector.create = function() {
 };
 class KeywordDetector  extends TokenDetector {
   constructor(token, noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.keyword = "";
     this.cachedNoMatch = noMatchSlice;
     this.keyword = token;
@@ -2309,7 +2309,7 @@ KeywordDetector.create = function(token) {
 };
 class DateTimeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.parseDateShapeCalls = 0;
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "datetime";
@@ -2435,7 +2435,7 @@ DateTimeDetector.create = function() {
 };
 class SpaceDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "space";
   }
@@ -2458,7 +2458,7 @@ SpaceDetector.create = function() {
 };
 class NewlineDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "newline";
   }
@@ -2498,7 +2498,7 @@ NewlineDetector.create = function() {
 };
 class PositiveIntegerDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "positive-integer";
   }
@@ -2541,7 +2541,7 @@ PositiveIntegerDetector.create = function() {
 };
 class DecimalNumberDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "decimal-number";
   }
@@ -2589,7 +2589,7 @@ DecimalNumberDetector.create = function() {
 };
 class TimeValueDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "time-value";
   }
@@ -2633,7 +2633,7 @@ TimeValueDetector.create = function() {
 };
 class DistanceDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "distance";
   }
@@ -2677,7 +2677,7 @@ DistanceDetector.create = function() {
 };
 class RecoveryTimeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "recovery-time";
   }
@@ -2750,7 +2750,7 @@ RecoveryTimeDetector.create = function() {
 };
 class AMTimeValueDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "am-time";
   }
@@ -2791,7 +2791,7 @@ AMTimeValueDetector.create = function() {
 };
 class PercentageDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "percentage";
   }
@@ -2887,7 +2887,7 @@ Parser.fromSlice = function(s, detectors) {
 };
 class NumRangeBlockDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "num-range";
   }
@@ -2960,7 +2960,7 @@ NumRangeBlockDetector.create = function() {
 };
 class PercentageRangeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "percentage-range";
   }
@@ -3052,7 +3052,7 @@ PercentageRangeDetector.create = function() {
 };
 class DurationDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "duration";
   }
@@ -3240,7 +3240,7 @@ NGSubParserDetectors.__singleton = function() {
 };
 class WeightDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "weight";
   }
@@ -3291,7 +3291,7 @@ WeightDetector.create = function() {
 };
 class RepeatBlockDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "repeat-block";
   }
@@ -3482,7 +3482,7 @@ RepeatBlockDetector.create = function() {
 };
 class SpeedDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "speed";
     this.distanceDetector = DistanceDetector.create();
@@ -3559,7 +3559,7 @@ SpeedDetector.create = function() {
 };
 class ZoneDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "zone";
   }
@@ -3668,7 +3668,7 @@ NGChildDetectorRegistry.__singleton = function() {
 };
 class RecoveryDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "recovery";
   }
@@ -3722,7 +3722,7 @@ RecoveryDetector.create = function() {
 };
 class LeftRightDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "left-right";
   }
@@ -3780,7 +3780,7 @@ LeftRightDetector.create = function() {
 };
 class FeelingDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "feeling";
   }
@@ -3937,7 +3937,7 @@ FeelingDetector.create = function() {
 };
 class EffortDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "effort";
   }
@@ -3998,7 +3998,7 @@ EffortDetector.create = function() {
 };
 class BodyMetricDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "body-metric";
   }
@@ -4196,7 +4196,7 @@ BodyMetricDetector.create = function() {
 };
 class CircuitDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "circuit";
   }
@@ -4368,7 +4368,7 @@ NGSharedLists.__singleton = function() {
 };
 class ContextEntryDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "context-entry";
   }
@@ -4674,7 +4674,7 @@ ContextEntryDetector.create = function() {
 };
 class DistanceRangeBlockDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "distance-range";
   }
@@ -4767,7 +4767,7 @@ DistanceRangeBlockDetector.create = function() {
 };
 class SemicolonSeparatorDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "space";
   }
@@ -4789,7 +4789,7 @@ SemicolonSeparatorDetector.create = function() {
 };
 class KCALDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "kcal";
   }
@@ -4831,7 +4831,7 @@ KCALDetector.create = function() {
 };
 class BPMDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "bpm";
   }
@@ -4873,7 +4873,7 @@ BPMDetector.create = function() {
 };
 class RMDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "rm";
   }
@@ -4915,7 +4915,7 @@ RMDetector.create = function() {
 };
 class RomanZoneDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "zone-roman";
   }
@@ -4955,7 +4955,7 @@ RomanZoneDetector.create = function() {
 };
 class PhaseDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "phase";
   }
@@ -5025,7 +5025,7 @@ PhaseDetector.create = function() {
 };
 class HeadingDataDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "heading-data";
   }
@@ -5200,7 +5200,7 @@ StandardDetectors.create = function() {
 };
 class DetailsDataDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "details-data";
   }
@@ -5410,7 +5410,7 @@ NGSharedDetectorFactory.__singleton = function() {
 };
 class SportExerciseDetector  extends TokenDetector {
   constructor(noMatchSlice, sportNames, ds) {
-    super()
+    super(noMatchSlice)
     this.sports = [];
     this.childDetectors = [];
     this.cachedNoMatch = noMatchSlice;

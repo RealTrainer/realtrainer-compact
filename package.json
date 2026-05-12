@@ -61,45 +61,45 @@
     "dev:ui": "npm --prefix ui/react run dev",
     "test:all": "npm test && npm --prefix ui/react run test",
     "parse": "node dist/cli.js",
-    "mcp:start": "node dist/mcp/server.js"
-    ,"ranger:build": "cd multiplatform/ranger && mkdir -p dist && ranger-compiler -es6 -nodemodule ./src/compact_ranger_parser.rgr -o=compact_ranger_parser.cjs && (test -f ./src/bin/compact_ranger_parser.cjs && cp ./src/bin/compact_ranger_parser.cjs ./dist/index.cjs || (test -f ./src/bin/compact_ranger_parser.js && cp ./src/bin/compact_ranger_parser.js ./dist/index.cjs || (test -f ./compact_ranger_parser.cjs && cp ./compact_ranger_parser.cjs ./dist/index.cjs || (test -f ./compact_ranger_parser.js && cp ./compact_ranger_parser.js ./dist/index.cjs))))"
-    ,"ranger:build:swift": "cd multiplatform/ranger && mkdir -p dist/swift && ranger-compiler ./src/compact_ranger_parser.rgr -l=swift6 -d=./dist/swift -o=compact_ranger_parser.swift"
-    ,"ranger:build:kotlin": "cd multiplatform/ranger && mkdir -p dist/kotlin && ranger-compiler ./src/compact_ranger_parser.rgr -l=kotlin -d=./dist/kotlin -o=compact_ranger_parser.kt"
-    ,"ranger:ng:build": "cd multiplatform/ranger && mkdir -p dist/ng && ranger-compiler -es6 -nodemodule ./src/ng/token_slice.rgr -o=token_slice.cjs && (test -f ./src/ng/bin/token_slice.cjs && cp ./src/ng/bin/token_slice.cjs ./dist/ng/token_slice.cjs || (test -f ./src/ng/bin/token_slice.js && cp ./src/ng/bin/token_slice.js ./dist/ng/token_slice.cjs || (test -f ./token_slice.cjs && cp ./token_slice.cjs ./dist/ng/token_slice.cjs || (test -f ./token_slice.js && cp ./token_slice.js ./dist/ng/token_slice.cjs))))"
-    ,"ranger:ng:test": "npm run ranger:ng:build && node multiplatform/ranger/test/token_slice_smoke.mjs"
-    ,"ranger:ng:detector:build": "cd multiplatform/ranger && ranger-compiler -es6 -nodemodule ./src/ng/TokenDetectorModule.rgr -o=token_detector.cjs"
-    ,"ranger:ng:detector:test": "npm run ranger:ng:build && npm run ranger:ng:detector:build && node multiplatform/ranger/test/token_detector_smoke.mjs"
-    ,"ranger:ng:parser:build": "cd multiplatform/ranger && ranger-compiler -es6 -nodemodule ./src/ng/Parser.rgr -o=parser.cjs"
-    ,"ranger:ng:common:test": "npm run ranger:ng:build && npm run ranger:ng:detector:build && npm run ranger:ng:parser:build && node multiplatform/ranger/test/ng_common_harness.mjs"
-    ,"ranger:ng:build:kotlin": "cd multiplatform/ranger && mkdir -p dist/ng-kotlin && ranger-compiler ./src/ng/TokenDetectorModule.rgr -l=kotlin -d=./dist/ng-kotlin -o=token_detector_ng.kt"
-    ,"ranger:ng:build:ts": "cd multiplatform/ranger && mkdir -p dist/ng-ts && ranger-compiler -es6 -typescript -esm -nodemodule ./src/ng/TokenDetectorModule.rgr -d=./dist/ng-ts -o=token_detector_ng.ts"
-    ,"ranger:ng:build:swift": "cd multiplatform/ranger && mkdir -p dist/ng-swift && ranger-compiler ./src/ng/TokenDetectorModule.rgr -l=swift6 -d=./dist/ng-swift -o=token_detector_ng.swift"
-    ,"ranger:ng:test:kotlin": "npm run ranger:ng:build:kotlin && (command -v kotlinc >/dev/null && kotlinc multiplatform/ranger/test/org_json_shims.kt multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt multiplatform/ranger/test/ng_common_harness.kt -include-runtime -d multiplatform/ranger/dist/ng-kotlin/ng_common_harness.jar && java -jar multiplatform/ranger/dist/ng-kotlin/ng_common_harness.jar || (echo 'kotlinc not found; generated Kotlin NG sources and harness only' && exit 0))"
-    ,"ranger:ng:test:swift": "npm run ranger:ng:build:swift && (swiftc multiplatform/ranger/test/ranger_swift_shims.swift multiplatform/ranger/dist/ng-swift/token_detector_ng.swift multiplatform/ranger/test/ng_common_harness.swift -o multiplatform/ranger/dist/ng-swift/ng_common_harness && ./multiplatform/ranger/dist/ng-swift/ng_common_harness || (echo 'Swift compile currently fails with Ranger-generated NG source for this target. NG harness source exists in multiplatform/ranger/test/ng_common_harness.swift.' && exit 0))"
-    ,"ranger:ng:test:targets": "npm run ranger:ng:common:test && npm run ranger:ng:test:kotlin && npm run ranger:ng:test:swift"
-    ,"ranger:ng:test:report": "node multiplatform/ranger/tools/ng_harness_report.mjs"
-    ,"ranger:ng:json:pretty": "node multiplatform/ranger/tools/pretty_print_json_dir.mjs multiplatform/ranger/dist/ng/json"
-    ,"ranger:ng:kotlin:json:pretty": "node multiplatform/ranger/tools/pretty_print_json_dir.mjs multiplatform/ranger/dist/ng-kotlin/json"
-    ,"ranger:test": "npm run ranger:build && node multiplatform/ranger/test/ranger_smoke.mjs"
-    ,"ranger:test:swift": "npm run ranger:build:swift && (swiftc multiplatform/ranger/test/ranger_swift_shims.swift multiplatform/ranger/dist/swift/compact_ranger_parser.swift multiplatform/ranger/test/ranger_smoke.swift -o multiplatform/ranger/dist/swift/ranger_smoke && ./multiplatform/ranger/dist/swift/ranger_smoke || (echo 'Swift compile currently fails with Ranger-generated source for this parser target (for example splice/length emissions). Smoke source is generated in multiplatform/ranger/test/ranger_smoke.swift.' && exit 0))"
-    ,"ranger:test:kotlin": "npm run ranger:build:kotlin && (command -v kotlinc >/dev/null && kotlinc multiplatform/ranger/dist/kotlin/compact_ranger_parser.kt multiplatform/ranger/test/ranger_smoke.kt -include-runtime -d multiplatform/ranger/dist/kotlin/ranger_smoke.jar && java -jar multiplatform/ranger/dist/kotlin/ranger_smoke.jar || (echo 'kotlinc not found; generated Kotlin parser+test sources only' && exit 0))"
-    ,"ranger:json": "npm run ranger:build && node multiplatform/ranger/tools/compact_to_json.mjs"
-    ,"ranger:parity:js": "npm run ranger:build && node multiplatform/ranger/tools/export_target_parity_js.mjs && node multiplatform/ranger/tools/pretty_print_json.mjs multiplatform/ranger/dist/parity/ranger_target_js.json"
-    ,"ranger:parity:kotlin": "npm run ranger:build:kotlin && kotlinc multiplatform/ranger/dist/kotlin/compact_ranger_parser.kt multiplatform/ranger/test/ranger_parity_export.kt -include-runtime -d multiplatform/ranger/dist/kotlin/ranger_parity_export.jar && java -jar multiplatform/ranger/dist/kotlin/ranger_parity_export.jar MINI_TRAINING_PLAN.compact multiplatform/ranger/dist/parity/ranger_target_kotlin.json && node multiplatform/ranger/tools/pretty_print_json.mjs multiplatform/ranger/dist/parity/ranger_target_kotlin.json"
-    ,"ranger:parity:swift": "npm run ranger:build:swift && swiftc multiplatform/ranger/test/ranger_swift_shims.swift multiplatform/ranger/dist/swift/compact_ranger_parser.swift multiplatform/ranger/test/ranger_parity_export.swift -o multiplatform/ranger/dist/swift/ranger_parity_export && ./multiplatform/ranger/dist/swift/ranger_parity_export MINI_TRAINING_PLAN.compact multiplatform/ranger/dist/parity/ranger_target_swift.json && node multiplatform/ranger/tools/pretty_print_json.mjs multiplatform/ranger/dist/parity/ranger_target_swift.json"
-    ,"ranger:parity:summary": "node multiplatform/ranger/tools/parity_summary_markdown.mjs"
-    ,"ranger:parity:targets": "npm run ranger:parity:js && npm run ranger:parity:kotlin && npm run ranger:parity:swift"
-    ,"ranger:bench": "node multiplatform/ranger/tools/parser_benchmark_report.mjs"
-    ,"ranger:bench:3way": "node multiplatform/ranger/tools/parser_benchmark_3way.mjs"
-    ,"ranger:bench:3way:10": "node multiplatform/ranger/tools/parser_benchmark_3way.mjs --runs=10"
-    ,"ranger:bench:pegjs-ng": "node multiplatform/ranger/tools/parser_benchmark_pegjs_ng.mjs"
-    ,"ranger:bench:pegjs-ng:10": "node multiplatform/ranger/tools/parser_benchmark_pegjs_ng.mjs --runs=10"
-    ,"ranger:modules:export": "node multiplatform/ranger/tools/export_parser_modules.mjs"
-    ,"ranger:modules:build": "npm run ranger:ng:common:test && npm run ranger:ng:build:swift && npm run ranger:ng:build:kotlin && npm run ranger:ng:build:ts && npm run ranger:modules:export"
-    ,"ranger:compare": "npm run build && npm run ranger:build && node multiplatform/ranger/tools/compare_pegjs_ranger.mjs"
-    ,"build:converter": "esbuild src/tools/compact_v1_to_ng_converter.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/tools/compact_v1_to_ng_converter.js --sourcemap"
-    ,"convert:v1:to:ng": "npm run build:converter && node dist/tools/compact_v1_to_ng_converter.js"
-    ,"convert:minimonster": "npm run convert:v1:to:ng -- data/minimonster.compact data/minimonster.ng.compact"
+    "mcp:start": "node dist/mcp/server.js",
+    "ranger:build": "cd multiplatform/ranger && mkdir -p dist && ranger-compiler -es6 -nodemodule ./src/compact_ranger_parser.rgr -o=compact_ranger_parser.cjs && (test -f ./src/bin/compact_ranger_parser.cjs && cp ./src/bin/compact_ranger_parser.cjs ./dist/index.cjs || (test -f ./src/bin/compact_ranger_parser.js && cp ./src/bin/compact_ranger_parser.js ./dist/index.cjs || (test -f ./compact_ranger_parser.cjs && cp ./compact_ranger_parser.cjs ./dist/index.cjs || (test -f ./compact_ranger_parser.js && cp ./compact_ranger_parser.js ./dist/index.cjs))))",
+    "ranger:build:swift": "cd multiplatform/ranger && mkdir -p dist/swift && ranger-compiler ./src/compact_ranger_parser.rgr -l=swift6 -d=./dist/swift -o=compact_ranger_parser.swift",
+    "ranger:build:kotlin": "cd multiplatform/ranger && mkdir -p dist/kotlin && ranger-compiler ./src/compact_ranger_parser.rgr -l=kotlin -d=./dist/kotlin -o=compact_ranger_parser.kt",
+    "ranger:ng:build": "cd multiplatform/ranger && mkdir -p dist/ng && ranger-compiler -es6 -nodemodule ./src/ng/token_slice.rgr -o=token_slice.cjs && (test -f ./src/ng/bin/token_slice.cjs && cp ./src/ng/bin/token_slice.cjs ./dist/ng/token_slice.cjs || (test -f ./src/ng/bin/token_slice.js && cp ./src/ng/bin/token_slice.js ./dist/ng/token_slice.cjs || (test -f ./token_slice.cjs && cp ./token_slice.cjs ./dist/ng/token_slice.cjs || (test -f ./token_slice.js && cp ./token_slice.js ./dist/ng/token_slice.cjs))))",
+    "ranger:ng:test": "npm run ranger:ng:build && node multiplatform/ranger/test/token_slice_smoke.mjs",
+    "ranger:ng:detector:build": "cd multiplatform/ranger && ranger-compiler -es6 -nodemodule ./src/ng/TokenDetectorModule.rgr -o=token_detector.cjs",
+    "ranger:ng:detector:test": "npm run ranger:ng:build && npm run ranger:ng:detector:build && node multiplatform/ranger/test/token_detector_smoke.mjs",
+    "ranger:ng:parser:build": "cd multiplatform/ranger && ranger-compiler -es6 -nodemodule ./src/ng/Parser.rgr -o=parser.cjs",
+    "ranger:ng:common:test": "npm run ranger:ng:build && npm run ranger:ng:detector:build && npm run ranger:ng:parser:build && node multiplatform/ranger/test/ng_common_harness.mjs",
+    "ranger:ng:build:kotlin": "cd multiplatform/ranger && mkdir -p dist/ng-kotlin && ranger-compiler ./src/ng/TokenDetectorModule.rgr -l=kotlin -d=./dist/ng-kotlin -o=token_detector_ng.kt",
+    "ranger:ng:build:ts": "cd multiplatform/ranger && mkdir -p dist/ng-ts && ranger-compiler -es6 -typescript -esm -nodemodule ./src/ng/TokenDetectorModule.rgr -d=./dist/ng-ts -o=token_detector_ng.ts",
+    "ranger:ng:build:swift": "cd multiplatform/ranger && mkdir -p dist/ng-swift && ranger-compiler ./src/ng/TokenDetectorModule.rgr -l=swift6 -d=./dist/ng-swift -o=token_detector_ng.swift",
+    "ranger:ng:test:kotlin": "npm run ranger:ng:build:kotlin && (command -v kotlinc >/dev/null && kotlinc multiplatform/ranger/test/org_json_shims.kt multiplatform/ranger/dist/ng-kotlin/token_detector_ng.kt multiplatform/ranger/test/ng_common_harness.kt -include-runtime -d multiplatform/ranger/dist/ng-kotlin/ng_common_harness.jar && java -jar multiplatform/ranger/dist/ng-kotlin/ng_common_harness.jar || (echo 'kotlinc not found; generated Kotlin NG sources and harness only' && exit 0))",
+    "ranger:ng:test:swift": "npm run ranger:ng:build:swift && (swiftc multiplatform/ranger/test/ranger_swift_shims.swift multiplatform/ranger/dist/ng-swift/token_detector_ng.swift multiplatform/ranger/test/ng_common_harness.swift -o multiplatform/ranger/dist/ng-swift/ng_common_harness && ./multiplatform/ranger/dist/ng-swift/ng_common_harness || (echo 'Swift compile currently fails with Ranger-generated NG source for this target. NG harness source exists in multiplatform/ranger/test/ng_common_harness.swift.' && exit 0))",
+    "ranger:ng:test:targets": "npm run ranger:ng:common:test && npm run ranger:ng:test:kotlin && npm run ranger:ng:test:swift",
+    "ranger:ng:test:report": "node multiplatform/ranger/tools/ng_harness_report.mjs",
+    "ranger:ng:json:pretty": "node multiplatform/ranger/tools/pretty_print_json_dir.mjs multiplatform/ranger/dist/ng/json",
+    "ranger:ng:kotlin:json:pretty": "node multiplatform/ranger/tools/pretty_print_json_dir.mjs multiplatform/ranger/dist/ng-kotlin/json",
+    "ranger:test": "npm run ranger:build && node multiplatform/ranger/test/ranger_smoke.mjs",
+    "ranger:test:swift": "npm run ranger:build:swift && (swiftc multiplatform/ranger/test/ranger_swift_shims.swift multiplatform/ranger/dist/swift/compact_ranger_parser.swift multiplatform/ranger/test/ranger_smoke.swift -o multiplatform/ranger/dist/swift/ranger_smoke && ./multiplatform/ranger/dist/swift/ranger_smoke || (echo 'Swift compile currently fails with Ranger-generated source for this parser target (for example splice/length emissions). Smoke source is generated in multiplatform/ranger/test/ranger_smoke.swift.' && exit 0))",
+    "ranger:test:kotlin": "npm run ranger:build:kotlin && (command -v kotlinc >/dev/null && kotlinc multiplatform/ranger/dist/kotlin/compact_ranger_parser.kt multiplatform/ranger/test/ranger_smoke.kt -include-runtime -d multiplatform/ranger/dist/kotlin/ranger_smoke.jar && java -jar multiplatform/ranger/dist/kotlin/ranger_smoke.jar || (echo 'kotlinc not found; generated Kotlin parser+test sources only' && exit 0))",
+    "ranger:json": "npm run ranger:build && node multiplatform/ranger/tools/compact_to_json.mjs",
+    "ranger:parity:js": "npm run ranger:build && node multiplatform/ranger/tools/export_target_parity_js.mjs && node multiplatform/ranger/tools/pretty_print_json.mjs multiplatform/ranger/dist/parity/ranger_target_js.json",
+    "ranger:parity:kotlin": "npm run ranger:build:kotlin && kotlinc multiplatform/ranger/dist/kotlin/compact_ranger_parser.kt multiplatform/ranger/test/ranger_parity_export.kt -include-runtime -d multiplatform/ranger/dist/kotlin/ranger_parity_export.jar && java -jar multiplatform/ranger/dist/kotlin/ranger_parity_export.jar MINI_TRAINING_PLAN.compact multiplatform/ranger/dist/parity/ranger_target_kotlin.json && node multiplatform/ranger/tools/pretty_print_json.mjs multiplatform/ranger/dist/parity/ranger_target_kotlin.json",
+    "ranger:parity:swift": "npm run ranger:build:swift && swiftc multiplatform/ranger/test/ranger_swift_shims.swift multiplatform/ranger/dist/swift/compact_ranger_parser.swift multiplatform/ranger/test/ranger_parity_export.swift -o multiplatform/ranger/dist/swift/ranger_parity_export && ./multiplatform/ranger/dist/swift/ranger_parity_export MINI_TRAINING_PLAN.compact multiplatform/ranger/dist/parity/ranger_target_swift.json && node multiplatform/ranger/tools/pretty_print_json.mjs multiplatform/ranger/dist/parity/ranger_target_swift.json",
+    "ranger:parity:summary": "node multiplatform/ranger/tools/parity_summary_markdown.mjs",
+    "ranger:parity:targets": "npm run ranger:parity:js && npm run ranger:parity:kotlin && npm run ranger:parity:swift",
+    "ranger:bench": "node multiplatform/ranger/tools/parser_benchmark_report.mjs",
+    "ranger:bench:3way": "node multiplatform/ranger/tools/parser_benchmark_3way.mjs",
+    "ranger:bench:3way:10": "node multiplatform/ranger/tools/parser_benchmark_3way.mjs --runs=10",
+    "ranger:bench:pegjs-ng": "node multiplatform/ranger/tools/parser_benchmark_pegjs_ng.mjs",
+    "ranger:bench:pegjs-ng:10": "node multiplatform/ranger/tools/parser_benchmark_pegjs_ng.mjs --runs=10",
+    "ranger:modules:export": "node multiplatform/ranger/tools/export_parser_modules.mjs",
+    "ranger:modules:build": "npm run ranger:ng:common:test && npm run ranger:ng:build:swift && npm run ranger:ng:build:kotlin && npm run ranger:ng:build:ts && npm run ranger:modules:export",
+    "ranger:compare": "npm run build && npm run ranger:build && node multiplatform/ranger/tools/compare_pegjs_ranger.mjs",
+    "build:converter": "esbuild src/tools/compact_v1_to_ng_converter.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/tools/compact_v1_to_ng_converter.js --sourcemap",
+    "convert:v1:to:ng": "npm run build:converter && node dist/tools/compact_v1_to_ng_converter.js",
+    "convert:minimonster": "npm run convert:v1:to:ng -- data/minimonster.compact data/minimonster.ng.compact"
   },
   "keywords": [
     "parser",
@@ -139,6 +139,7 @@
     "@types/node": "^20.0.0",
     "esbuild": "^0.25.0",
     "peggy": "^4.0.0",
+    "ranger-compiler": "3.0.4",
     "typescript": "^5.0.0",
     "vitest": "^2.0.0"
   }

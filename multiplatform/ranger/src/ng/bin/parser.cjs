@@ -2279,7 +2279,7 @@ TokenDetector.create = function() {
 };
 class DateTimeDetector  extends TokenDetector {
   constructor(noMatchSlice) {
-    super()
+    super(noMatchSlice)
     this.parseDateShapeCalls = 0;
     this.cachedNoMatch = noMatchSlice;
     this.detectedTag = "datetime";
