@@ -1,4 +1,0 @@
-class PercentageValue @serialize(true) {
-    def kind:string "percentage"
-    def value:int 0
-}

@@ -1,5 +1,0 @@
-class RecoveryTimeValue @serialize(true) {
-    def kind:string "recovery-time"
-    def value:int 0
-    def unit:string ""
-}

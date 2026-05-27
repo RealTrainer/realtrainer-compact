@@ -15,7 +15,7 @@
  * [2025-05-01..2025-05-06]
  * [4W:2025-12-31]
  */
-export type DateValue =
+export type CompactDateValue =
   | { type: 'date'; year: number; month: number; day: number; unknown?: boolean }
   | { type: 'datetime'; year: number; month: number; day: number; hour: number; minute: number; timezone: string | null }
   | { type: 'week'; year: number; week: number }
@@ -24,6 +24,9 @@ export type DateValue =
   | { type: 'range'; year: number; month: number; startDay: number; endDay: number }
   | { type: 'range'; startYear: number; startMonth: number; startDay: number; endYear: number; endMonth: number; endDay: number }
   | { type: 'rolling'; weeks: number; endYear: number; endMonth: number; endDay: number };
+
+/** Legacy document date type (`realtrainer-compact/types`). Main export also exposes Ranger class `DateValue`. */
+export type DateValue = CompactDateValue;
 
 /**
  * Weight specification supporting absolute weight, bodyweight, percentage of 1RM, or template placeholders.
@@ -858,7 +861,7 @@ export type Content =
 export interface Workout {
   type: 'workout';
   id: string | null;
-  date: DateValue | null;
+  date: CompactDateValue | null;
   title: string | null;
   content: Content[];
   /** Declared input syntax format for this workout, if explicitly marked in source. */
@@ -872,7 +875,7 @@ export interface Workout {
  */
 export interface Stats {
   type: 'stats';
-  period: DateValue;
+  period: CompactDateValue;
   workouts: number;
   exercises: number;
   sets: number;

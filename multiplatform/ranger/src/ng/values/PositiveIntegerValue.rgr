@@ -1,4 +1,0 @@
-class PositiveIntegerValue @serialize(true) {
-    def kind:string "positive-integer"
-    def value:int 0
-}

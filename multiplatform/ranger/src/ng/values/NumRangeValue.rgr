@@ -1,5 +1,0 @@
-class NumRangeValue @serialize(true) {
-    def kind:string "num-range"
-    def minValue:int 0
-    def maxValue:int 0
-}

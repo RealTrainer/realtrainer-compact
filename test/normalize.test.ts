@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { normalizeCompactText } from '../dist/index.js';
+import { normalizeCompactText } from '../src/index.js';
 
 describe('normalization', () => {
   it('normalizes core strength and endurance rows into canonical syntax', () => {

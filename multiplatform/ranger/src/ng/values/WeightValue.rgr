@@ -1,5 +1,0 @@
-class WeightValue @serialize(true) {
-    def kind:string "weight"
-    def value:double 0.0
-    def unit:string "kg"
-}

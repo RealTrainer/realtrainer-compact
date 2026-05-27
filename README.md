@@ -8,6 +8,12 @@ A parser for **COMPACT format** - a concise text-based DSL for workout tracking,
 npm install realtrainer-compact
 ```
 
+### 3.0.0 breaking changes
+
+- **Parser backend:** Peggy-generated `parser-generated.js` is replaced by **Ranger V1** TypeScript (`src/parser-ranger/compact_parser_v1.rgr` via [`parser-ranger-v1`](https://github.com/RealTrainer/realtrainer/tree/main/parser-ranger-v1)). The public API (`parseCompact`, types, renderers) is unchanged.
+- **Removed exports:** `./ng` and `./ng/token_detector_ng` are no longer published. NG/multiplatform sources live in the RealTrainer monorepo under `research/parser-ng-archive/`.
+- **Regenerating the parser:** `npm run build:parser-ranger` (requires local [Ranger](https://github.com/terotests/Ranger) `dist/rgrc.js` and `parser-ranger-v1` sibling checkout).
+
 ## Quick Start
 
 ```typescript
@@ -34,6 +40,41 @@ if (result.success) {
   console.error(formatParseError(result.error));
 }
 ```
+
+## Ranger AST API (programmatic editing)
+
+The package also exports the **Ranger-generated parser** and AST node classes (`CompactV1Parser`, `DocumentNode`, `ExerciseNode`, `MoveNode`, …) from the main entry and from `realtrainer-compact/parser`.
+
+| API | Returns | Use when |
+|-----|---------|----------|
+| `parseCompact` | `types.ts` `Document` | UI, renderers, existing integrations |
+| `parseCompactAst` | `DocumentNode` | You need mutable Ranger nodes (`hasSets`, `sets`, `toJSONString()`, …) |
+| `astToLegacyDocument` | `Document` | Convert AST → legacy document for renderers |
+
+```typescript
+import {
+  parseCompactAst,
+  astToLegacyDocument,
+  ExerciseNode,
+} from 'realtrainer-compact';
+
+const ast = parseCompactAst(`
+[2026-01-15]## Voima
+Exercise Takakyykky|3x8@80kg
+`);
+
+const exercise = ast.workouts[0].content.find((e) => e.type === 'exercise') as ExerciseNode;
+exercise.sets = 4;
+exercise.hasSets = true;
+
+const legacyDoc = astToLegacyDocument(ast); // for CompactView / renderers
+```
+
+**Note:** Ranger nodes use fields like `hasSets` / `sets`; legacy `types.ts` uses `sets: number | null`. Do not mix the two models without `astToLegacyDocument` or `parseCompact`.
+
+The main export exposes Ranger class `DateValue` (serialize helper). Legacy document dates use type `CompactDateValue` (or `DateValue` from `realtrainer-compact/types`).
+
+Advanced parser internals (`MoveParserV1`, detectors, …) are exported but considered unstable.
 
 ## API Reference
 
@@ -249,7 +290,7 @@ import type { Document, Entry, Exercise, Workout } from 'realtrainer-compact/typ
 
 ## Grammar
 
-The parser is built using [Peggy](https://peggyjs.org/) (PEG.js successor). The grammar file is located at `src/grammar/compact.pegjs`.
+The parser is generated from Ranger source in [`parser-ranger-v1`](https://github.com/RealTrainer/realtrainer/tree/main/parser-ranger-v1) (`compact_parser_v1.rgr`). Sync into this package with `npm run build:parser-ranger`. Legacy Peggy grammar is archived under RealTrainer `research/parser-ng-archive/pegjs-legacy/`.
 
 ## License
 

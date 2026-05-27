@@ -1,5 +1,0 @@
-class PercentageRangeValue @serialize(true) {
-    def kind:string "percentage-range"
-    def minValue:int 0
-    def maxValue:int 0
-}

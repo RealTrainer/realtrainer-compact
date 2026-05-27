@@ -1,4 +1,0 @@
-class RecoveryValue @serialize(true) {
-    def kind:string "recovery"
-    def label:string "Recovery"
-}

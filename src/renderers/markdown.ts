@@ -7,7 +7,7 @@
 import type {
   Workout,
   Content,
-  DateValue,
+  CompactDateValue,
   Document,
   Exercise,
   Pyramid,
@@ -116,7 +116,7 @@ export function renderWorkoutToMarkdown(workout: Workout, options?: MarkdownOpti
 /**
  * Format date for display
  */
-function formatDateForDisplay(date: DateValue): string {
+function formatDateForDisplay(date: CompactDateValue): string {
   if (date.type === 'date') {
     return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
   }

@@ -644,7 +644,6 @@ function App() {
   const minimonsterNormalized = useMemo(() => normalizeCompactText(minimonsterCompactText), []);
   const normalizedGalleryResult = useMemo(() => normalizeCompactText(normalizedGallerySource), []);
   const normalizedGalleryText = normalizedGalleryResult.success ? normalizedGalleryResult.text : '';
-
   const [activeSection, setActiveSection] = useState<GallerySectionId>(() => {
     if (typeof window === 'undefined') {
       return 'overview';

@@ -1,4 +1,0 @@
-class FeelingValue @serialize(true) {
-    def kind:string "feeling"
-    def score:int 0
-}

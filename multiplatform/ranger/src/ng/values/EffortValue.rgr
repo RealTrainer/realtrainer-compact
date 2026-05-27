@@ -1,4 +1,0 @@
-class EffortValue @serialize(true) {
-    def kind:string "effort"
-    def score:int 0
-}

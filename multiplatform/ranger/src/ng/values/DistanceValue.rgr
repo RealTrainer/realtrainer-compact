@@ -1,5 +1,0 @@
-class DistanceValue @serialize(true) {
-    def kind:string "distance"
-    def value:int 0
-    def unit:string "m"
-}

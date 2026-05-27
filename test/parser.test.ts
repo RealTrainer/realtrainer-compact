@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { getDeclaredCompactFormat, parseCompact, validateCompact, formatParseError } from '../dist/index.js';
-import type { Exercise, Move, Food, Expense, Tags, Section, SleepEntry, BodyMeasurement, Meta } from '../dist/types.js';
+import { getDeclaredCompactFormat, parseCompact, validateCompact, formatParseError } from '../src/index.js';
+import type { Exercise, Move, Food, Expense, Tags, Section, SleepEntry, BodyMeasurement, Meta } from '../src/types.js';
 
 // Helper to get content item by type
 function getContent<T>(input: string, type: string): T {
@@ -607,6 +607,8 @@ describe('Interval Parsing', () => {
       const interval = result.document.workouts[0].content[0] as any;
       expect(interval.type).toBe('interval');
       expect(interval.count).toBe(5);
+      expect(interval.distance.value).toBe(1);
+      expect(interval.distance.unit).toBe('km');
       expect(interval.intensityText).toBe('Z4');
       expect(interval.recovery.value).toBe(3);
       expect(interval.recovery.unit).toBe('min');

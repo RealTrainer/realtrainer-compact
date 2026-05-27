@@ -6,7 +6,7 @@ import {
 import { serializeContent, serializeDate } from './renderers/compact.js';
 import type {
   Content,
-  DateValue,
+  CompactDateValue,
   Document,
   Emojis,
   Exercise,
@@ -92,7 +92,7 @@ export type V2Row = V2StrengthRow | V2EnduranceRow | V2LegacyRow;
 export interface V2Workout {
   type: 'workout';
   id: string | null;
-  date: DateValue | null;
+  date: CompactDateValue | null;
   title: string | null;
   tags: string[];
   emojis: string;

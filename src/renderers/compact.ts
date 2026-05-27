@@ -8,7 +8,7 @@
 import type {
   Workout,
   Content,
-  DateValue,
+  CompactDateValue,
   Document,
   Weight,
   Exercise,
@@ -137,7 +137,7 @@ export function serializeWorkout(workout: Workout, options: SerializeWorkoutOpti
 /**
  * Serialize a DateValue to string format
  */
-export function serializeDate(date: DateValue): string {
+export function serializeDate(date: CompactDateValue): string {
   if (date.type === 'date') {
     if ('unknown' in date && date.unknown) {
       return '????-??-??';

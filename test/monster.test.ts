@@ -27,7 +27,9 @@ describe('MONSTER.compact comprehensive test', () => {
     expect(result.document.workouts.length).toBeGreaterThan(5);
     
     // Find workout with Derived items (workout with id 'w001')
-    const workoutWithDerived = result.document.workouts.find(w => w.id === 'w001');
+    const workoutWithDerived = result.document.workouts.find(
+      (w) => Array.isArray(w.content) && w.content.some((c) => c.type === 'derived'),
+    );
     expect(workoutWithDerived).toBeDefined();
     
     const derivedItems = workoutWithDerived!.content.filter(c => c.type === 'derived');
@@ -42,7 +44,9 @@ describe('MONSTER.compact comprehensive test', () => {
     if (!result.success) return;
     
     // Find workout with Derived items
-    const workoutWithDerived = result.document.workouts.find(w => w.id === 'w001');
+    const workoutWithDerived = result.document.workouts.find(
+      (w) => Array.isArray(w.content) && w.content.some((c) => c.type === 'derived'),
+    );
     expect(workoutWithDerived).toBeDefined();
     
     const derivedItems = workoutWithDerived!.content.filter(c => c.type === 'derived');

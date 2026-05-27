@@ -7,8 +7,7 @@ import type {
   Emojis,
   Workout,
 } from './types.js';
-// @ts-expect-error - generated parser has no type declarations
-import { parse } from './parser-generated.js';
+import { parseDocument as parseRangerDocument } from './parse-ranger.js';
 
 export interface SimilarityBreakdown {
   overall: number;
@@ -546,32 +545,16 @@ export function compareCompactTexts(
   compactB: string,
   options?: SimilarityOptions
 ): SimilarityBreakdown {
-  const parseDocument = (input: string): { workouts: Workout[] } => {
-    const normalizedInput = input.endsWith('\n') ? input : `${input}\n`;
-    const document = parse(normalizedInput) as { workouts: Workout[] };
-
-    for (const workout of document.workouts) {
-      while (
-        workout.content.length > 0 &&
-        workout.content[workout.content.length - 1].type === 'section'
-      ) {
-        workout.content.pop();
-      }
-    }
-
-    return document;
-  };
-
   let documentA: { workouts: Workout[] };
   let documentB: { workouts: Workout[] };
   try {
-    documentA = parseDocument(compactA);
+    documentA = parseRangerDocument(compactA);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(`First COMPACT parse failed: ${message}`);
   }
   try {
-    documentB = parseDocument(compactB);
+    documentB = parseRangerDocument(compactB);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(`Second COMPACT parse failed: ${message}`);
