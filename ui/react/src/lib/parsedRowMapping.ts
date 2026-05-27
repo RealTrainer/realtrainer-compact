@@ -176,9 +176,15 @@ function mapMeasuredDurations(durations: MeasuredDuration[] | undefined): Compac
   }));
 }
 
+function isNestedSplit(value: NonNullable<Split['splits']>[number]): value is Split {
+  return value.type === 'split';
+}
+
 function mapSplit(split: Split, splitId: string): CompactSplitRow {
   const nestedSplits = Array.isArray(split.splits)
-    ? split.splits.map((nested, nestedIndex) => mapSplit(nested, `${splitId}-nested-${nestedIndex}`))
+    ? split.splits
+      .filter(isNestedSplit)
+      .map((nested, nestedIndex) => mapSplit(nested, `${splitId}-nested-${nestedIndex}`))
     : null;
 
   return {
@@ -310,7 +316,9 @@ export function compactRowFromParsedContent(content: Content, index = 0): Compac
   if (type === 'move') {
     const move = content as Move;
     const splits = Array.isArray(move.splits)
-      ? move.splits.map((split, splitIndex) => mapSplit(split, `${id}-split-${splitIndex}`))
+      ? move.splits
+        .filter(isNestedSplit)
+        .map((split, splitIndex) => mapSplit(split, `${id}-split-${splitIndex}`))
       : null;
 
     return {

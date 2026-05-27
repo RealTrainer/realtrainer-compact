@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { parseCompact, validateCompact, formatParseError } from '../dist/index.js';
-import type { Exercise, Move, Food, Expense, Tags, Section, SleepEntry, BodyMeasurement } from '../dist/types.js';
+import { getDeclaredCompactFormat, parseCompact, validateCompact, formatParseError } from '../src/index.js';
+import type { Exercise, Move, Food, Expense, Tags, Section, SleepEntry, BodyMeasurement, Meta } from '../src/types.js';
 
 // Helper to get content item by type
 function getContent<T>(input: string, type: string): T {
@@ -114,6 +114,32 @@ describe('Basic Parsing', () => {
     expect(derived.source).toBe('sets*reps*load');
     expect(derived.goodness).toBe(4);
     expect(unknown).toBeUndefined();
+  });
+
+  it('parses explicit Format marker as document format and hides it from workout content', () => {
+    const result = parseCompact('[2026-01-13] ## Test\nFormat compact/v2\nExercise Kyykky|3x5@90kg\n');
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    expect(result.document.format).toBe('compact/v2');
+    expect(getDeclaredCompactFormat(result.document)).toBe('compact/v2');
+    expect(result.document.workouts[0].format).toBe('compact/v2');
+    expect(result.document.workouts[0].content.find((item) => item.type === 'meta')).toBeUndefined();
+    expect(result.document.workouts[0].content.find((item) => item.type === 'exercise')).toBeDefined();
+  });
+
+  it('parses Meta format marker as declared format and keeps other meta rows intact', () => {
+    const result = parseCompact('[2026-01-13] ## Test\nMeta format=compact/v2\n> goal:kyykky 160kg\nExercise Kyykky|3x5@90kg\n');
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+
+    expect(result.document.format).toBe('compact/v2');
+    expect(getDeclaredCompactFormat(result.document.workouts[0])).toBe('compact/v2');
+
+    const meta = result.document.workouts[0].content.find((item) => item.type === 'meta') as Meta | undefined;
+    expect(meta).toBeDefined();
+    expect(meta?.key).toBe('goal');
+    expect(meta?.value).toBe('kyykky 160kg');
   });
 });
 
@@ -375,7 +401,7 @@ Exercise Side Plank|2x20s+37s,23s+21s/60s
 
   it('parses distance exercise with recovery before weight', () => {
     const result = parseCompact(`[2026-01-13] ## Test
-Exercise Farmer walk|3x40m/2min@2x32kg
+Exercise Farmer walk|3x40m/2min@32kg
 `);
     expect(result.success).toBe(true);
     if (result.success) {
@@ -383,7 +409,7 @@ Exercise Farmer walk|3x40m/2min@2x32kg
       expect(exercise.sets).toBe(3);
       expect(exercise.distance).toBe(40);
       expect(exercise.unit).toBe('m');
-      expect(exercise.weight).toEqual({ value: 32, unit: 'kg', count: 2 });
+      expect(exercise.weight).toEqual({ value: 32, unit: 'kg' });
       expect(exercise.recovery).toEqual({ value: 2, max: null, unit: 'min' });
     }
   });
@@ -581,6 +607,8 @@ describe('Interval Parsing', () => {
       const interval = result.document.workouts[0].content[0] as any;
       expect(interval.type).toBe('interval');
       expect(interval.count).toBe(5);
+      expect(interval.distance.value).toBe(1);
+      expect(interval.distance.unit).toBe('km');
       expect(interval.intensityText).toBe('Z4');
       expect(interval.recovery.value).toBe(3);
       expect(interval.recovery.unit).toBe('min');

@@ -28,14 +28,16 @@ import { ActiveWorkoutSession } from './components/organisms/ActiveWorkoutSessio
 import { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
 import { CompactBlogView } from './components/organisms/CompactBlogView';
 import { CompactView } from './components/organisms/CompactView';
+import { NormalizedCompactView } from './components/organisms/NormalizedCompactView';
 import { compactStatFromText, statFromExerciseRow } from './lib/formatters';
 import { getNextDistanceMetersValue, getNextWeightValue } from './lib/stepperRules';
 import type { CompactExerciseRow, CompactRow, CompactRunRow, CompactWorkoutModel } from './lib/types';
-import { parseCompact } from '@parser';
+import { normalizeCompactText, parseCompact } from '@parser';
 import type { DurationBlock as ParsedDurationBlock, Exercise as ParsedExercise } from '@parser/types';
 import { activeWorkoutSessionCompactExample, sampleWorkout } from './preview/fixtures';
 import sampleCompactText from '../../../sample.compact?raw';
 import minimonsterCompactText from '../../../data/minimonster.compact?raw';
+import minimonsterCanonicalCompactText from '../../../data/minimonster-canonical.compact?raw';
 import { workoutsFromCompact } from './preview/fromCompact';
 import { VirtualClock } from './lib/controller/VirtualClock';
 
@@ -92,6 +94,7 @@ type GallerySectionId =
   | 'row-unknown'
   | 'organism-blog-view'
   | 'organism-compact-view'
+  | 'organism-normalized-compact-view'
   | 'organism-blog-editor'
   | 'organism-active-workout-session'
   | 'playground-compact-input'
@@ -145,6 +148,7 @@ const galleryNav: Array<{ title: string; items: GalleryNavItem[] }> = [
     items: [
       { id: 'organism-blog-view', label: 'CompactBlogView', kind: 'organism', description: 'Koko workout-kortin view' },
       { id: 'organism-compact-view', label: 'CompactView', kind: 'organism', description: 'Parseri-ensin renderer tekstille tai AST:lle' },
+      { id: 'organism-normalized-compact-view', label: 'NormalizedCompactView', kind: 'organism', description: 'Nykyisen COMPACTin normalisoitu review-pinta uusille tunnisteille ja kanoniselle muodolle' },
       { id: 'organism-blog-editor', label: 'CompactBlogEditor', kind: 'organism', description: 'Koko workout-kortin editori' },
       { id: 'organism-active-workout-session', label: 'ActiveWorkoutSession', kind: 'organism', description: 'Monen harjoituksen aktiivinen sessionakyma Active-kontrolleilla' },
       { id: 'playground-compact-input', label: 'COMPACT Playground', kind: 'playground', description: 'Pasteta COMPACT, renderoi ja exportoi JSON' },
@@ -175,6 +179,15 @@ Run "rintauinti" 14.7min 500m | Tampere
 > 100m 2'49"/100m
 `;
 
+const normalizedGallerySource = `[2026-04-12]
+## Normalization Demo
+Tags voima, juoksu
+Emojis 🏋️🏃
+
+Exercise Takakyykky|3x5@100kg|Pidä keskivartalo tiukkana
+Run 6km | Tasainen pk
+Interval 5x1km@Z4/3min`;
+
 const componentInterfaces: Record<GallerySectionId, string> = {
   overview: `type GallerySectionId =
   | 'overview'
@@ -199,6 +212,7 @@ const componentInterfaces: Record<GallerySectionId, string> = {
   | 'organism-blog-view'
   | 'organism-blog-editor'
   | 'organism-compact-view'
+  | 'organism-normalized-compact-view'
   | 'organism-active-workout-session'
   | 'playground-compact-input'
   | 'playground-minimonster'
@@ -348,6 +362,22 @@ interface CompactViewProps {
   headerOptions?: CompactBlogHeaderOptions;
   onRowInteraction?: (rowId: string, event: RowInteractionEvent) => void;
   renderers?: CompactUiRenderers;
+  emptyState?: ReactNode;
+  errorFallback?: (message: string) => ReactNode;
+}`,
+  'organism-normalized-compact-view': `type NormalizedCompactRenderableData =
+  | string
+  | NormalizedDocument
+  | NormalizedWorkout
+  | NormalizedWorkout[]
+  | NormalizedDocumentResult
+  | NormalizedTextResult;
+
+interface NormalizedCompactViewProps {
+  data: NormalizedCompactRenderableData;
+  workoutIndex?: number;
+  showHeader?: boolean;
+  headerOptions?: CompactBlogHeaderOptions;
   emptyState?: ReactNode;
   errorFallback?: (message: string) => ReactNode;
 }`,
@@ -611,7 +641,9 @@ function App() {
   const minimonsterParsed = workoutsFromCompact(minimonsterCompactText);
   const sourceWorkouts = parsed.workouts.length > 0 ? parsed.workouts : [sampleWorkout];
   const minimonsterWorkout = pickWorkoutByTitle(minimonsterParsed.workouts, 'minimonster');
-
+  const minimonsterNormalized = useMemo(() => normalizeCompactText(minimonsterCompactText), []);
+  const normalizedGalleryResult = useMemo(() => normalizeCompactText(normalizedGallerySource), []);
+  const normalizedGalleryText = normalizedGalleryResult.success ? normalizedGalleryResult.text : '';
   const [activeSection, setActiveSection] = useState<GallerySectionId>(() => {
     if (typeof window === 'undefined') {
       return 'overview';
@@ -1950,6 +1982,63 @@ const parsed = parseCompact(source);
             </div>
           </GalleryCard>
         );
+      case 'organism-normalized-compact-view':
+        return (
+          <GalleryCard title="NormalizedCompactView" subtitle="Nykyisen COMPACTin normalisoitu rendereri, joka toimii review-pintana uusille tunnisteille ja kanoniselle muodolle. Legacy-syotteesta voidaan muodostaa normalisoitu tulos ja nayttaa samalla mahdolliset varoitukset ennen viimeistelya.">
+            <div className="space-y-4">
+              <ExampleIntro title="Normalized view kayttaa normalisoinnin tulosta suoraan, joten sama komponentti toimii samalla kun parseri oppii vaiheittain uusia tunnisteita saman formaatin sisalla.">
+                {normalizedGalleryResult.success ? (
+                  <NormalizedCompactView
+                    data={normalizedGalleryResult}
+                    showHeader
+                    headerOptions={{
+                      showTags: true,
+                      showEmojis: true,
+                    }}
+                  />
+                ) : (
+                  <div className="rounded-2xl border border-rose-700 bg-rose-950/40 p-4 text-sm text-rose-100">
+                    Normalization failed: {normalizedGalleryResult.error.message}
+                  </div>
+                )}
+              </ExampleIntro>
+              <NpmImportBlock imports={["NormalizedCompactView"]} />
+              <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                <code>{`import { normalizeCompactText } from 'realtrainer-compact';`}</code>
+              </pre>
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)]">
+                <PreviewSurface>
+                  {normalizedGalleryResult.success ? (
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap gap-2">
+                        <Badge tone="accent">rows {normalizedGalleryResult.document.workouts[0]?.rows.length ?? 0}</Badge>
+                        <Badge tone="warn">warnings {normalizedGalleryResult.warnings.length}</Badge>
+                      </div>
+                      <NormalizedCompactView
+                        data={normalizedGalleryResult.document}
+                        showHeader
+                        headerOptions={{
+                          showTags: true,
+                          showEmojis: true,
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-rose-700 bg-rose-950/40 p-4 text-sm text-rose-100">
+                      {normalizedGalleryResult.error.message}
+                    </div>
+                  )}
+                </PreviewSurface>
+                <div className="space-y-4">
+                  <InterfaceBlock value={componentInterfaces['organism-normalized-compact-view']} />
+                  <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                    <code>{normalizedGalleryResult.success ? normalizedGalleryText : normalizedGallerySource}</code>
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </GalleryCard>
+        );
       case 'organism-blog-editor':
         return (
           <GalleryCard title="CompactBlogEditor" subtitle="Koko workout-mallin editori. Taalla voi testata header- ja row-editoinnin yhdessa pinnassa.">
@@ -2178,6 +2267,41 @@ const parsed = parseCompact(source);
                       />
                     </div>
                   </PreviewSurface>
+
+                  {minimonsterNormalized.success ? (
+                    <div className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)]">
+                      <PreviewSurface>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-semibold text-slate-100">MINIMONSTER canonical review target</p>
+                              <p className="text-xs text-slate-400">NormalizedCompactView nayttaa normalisoinnin tulosta suoraan. Vieressa on kuratoitu kanoninen tekstitavoite parserin ja serializerin tarkastusta varten.</p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              <Badge tone="accent">rows {minimonsterNormalized.document.workouts[0]?.rows.length ?? 0}</Badge>
+                              <Badge tone="warn">warnings {minimonsterNormalized.warnings.length}</Badge>
+                            </div>
+                          </div>
+                          <NormalizedCompactView
+                            data={minimonsterNormalized.document}
+                            showHeader
+                            headerOptions={{
+                              showTags: true,
+                              showEmojis: true,
+                            }}
+                          />
+                        </div>
+                      </PreviewSurface>
+
+                      <pre className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/90 p-4 text-xs leading-6 text-slate-200">
+                        <code>{minimonsterCanonicalCompactText}</code>
+                      </pre>
+                    </div>
+                  ) : (
+                    <PreviewSurface>
+                      <p className="text-sm text-rose-300">MINIMONSTER normalisointi ei muodostunut. Tarkista ylapuolen virheviesti.</p>
+                    </PreviewSurface>
+                  )}
 
                   <InterfaceBlock value={componentInterfaces['playground-minimonster']} />
                 </>

@@ -59,7 +59,7 @@ Recovery is a first-class part of exercise notation, not just free-text descript
 <EditableCompactExampleBlock minHeight={140}>
 ```compact
 Exercise Side Plank|2x20s+37s,23s+21s/60s
-Exercise Farmer walk|3x40m/2min@2x32kg
+Exercise Farmer walk|3x40m/2min@32kg
 Exercise Band Pull-Apart|3x20/15-20s
 ```
 </EditableCompactExampleBlock>
@@ -73,7 +73,7 @@ For a dedicated recovery page, see <Link to="/docs/tracking-types/recovery">Reco
 Exercise Kiertäjät|15+15@2kg
 Exercise Bilateraali aika|3x30s+30s
 Exercise Bilateraali ilman painoa|15+15
-Exercise Farmer walk|3x40m/2min@2x32kg
+Exercise Farmer walk|3x40m/2min@32kg
 ```
 </EditableCompactExampleBlock>
 

@@ -25,7 +25,7 @@ Common grammar-supported forms:
 <EditableCompactExampleBlock minHeight={150}>
 ```compact
 Exercise Side Plank|2x20s+37s,23s+21s/60s
-Exercise Farmers Walk|3x40m/2min@2x32kg
+Exercise Farmers Walk|3x40m/2min@32kg
 Exercise Wall Sit|4x45s/30s
 ```
 </EditableCompactExampleBlock>
@@ -46,7 +46,7 @@ Exercise Carry Drill|4x20m/1-2min@2x20kg
 
 - Recovery belongs after the spec, not inside the note text.
 - Unitless recovery like `/15` is allowed and treated as seconds by the parser.
-- Distance-based exercises can place recovery before weight, for example `3x40m/2min@2x32kg`.
+- Distance-based exercises can place recovery before weight, for example `3x40m/2min@32kg`.
 - Recovery also appears in interval and run syntax, but this page focuses on `Exercise` notation.
 
 ## Related Formats

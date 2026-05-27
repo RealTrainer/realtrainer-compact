@@ -21,6 +21,19 @@ export type {
   CompactTextRow,
   CompactUnknownRow,
 } from './lib/types';
+export type {
+  NormalizedCompactRenderableData,
+  NormalizedDocument,
+  NormalizedDocumentResult,
+  NormalizedEnduranceRow,
+  NormalizedLegacyRow,
+  NormalizationWarning,
+  NormalizedRow,
+  NormalizedSport,
+  NormalizedStrengthRow,
+  NormalizedTextResult,
+  NormalizedWorkout,
+} from './lib/normalized-types';
 
 export { Badge } from './components/atoms/Badge';
 export { DurationStepper, formatDurationValue } from './components/atoms/DurationStepper';
@@ -56,10 +69,17 @@ export { CompactBlogView } from './components/organisms/CompactBlogView';
 export type { CompactBlogHeaderOptions } from './components/organisms/CompactBlogView';
 export { CompactView } from './components/organisms/CompactView';
 export type { CompactRenderableData, CompactViewProps } from './components/organisms/CompactView';
+export { NormalizedWorkoutView } from './components/organisms/NormalizedWorkoutView';
+export type { NormalizedWorkoutViewProps } from './components/organisms/NormalizedWorkoutView';
+export { NormalizedCompactView } from './components/organisms/NormalizedCompactView';
+export type { NormalizedCompactViewProps } from './components/organisms/NormalizedCompactView';
 export { CompactBlogEditor } from './components/organisms/CompactBlogEditor';
 export { ActiveWorkoutSession } from './components/organisms/ActiveWorkoutSession';
 export type { ActiveWorkoutSessionProps } from './components/organisms/ActiveWorkoutSession';
+export { NormalizedRowView } from './components/molecules/NormalizedRowView';
+export type { NormalizedRowViewProps } from './components/molecules/NormalizedRowView';
 export { workoutsFromCompact } from './lib/workoutsFromCompact';
+export { resolveNormalizedWorkouts } from './lib/normalizedWorkouts';
 export {
   compactRowFromParsedContent,
   compactRowsFromParsedContent,

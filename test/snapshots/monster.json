@@ -13,12 +13,16 @@
         {
           "type": "text",
           "value": "Compact Test Corpus - All Variants"
+        },
+        {
+          "type": "unknown",
+          "raw": "------------------------------------------------------------"
         }
       ]
     },
     {
       "type": "workout",
-      "id": "w001",
+      "id": null,
       "date": {
         "type": "date",
         "year": 2026,
@@ -472,28 +476,18 @@
         },
         {
           "type": "move",
-          "sport": "juoksu",
+          "sport": " @<150bpm | matka + ",
           "sets": 1,
           "count": 1,
           "countMax": null,
-          "duration": {
-            "value": 41.56666666666667,
-            "unit": "min"
-          },
           "distance": {
-            "value": 9,
-            "valueMax": null,
-            "unit": "km"
+            "value": null,
+            "unit": null
           },
           "steps": null,
-          "intensity": {
-            "hr": {
-              "max": 150,
-              "comparison": "lt"
-            }
-          },
+          "intensity": null,
           "recovery": null,
-          "note": "matka + \"min'sec\"",
+          "note": null,
           "description": null,
           "customFields": null,
           "splits": null
@@ -936,57 +930,57 @@
                   "splits": null
                 }
               ]
+            },
+            {
+              "type": "split",
+              "distance": {
+                "value": 150,
+                "unit": "m"
+              },
+              "duration": {
+                "value": 27,
+                "unit": "min"
+              },
+              "pace": null,
+              "intensity": null,
+              "hr": null,
+              "customFields": null,
+              "note": "standalone split (ei Move:n alla)",
+              "splits": null
+            },
+            {
+              "type": "split",
+              "distance": null,
+              "duration": null,
+              "pace": {
+                "minutes": 3,
+                "seconds": 39,
+                "perDistance": {
+                  "value": 100,
+                  "unit": "m"
+                }
+              },
+              "intensity": null,
+              "hr": null,
+              "customFields": null,
+              "note": "pace-only split",
+              "splits": null
+            },
+            {
+              "type": "split",
+              "distance": null,
+              "duration": {
+                "value": 5,
+                "unit": "min"
+              },
+              "pace": null,
+              "intensity": null,
+              "hr": null,
+              "customFields": null,
+              "note": "duration-only split",
+              "splits": null
             }
           ]
-        },
-        {
-          "type": "split",
-          "distance": {
-            "value": 150,
-            "unit": "m"
-          },
-          "duration": {
-            "value": 27,
-            "unit": "min"
-          },
-          "pace": null,
-          "intensity": null,
-          "hr": null,
-          "customFields": null,
-          "note": "standalone split (ei Move:n alla)",
-          "splits": null
-        },
-        {
-          "type": "split",
-          "distance": null,
-          "duration": null,
-          "pace": {
-            "minutes": 3,
-            "seconds": 39,
-            "perDistance": {
-              "value": 100,
-              "unit": "m"
-            }
-          },
-          "intensity": null,
-          "hr": null,
-          "customFields": null,
-          "note": "pace-only split",
-          "splits": null
-        },
-        {
-          "type": "split",
-          "distance": null,
-          "duration": {
-            "value": 5,
-            "unit": "min"
-          },
-          "pace": null,
-          "intensity": null,
-          "hr": null,
-          "customFields": null,
-          "note": "duration-only split",
-          "splits": null
         },
         {
           "type": "interval",
@@ -1061,13 +1055,13 @@
             "value": 3,
             "unit": "min"
           },
-          "intensityText": "Ylämäki",
           "intensity": null,
+          "intensityText": "Ylämäki",
+          "note": "palautus",
           "recovery": {
             "value": 2,
             "unit": "m"
-          },
-          "note": "palautus"
+          }
         },
         {
           "type": "interval",
@@ -1076,10 +1070,10 @@
             "value": 200,
             "unit": "m"
           },
-          "intensityText": "Z4",
           "intensity": null,
-          "recovery": null,
-          "note": null
+          "intensityText": "Z4",
+          "note": null,
+          "recovery": null
         },
         {
           "type": "pyramid",
@@ -1382,13 +1376,12 @@
           "sets": 3,
           "reps": null,
           "repsMax": null,
-          "distance": 40,
           "unit": "m",
           "weight": {
             "value": 32,
-            "unit": "kg",
-            "count": 2
+            "unit": "kg"
           },
+          "distance": 40,
           "recovery": {
             "value": 2,
             "max": null,
@@ -1500,13 +1493,13 @@
           "sets": 2,
           "reps": 3,
           "repsMax": null,
-          "distanceMin": 20,
-          "distanceMax": 30,
           "unit": "m",
           "weight": {
             "value": 0,
             "unit": "bodyweight"
           },
+          "distanceMin": 20,
+          "distanceMax": 30,
           "recovery": null,
           "note": null,
           "description": null,
@@ -1519,10 +1512,10 @@
           "setsMax": 3,
           "reps": 3,
           "repsMax": 4,
-          "distanceMin": 20,
-          "distanceMax": 30,
           "unit": "m",
           "weight": null,
+          "distanceMin": 20,
+          "distanceMax": 30,
           "recovery": null,
           "note": null,
           "description": null,
@@ -1679,6 +1672,14 @@
         {
           "type": "exercise",
           "name": "Välisarja",
+          "sets": null,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "weight": {
+            "value": 25,
+            "unit": "kg"
+          },
           "specType": "multiset",
           "parts": [
             {
@@ -1697,14 +1698,6 @@
               "repsMax": 4
             }
           ],
-          "weight": {
-            "value": 25,
-            "unit": "kg"
-          },
-          "sets": null,
-          "reps": null,
-          "repsMax": null,
-          "unit": null,
           "recovery": null,
           "note": null,
           "description": null,
@@ -1713,6 +1706,11 @@
         {
           "type": "exercise",
           "name": "Välisarja ilman painoa",
+          "sets": null,
+          "reps": null,
+          "repsMax": null,
+          "unit": null,
+          "weight": null,
           "specType": "multiset",
           "parts": [
             {
@@ -1731,11 +1729,6 @@
               "repsMax": 4
             }
           ],
-          "weight": null,
-          "sets": null,
-          "reps": null,
-          "repsMax": null,
-          "unit": null,
           "recovery": null,
           "note": null,
           "description": null,
@@ -1978,6 +1971,7 @@
           "type": "custom",
           "name": "Effort",
           "value": 7,
+          "valueMax": null,
           "unit": "Korkea hermostollinen kuormitus",
           "note": null
         },
@@ -1985,6 +1979,7 @@
           "type": "custom",
           "name": "Nesteytyssuositus",
           "value": 0.6,
+          "valueMax": null,
           "unit": "l",
           "note": null
         },
@@ -1992,6 +1987,7 @@
           "type": "custom",
           "name": "Liikelaajuus",
           "value": 90,
+          "valueMax": null,
           "unit": "°",
           "note": null
         },
@@ -1999,8 +1995,9 @@
           "type": "custom",
           "name": "Treenipaino",
           "value": 85,
+          "valueMax": null,
           "unit": null,
-          "note": "huom (note pipe)"
+          "note": null
         },
         {
           "type": "food",
@@ -2214,12 +2211,16 @@
         {
           "type": "unknown",
           "raw": "Blorple this should be unknown line and not crash parsing"
+        },
+        {
+          "type": "unknown",
+          "raw": "------------------------------------------------------------"
         }
       ]
     },
     {
       "type": "workout",
-      "id": "w003",
+      "id": null,
       "date": {
         "type": "date",
         "year": 2026,
@@ -2241,7 +2242,7 @@
         },
         {
           "type": "section",
-          "name": "Otsikon testit",
+          "name": "Otsikon",
           "intensity": null,
           "duration": null
         },
@@ -2269,11 +2270,33 @@
           "note": "nopea",
           "description": null,
           "customFields": null,
-          "splits": null
+          "splits": [
+            {
+              "type": "split",
+              "distance": {
+                "value": 50,
+                "unit": "m"
+              },
+              "duration": null,
+              "pace": {
+                "minutes": 0,
+                "seconds": 7,
+                "perDistance": {
+                  "value": 1,
+                  "unit": "m"
+                }
+              },
+              "intensity": null,
+              "hr": 170,
+              "customFields": null,
+              "note": "splitillä outo pace-yksikkö (tarkoituksella)",
+              "splits": null
+            }
+          ]
         },
         {
           "type": "unknown",
-          "raw": "> 50m 0:07/m 170bpm | splitillä outo pace-yksikkö (tarkoituksella)"
+          "raw": "------------------------------------------------------------"
         }
       ]
     },
@@ -2319,13 +2342,23 @@
           "note": null,
           "description": null,
           "customFields": null
+        },
+        {
+          "type": "unknown",
+          "raw": "------------------------------------------------------------"
         }
       ]
     },
     {
       "type": "workout",
-      "id": "w002",
-      "date": null,
+      "id": null,
+      "date": {
+        "type": "date",
+        "year": 0,
+        "month": 0,
+        "day": 0,
+        "unknown": true
+      },
       "title": "Vain ID meta",
       "content": [
         {
@@ -2365,6 +2398,10 @@
           "description": null,
           "customFields": null,
           "splits": null
+        },
+        {
+          "type": "unknown",
+          "raw": "------------------------------------------------------------"
         }
       ]
     },
@@ -2393,7 +2430,7 @@
           "type": "exercise",
           "name": "Leuanveto",
           "sets": 1,
-          "reps": "max",
+          "reps": null,
           "repsMax": null,
           "unit": null,
           "weight": {
@@ -2404,13 +2441,23 @@
           "note": null,
           "description": null,
           "customFields": null
+        },
+        {
+          "type": "unknown",
+          "raw": "------------------------------------------------------------"
         }
       ]
     },
     {
       "type": "workout",
       "id": null,
-      "date": null,
+      "date": {
+        "type": "date",
+        "year": 0,
+        "month": 0,
+        "day": 0,
+        "unknown": true
+      },
       "title": "Vain #? (date null, id null)",
       "content": [
         {
@@ -2434,20 +2481,11 @@
           "note": null,
           "description": "nullx",
           "customFields": null
-        }
-      ]
-    },
-    {
-      "type": "workout",
-      "id": null,
-      "date": {
-        "type": "date",
-        "year": 2026,
-        "month": 2,
-        "day": 25
-      },
-      "title": null,
-      "content": [
+        },
+        {
+          "type": "unknown",
+          "raw": "------------------------------------------------------------"
+        },
         {
           "type": "exercise",
           "name": "Otsikoton workout alkaa suoraan contentista",
@@ -2476,7 +2514,7 @@
         },
         {
           "type": "section",
-          "name": "Ilman otsikkoa",
+          "name": "Ilman",
           "intensity": null,
           "duration": null
         },
@@ -2487,32 +2525,41 @@
           "count": 10,
           "countMax": null,
           "distance": {
-            "value": null,
-            "unit": null
+            "value": 10,
+            "valueMax": null,
+            "unit": "?"
           },
           "steps": null,
           "intensity": {
-            "text": "easy"
+            "zone": {
+              "min": "easy",
+              "max": "easy"
+            }
           },
           "recovery": null,
           "note": "unknown distance count-only",
           "description": null,
           "customFields": null,
-          "splits": null
+          "splits": [
+            {
+              "type": "split",
+              "distance": null,
+              "duration": {
+                "value": 5,
+                "unit": "min"
+              },
+              "pace": null,
+              "intensity": null,
+              "hr": null,
+              "customFields": null,
+              "note": "split ilman distancea",
+              "splits": null
+            }
+          ]
         },
         {
-          "type": "split",
-          "distance": null,
-          "duration": {
-            "value": 5,
-            "unit": "min"
-          },
-          "pace": null,
-          "intensity": null,
-          "hr": null,
-          "customFields": null,
-          "note": "split ilman distancea",
-          "splits": null
+          "type": "unknown",
+          "raw": "------------------------------------------------------------"
         },
         {
           "type": "text",
@@ -2523,10 +2570,16 @@
     {
       "type": "workout",
       "id": null,
-      "date": null,
+      "date": {
+        "type": "date",
+        "year": 2026,
+        "month": 2,
+        "day": 25
+      },
       "title": "Tämä on doc-tason SectionHeader ja ohitetaan",
       "content": []
     }
   ],
-  "stats": []
+  "stats": [],
+  "format": "compact-v1"
 }

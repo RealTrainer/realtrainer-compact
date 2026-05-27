@@ -120,7 +120,7 @@ Run 8km | Rauhallinen lenkki`;
     render(<CompactBlogView workout={parsed.workouts[0]} />);
 
     expect(screen.queryByText(/untitled workout/i)).not.toBeInTheDocument();
-    expect(screen.getByText('28.03.2026')).toBeInTheDocument();
+    expect(screen.queryByText('28.03.2026')).not.toBeInTheDocument();
     expect(screen.getByText('juoksu')).toBeInTheDocument();
   });
 

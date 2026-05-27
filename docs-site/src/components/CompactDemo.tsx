@@ -8,14 +8,14 @@ import {
   CompactView,
   CompactRowView,
   workoutsFromCompact,
-} from 'realtrainer-compact/ui';
+} from '../../../dist/ui/index.js';
 import type {
   CompactExerciseRow,
   CompactMoveRow,
   CompactPyramidRow,
   CompactRow,
   CompactWorkoutModel,
-} from 'realtrainer-compact/ui';
+} from '../../../dist/ui/index.js';
 
 const sampleExercise: CompactExerciseRow = {
   id: 'ex-1',

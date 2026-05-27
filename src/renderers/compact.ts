@@ -8,7 +8,7 @@
 import type {
   Workout,
   Content,
-  DateValue,
+  CompactDateValue,
   Document,
   Weight,
   Exercise,
@@ -16,6 +16,7 @@ import type {
   Circuit,
   Move,
   Split,
+  SplitChild,
   CustomField,
 } from '../types.js';
 
@@ -86,13 +87,21 @@ function maybeQuoteDerivedSource(source: string): string {
  * Serialize a complete Document to COMPACT format
  */
 export function serializeDocument(document: Document): string {
-  return document.workouts.map(serializeWorkout).join('\n\n');
+  return document.workouts
+    .map((workout, index) => serializeWorkout(workout, {
+      declaredFormat: workout.format ?? (index === 0 ? document.format ?? null : null),
+    }))
+    .join('\n\n');
+}
+
+interface SerializeWorkoutOptions {
+  declaredFormat?: string | null;
 }
 
 /**
  * Serialize a single Workout to COMPACT format
  */
-export function serializeWorkout(workout: Workout): string {
+export function serializeWorkout(workout: Workout, options: SerializeWorkoutOptions = {}): string {
   const lines: string[] = [];
 
   // Metadata and Title - only date, no internal ID
@@ -109,6 +118,11 @@ export function serializeWorkout(workout: Workout): string {
     lines.push(metaStr);
   }
 
+  const declaredFormat = options.declaredFormat ?? workout.format ?? null;
+  if (typeof declaredFormat === 'string' && declaredFormat.trim().length > 0) {
+    lines.push(`Format ${declaredFormat.trim()}`);
+  }
+
   // Content
   workout.content.forEach((item) => {
     const serialized = serializeContent(item);
@@ -123,7 +137,7 @@ export function serializeWorkout(workout: Workout): string {
 /**
  * Serialize a DateValue to string format
  */
-export function serializeDate(date: DateValue): string {
+export function serializeDate(date: CompactDateValue): string {
   if (date.type === 'date') {
     if ('unknown' in date && date.unknown) {
       return '????-??-??';
@@ -252,6 +266,15 @@ export function serializeContent(item: Content): string | null {
 
     case 'split':
       return serializeSplit(item as Split, '');
+
+    case 'attempt':
+      return serializeSplitChild(item as SplitChild, '');
+
+    case 'recovery':
+      return serializeSplitChild(item as SplitChild, '');
+
+    case 'splitMove':
+      return serializeSplitChild(item as SplitChild, '');
 
     case 'duration': {
       if (item.timeOfDay) {
@@ -721,7 +744,7 @@ function serializeMove(item: Move): string {
 
     // Serialize splits
     if (item.splits && item.splits.length > 0) {
-      const splitLines = item.splits.map(s => serializeSplit(s, ''));
+      const splitLines = item.splits.map((split) => serializeSplitChild(split, ''));
       line += '\n' + splitLines.join('\n');
     }
 
@@ -797,29 +820,199 @@ function serializeMove(item: Move): string {
 
   // Serialize splits
   if (item.splits && item.splits.length > 0) {
-    const splitLines = item.splits.map(s => serializeSplit(s, ''));
+    const splitLines = item.splits.map((split) => serializeSplitChild(split, ''));
     line += '\n' + splitLines.join('\n');
   }
 
   return line;
 }
 
+function serializeSplitChild(item: SplitChild, prefix: string): string {
+  if (item.type === 'derived' || item.type === 'feeling') {
+    const serialized = serializeContent(item as Content);
+    if (!serialized) {
+      return `${prefix}>`;
+    }
+    return `${prefix}> ${serialized}`;
+  }
+
+  if (item.type === 'text') {
+    return `${prefix}> Comment ${item.value}`;
+  }
+
+  if (item.type === 'attempt') {
+    const load = (() => {
+      if ('percent' in item.load) {
+        return `${item.load.percent}%${item.load.of || ''}`;
+      }
+
+      if ('value' in item.load && item.load.unit === 'bodyweight') {
+        return 'bw';
+      }
+
+      if ('value' in item.load) {
+        return `${item.load.value}${item.load.unit || 'kg'}`;
+      }
+
+      return '';
+    })();
+
+    const note = item.note ? ` | ${item.note}` : '';
+    return `${prefix}> Attempt ${item.reps}x${load}${note}`;
+  }
+
+  if (item.type === 'recovery') {
+    const recoveryValue = (() => {
+      if (typeof item.recovery.text === 'string' && item.recovery.text.trim().length > 0) {
+        return item.recovery.text.trim();
+      }
+
+      if (item.recovery.value == null && item.recovery.unit === 'walk') {
+        return 'walk';
+      }
+
+      if (item.recovery.value == null) {
+        return '';
+      }
+
+      const unit = item.recovery.unit === 'sec'
+        ? 's'
+        : item.recovery.unit || '';
+      if (typeof item.recovery.max === 'number' && item.recovery.max !== item.recovery.value) {
+        return `${item.recovery.value}-${item.recovery.max}${unit}`;
+      }
+      return `${item.recovery.value}${unit}`;
+    })();
+
+    const note = item.note ? ` | ${item.note}` : '';
+    return `${prefix}> Recovery ${recoveryValue}${note}`.trimEnd();
+  }
+
+  if (item.type === 'splitMove') {
+    const sportToken = (() => {
+      const normalized = item.sport.trim().toLowerCase();
+      if (normalized === 'uphill run') return 'Uphill Run';
+      if (normalized === 'run') return 'Run';
+      if (normalized === 'walk') return 'Walk';
+      if (normalized === 'swim') return 'Swim';
+      if (normalized === 'cycling') return 'Cycling';
+      if (normalized === 'skiing') return 'Skiing';
+      return item.sport;
+    })();
+
+    const distanceToken = item.distance && item.distance.value !== null
+      ? `${item.distance.value}${item.distance.unit || ''}`
+      : null;
+    const durationToken = item.duration && item.duration.value !== null
+      ? `${item.duration.value}${item.duration.unit}`
+      : null;
+
+    const countToken = item.countMax
+      ? `${item.count}-${item.countMax}`
+      : String(item.count || item.sets || 1);
+
+    const hasIntervalMultiplicity = item.countMax !== null || item.count > 1 || item.sets > 1;
+    const specToken = (() => {
+      if (hasIntervalMultiplicity && distanceToken) {
+        return `${countToken}x${distanceToken}`;
+      }
+      if (durationToken && distanceToken) {
+        return `${durationToken} ${distanceToken}`;
+      }
+      return durationToken || distanceToken || '';
+    })();
+
+    let intensityStr = '';
+    if (item.intensity) {
+      if ('zone' in item.intensity && item.intensity.zone) {
+        const zone = item.intensity.zone as any;
+        if ('combo' in zone && Array.isArray(zone.combo)) {
+          intensityStr = `@${zone.combo.join('+')}`;
+        } else if ('min' in zone && 'max' in zone) {
+          intensityStr = zone.min === zone.max
+            ? `@${zone.min}`
+            : `@${zone.min}-${zone.max}`;
+        }
+      } else if ('paceMin' in item.intensity && item.intensity.paceMin && 'paceMax' in item.intensity && item.intensity.paceMax) {
+        const intensity = item.intensity as any;
+        const formatPace = (pace: { minutes: number; seconds: number }) => {
+          const sec = String(pace.seconds).padStart(2, '0');
+          return `${pace.minutes}:${sec}`;
+        };
+
+        const paceMinStr = formatPace(intensity.paceMin);
+        const paceMaxStr = formatPace(intensity.paceMax);
+        const pacePerDistance = intensity.pacePerDistance
+          ? `/${intensity.pacePerDistance.value}${intensity.pacePerDistance.unit}`
+          : (intensity.paceUnit ? `/${intensity.paceUnit}` : '');
+
+        intensityStr = paceMinStr === paceMaxStr
+          ? `@${paceMinStr}${pacePerDistance}`
+          : `@${paceMinStr}-${paceMaxStr}${pacePerDistance}`;
+      } else if ('min' in item.intensity && 'max' in item.intensity) {
+        const intensity = item.intensity as { min: number; max: number };
+        intensityStr = intensity.min === intensity.max
+          ? `@${intensity.min}%`
+          : `@${intensity.min}-${intensity.max}%`;
+      } else if ('text' in item.intensity) {
+        intensityStr = `@${item.intensity.text}`;
+      } else if ('hr' in item.intensity && item.intensity.hr) {
+        const hr = item.intensity.hr;
+        if ('min' in hr && 'max' in hr) {
+          intensityStr = `@${hr.min}-${hr.max}bpm`;
+        } else if ('value' in hr) {
+          intensityStr = `@${hr.value}bpm`;
+        }
+      }
+    }
+
+    let recoveryStr = '';
+    if (item.recovery) {
+      const rec = item.recovery as any;
+      recoveryStr = `/${rec.value || rec.text}${rec.unit || ''}`;
+    }
+
+    const customFieldsStr = serializeCustomFields(item.customFields);
+    const note = item.note || item.description;
+    let line = `${prefix}> ${sportToken}${specToken ? ` ${specToken}` : ''}${intensityStr}${recoveryStr}${customFieldsStr}${note ? ` | ${note}` : ''}`;
+
+    if (item.splits && item.splits.length > 0) {
+      const nestedLines = item.splits.map((split) => serializeSplitChild(split, prefix + '> '));
+      line += '\n' + nestedLines.join('\n');
+    }
+
+    return line;
+  }
+
+  return serializeSplit(item, prefix);
+}
+
 /**
  * Serialize a Split to COMPACT format
  */
 function serializeSplit(item: Split, prefix: string): string {
-  let line = `${prefix}> `;
+  let line = `${prefix}> Split`;
+
+  const splitParts: string[] = [];
 
   // Distance
   if (item.distance && item.distance.value !== null) {
-    line += `${item.distance.value}${item.distance.unit || 'm'}`;
+    splitParts.push(`${item.distance.value}${item.distance.unit || 'm'}`);
+  }
+
+  if (item.duration && item.duration.value !== null) {
+    const durationUnit = item.duration.unit || '';
+    splitParts.push(`${item.duration.value}${durationUnit}`);
   }
 
   // Pace
   if (item.pace) {
     const sec = String(item.pace.seconds).padStart(2, '0');
-    if (item.distance) line += ' ';
-    line += `${item.pace.minutes}'${sec}"/${item.pace.perDistance.value}${item.pace.perDistance.unit}`;
+    splitParts.push(`${item.pace.minutes}'${sec}"/${item.pace.perDistance.value}${item.pace.perDistance.unit}`);
+  }
+
+  if (splitParts.length > 0) {
+    line += ` ${splitParts.join(' ')}`;
   }
 
   // Intensity
@@ -854,7 +1047,7 @@ function serializeSplit(item: Split, prefix: string): string {
 
   // Nested splits
   if (item.splits && item.splits.length > 0) {
-    const nestedLines = item.splits.map(s => serializeSplit(s, prefix + '> '));
+    const nestedLines = item.splits.map((split) => serializeSplitChild(split, prefix + '> '));
     line += '\n' + nestedLines.join('\n');
   }
 

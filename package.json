@@ -1,6 +1,6 @@
 {
   "name": "realtrainer-compact",
-  "version": "1.0.15",
+  "version": "3.0.0",
   "description": "Parser for COMPACT format - a concise text-based DSL for workout tracking, nutrition, expenses, and life logging",
   "type": "module",
   "main": "dist/index.js",
@@ -14,6 +14,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./parser": {
+      "types": "./dist/parser-ranger/index.d.ts",
+      "import": "./dist/parser-ranger/index.js"
     },
     "./types": {
       "types": "./dist/types.d.ts",
@@ -33,11 +37,11 @@
     "./ui/styles.css": "./dist/ui/compact-ui-react.css"
   },
   "files": [
-    "dist",
-    "src/grammar"
+    "dist"
   ],
   "scripts": {
-    "build": "npm run generate-parser && tsc && npm run copy-assets",
+    "build": "npm run clean && npm run build:parser-ranger && tsc",
+    "build:parser-ranger": "node scripts/sync-parser-from-ranger-v1.mjs",
     "build:all": "npm run build && npm run build:ui && npm run build:extension",
     "build:mcp": "esbuild src/mcp/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/mcp/server.js --sourcemap",
     "build:mcp:watch": "esbuild src/mcp/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/mcp/server.js --sourcemap --watch",
@@ -46,14 +50,12 @@
     "build:ui-export": "npm run build:ui && node build-ui-export.mjs",
     "build:extension": "npm --prefix vscode-rtcompact run build:ui",
     "build:dev": "npm run build && npm run link:local",
-    "generate-parser": "node generate-parser.mjs",
-    "copy-assets": "cp src/parser-generated.js dist/",
     "prepare-dist": "node prepare-dist-package.mjs",
     "build:dist": "npm run build && npm run build:ui-export && npm run prepare-dist",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:update-snapshots": "UPDATE_SNAPSHOTS=1 vitest run monster",
-    "prepublishOnly": "npm run build && npm run build:ui-export && npm test",
+    "prepublishOnly": "npm run build:dist && npm test",
     "clean": "rm -rf dist",
     "clean:ui": "rm -rf ui/react/dist",
     "link:local": "npm link",
@@ -61,13 +63,13 @@
     "dev:ui": "npm --prefix ui/react run dev",
     "test:all": "npm test && npm --prefix ui/react run test",
     "parse": "node dist/cli.js",
-    "mcp:start": "node dist/mcp/server.js"
+    "mcp:start": "node dist/mcp/server.js",
+    "compact-parity:test": "npm --prefix ../realtrainer/parser-ranger-v1 run compact-parity:test",
+    "ranger:parity:minimonster:report": "npm --prefix ../realtrainer/parser-ranger-v1 run ranger:parity:minimonster:report"
   },
   "keywords": [
     "parser",
-    "peg",
-    "pegjs",
-    "peggy",
+    "ranger",
     "dsl",
     "workout",
     "fitness",
@@ -100,7 +102,6 @@
     "@modelcontextprotocol/sdk": "^1.18.2",
     "@types/node": "^20.0.0",
     "esbuild": "^0.25.0",
-    "peggy": "^4.0.0",
     "typescript": "^5.0.0",
     "vitest": "^2.0.0"
   }
