@@ -76,7 +76,7 @@ export class CompactV1Json  {
   };
 }
 export class AstNode  {
-  type: string;
+  type!: string;
   constructor() {
     this.type = "";
   }
@@ -416,9 +416,9 @@ export class V1SharedHelpers  {
   };
 }
 export class LineKindValue  {
-  kind: string;
-  tag: string;
-  raw: string;
+  kind!: string;
+  tag!: string;
+  raw!: string;
   constructor() {
     this.kind = "line-kind";
     this.tag = "unknown";
@@ -708,10 +708,10 @@ export class V1DetectorRegistry  {
   };
 }
 export class PyramidNode  extends AstNode {
-  name: string;
+  name!: string;
   setJsonList!: Array<string>;
-  hasNote: boolean;
-  note: string;
+  hasNote!: boolean;
+  note!: string;
   constructor() {
     super()
     this.name = "";
@@ -1081,39 +1081,39 @@ export class PyramidParserV1  {
   };
 }
 export class MoveNode  extends AstNode {
-  sport: string;
-  hasDistance: boolean;
-  hasDistanceNumeric: boolean;
-  distanceValue: string;
-  hasDistanceMax: boolean;
-  distanceValueMax: string;
-  distanceUnit: string;
-  hasDuration: boolean;
-  durationValueRaw: string;
-  hasDurationFloat: boolean;
-  hasSteps: boolean;
-  steps: number;
-  hasIntensityJson: boolean;
-  intensityJson: string;
-  hasSetsVal: boolean;
-  setsVal: number;
-  hasCountVal: boolean;
-  countVal: number;
-  hasCountMax: boolean;
-  countMax: number;
-  hasCountRight: boolean;
-  countRightVal: number;
-  hasDistanceRight: boolean;
-  distanceRightVal: string;
-  hasRecovery: boolean;
-  recoveryValue: number;
-  hasRecoveryMax: boolean;
-  recoveryMax: number;
-  recoveryUnit: string;
-  hasRecoveryText: boolean;
-  recoveryText: string;
-  hasNote: boolean;
-  note: string;
+  sport!: string;
+  hasDistance!: boolean;
+  hasDistanceNumeric!: boolean;
+  distanceValue!: string;
+  hasDistanceMax!: boolean;
+  distanceValueMax!: string;
+  distanceUnit!: string;
+  hasDuration!: boolean;
+  durationValueRaw!: string;
+  hasDurationFloat!: boolean;
+  hasSteps!: boolean;
+  steps!: number;
+  hasIntensityJson!: boolean;
+  intensityJson!: string;
+  hasSetsVal!: boolean;
+  setsVal!: number;
+  hasCountVal!: boolean;
+  countVal!: number;
+  hasCountMax!: boolean;
+  countMax!: number;
+  hasCountRight!: boolean;
+  countRightVal!: number;
+  hasDistanceRight!: boolean;
+  distanceRightVal!: string;
+  hasRecovery!: boolean;
+  recoveryValue!: number;
+  hasRecoveryMax!: boolean;
+  recoveryMax!: number;
+  recoveryUnit!: string;
+  hasRecoveryText!: boolean;
+  recoveryText!: string;
+  hasNote!: boolean;
+  note!: string;
   splitJsonList!: Array<string>;
   constructor() {
     super()
@@ -2285,14 +2285,14 @@ export class MoveParserV1  {
   };
 }
 export class CustomNode  extends AstNode {
-  name: string;
-  valueRaw: string;
-  hasValueMax: boolean;
-  valueMaxRaw: string;
-  hasUnit: boolean;
-  unit: string;
-  hasNote: boolean;
-  note: string;
+  name!: string;
+  valueRaw!: string;
+  hasValueMax!: boolean;
+  valueMaxRaw!: string;
+  hasUnit!: boolean;
+  unit!: string;
+  hasNote!: boolean;
+  note!: string;
   constructor() {
     super()
     this.name = "";
@@ -2445,17 +2445,17 @@ export class CustomParserV1  {
   };
 }
 export class FoodNode  extends AstNode {
-  hasCalories: boolean;
-  caloriesRaw: string;
-  hasProtein: boolean;
-  proteinRaw: string;
-  hasCarbs: boolean;
-  carbsRaw: string;
-  hasFat: boolean;
-  fatRaw: string;
+  hasCalories!: boolean;
+  caloriesRaw!: string;
+  hasProtein!: boolean;
+  proteinRaw!: string;
+  hasCarbs!: boolean;
+  carbsRaw!: string;
+  hasFat!: boolean;
+  fatRaw!: string;
   nutrientJsonList!: Array<string>;
-  hasDescription: boolean;
-  description: string;
+  hasDescription!: boolean;
+  description!: string;
   constructor() {
     super()
     this.hasCalories = false;
@@ -2506,11 +2506,11 @@ export class FoodNode  extends AstNode {
   };
 }
 export class NutrientScanResult  {
-  found: boolean;
-  nextPos: number;
-  name: string;
-  value: string;
-  unit: string;
+  found!: boolean;
+  nextPos!: number;
+  name!: string;
+  value!: string;
+  unit!: string;
   constructor() {
     this.found = false;
     this.nextPos = -1;
@@ -2669,19 +2669,19 @@ export class FoodParserV1  {
   };
 }
 export class DrinkingNode  extends AstNode {
-  hasVolume: boolean;
-  volumeRaw: string;
-  volumeUnit: string;
-  hasCalories: boolean;
-  caloriesRaw: string;
-  hasProtein: boolean;
-  proteinRaw: string;
+  hasVolume!: boolean;
+  volumeRaw!: string;
+  volumeUnit!: string;
+  hasCalories!: boolean;
+  caloriesRaw!: string;
+  hasProtein!: boolean;
+  proteinRaw!: string;
   nutrientJsonList!: Array<string>;
-  hasNutrients: boolean;
-  hasLiquid: boolean;
-  liquid: string;
-  hasDescription: boolean;
-  description: string;
+  hasNutrients!: boolean;
+  hasLiquid!: boolean;
+  liquid!: string;
+  hasDescription!: boolean;
+  description!: string;
   constructor() {
     super()
     this.hasVolume = false;
@@ -2738,9 +2738,9 @@ export class DrinkingNode  extends AstNode {
   };
 }
 export class DrinkVolumeResult  {
-  found: boolean;
-  volume: string;
-  unit: string;
+  found!: boolean;
+  volume!: string;
+  unit!: string;
   constructor() {
     this.found = false;
     this.volume = "";
@@ -2837,17 +2837,17 @@ export class DrinkingParserV1  {
   };
 }
 export class ExpenseNode  extends AstNode {
-  expenseType: string;
-  hasNamedEntry: boolean;
-  namedEntryName: string;
-  amountRaw: string;
-  currency: string;
-  hasVatPercent: boolean;
-  vatPercentRaw: string;
-  hasVatAmount: boolean;
-  vatAmountRaw: string;
-  hasDescription: boolean;
-  description: string;
+  expenseType!: string;
+  hasNamedEntry!: boolean;
+  namedEntryName!: string;
+  amountRaw!: string;
+  currency!: string;
+  hasVatPercent!: boolean;
+  vatPercentRaw!: string;
+  hasVatAmount!: boolean;
+  vatAmountRaw!: string;
+  hasDescription!: boolean;
+  description!: string;
   constructor() {
     super()
     this.expenseType = "general";
@@ -2900,9 +2900,9 @@ export class ExpenseNode  extends AstNode {
   };
 }
 export class ExpenseAmountResult  {
-  found: boolean;
-  amount: string;
-  currency: string;
+  found!: boolean;
+  amount!: string;
+  currency!: string;
   constructor() {
     this.found = false;
     this.amount = "";
@@ -3065,7 +3065,7 @@ export class V1LineParser  {
   };
 }
 export class UnknownFallbackNode  extends AstNode {
-  raw: string;
+  raw!: string;
   constructor() {
     super()
     this.raw = "";
@@ -3079,15 +3079,15 @@ export class UnknownFallbackNode  extends AstNode {
   };
 }
 export class CircuitNode  extends AstNode {
-  variant: string;
-  hasRounds: boolean;
-  rounds: number;
-  roundsNull: boolean;
-  hasRoundRest: boolean;
-  roundRestValue: number;
-  roundRestUnit: string;
-  hasNote: boolean;
-  note: string;
+  variant!: string;
+  hasRounds!: boolean;
+  rounds!: number;
+  roundsNull!: boolean;
+  hasRoundRest!: boolean;
+  roundRestValue!: number;
+  roundRestUnit!: string;
+  hasNote!: boolean;
+  note!: string;
   exerciseJsonList!: Array<string>;
   constructor() {
     super()
@@ -3416,15 +3416,15 @@ export class CircuitParserV1  {
   };
 }
 export class AttemptNode  extends AstNode {
-  hasRecognized: boolean;
-  reps: number;
-  hasLoadValue: boolean;
-  loadValueRaw: string;
-  loadUnit: string;
-  hasLoadPercent: boolean;
-  loadPercent: number;
-  hasNote: boolean;
-  note: string;
+  hasRecognized!: boolean;
+  reps!: number;
+  hasLoadValue!: boolean;
+  loadValueRaw!: string;
+  loadUnit!: string;
+  hasLoadPercent!: boolean;
+  loadPercent!: number;
+  hasNote!: boolean;
+  note!: string;
   constructor() {
     super()
     this.hasRecognized = false;
@@ -3464,14 +3464,14 @@ export class AttemptNode  extends AstNode {
   };
 }
 export class RecoveryNode  extends AstNode {
-  hasRecognized: boolean;
-  hasRecoveryValue: boolean;
-  recoveryValue: number;
-  hasRecoveryMax: boolean;
-  recoveryMax: number;
-  recoveryUnit: string;
-  hasNote: boolean;
-  note: string;
+  hasRecognized!: boolean;
+  hasRecoveryValue!: boolean;
+  recoveryValue!: number;
+  hasRecoveryMax!: boolean;
+  recoveryMax!: number;
+  recoveryUnit!: string;
+  hasNote!: boolean;
+  note!: string;
   constructor() {
     super()
     this.hasRecognized = false;
@@ -3509,34 +3509,34 @@ export class RecoveryNode  extends AstNode {
   };
 }
 export class SplitMoveNode  extends AstNode {
-  hasRecognized: boolean;
-  sport: string;
-  hasSetsVal: boolean;
-  setsVal: number;
-  hasCountVal: boolean;
-  countVal: number;
-  hasCountMax: boolean;
-  countMax: number;
-  hasDistance: boolean;
-  hasDistanceNumeric: boolean;
-  distanceValue: string;
-  distanceUnit: string;
-  hasDuration: boolean;
-  durationValueRaw: string;
-  hasDurationFloat: boolean;
-  hasIntensityJson: boolean;
-  intensityJson: string;
-  hasRecovery: boolean;
-  recoveryValue: number;
-  hasRecoveryMax: boolean;
-  recoveryMax: number;
-  recoveryUnit: string;
-  hasRecoveryText: boolean;
-  recoveryText: string;
-  hasNote: boolean;
-  note: string;
-  hasDescription: boolean;
-  description: string;
+  hasRecognized!: boolean;
+  sport!: string;
+  hasSetsVal!: boolean;
+  setsVal!: number;
+  hasCountVal!: boolean;
+  countVal!: number;
+  hasCountMax!: boolean;
+  countMax!: number;
+  hasDistance!: boolean;
+  hasDistanceNumeric!: boolean;
+  distanceValue!: string;
+  distanceUnit!: string;
+  hasDuration!: boolean;
+  durationValueRaw!: string;
+  hasDurationFloat!: boolean;
+  hasIntensityJson!: boolean;
+  intensityJson!: string;
+  hasRecovery!: boolean;
+  recoveryValue!: number;
+  hasRecoveryMax!: boolean;
+  recoveryMax!: number;
+  recoveryUnit!: string;
+  hasRecoveryText!: boolean;
+  recoveryText!: string;
+  hasNote!: boolean;
+  note!: string;
+  hasDescription!: boolean;
+  description!: string;
   splitJsonList!: Array<string>;
   constructor() {
     super()
@@ -3878,11 +3878,11 @@ export class SplitChildParserV1  {
   };
 }
 export class DateValue  {
-  kind: string;
-  year: number;
-  month: number;
-  day: number;
-  unknown: boolean;
+  kind!: string;
+  year!: number;
+  month!: number;
+  day!: number;
+  unknown!: boolean;
   constructor() {
     this.kind = "date";
     this.year = 0;
@@ -3935,9 +3935,9 @@ export class DateValue  {
   };
 }
 export class DistanceValue  {
-  kind: string;
-  value: number;
-  unit: string;
+  kind!: string;
+  value!: number;
+  unit!: string;
   constructor() {
     this.kind = "distance";
     this.value = 0.0;
@@ -3977,9 +3977,9 @@ export class DistanceValue  {
   };
 }
 export class DurationValue  {
-  kind: string;
-  value: number;
-  unit: string;
+  kind!: string;
+  value!: number;
+  unit!: string;
   constructor() {
     this.kind = "duration";
     this.value = 0;
@@ -4039,17 +4039,17 @@ export class CompactV1JsonExtra  {
   };
 }
 export class DateValueNode  {
-  type: string;
-  year: number;
-  month: number;
-  day: number;
-  unknown: boolean;
-  hasHour: boolean;
-  hour: number;
-  hasMinute: boolean;
-  minute: number;
-  hasTimezone: boolean;
-  timezone: string;
+  type!: string;
+  year!: number;
+  month!: number;
+  day!: number;
+  unknown!: boolean;
+  hasHour!: boolean;
+  hour!: number;
+  hasMinute!: boolean;
+  minute!: number;
+  hasTimezone!: boolean;
+  timezone!: string;
   constructor() {
     this.type = "date";
     this.year = 0;
@@ -4099,7 +4099,7 @@ export class TagsNode  extends AstNode {
   };
 }
 export class SummaryNode  extends AstNode {
-  text: string;
+  text!: string;
   constructor() {
     super()
     this.text = "";
@@ -4113,7 +4113,7 @@ export class SummaryNode  extends AstNode {
   };
 }
 export class TextLineNode  extends AstNode {
-  value: string;
+  value!: string;
   constructor() {
     super()
     this.value = "";
@@ -4127,7 +4127,7 @@ export class TextLineNode  extends AstNode {
   };
 }
 export class EmojisNode  extends AstNode {
-  emojis: string;
+  emojis!: string;
   constructor() {
     super()
     this.emojis = "";
@@ -4141,8 +4141,8 @@ export class EmojisNode  extends AstNode {
   };
 }
 export class SportNode  extends AstNode {
-  level: number;
-  name: string;
+  level!: number;
+  name!: string;
   constructor() {
     super()
     this.level = 0;
@@ -4158,17 +4158,17 @@ export class SportNode  extends AstNode {
   };
 }
 export class DerivedNode  extends AstNode {
-  name: string;
-  value: number;
-  unit: string;
-  basis: string;
-  hasConfidence: boolean;
-  confidence: number;
-  source: string;
-  hasGoodness: boolean;
-  goodness: number;
-  hasNote: boolean;
-  note: string;
+  name!: string;
+  value!: number;
+  unit!: string;
+  basis!: string;
+  hasConfidence!: boolean;
+  confidence!: number;
+  source!: string;
+  hasGoodness!: boolean;
+  goodness!: number;
+  hasNote!: boolean;
+  note!: string;
   constructor() {
     super()
     this.name = "";
@@ -4211,11 +4211,11 @@ export class DerivedNode  extends AstNode {
   };
 }
 export class PhaseNode  extends AstNode {
-  hasNumber: boolean;
-  number: number;
-  name: string;
-  hasDetails: boolean;
-  details: string;
+  hasNumber!: boolean;
+  number!: number;
+  name!: string;
+  hasDetails!: boolean;
+  details!: string;
   constructor() {
     super()
     this.hasNumber = false;
@@ -4243,8 +4243,8 @@ export class PhaseNode  extends AstNode {
   };
 }
 export class MetaNode  extends AstNode {
-  key: string;
-  value: string;
+  key!: string;
+  value!: string;
   constructor() {
     super()
     this.key = "";
@@ -4260,7 +4260,7 @@ export class MetaNode  extends AstNode {
   };
 }
 export class LocationNode  extends AstNode {
-  place: string;
+  place!: string;
   constructor() {
     super()
     this.place = "";
@@ -4274,7 +4274,7 @@ export class LocationNode  extends AstNode {
   };
 }
 export class UrlNode  extends AstNode {
-  url: string;
+  url!: string;
   constructor() {
     super()
     this.url = "";
@@ -4288,13 +4288,13 @@ export class UrlNode  extends AstNode {
   };
 }
 export class FeelingNode  extends AstNode {
-  scale: string;
-  hasValue: boolean;
-  value: number;
-  hasMax: boolean;
-  max: number;
-  hasDescription: boolean;
-  description: string;
+  scale!: string;
+  hasValue!: boolean;
+  value!: number;
+  hasMax!: boolean;
+  max!: number;
+  hasDescription!: boolean;
+  description!: string;
   constructor() {
     super()
     this.scale = "feeling";
@@ -4327,11 +4327,11 @@ export class FeelingNode  extends AstNode {
   };
 }
 export class ReminderNode  extends AstNode {
-  year: number;
-  month: number;
-  day: number;
-  hasDescription: boolean;
-  description: string;
+  year!: number;
+  month!: number;
+  day!: number;
+  hasDescription!: boolean;
+  description!: string;
   constructor() {
     super()
     this.year = 0;
@@ -4358,12 +4358,12 @@ export class ReminderNode  extends AstNode {
   };
 }
 export class PainNode  extends AstNode {
-  hasBodyPart: boolean;
-  bodyPart: string;
-  hasSeverity: boolean;
-  severity: number;
-  hasDescription: boolean;
-  description: string;
+  hasBodyPart!: boolean;
+  bodyPart!: string;
+  hasSeverity!: boolean;
+  severity!: number;
+  hasDescription!: boolean;
+  description!: string;
   constructor() {
     super()
     this.hasBodyPart = false;
@@ -4396,19 +4396,19 @@ export class PainNode  extends AstNode {
   };
 }
 export class DurationNode  extends AstNode {
-  unit: string;
-  hasSingle: boolean;
-  singleValue: number;
-  hasFloatSingle: boolean;
-  floatValueRaw: string;
-  hasRange: boolean;
-  minValue: number;
-  maxValue: number;
-  hasTimeOfDay: boolean;
-  todHour: number;
-  todMinute: number;
-  hasDescription: boolean;
-  description: string;
+  unit!: string;
+  hasSingle!: boolean;
+  singleValue!: number;
+  hasFloatSingle!: boolean;
+  floatValueRaw!: string;
+  hasRange!: boolean;
+  minValue!: number;
+  maxValue!: number;
+  hasTimeOfDay!: boolean;
+  todHour!: number;
+  todMinute!: number;
+  hasDescription!: boolean;
+  description!: string;
   constructor() {
     super()
     this.unit = "min";
@@ -4465,16 +4465,16 @@ export class DurationNode  extends AstNode {
   };
 }
 export class ContactsNode  extends AstNode {
-  hasCount: boolean;
-  count: number;
-  hasCountMax: boolean;
-  countMax: number;
-  hasSets: boolean;
-  sets: number;
-  hasReps: boolean;
-  reps: number;
-  hasName: boolean;
-  name: string;
+  hasCount!: boolean;
+  count!: number;
+  hasCountMax!: boolean;
+  countMax!: number;
+  hasSets!: boolean;
+  sets!: number;
+  hasReps!: boolean;
+  reps!: number;
+  hasName!: boolean;
+  name!: string;
   constructor() {
     super()
     this.hasCount = false;
@@ -4519,15 +4519,15 @@ export class ContactsNode  extends AstNode {
   };
 }
 export class SectionNode  extends AstNode {
-  name: string;
-  hasIntensity: boolean;
-  intensity: number;
-  hasDuration: boolean;
-  duration: number;
-  hasSegment: boolean;
-  segmentStart: number;
-  segmentEnd: number;
-  segmentUnit: string;
+  name!: string;
+  hasIntensity!: boolean;
+  intensity!: number;
+  hasDuration!: boolean;
+  duration!: number;
+  hasSegment!: boolean;
+  segmentStart!: number;
+  segmentEnd!: number;
+  segmentUnit!: string;
   constructor() {
     super()
     this.name = "";
@@ -4566,51 +4566,51 @@ export class SectionNode  extends AstNode {
   };
 }
 export class ExerciseNode  extends AstNode {
-  name: string;
-  hasSets: boolean;
-  sets: number;
-  hasSetsMax: boolean;
-  setsMax: number;
-  hasReps: boolean;
-  reps: number;
-  hasRepsRight: boolean;
-  repsRight: number;
-  hasRepsMax: boolean;
-  repsMax: number;
-  hasCount: boolean;
-  count: number;
-  hasUnit: boolean;
-  unit: string;
-  hasWeight: boolean;
-  weightValue: number;
-  weightUnit: string;
-  hasWeightPercent: boolean;
-  weightPercent: number;
-  hasWeightValueMax: boolean;
-  weightValueMax: number;
-  hasExerciseDistance: boolean;
-  exerciseDistance: number;
-  exerciseDistanceUnit: string;
-  hasNote: boolean;
-  note: string;
-  hasDescription: boolean;
-  description: string;
+  name!: string;
+  hasSets!: boolean;
+  sets!: number;
+  hasSetsMax!: boolean;
+  setsMax!: number;
+  hasReps!: boolean;
+  reps!: number;
+  hasRepsRight!: boolean;
+  repsRight!: number;
+  hasRepsMax!: boolean;
+  repsMax!: number;
+  hasCount!: boolean;
+  count!: number;
+  hasUnit!: boolean;
+  unit!: string;
+  hasWeight!: boolean;
+  weightValue!: number;
+  weightUnit!: string;
+  hasWeightPercent!: boolean;
+  weightPercent!: number;
+  hasWeightValueMax!: boolean;
+  weightValueMax!: number;
+  hasExerciseDistance!: boolean;
+  exerciseDistance!: number;
+  exerciseDistanceUnit!: string;
+  hasNote!: boolean;
+  note!: string;
+  hasDescription!: boolean;
+  description!: string;
   customFieldsJson!: Array<string>;
-  hasDistanceMin: boolean;
-  distanceMin: number;
-  hasDistanceMax: boolean;
-  distanceMax: number;
-  hasSpecType: boolean;
-  specType: string;
+  hasDistanceMin!: boolean;
+  distanceMin!: number;
+  hasDistanceMax!: boolean;
+  distanceMax!: number;
+  hasSpecType!: boolean;
+  specType!: string;
   partJsonList!: Array<string>;
   measuredDurationJsonList!: Array<string>;
-  hasIsBilateral: boolean;
-  isBilateral: boolean;
-  hasRecovery: boolean;
-  recoveryValue: number;
-  hasRecoveryMax: boolean;
-  recoveryMax: number;
-  recoveryUnit: string;
+  hasIsBilateral!: boolean;
+  isBilateral!: boolean;
+  hasRecovery!: boolean;
+  recoveryValue!: number;
+  hasRecoveryMax!: boolean;
+  recoveryMax!: number;
+  recoveryUnit!: string;
   constructor() {
     super()
     this.name = "";
@@ -4773,23 +4773,23 @@ export class ExerciseNode  extends AstNode {
   };
 }
 export class IntervalNode  extends AstNode {
-  hasCount: boolean;
-  count: number;
-  hasDistance: boolean;
-  distanceValue: number;
-  distanceUnit: string;
-  hasIntensity: boolean;
-  intensityMin: number;
-  intensityMax: number;
-  hasRecovery: boolean;
-  recoveryValue: number;
-  hasRecoveryMax: boolean;
-  recoveryMax: number;
-  recoveryUnit: string;
-  hasIntensityText: boolean;
-  intensityText: string;
-  hasNote: boolean;
-  note: string;
+  hasCount!: boolean;
+  count!: number;
+  hasDistance!: boolean;
+  distanceValue!: number;
+  distanceUnit!: string;
+  hasIntensity!: boolean;
+  intensityMin!: number;
+  intensityMax!: number;
+  hasRecovery!: boolean;
+  recoveryValue!: number;
+  hasRecoveryMax!: boolean;
+  recoveryMax!: number;
+  recoveryUnit!: string;
+  hasIntensityText!: boolean;
+  intensityText!: string;
+  hasNote!: boolean;
+  note!: string;
   constructor() {
     super()
     this.hasCount = false;
@@ -4865,12 +4865,12 @@ export class IntervalNode  extends AstNode {
   };
 }
 export class VitalsNode  extends AstNode {
-  hasKey: boolean;
-  key: string;
-  hasValue: boolean;
-  value: string;
-  hasUnit: boolean;
-  unit: string;
+  hasKey!: boolean;
+  key!: string;
+  hasValue!: boolean;
+  value!: string;
+  hasUnit!: boolean;
+  unit!: string;
   constructor() {
     super()
     this.hasKey = false;
@@ -4903,28 +4903,28 @@ export class VitalsNode  extends AstNode {
   };
 }
 export class SplitNode  extends AstNode {
-  hasRecognized: boolean;
-  hasDistance: boolean;
-  distanceValue: number;
-  distanceValueRaw: string;
-  useDistanceRaw: boolean;
-  distanceUnit: string;
-  hasDuration: boolean;
-  durationValue: number;
-  durationUnit: string;
-  hasPace: boolean;
-  paceMinutes: number;
-  paceSeconds: number;
-  pacePerDistanceValue: number;
-  pacePerDistanceUnit: string;
-  hasHr: boolean;
-  hr: number;
-  hasIntensity: boolean;
-  intensityJson: string;
+  hasRecognized!: boolean;
+  hasDistance!: boolean;
+  distanceValue!: number;
+  distanceValueRaw!: string;
+  useDistanceRaw!: boolean;
+  distanceUnit!: string;
+  hasDuration!: boolean;
+  durationValue!: number;
+  durationUnit!: string;
+  hasPace!: boolean;
+  paceMinutes!: number;
+  paceSeconds!: number;
+  pacePerDistanceValue!: number;
+  pacePerDistanceUnit!: string;
+  hasHr!: boolean;
+  hr!: number;
+  hasIntensity!: boolean;
+  intensityJson!: string;
   customFieldsJson!: Array<string>;
   nestedSplitJsonList!: Array<string>;
-  hasNote: boolean;
-  note: string;
+  hasNote!: boolean;
+  note!: string;
   constructor() {
     super()
     this.hasRecognized = false;
@@ -5015,18 +5015,18 @@ export class SplitNode  extends AstNode {
   };
 }
 export class MaxNode  extends AstNode {
-  name: string;
-  hasReps: boolean;
-  reps: number;
-  hasWeight: boolean;
-  weight: number;
-  unit: string;
-  estimated: boolean;
-  pr: boolean;
-  hasCalc: boolean;
-  calcReps: number;
-  calcWeight: number;
-  calcUnit: string;
+  name!: string;
+  hasReps!: boolean;
+  reps!: number;
+  hasWeight!: boolean;
+  weight!: number;
+  unit!: string;
+  estimated!: boolean;
+  pr!: boolean;
+  hasCalc!: boolean;
+  calcReps!: number;
+  calcWeight!: number;
+  calcUnit!: string;
   constructor() {
     super()
     this.name = "";
@@ -5073,11 +5073,11 @@ export class MaxNode  extends AstNode {
   };
 }
 export class BestNode  extends AstNode {
-  name: string;
-  hasResult: boolean;
-  resultValue: string;
-  resultUnit: string;
-  pr: boolean;
+  name!: string;
+  hasResult!: boolean;
+  resultValue!: string;
+  resultUnit!: string;
+  pr!: boolean;
   constructor() {
     super()
     this.name = "";
@@ -5108,8 +5108,8 @@ export class BestNode  extends AstNode {
   };
 }
 export class HealthNode  extends AstNode {
-  healthType: string;
-  description: string;
+  healthType!: string;
+  description!: string;
   constructor() {
     super()
     this.healthType = "";
@@ -5125,7 +5125,7 @@ export class HealthNode  extends AstNode {
   };
 }
 export class UnknownNode  extends AstNode {
-  raw: string;
+  raw!: string;
   constructor() {
     super()
     this.raw = "";
@@ -5139,10 +5139,10 @@ export class UnknownNode  extends AstNode {
   };
 }
 export class MeasurementNode  extends AstNode {
-  measureType: string;
-  valueRaw: string;
-  unit: string;
-  hasUnit: boolean;
+  measureType!: string;
+  valueRaw!: string;
+  unit!: string;
+  hasUnit!: boolean;
   constructor() {
     super()
     this.measureType = "";
@@ -5165,13 +5165,13 @@ export class MeasurementNode  extends AstNode {
   };
 }
 export class SleepNode  extends AstNode {
-  durationRaw: string;
-  hasQuality: boolean;
-  quality: string;
-  hasHrv: boolean;
-  hrv: number;
-  hasRhr: boolean;
-  rhr: number;
+  durationRaw!: string;
+  hasQuality!: boolean;
+  quality!: string;
+  hasHrv!: boolean;
+  hrv!: number;
+  hasRhr!: boolean;
+  rhr!: number;
   constructor() {
     super()
     this.durationRaw = "0";
@@ -5206,13 +5206,13 @@ export class SleepNode  extends AstNode {
   };
 }
 export class WorkoutNode  {
-  type: string;
+  type!: string;
   title?: string;
-  hasTitle: boolean;
+  hasTitle!: boolean;
   content!: Array<AstNode>;
   date?: DateValueNode;
   format?: string;
-  hasFormat: boolean;
+  hasFormat!: boolean;
   constructor() {
     this.type = "workout";
     this.hasTitle = false;
@@ -5245,7 +5245,7 @@ export class WorkoutNode  {
 }
 export class DocumentNode  {
   workouts!: Array<WorkoutNode>;
-  format: string;
+  format!: string;
   constructor() {
     this.workouts = [];
     this.format = "compact-v1";
@@ -5258,9 +5258,9 @@ export class DocumentNode  {
   };
 }
 export class ChildParseResult  {
-  found: boolean;
-  kind: string;
-  canNest: boolean;
+  found!: boolean;
+  kind!: string;
+  canNest!: boolean;
   nestSplitMove?: SplitMoveNode;
   constructor() {
     this.found = false;
@@ -5468,7 +5468,7 @@ export class CompactV1Parser  {
     }
     return false;
   };
-  tryParseTickQuoteDurationSeconds (text : string) : number  {
+  tryParseTickQuoteDurationSeconds (text : string) : number | undefined  {
     let res : number | undefined ;
     const apos : number  = this.findToken(text, "'");
     if ( apos <= 0 ) {
